@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Uno.Enums;
 
 namespace Uno.Models
@@ -13,6 +14,17 @@ namespace Uno.Models
         }
 
         public List<Card> Cards { get; set; }
+
+        
+        public List<Card> Draw(int count)
+        {
+            var cardsDrew = Cards.Take(count).ToList();
+
+            //Remove the drawn Deck from the draw pile
+            Cards.RemoveAll(x => cardsDrew.Contains(x));
+
+            return cardsDrew;
+        }
 
 
         private void InitializeCards()
@@ -100,7 +112,7 @@ namespace Uno.Models
             }
         }
 
-        private void Shuffle()
+        public void Shuffle()
         {
             Random r = new Random();
 
@@ -113,6 +125,7 @@ namespace Uno.Models
                 Cards[k] = temp;
             }
         }
+
 
 
     }
