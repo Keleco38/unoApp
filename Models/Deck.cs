@@ -15,7 +15,7 @@ namespace Uno.Models
 
         public List<Card> Cards { get; set; }
 
-        
+
         public List<Card> Draw(int count)
         {
             var cardsDrew = Cards.Take(count).ToList();
@@ -31,11 +31,12 @@ namespace Uno.Models
         {
             Cards = new List<Card>();
 
-            //For every color we have defined
             foreach (CardColor color in Enum.GetValues(typeof(CardColor)))
             {
-                if (color != CardColor.Wild) //Wild Cards don't have a color
+                //For every color we have defined
+                if (color != CardColor.Wild)
                 {
+                    //Wild Cards don't have a color
                     foreach (CardValue val in Enum.GetValues(typeof(CardValue)))
                     {
                         switch (val)
@@ -49,65 +50,29 @@ namespace Uno.Models
                             case CardValue.Seven:
                             case CardValue.Eight:
                             case CardValue.Nine:
-                                //Add two copies of each color card 1-9
-                                Cards.Add(new Card()
-                                {
-                                    Color = color,
-                                    Value = val
-                                });
-                                Cards.Add(new Card()
-                                {
-                                    Color = color,
-                                    Value = val
-                                });
-                                break;
                             case CardValue.Skip:
                             case CardValue.Reverse:
                             case CardValue.DrawTwo:
-                                //Add two copies per color of Skip, Reverse, and Draw Two
-                                Cards.Add(new Card()
-                                {
-                                    Color = color,
-                                    Value = val
-                                });
-                                Cards.Add(new Card()
-                                {
-                                    Color = color,
-                                    Value = val
-                                });
+                                Cards.Add(new Card(color, val));
+                                Cards.Add(new Card(color, val));
                                 break;
-
                             case CardValue.Zero:
                                 //Add one copy per color for 0
-                                Cards.Add(new Card()
-                                {
-                                    Color = color,
-                                    Value = val
-                                });
+                                Cards.Add(new Card(color, val));
                                 break;
                         }
                     }
                 }
-                else //Handle wild Cards here
+                else
                 {
+                    //Handle wild Cards here
                     //Add four regular wild Cards
                     for (int i = 1; i <= 4; i++)
                     {
-                        Cards.Add(new Card()
-                        {
-                            Color = color,
-                            Value = CardValue.Wild,
-                        });
+                        Cards.Add(new Card(color, CardValue.ChangeColor));
+                        Cards.Add(new Card(color, CardValue.DrawFour));
                     }
-                    //Add four Draw Four Wild Cards
-                    for (int i = 1; i <= 4; i++)
-                    {
-                        Cards.Add(new Card()
-                        {
-                            Color = color,
-                            Value = CardValue.DrawFour,
-                        });
-                    }
+
                 }
             }
         }

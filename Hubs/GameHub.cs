@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Uno.Enums;
 using Uno.Models;
 
 namespace Uno.Hubs
@@ -54,27 +55,47 @@ namespace Uno.Hubs
 
         public void AddUser(string name)
         {
-
             User user;
             lock (_users)
             {
                 name = Regex.Replace(name, @"\s+", "").ToLower();
-
                 if (name.Length > 10)
                     name = name.Substring(0, 10);
-
                 var nameExists = _users.Any(x => x.Name == name);
                 if (nameExists)
                 {
                     Random rnd = new Random();
                     name = name + rnd.Next(1, 100);
                 }
-
-
                 user = new User(Context.ConnectionId, name);
 
                 _users.Add(user);
             }
+        }
+
+        public void DrawCard(Guid gameId)
+        {
+            var game = _games.Find(x => x.Id == gameId);
+            lock (game)
+            {
+                if (game.PlayerToPlay.User.ConnectionId == Context.ConnectionId)
+                {
+                    game.DrawCard(game.PlayerToPlay, 1);
+                }
+            }
+        }
+
+        public async Task PlayCard(Guid gameId, Card card, CardColor cardColor)
+        {
+            var game = _games.Find(x => x.Id == gameId);
+            lock (game)
+            {
+                if (game.PlayerToPlay.User.ConnectionId == Context.ConnectionId)
+                {
+                    var success=game.PlayCard(game.PlayerToPlay,card,cardColor);
+                }
+            }
+            await Task.CompletedTask;
         }
 
 
@@ -83,12 +104,12 @@ namespace Uno.Hubs
         private async Task CleanupUserFromGames()
         {
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-            var game = _games.FirstOrDefault(x => x.Players.FirstOrDefault(y => y.User == user) != null);
+            var game = _games.FirstOrDefault(x => x.Players.FirstOrDefault(y => y.User.ConnectionId == user.ConnectionId) != null);
             if (game != null)
             {
                 var player = game.Players.Find(x => x.User == user);
                 player.LeftGame = true;
-                if (!game.Players.Any(x=>x.LeftGame==false))
+                if (!game.Players.Any(x => x.LeftGame == false))
                 {
                     _games.Remove(game);
                 }
@@ -106,7 +127,7 @@ namespace Uno.Hubs
         private async Task CleanupUserGameSetups()
         {
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-            var gameSetup = _gameSetups.FirstOrDefault(x => x.Users.Contains(user));
+            var gameSetup = _gameSetups.FirstOrDefault(x => x.Users.FirstOrDefault(y => y.ConnectionId == user.ConnectionId) != null);
             if (gameSetup != null)
             {
                 gameSetup.Users.Remove(user);

@@ -7,12 +7,14 @@ namespace Uno.Models
 {
     public class Game
     {
+        public Guid Id { get; set; }
         public Deck Deck { get; set; }
         public List<Player> Players { get; set; }
         public List<Card> DiscardedPile { get; set; }
         public Direction Direction { get; set; }
         public Card LastCardPlayed { get; set; }
         public Player PlayerToPlay { get; set; }
+        public bool GameEnded { get; set; }
 
         public Game(GameSetup gameSetup)
         {
@@ -20,8 +22,10 @@ namespace Uno.Models
             DiscardedPile = Deck.Draw(1);
             LastCardPlayed = DiscardedPile.First();
             InitializePlayers(gameSetup);
+            Id = gameSetup.Id;
             Direction = Direction.Right;
             PlayerToPlay = Players.First();
+            GameEnded=false;
         }
 
         public bool PlayCard(Player player, Card card, CardColor cardColor)
@@ -31,29 +35,30 @@ namespace Uno.Models
 
             if (card.Color != CardColor.Wild && card.Color != LastCardPlayed.Color && card.Value != LastCardPlayed.Value)
                 return false;
-
+            
             PlayerToPlay.Hand.Remove(card);
             DiscardedPile.Add(card);
 
+
+            var gameEnded=DetectIfGameEnded();
+            if(gameEnded){
+                GameEnded=true;
+                return true;
+            }
+
             if (card.Color == CardColor.Wild)
             {
+                LastCardPlayed = new Card(cardColor,CardValue.ChangeColor);
+
                 if (card.Value == CardValue.DrawFour)
                 {
                     DrawCard(GetNextPlayerToPlay(), 4);
                 }
-                LastCardPlayed = new Card()
-                {
-                    Value = CardValue.Wild,
-                    Color = cardColor
-                };
             }
             else
             {
-                LastCardPlayed = new Card()
-                {
-                    Value = card.Value,
-                    Color = card.Color
-                };
+                LastCardPlayed = new Card(card.Color,card.Value);
+          
                 if (card.Value == CardValue.DrawTwo)
                 {
                     DrawCard(GetNextPlayerToPlay(), 2);
@@ -70,6 +75,11 @@ namespace Uno.Models
 
             PlayerToPlay = GetNextPlayerToPlay();
             return true;
+        }
+
+        private bool DetectIfGameEnded()
+        {
+            return !PlayerToPlay.Hand.Any();
         }
 
         public void DrawCard(Player player, int count)
