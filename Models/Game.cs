@@ -8,25 +8,20 @@ namespace Uno.Models
 {
     public class Game
     {
-        public Guid Id { get; set; }
         public Deck Deck { get; set; }
         public List<Player> Players { get; set; }
         public List<User> Spectators { get; set; }
         public List<Card> DiscardedPile { get; set; }
+        public GameSetup GameSetup { get; set; }
         public Direction Direction { get; set; }
         public Card LastCardPlayed { get; set; }
         public Player PlayerToPlay { get; set; }
+        public bool GameStarted { get; set; }
         public bool GameEnded { get; set; }
 
         public Game(GameSetup gameSetup)
         {
-            Deck = new Deck();
-            DiscardedPile = Deck.Draw(1);
-            LastCardPlayed = DiscardedPile.First();
-            InitializePlayers(gameSetup);
-            Id = gameSetup.Id;
-            Direction = Direction.Right;
-            PlayerToPlay = Players.First();
+            GameSetup = gameSetup;
         }
 
         public bool PlayCard(Player player, Card card, CardColor cardColor)
@@ -37,7 +32,7 @@ namespace Uno.Models
             if (card.Color != CardColor.Wild && card.Color != LastCardPlayed.Color && card.Value != LastCardPlayed.Value)
                 return false;
 
-            PlayerToPlay.Hand.Remove(card);
+            PlayerToPlay.Cards.Remove(card);
             DiscardedPile.Add(card);
 
 
@@ -79,14 +74,24 @@ namespace Uno.Models
             return true;
         }
 
-        private bool DetectIfGameEnded()
+
+
+        public void StartGame()
         {
-            return !PlayerToPlay.Hand.Any();
+            Deck = new Deck();
+            DiscardedPile = Deck.Draw(1);
+            LastCardPlayed = DiscardedPile.First();
+            Direction = Direction.Right;
+            PlayerToPlay = Players.First();
+            Players.ForEach(x => x.Cards = Deck.Draw(7));
+            GameStarted = true;
+
         }
+
 
         public void DrawCard(Player player, int count)
         {
-            var handCount = player.Hand.Count;
+            var handCount = player.Cards.Count;
             if (handCount + count > Constants.MAX_NUMBER_OF_CARDS)
             {
                 count = Constants.MAX_NUMBER_OF_CARDS - handCount;
@@ -95,15 +100,15 @@ namespace Uno.Models
             var deckCount = Deck.Cards.Count;
             if (deckCount < count)
             {
-                player.Hand.AddRange(Deck.Draw(deckCount));
+                player.Cards.AddRange(Deck.Draw(deckCount));
                 Deck.Cards = DiscardedPile.ToList();
                 Deck.Shuffle();
                 DiscardedPile.Clear();
-                player.Hand.AddRange(Deck.Draw(count - deckCount));
+                player.Cards.AddRange(Deck.Draw(count - deckCount));
             }
             else
             {
-                player.Hand.AddRange(Deck.Draw(count));
+                player.Cards.AddRange(Deck.Draw(count));
             }
 
             if (count == 1)
@@ -116,15 +121,6 @@ namespace Uno.Models
 
         // -------------------------------------private------------
 
-
-        private void InitializePlayers(GameSetup gameSetup)
-        {
-            Players = new List<Player>();
-            foreach (var user in gameSetup.Users)
-            {
-                Players.Add(new Player(user, Deck.Draw(7)));
-            }
-        }
 
         private Player GetNextPlayerToPlay()
         {
@@ -155,6 +151,9 @@ namespace Uno.Models
 
         }
 
-
+        private bool DetectIfGameEnded()
+        {
+            return !PlayerToPlay.Cards.Any();
+        }
     }
 }

@@ -5,13 +5,13 @@ namespace Uno.Models
 {
     public class Player
     {
-        public Player(User user, List<Card> hand)
+        public Player(User user)
         {
             User = user;
-            Hand = hand;
+            Cards=new List<Card>();
         }
         public User User { get; set; }
-        public List<Card> Hand { get; set; }
+        public List<Card> Cards { get; set; }
         public bool LeftGame { get; set; }
 
     }

@@ -5,14 +5,11 @@ namespace Uno.Models
 {
     public class GameSetup
     {
-
-        public GameSetup(User user)
+        public GameSetup()
         {
-            Id = Guid.NewGuid();
-            Users = new List<User>() { user };
+            Id = Guid.NewGuid().ToString();
         }
-
-        public Guid Id { get; set; }
-        public List<User> Users { get; set; }
+        public string Id { get; set; }
+        public string Password { get; set; }
     }
 }
