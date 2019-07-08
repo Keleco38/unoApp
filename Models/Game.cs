@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Uno.Contants;
 using Uno.Enums;
 
 namespace Uno.Models
@@ -10,6 +11,7 @@ namespace Uno.Models
         public Guid Id { get; set; }
         public Deck Deck { get; set; }
         public List<Player> Players { get; set; }
+        public List<User> Spectators { get; set; }
         public List<Card> DiscardedPile { get; set; }
         public Direction Direction { get; set; }
         public Card LastCardPlayed { get; set; }
@@ -25,7 +27,6 @@ namespace Uno.Models
             Id = gameSetup.Id;
             Direction = Direction.Right;
             PlayerToPlay = Players.First();
-            GameEnded=false;
         }
 
         public bool PlayCard(Player player, Card card, CardColor cardColor)
@@ -35,20 +36,21 @@ namespace Uno.Models
 
             if (card.Color != CardColor.Wild && card.Color != LastCardPlayed.Color && card.Value != LastCardPlayed.Value)
                 return false;
-            
+
             PlayerToPlay.Hand.Remove(card);
             DiscardedPile.Add(card);
 
 
-            var gameEnded=DetectIfGameEnded();
-            if(gameEnded){
-                GameEnded=true;
+            var gameEnded = DetectIfGameEnded();
+            if (gameEnded)
+            {
+                GameEnded = true;
                 return true;
             }
 
             if (card.Color == CardColor.Wild)
             {
-                LastCardPlayed = new Card(cardColor,CardValue.ChangeColor);
+                LastCardPlayed = new Card(cardColor, CardValue.ChangeColor);
 
                 if (card.Value == CardValue.DrawFour)
                 {
@@ -57,8 +59,8 @@ namespace Uno.Models
             }
             else
             {
-                LastCardPlayed = new Card(card.Color,card.Value);
-          
+                LastCardPlayed = new Card(card.Color, card.Value);
+
                 if (card.Value == CardValue.DrawTwo)
                 {
                     DrawCard(GetNextPlayerToPlay(), 2);
@@ -84,6 +86,12 @@ namespace Uno.Models
 
         public void DrawCard(Player player, int count)
         {
+            var handCount = player.Hand.Count;
+            if (handCount + count > Constants.MAX_NUMBER_OF_CARDS)
+            {
+                count = Constants.MAX_NUMBER_OF_CARDS - handCount;
+            }
+
             var deckCount = Deck.Cards.Count;
             if (deckCount < count)
             {
@@ -104,8 +112,6 @@ namespace Uno.Models
                 PlayerToPlay = GetNextPlayerToPlay();
             }
         }
-
-
 
 
         // -------------------------------------private------------
