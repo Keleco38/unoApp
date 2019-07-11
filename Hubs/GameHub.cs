@@ -129,7 +129,7 @@ namespace Uno.Hubs
                 return;
             }
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-            var gameSetup = new GameSetup();
+            var gameSetup = new GameSetup(gameMode);
             var game = new Game(gameSetup);
             game.Players.Add(new Player(user));
             _games.Add(game);

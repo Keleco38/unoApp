@@ -43,8 +43,8 @@ namespace Uno.Enums
     public enum GameMode
     {
         Normal = 1,
-        SpecialWildCards = 2,
-        SpecialWildCardsAndAvalonCards = 3
+        SpecialCards = 2,
+        SpecialCardsAndAvalonCards = 3
     }
 
 }

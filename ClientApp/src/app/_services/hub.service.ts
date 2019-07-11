@@ -15,11 +15,15 @@ import { Game } from '../_models/game';
 export class HubService {
   private _hubConnection: signalR.HubConnection;
   private _allChatMessages: ChatMessage[] = [];
+  private _gameChatMessages: ChatMessage[] = [];
   private _buzzPlayerDisabled: boolean;
+
   private _onlineUsersObservable = new BehaviorSubject<User[]>(new Array<User>());
   private _currentUserObservable = new BehaviorSubject<User>(null);
   private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._allChatMessages);
   private _availableGamesObservable = new BehaviorSubject<Game[]>(new Array<Game>());
+  private _activeGameObservable = new BehaviorSubject<Game>(null);
+  private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._gameChatMessages);
 
   constructor(private _router: Router) {
     this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
@@ -43,9 +47,16 @@ export class HubService {
       this._allChatMessages.unshift(message);
       this._allChatMessagesObservable.next(this._allChatMessages);
     });
+
+    this._hubConnection.on('PostNewMessageInGameChat', (message: ChatMessage) => {
+      this._gameChatMessages.unshift(message);
+      this._gameChatMessagesObservable.next(this._gameChatMessages);
+    });
+
     this._hubConnection.on('RefreshAllGamesList', (games: Game[]) => {
       this._availableGamesObservable.next(games);
     });
+
     this._hubConnection.on('BuzzPlayer', () => {
       if (this._buzzPlayerDisabled) {
         return;
@@ -57,6 +68,28 @@ export class HubService {
       setTimeout(() => {
         this._buzzPlayerDisabled = false;
       }, 5000);
+    });
+
+    this._hubConnection.on('KickPlayerFromGame', () => {
+      this._activeGameObservable.next(null);
+      this._router.navigateByUrl('home');
+    });
+
+    this._hubConnection.on('DisplayToastMessage', (message: string) => {
+      alert(message);
+    });
+
+    this._hubConnection.on('UpdateGame', (game: Game) => {
+      this._activeGameObservable.next(game);
+      if (game.gameStarted) {
+        if (this._router.url !== '/game') {
+          this._router.navigateByUrl('/game');
+        }
+      } else {
+        if (this._router.url !== '/waitingRoom') {
+          this._router.navigateByUrl('/waitingRoom');
+        }
+      }
     });
   }
 
@@ -87,8 +120,38 @@ export class HubService {
     this._hubConnection.invoke('JoinGame', id, password);
   }
 
-  createGame(gameMode:GameMode) {
+  sendMessageToGameChat(message: string): any {
+    this._hubConnection.invoke(
+      'SendMessageToGameChat',
+      this._activeGameObservable.getValue().gameSetup.id,
+      this._currentUserObservable.getValue().name,
+      message,
+      TypeOfMessage.chat
+    );
+  }
+
+  createGame(gameMode: GameMode) {
     this._hubConnection.invoke('CreateGame', gameMode);
+  }
+
+  kickPlayerFromGame(user: User): any {
+    this._hubConnection.invoke('KickPlayerFromGame', user.name, this._activeGameObservable.getValue().gameSetup.id);
+  }
+
+  exitGame(): any {
+    if (!this._activeGameObservable.getValue()) {
+      return;
+    }
+    this._hubConnection.invoke('ExitGame', this._activeGameObservable.getValue().gameSetup.id);
+    this._activeGameObservable.next(null);
+  }
+
+  startGame(): any {
+    this._hubConnection.invoke('StartGame', this._activeGameObservable.getValue().gameSetup.id);
+  }
+
+  setGamePassword(id: string, roomPassword: string): any {
+    this._hubConnection.invoke('SetGamePassword', id, roomPassword);
   }
 
   get onlineUsers() {
@@ -105,5 +168,13 @@ export class HubService {
 
   get availableGames() {
     return this._availableGamesObservable.asObservable();
+  }
+
+  get activeGame() {
+    return this._activeGameObservable.asObservable();
+  }
+
+  get gameChatMessages() {
+    return this._gameChatMessagesObservable.asObservable();
   }
 }

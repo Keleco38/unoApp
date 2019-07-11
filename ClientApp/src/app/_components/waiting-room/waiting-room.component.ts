@@ -1,0 +1,63 @@
+import { Component, OnInit } from '@angular/core';
+import { Game } from 'src/app/_models/game';
+import { User } from 'src/app/_models/user';
+import { HubService } from 'src/app/_services/hub.service';
+import { Router } from '@angular/router';
+import { Player } from 'src/app/_models/player';
+
+@Component({
+  selector: 'app-waiting-room',
+  templateUrl: './waiting-room.component.html',
+  styleUrls: ['./waiting-room.component.css']
+})
+export class WaitingRoomComponent implements OnInit {
+  activeGame: Game;
+  password: string;
+  currentUser: User;
+
+  constructor(private _hubService: HubService, private _router: Router) {}
+
+  ngOnInit() {
+    this._hubService.activeGame.subscribe(room => {
+      this.activeGame = room;
+    });
+
+    this._hubService.currentUser.subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
+  leaveWaitingRoom() {
+    this._hubService.exitGame();
+    this._router.navigate(['/']);
+  }
+
+  joinGame() {
+    this._hubService.joinGame(this.activeGame.gameSetup.id, '');
+  }
+
+  userIsSpectator() {
+    const exists = this.activeGame.spectators.find(spectator => {
+      return spectator.user.name === this.currentUser.name;
+    });
+    return exists != null;
+  }
+
+  startGame() {
+    this._hubService.startGame();
+  }
+
+  setRoomPassword() {
+    if (!this.password) {
+      return;
+    }
+    this._hubService.setGamePassword(this.activeGame.gameSetup.id, this.password);
+  }
+
+  kickPlayerFromGame(player: Player) {
+    const cfrm = confirm('Really kick this player? ' + player.user.name);
+    if (cfrm) {
+      this._hubService.kickPlayerFromGame(player.user);
+    }
+  }
+}

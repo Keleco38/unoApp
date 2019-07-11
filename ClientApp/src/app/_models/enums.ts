@@ -37,6 +37,6 @@ export enum Direction {
 
 export enum GameMode {
   normal = 1,
-  specialWildCards = 2,
-  specialWildCardsAndAvalonCards = 3
+  specialCards = 2,
+  specialCardsAndAvalonCards = 3
 }

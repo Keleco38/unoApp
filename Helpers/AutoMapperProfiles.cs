@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AutoMapper;
 using Uno.Models;
 using Uno.Models.Dtos;
@@ -13,11 +14,17 @@ namespace Uno.Helpers
             CreateMap<Spectator, SpectatorDto>();
             CreateMap<Card, CardDto>();
             CreateMap<Game, GameDto>();
-            
+
             CreateMap<GameSetup, GameSetupDto>()
                 .ForMember(dest => dest.IsPasswordProtected, opt =>
                 {
                     opt.MapFrom(src => src.IsPasswordProtected);
+                });
+
+            CreateMap<List<Card>, MyHandDto>()
+                .ForMember(dest => dest.Cards, opt =>
+                {
+                    opt.MapFrom(src => src);
                 });
 
             CreateMap<Player, PlayerDto>()
