@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 using AutoMapper;
 using Uno.Models;
@@ -24,7 +25,7 @@ namespace Uno.Helpers
             CreateMap<List<Card>, MyHandDto>()
                 .ForMember(dest => dest.Cards, opt =>
                 {
-                    opt.MapFrom(src => src);
+                    opt.MapFrom(src => src.OrderBy(y=>y.Color).ThenBy(y=>y.Value));
                 });
 
             CreateMap<Player, PlayerDto>()

@@ -2,7 +2,7 @@
   <div class="col-sm-12 fill-viewport-50 scrollable-div-y">
     <button class="btn btn-danger btn-block mb-2" (click)="leaveWaitingRoom()">Leave waiting room</button>
     <div class="alert alert-primary">
-      <p><strong>Game mode:</strong> {{ activeGame.gameSetup.gameMode }}</p>
+      <p><strong>Game mode:</strong> {{ getGameModeText() }}</p>
       <form *ngIf="activeGame.players[0]?.user.name == currentUser.name">
         <div class="form-group row">
           <label for="password" class="col-3 col-sm-1 col-form-label"><strong>Password:</strong> </label>

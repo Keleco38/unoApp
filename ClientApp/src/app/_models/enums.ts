@@ -1,7 +1,7 @@
 export enum TypeOfMessage {
-  chat,
-  server,
-  spectators
+  chat = 1,
+  server = 2,
+  spectators = 3
 }
 
 export enum CardColor {
@@ -31,8 +31,8 @@ export enum CardValue {
 }
 
 export enum Direction {
-  left,
-  right
+  right = 1,
+  left = 2
 }
 
 export enum GameMode {

@@ -1,3 +1,5 @@
+import { GameDeactivateGuard } from './_guards/game-deactivate.guard';
+import { GameGuard } from './_guards/game.guard';
 import { GameComponent } from './_components/game/game.component';
 import { GameChatComponent } from './_components/game-chat/game-chat.component';
 import { GameSpectatorsComponent } from './_components/game-spectators/game-spectators.component';
@@ -13,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
+import { SidebarModule } from 'ng-sidebar';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './_components/home/home.component';
@@ -40,6 +43,7 @@ import { WaitingRoomDeactivateGuard } from './_guards/waiting-room-deactivate.gu
     ToastrModule.forRoot(),
     HttpClientModule,
     FormsModule,
+    SidebarModule.forRoot(),
     NgbModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -49,12 +53,11 @@ import { WaitingRoomDeactivateGuard } from './_guards/waiting-room-deactivate.gu
         canDeactivate: [WaitingRoomDeactivateGuard],
         canActivate: [WaitingRoomGuard]
       },
-      { path: 'game', component: GameComponent },
-      // { path: 'game', component: GameComponent, canActivate: [GameGuard], canDeactivate: [GameDeactivateGuard] },
+      { path: 'game', component: GameComponent, canActivate: [GameGuard], canDeactivate: [GameDeactivateGuard] },
       { path: '**', redirectTo: '/' }
     ])
   ],
-  providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard],
+  providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

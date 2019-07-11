@@ -30,15 +30,15 @@ namespace Uno.Enums
 
     public enum Direction
     {
-        Left,
-        Right
+        Right = 1,
+        Left = 2
     }
 
     public enum TypeOfMessage
     {
-        Chat,
-        Server,
-        Spectators
+        Chat = 1,
+        Server = 2,
+        Spectators = 3
     }
     public enum GameMode
     {

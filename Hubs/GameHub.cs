@@ -285,10 +285,11 @@ namespace Uno.Hubs
 
         public async Task DrawCard(string gameId)
         {
+            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             lock (game)
             {
-                if (game.PlayerToPlay.User.ConnectionId == Context.ConnectionId)
+                if (game.PlayerToPlay.User.Name == user.Name)
                 {
                     game.DrawCard(game.PlayerToPlay, 1);
                 }
@@ -296,7 +297,7 @@ namespace Uno.Hubs
             await GameUpdated(game);
         }
 
-        public async Task PlayCard(string gameId, Card card, CardColor cardColor)
+        public async Task PlayCard(string gameId, Card card, CardColor pickedCardColor = 0)
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
@@ -304,7 +305,7 @@ namespace Uno.Hubs
             {
                 if (game.GameEnded || !game.GameStarted || game.PlayerToPlay.User.Name != user.Name)
                     return;
-                game.PlayCard(game.PlayerToPlay, card, cardColor);
+                game.PlayCard(game.PlayerToPlay, card, pickedCardColor);
             }
             await GameUpdated(game);
         }

@@ -23,16 +23,20 @@ namespace Uno.Models
         {
             GameSetup = gameSetup;
             Players = new List<Player>();
-            Spectators=new List<Spectator>();
+            Spectators = new List<Spectator>();
         }
 
-        public bool PlayCard(Player player, Card card, CardColor cardColor)
+        public bool PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor)
         {
+            var card = PlayerToPlay.Cards.Find(y => y.Color == cardPlayed.Color && y.Value == cardPlayed.Value);
+
+
             if (PlayerToPlay != player)
                 return false;
 
             if (card.Color != CardColor.Wild && card.Color != LastCardPlayed.Color && card.Value != LastCardPlayed.Value)
                 return false;
+
 
             PlayerToPlay.Cards.Remove(card);
             DiscardedPile.Add(card);
@@ -45,9 +49,12 @@ namespace Uno.Models
                 return true;
             }
 
+            LastCardPlayed = new Card(card.Color, card.Value);
+
             if (card.Color == CardColor.Wild)
             {
-                LastCardPlayed = new Card(cardColor, CardValue.ChangeColor);
+                LastCardPlayed.ImageUrl = card.ImageUrl;
+                LastCardPlayed.Color=pickedCardColor;
 
                 if (card.Value == CardValue.DrawFour)
                 {
@@ -56,8 +63,6 @@ namespace Uno.Models
             }
             else
             {
-                LastCardPlayed = new Card(card.Color, card.Value);
-
                 if (card.Value == CardValue.DrawTwo)
                 {
                     DrawCard(GetNextPlayerToPlay(), 2);
@@ -92,12 +97,6 @@ namespace Uno.Models
 
         public void DrawCard(Player player, int count)
         {
-            var handCount = player.Cards.Count;
-            if (handCount + count > Constants.MAX_NUMBER_OF_CARDS)
-            {
-                count = Constants.MAX_NUMBER_OF_CARDS - handCount;
-            }
-
             var deckCount = Deck.Cards.Count;
             if (deckCount < count)
             {

@@ -1,4 +1,5 @@
-import { GameMode } from './../_models/enums';
+import { MyHand } from './../_models/myHand';
+import { GameMode, CardColor } from './../_models/enums';
 import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
 import { Router } from '@angular/router';
@@ -9,6 +10,7 @@ import { TypeOfMessage } from '../_models/enums';
 import { ChatMessage } from '../_models/chatMessage';
 import { Game } from '../_models/game';
 import { ToastrService } from 'ngx-toastr';
+import { Card } from '../_models/card';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +27,7 @@ export class HubService {
   private _availableGamesObservable = new BehaviorSubject<Game[]>(new Array<Game>());
   private _activeGameObservable = new BehaviorSubject<Game>(null);
   private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._gameChatMessages);
+  private _myHandObservable = new BehaviorSubject<MyHand>(null);
 
   constructor(private _router: Router, private _toastrService: ToastrService) {
     this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
@@ -80,6 +83,10 @@ export class HubService {
       this._toastrService.info(message, '', { timeOut: 8000 });
     });
 
+    this._hubConnection.on('UpdateMyHand', (myHand: MyHand) => {
+      this._myHandObservable.next(myHand);
+    });
+
     this._hubConnection.on('UpdateGame', (game: Game) => {
       this._activeGameObservable.next(game);
       if (game.gameStarted) {
@@ -122,6 +129,10 @@ export class HubService {
     this._hubConnection.invoke('JoinGame', id, password);
   }
 
+  drawCard() {
+    this._hubConnection.invoke('DrawCard', this._activeGameObservable.getValue().gameSetup.id);
+  }
+
   sendMessageToGameChat(message: string): any {
     this._hubConnection.invoke(
       'SendMessageToGameChat',
@@ -132,6 +143,9 @@ export class HubService {
     );
   }
 
+  playCard(card: Card, pickedCardColor: CardColor) {
+    this._hubConnection.invoke('PlayCard', this._activeGameObservable.getValue().gameSetup.id, card, pickedCardColor);
+  }
   createGame(gameMode: GameMode) {
     this._hubConnection.invoke('CreateGame', gameMode);
   }
@@ -179,5 +193,9 @@ export class HubService {
 
   get gameChatMessages() {
     return this._gameChatMessagesObservable.asObservable();
+  }
+
+  get myHand() {
+    return this._myHandObservable.asObservable();
   }
 }
