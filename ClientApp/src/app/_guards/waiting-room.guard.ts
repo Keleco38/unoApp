@@ -10,11 +10,11 @@ export class WaitingRoomGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     return this._hubService.activeGame.pipe(
       map(activeGame => {
-        if (activeGame === null) {
+        if (activeGame !== null && activeGame.gameStarted === false) {
+          return true;
+        } else {
           this._router.navigate(['/home']);
           return false;
-        } else {
-          return true;
         }
       })
     );

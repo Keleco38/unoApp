@@ -188,7 +188,6 @@ namespace Uno.Hubs
         public async Task StartGame(string gameId)
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
-            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
 
             game.StartGame();
 

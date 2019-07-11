@@ -13,6 +13,9 @@ export class WaitingRoomDeactivateGuard implements CanDeactivate<WaitingRoomComp
     currentState: RouterStateSnapshot,
     nextState?: RouterStateSnapshot
   ): boolean | Observable<boolean> | Promise<boolean> {
+    if (nextState.url === '/game') {
+      return true;
+    }
     this._hubService.exitGame();
     return true;
   }

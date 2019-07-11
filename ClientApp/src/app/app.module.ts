@@ -1,3 +1,4 @@
+import { GameComponent } from './_components/game/game.component';
 import { GameChatComponent } from './_components/game-chat/game-chat.component';
 import { GameSpectatorsComponent } from './_components/game-spectators/game-spectators.component';
 import { GameTabsComponent } from './_components/game-tabs/game-tabs.component';
@@ -30,7 +31,8 @@ import { WaitingRoomDeactivateGuard } from './_guards/waiting-room-deactivate.gu
     WaitingRoomComponent,
     GameTabsComponent,
     GameSpectatorsComponent,
-    GameChatComponent
+    GameChatComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -47,6 +49,7 @@ import { WaitingRoomDeactivateGuard } from './_guards/waiting-room-deactivate.gu
         canDeactivate: [WaitingRoomDeactivateGuard],
         canActivate: [WaitingRoomGuard]
       },
+      { path: 'game', component: GameComponent },
       // { path: 'game', component: GameComponent, canActivate: [GameGuard], canDeactivate: [GameDeactivateGuard] },
       { path: '**', redirectTo: '/' }
     ])
