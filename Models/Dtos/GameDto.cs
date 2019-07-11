@@ -8,7 +8,6 @@ namespace Uno.Models.Dtos
         public DeckDto Deck { get; set; }
         public List<PlayerDto> Players { get; set; }
         public List<SpectatorDto> Spectators { get; set; }
-        public List<CardDto> DiscardedPile { get; set; }
         public GameSetupDto GameSetup { get; set; }
         public Direction Direction { get; set; }
         public CardDto LastCardPlayed { get; set; }

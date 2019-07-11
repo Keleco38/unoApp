@@ -4,8 +4,8 @@ namespace Uno.Models.Dtos
 {
     public class ChatMessageDto
     {
-        public string Name { get; set; }
-        public string Message { get; set; }
+        public string Username { get; set; }
+        public string Text { get; set; }
         public TypeOfMessage TypeOfMessage { get; set; }
     }
 }

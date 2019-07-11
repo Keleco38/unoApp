@@ -22,6 +22,8 @@ namespace Uno.Models
         public Game(GameSetup gameSetup)
         {
             GameSetup = gameSetup;
+            Players = new List<Player>();
+            Spectators=new List<Spectator>();
         }
 
         public bool PlayCard(Player player, Card card, CardColor cardColor)

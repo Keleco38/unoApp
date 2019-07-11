@@ -77,7 +77,7 @@ namespace Uno.Hubs
 
             var isBuzzAndExistingUser = GetIsBuzzAndTargetedUser(message);
 
-            if (isBuzzAndExistingUser.Key==true)
+            if (isBuzzAndExistingUser.Key == true)
             {
                 var targetedUser = isBuzzAndExistingUser.Value;
 
@@ -104,7 +104,7 @@ namespace Uno.Hubs
         {
             var game = _games.First(x => x.GameSetup.Id == id);
             game.GameSetup.Password = password;
-            await UpdateAllGames();
+            await GetAllGames();
             await DisplayToastMessageToGame(id, "Password updated");
         }
 
@@ -114,14 +114,14 @@ namespace Uno.Hubs
             await Clients.All.SendAsync("RefreshOnlineUsersList", usersDto);
         }
 
-        public async Task UpdateAllGames()
+        public async Task GetAllGames()
         {
             var gamesDtos = _mapper.Map<List<GameDto>>(_games);
             await Clients.All.SendAsync("RefreshAllGamesList", gamesDtos);
         }
 
 
-        public async Task CreateGame(int playUntilPoints, int expectedNumberOfPlayers)
+        public async Task CreateGame()
         {
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             var gameSetup = new GameSetup();
@@ -129,7 +129,7 @@ namespace Uno.Hubs
             game.Players.Add(new Player(user));
             _games.Add(game);
             await GameUpdated(game);
-            await UpdateAllGames();
+            await GetAllGames();
             await SendMessageToAllChat("Server", $"User {user.Name} has created new game", TypeOfMessage.Server);
         }
 
@@ -163,7 +163,7 @@ namespace Uno.Hubs
 
             if (!game.Players.Any(x => x.LeftGame == false) && !game.Spectators.Any())
                 _games.Remove(game);
-            await UpdateAllGames();
+            await GetAllGames();
         }
 
         public async Task KickPlayerFromGame(string name, string gameId)
@@ -175,7 +175,7 @@ namespace Uno.Hubs
             game.Players.Remove(playerToKick);
 
             await GameUpdated(game);
-            await UpdateAllGames();
+            await GetAllGames();
             await Clients.Client(playerToKick.User.ConnectionId).SendAsync("KickPlayerFromGame");
         }
 
@@ -188,7 +188,7 @@ namespace Uno.Hubs
             game.StartGame();
 
             await GameUpdated(game);
-            await UpdateAllGames();
+            await GetAllGames();
         }
 
         public async Task JoinGame(string gameId, string password)
@@ -241,11 +241,11 @@ namespace Uno.Hubs
 
 
             await GameUpdated(game);
-            await UpdateAllGames();
+            await GetAllGames();
         }
 
 
-        public async Task AddUser(string name)
+        public void AddOrRenameUser(string name)
         {
             User user;
             lock (_users)
@@ -256,23 +256,30 @@ namespace Uno.Hubs
                 var nameExists = _users.Any(x => x.Name == name);
                 if (!nameExists)
                 {
-                    user = new User(Context.ConnectionId, name);
-                    _users.Add(user);
+                    user = _users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
+                    if (user != null)
+                    {
+                        SendMessageToAllChat("Server", $"{user.Name} has renamed to {name}", TypeOfMessage.Server).ConfigureAwait(false);
+                        user.Name = name;
+                    }
+                    else
+                    {
+                        user = new User(Context.ConnectionId, name);
+                        _users.Add(user);
+                        SendMessageToAllChat("Server", $"{user.Name} has connected to the server.", TypeOfMessage.Server).ConfigureAwait(false);
+                    }
+                    GetAllOnlineUsers().ConfigureAwait(false);
+                    var userDto = _mapper.Map<UserDto>(user);
+                    Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto).ConfigureAwait(false);
                 }
                 else
                 {
-                    Clients.Caller.SendAsync("RenamePlayer");
-                    return;
+                    Clients.Caller.SendAsync("RenamePlayer").ConfigureAwait(false);
                 }
-
             }
-            await GetAllOnlineUsers();
-            var userDto = _mapper.Map<UserDto>(user);
-            await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
-            await SendMessageToAllChat("Server", $"{user.Name} has connected to the server.", TypeOfMessage.Server);
         }
 
-        public void DrawCard(string gameId)
+        public async Task DrawCard(string gameId)
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             lock (game)
@@ -282,6 +289,7 @@ namespace Uno.Hubs
                     game.DrawCard(game.PlayerToPlay, 1);
                 }
             }
+            await GameUpdated(game);
         }
 
         public async Task PlayCard(string gameId, Card card, CardColor cardColor)

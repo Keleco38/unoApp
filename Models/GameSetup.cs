@@ -8,6 +8,7 @@ namespace Uno.Models
         public GameSetup()
         {
             Id = Guid.NewGuid().ToString();
+            Password=string.Empty;
         }
         public string Id { get; set; }
         public string Password { get; set; }

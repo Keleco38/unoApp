@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-12">
+    <div class="alert alert-primary">
+      <h4 class="h4">Available games ({{ availableGames.length }}):</h4>
+    </div>
+    <button
+      [class.btn-danger]="availableGame.gameStarted"
+      class="btn btn-primary btn-block"
+      *ngFor="let availableGame of availableGames"
+      (click)="joinGame(availableGame)"
+    >
+      <span class="mx-2" *ngIf="availableGame.gameSetup.isPasswordProtected">&#9919;</span>
+      {{ availableGame.players[0].user.name }} - ({{ availableGame.players.length }})
+    </button>
+  </div>
+</div>

@@ -13,7 +13,12 @@ namespace Uno.Helpers
             CreateMap<Spectator, SpectatorDto>();
             CreateMap<Card, CardDto>();
             CreateMap<Game, GameDto>();
-            CreateMap<GameSetup, GameSetupDto>();
+            
+            CreateMap<GameSetup, GameSetupDto>()
+                .ForMember(dest => dest.IsPasswordProtected, opt =>
+                {
+                    opt.MapFrom(src => src.IsPasswordProtected);
+                });
 
             CreateMap<Player, PlayerDto>()
                 .ForMember(dest => dest.NumberOfCards, opt =>
