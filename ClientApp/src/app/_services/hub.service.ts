@@ -8,6 +8,7 @@ import { User } from '../_models/user';
 import { TypeOfMessage } from '../_models/enums';
 import { ChatMessage } from '../_models/chatMessage';
 import { Game } from '../_models/game';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class HubService {
   private _activeGameObservable = new BehaviorSubject<Game>(null);
   private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._gameChatMessages);
 
-  constructor(private _router: Router) {
+  constructor(private _router: Router, private _toastrService: ToastrService) {
     this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
     this._hubConnection.start().then(() => {
       this.rename(false);
@@ -76,7 +77,7 @@ export class HubService {
     });
 
     this._hubConnection.on('DisplayToastMessage', (message: string) => {
-      alert(message);
+      this._toastrService.info(message, '', { timeOut: 8000 });
     });
 
     this._hubConnection.on('UpdateGame', (game: Game) => {
@@ -117,6 +118,7 @@ export class HubService {
   }
 
   joinGame(id: string, password: string): any {
+    this._gameChatMessages = [];
     this._hubConnection.invoke('JoinGame', id, password);
   }
 
@@ -143,6 +145,7 @@ export class HubService {
       return;
     }
     this._hubConnection.invoke('ExitGame', this._activeGameObservable.getValue().gameSetup.id);
+    this._router.navigate(['/home']);
     this._activeGameObservable.next(null);
   }
 

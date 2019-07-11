@@ -29,7 +29,6 @@ export class WaitingRoomComponent implements OnInit {
 
   leaveWaitingRoom() {
     this._hubService.exitGame();
-    this._router.navigate(['/']);
   }
 
   joinGame() {

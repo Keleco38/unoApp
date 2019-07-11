@@ -16,5 +16,5 @@ export class GameSpectatorsComponent implements OnInit {
     this._hubService.activeGame.subscribe(game => {
       this.game = game;
     });
-
+  }
 }

@@ -11,11 +11,14 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './_components/home/home.component';
 import { OnlinePlayersComponent } from './_components/online-players/online-players.component';
 import { WaitingRoomGuard } from './_guards/waiting-room.guard';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { WaitingRoomDeactivateGuard } from './_guards/waiting-room-deactivate.guard';
 
 @NgModule({
   declarations: [
@@ -31,17 +34,24 @@ import { WaitingRoomGuard } from './_guards/waiting-room.guard';
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     HttpClientModule,
     FormsModule,
     NgbModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'waitingRoom', component: WaitingRoomComponent, canActivate: [WaitingRoomGuard] },
+      {
+        path: 'waitingRoom',
+        component: WaitingRoomComponent,
+        canDeactivate: [WaitingRoomDeactivateGuard],
+        canActivate: [WaitingRoomGuard]
+      },
       // { path: 'game', component: GameComponent, canActivate: [GameGuard], canDeactivate: [GameDeactivateGuard] },
       { path: '**', redirectTo: '/' }
     ])
   ],
-  providers: [HubService, WaitingRoomGuard],
+  providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

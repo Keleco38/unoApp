@@ -10,7 +10,10 @@
       (click)="joinGame(availableGame)"
     >
       <span class="mx-2" *ngIf="availableGame.gameSetup.isPasswordProtected">&#9919;</span>
-      {{ availableGame.players[0].user.name }} - ({{ availableGame.players.length }})
+      <span *ngIf="availableGame.players.length > 0"> {{ availableGame.players[0]?.user.name }} </span>
+      <span *ngIf="availableGame.players.length == 0"> No Players Currently </span>
+      <span> - </span>
+      <span>({{ availableGame.players.length }})</span>
     </button>
   </div>
 </div>
