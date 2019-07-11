@@ -2,7 +2,8 @@ namespace Uno.Models.Dtos
 {
     public class PlayerDto
     {
-        public User User { get; set; }
+        public UserDto User { get; set; }
         public bool LeftGame { get; set; }
+        public int NumberOfCards { get; set; }
     }
 }

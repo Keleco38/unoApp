@@ -10,7 +10,7 @@ namespace Uno.Models
     {
         public Deck Deck { get; set; }
         public List<Player> Players { get; set; }
-        public List<User> Spectators { get; set; }
+        public List<Spectator> Spectators { get; set; }
         public List<Card> DiscardedPile { get; set; }
         public GameSetup GameSetup { get; set; }
         public Direction Direction { get; set; }
@@ -85,7 +85,6 @@ namespace Uno.Models
             PlayerToPlay = Players.First();
             Players.ForEach(x => x.Cards = Deck.Draw(7));
             GameStarted = true;
-
         }
 
 

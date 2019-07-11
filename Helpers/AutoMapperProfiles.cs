@@ -8,18 +8,25 @@ namespace Uno.Helpers
     {
         public AutoMapperProfiles()
         {
-            CreateMap<Player, PlayerDto>();
+            CreateMap<ChatMessage, ChatMessageDto>();
+            CreateMap<User, UserDto>();
+            CreateMap<Spectator, SpectatorDto>();
+            CreateMap<Card, CardDto>();
+            CreateMap<Game, GameDto>();
+            CreateMap<GameSetup, GameSetupDto>();
 
-            CreateMap<Game, GameDto>()
+            CreateMap<Player, PlayerDto>()
+                .ForMember(dest => dest.NumberOfCards, opt =>
+               {
+                   opt.MapFrom(src => src.Cards.Count);
+               });
+
+            CreateMap<Deck, DeckDto>()
                 .ForMember(dest => dest.DeckSize, opt =>
                 {
-                    opt.MapFrom(src => src.Deck.Cards.Count);
+                    opt.MapFrom(src => src.Cards.Count);
                 });
 
-            CreateMap<GameSetup, GameSetupDto>().ForMember(dest => dest.IsPasswordProtected, opt =>
-            {
-                opt.MapFrom(src => src.Password.Length > 0);
-            });
         }
     }
 }

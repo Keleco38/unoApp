@@ -11,5 +11,6 @@ namespace Uno.Models
         }
         public string Id { get; set; }
         public string Password { get; set; }
+        public bool IsPasswordProtected { get => Password.Length > 0; }
     }
 }
