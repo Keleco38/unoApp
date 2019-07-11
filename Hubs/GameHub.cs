@@ -121,8 +121,13 @@ namespace Uno.Hubs
         }
 
 
-        public async Task CreateGame()
+        public async Task CreateGame(GameMode gameMode)
         {
+            if (gameMode != GameMode.Normal)
+            {
+                Console.WriteLine($"Mode {gameMode.ToString()} is not supported");
+                return;
+            }
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             var gameSetup = new GameSetup();
             var game = new Game(gameSetup);

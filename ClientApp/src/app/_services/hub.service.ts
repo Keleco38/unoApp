@@ -1,3 +1,4 @@
+import { GameMode } from './../_models/enums';
 import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
 import { Router } from '@angular/router';
@@ -14,7 +15,7 @@ import { Game } from '../_models/game';
 export class HubService {
   private _hubConnection: signalR.HubConnection;
   private _allChatMessages: ChatMessage[] = [];
-
+  private _buzzPlayerDisabled: boolean;
   private _onlineUsersObservable = new BehaviorSubject<User[]>(new Array<User>());
   private _currentUserObservable = new BehaviorSubject<User>(null);
   private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._allChatMessages);
@@ -45,6 +46,18 @@ export class HubService {
     this._hubConnection.on('RefreshAllGamesList', (games: Game[]) => {
       this._availableGamesObservable.next(games);
     });
+    this._hubConnection.on('BuzzPlayer', () => {
+      if (this._buzzPlayerDisabled) {
+        return;
+      }
+      this._buzzPlayerDisabled = true;
+      const alert = new Audio('/sounds/alert.mp3');
+      alert.load();
+      alert.play();
+      setTimeout(() => {
+        this._buzzPlayerDisabled = false;
+      }, 5000);
+    });
   }
 
   sendMessageToAllChat(message: string): any {
@@ -74,8 +87,8 @@ export class HubService {
     this._hubConnection.invoke('JoinGame', id, password);
   }
 
-  createGame() {
-    this._hubConnection.invoke('CreateGame');
+  createGame(gameMode:GameMode) {
+    this._hubConnection.invoke('CreateGame', gameMode);
   }
 
   get onlineUsers() {

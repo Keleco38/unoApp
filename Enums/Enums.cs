@@ -40,5 +40,11 @@ namespace Uno.Enums
         Server,
         Spectators
     }
+    public enum GameMode
+    {
+        Normal = 1,
+        SpecialWildCards = 2,
+        SpecialWildCardsAndAvalonCards = 3
+    }
 
 }

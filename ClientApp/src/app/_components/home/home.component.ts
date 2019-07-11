@@ -1,3 +1,4 @@
+import { GameMode } from './../../_models/enums';
 import { Component, OnInit } from '@angular/core';
 import { HubService } from 'src/app/_services/hub.service';
 
@@ -14,7 +15,7 @@ export class HomeComponent implements OnInit {
     this._hubService.rename(true);
   }
 
-  createGame() {
-    this._hubService.createGame();
+  createGame(gameMode: GameMode) {
+    this._hubService.createGame(gameMode);
   }
 }
