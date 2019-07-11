@@ -43,13 +43,12 @@ namespace Uno.Hubs
         {
             ChatMessageDto msgDto = null;
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-            Regex regex = new Regex(@"^/(slap|buzz|alert) ([A-Za-z0-9\s]*)$");
-            Match match = regex.Match(message);
 
-            if (match.Success)
+            var isBuzzAndExistingUser = GetIsBuzzAndTargetedUser(message);
+
+            if (isBuzzAndExistingUser.Key == true)
             {
-                var targetedUsername = match.Groups[2].Value;
-                var targetedUser = _users.FirstOrDefault(x => x.Name == targetedUsername);
+                var targetedUser = isBuzzAndExistingUser.Value;
                 if (targetedUser != null)
                 {
                     await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer");
@@ -58,28 +57,29 @@ namespace Uno.Hubs
                 else
                 {
                     msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"Player {targetedUser.Name} not found", TypeOfMessage.Server));
-                    await Clients.Caller.SendAsync("ReceivedNewMessageInAllChat", msgDto);
+                    await Clients.Caller.SendAsync("PostNewMessageInAllChat", msgDto);
                 }
             }
             else
             {
                 msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage(username, message, typeOfMessage));
-                await Clients.All.SendAsync("ReceivedNewMessageInAllChat", msgDto);
+                await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
             }
         }
+
+
 
         public async Task SendMessageToGameChat(string gameId, string username, string message, TypeOfMessage typeOfMessage = TypeOfMessage.Chat)
         {
             ChatMessageDto msgDto = null;
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-            Regex regex = new Regex(@"^/(slap|buzz|alert) ([A-Za-z0-9\s]*)$");
-            Match match = regex.Match(message);
 
-            if (match.Success)
+            var isBuzzAndExistingUser = GetIsBuzzAndTargetedUser(message);
+
+            if (isBuzzAndExistingUser.Key==true)
             {
-                var targetedUsername = match.Groups[2].Value;
-                var targetedUser = _users.FirstOrDefault(x => x.Name == targetedUsername);
+                var targetedUser = isBuzzAndExistingUser.Value;
 
                 if (targetedUser != null)
                 {
@@ -89,14 +89,14 @@ namespace Uno.Hubs
                 else
                 {
                     msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"Player {targetedUser.Name} not found", TypeOfMessage.Server));
-                    await Clients.Caller.SendAsync("ReceivedNewMessageInGameChat", msgDto);
+                    await Clients.Caller.SendAsync("PostNewMessageInGameChat", msgDto);
                 }
             }
             else
             {
                 msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage(username, message, typeOfMessage));
                 var allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
-                await Clients.Clients(allUsersInGame).SendAsync("ReceivedNewMessageInGameChat", msgDto);
+                await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
             }
         }
 
@@ -170,7 +170,7 @@ namespace Uno.Hubs
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
 
-            var playerToKick=game.Players.Find(y => y.User.Name == name);
+            var playerToKick = game.Players.Find(y => y.User.Name == name);
 
             game.Players.Remove(playerToKick);
 
@@ -363,6 +363,33 @@ namespace Uno.Hubs
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             _users.Remove(user);
             await GetAllOnlineUsers();
+        }
+
+        private KeyValuePair<bool, User> GetIsBuzzAndTargetedUser(string message)
+        {
+            KeyValuePair<bool, User> objToReturn;
+
+            Regex regex = new Regex(@"^/(slap|buzz|alert) ([A-Za-z0-9\s]*)$");
+            Match match = regex.Match(message);
+
+            if (match.Success)
+            {
+                var targetedUsername = match.Groups[2].Value;
+                var targetedUser = _users.FirstOrDefault(x => x.Name == targetedUsername);
+                if (targetedUser != null)
+                {
+                    objToReturn = new KeyValuePair<bool, User>(true, targetedUser);
+                }
+                else
+                {
+                    objToReturn = new KeyValuePair<bool, User>(true, null);
+                }
+            }
+            else
+            {
+                objToReturn = new KeyValuePair<bool, User>(false, null);
+            }
+            return objToReturn;
         }
 
     }
