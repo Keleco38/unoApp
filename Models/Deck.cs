@@ -7,9 +7,9 @@ namespace Uno.Models
 {
     public class Deck
     {
-        public Deck()
+        public Deck(GameMode gameMode)
         {
-            InitializeCards();
+            InitializeCards(gameMode);
             Shuffle();
         }
 
@@ -27,7 +27,7 @@ namespace Uno.Models
         }
 
 
-        private void InitializeCards()
+        private void InitializeCards(GameMode gameMode)
         {
             Cards = new List<Card>();
 
@@ -65,7 +65,7 @@ namespace Uno.Models
                 }
                 else
                 {
-                    //Handle wild Cards here
+                    //Handle regular wild Cards here
                     //Add four regular wild Cards
                     for (int i = 1; i <= 4; i++)
                     {
@@ -73,6 +73,14 @@ namespace Uno.Models
                         Cards.Add(new Card(color, CardValue.DrawFour));
                     }
 
+                }
+            }
+
+            if (gameMode == GameMode.SpecialCards || gameMode == GameMode.SpecialCardsAndAvalonCards)
+            {
+                for (int i = 1; i <= 4; i++)
+                {
+                    Cards.Add(new Card(CardColor.Wild, CardValue.BlackHole));
                 }
             }
         }

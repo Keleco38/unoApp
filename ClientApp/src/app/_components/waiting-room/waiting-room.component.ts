@@ -19,8 +19,8 @@ export class WaitingRoomComponent implements OnInit {
   constructor(private _hubService: HubService, private _router: Router) {}
 
   ngOnInit() {
-    this._hubService.activeGame.subscribe(room => {
-      this.activeGame = room;
+    this._hubService.activeGame.subscribe(game => {
+      this.activeGame = game;
     });
 
     this._hubService.currentUser.subscribe(user => {
@@ -48,10 +48,8 @@ export class WaitingRoomComponent implements OnInit {
   }
 
   setRoomPassword() {
-    if (!this.password) {
-      return;
-    }
     this._hubService.setGamePassword(this.activeGame.gameSetup.id, this.password);
+    this.password = '';
   }
 
   kickPlayerFromGame(player: Player) {

@@ -105,7 +105,9 @@ namespace Uno.Hubs
             var game = _games.First(x => x.GameSetup.Id == id);
             game.GameSetup.Password = password;
             await GetAllGames();
-            await DisplayToastMessageToGame(id, "Password updated");
+            await GameUpdated(game);
+            var message = string.IsNullOrEmpty(password) ? "Password Removed" : "Password updated";
+            await DisplayToastMessageToGame(id, message);
         }
 
         public async Task GetAllOnlineUsers()
@@ -123,11 +125,6 @@ namespace Uno.Hubs
 
         public async Task CreateGame(GameMode gameMode)
         {
-            if (gameMode != GameMode.Normal)
-            {
-                Console.WriteLine($"Mode {gameMode.ToString()} is not supported");
-                return;
-            }
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             var gameSetup = new GameSetup(gameMode);
             var game = new Game(gameSetup);
@@ -291,7 +288,7 @@ namespace Uno.Hubs
             {
                 if (game.PlayerToPlay.User.Name == user.Name)
                 {
-                    game.DrawCard(game.PlayerToPlay, 1);
+                    game.DrawCard(game.PlayerToPlay, 1, true);
                 }
             }
             await GameUpdated(game);

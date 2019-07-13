@@ -54,18 +54,28 @@ namespace Uno.Models
             if (card.Color == CardColor.Wild)
             {
                 LastCardPlayed.ImageUrl = card.ImageUrl;
-                LastCardPlayed.Color=pickedCardColor;
+                LastCardPlayed.Color = pickedCardColor;
 
                 if (card.Value == CardValue.DrawFour)
                 {
-                    DrawCard(GetNextPlayerToPlay(), 4);
+                    DrawCard(GetNextPlayerToPlay(), 4, false);
+                }
+                if (card.Value == CardValue.BlackHole)
+                {
+                    Players.ForEach(x =>
+                    {
+                        var cardCount = x.Cards.Count;
+                        DiscardedPile.AddRange(x.Cards.ToList());
+                        x.Cards.Clear();
+                        DrawCard(x, cardCount, false);
+                    });
                 }
             }
             else
             {
                 if (card.Value == CardValue.DrawTwo)
                 {
-                    DrawCard(GetNextPlayerToPlay(), 2);
+                    DrawCard(GetNextPlayerToPlay(), 2, false);
                 }
                 else if (card.Value == CardValue.Reverse)
                 {
@@ -85,7 +95,7 @@ namespace Uno.Models
 
         public void StartGame()
         {
-            Deck = new Deck();
+            Deck = new Deck(GameSetup.GameMode);
             DiscardedPile = Deck.Draw(1);
             LastCardPlayed = DiscardedPile.First();
             Direction = Direction.Right;
@@ -95,7 +105,7 @@ namespace Uno.Models
         }
 
 
-        public void DrawCard(Player player, int count)
+        public void DrawCard(Player player, int count, bool normalDraw)
         {
             var deckCount = Deck.Cards.Count;
             if (deckCount < count)
@@ -111,9 +121,9 @@ namespace Uno.Models
                 player.Cards.AddRange(Deck.Draw(count));
             }
 
-            if (count == 1)
+            if (normalDraw)
             {
-                // if count is 1, then it's not a result of a wildcard
+                // if it's normalDraw then it's not a result of a wildcard
                 PlayerToPlay = GetNextPlayerToPlay();
             }
         }

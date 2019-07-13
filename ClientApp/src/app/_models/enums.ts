@@ -27,7 +27,8 @@ export enum CardValue {
   skip = 11,
   drawTwo = 12,
   drawFour = 13,
-  changeColor = 14
+  changeColor = 14,
+  blackHole = 15
 }
 
 export enum Direction {

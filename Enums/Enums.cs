@@ -25,7 +25,9 @@ namespace Uno.Enums
         Skip = 11,
         DrawTwo = 12,
         DrawFour = 13,
-        ChangeColor = 14
+        ChangeColor = 14,
+        BlackHole = 15
+
     }
 
     public enum Direction
