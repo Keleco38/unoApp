@@ -81,6 +81,7 @@ namespace Uno.Models
                 for (int i = 1; i <= 4; i++)
                 {
                     Cards.Add(new Card(CardColor.Wild, CardValue.BlackHole));
+                    Cards.Add(new Card(CardColor.Wild, CardValue.DiscardAllWildCards));
                 }
             }
         }

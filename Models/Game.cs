@@ -42,13 +42,6 @@ namespace Uno.Models
             DiscardedPile.Add(card);
 
 
-            var gameEnded = DetectIfGameEnded();
-            if (gameEnded)
-            {
-                GameEnded = true;
-                return true;
-            }
-
             LastCardPlayed = new Card(pickedCardColor, card.Value, card.ImageUrl);
 
             if (card.Color == CardColor.Wild)
@@ -56,6 +49,15 @@ namespace Uno.Models
                 if (card.Value == CardValue.DrawFour)
                 {
                     DrawCard(GetNextPlayerToPlay(), 4, false);
+                }
+                if (card.Value == CardValue.DiscardAllWildCards)
+                {
+                    Players.ForEach(x =>
+                    {
+                        var wildCards = x.Cards.Where(y => y.Color == CardColor.Wild).ToList();
+                        DiscardedPile.AddRange(wildCards);
+                        wildCards.ForEach(y => x.Cards.Remove(y));
+                    });
                 }
                 if (card.Value == CardValue.BlackHole)
                 {
@@ -84,6 +86,7 @@ namespace Uno.Models
                 }
             }
 
+            GameEnded = DetectIfGameEnded();
             PlayerToPlay = GetNextPlayerToPlay();
             return true;
         }

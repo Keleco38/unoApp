@@ -28,7 +28,8 @@ export enum CardValue {
   drawTwo = 12,
   drawFour = 13,
   changeColor = 14,
-  blackHole = 15
+  blackHole = 15,
+  discardAllWildCards = 16
 }
 
 export enum Direction {
