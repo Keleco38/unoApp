@@ -129,8 +129,8 @@ export class HubService {
     this._hubConnection.invoke('JoinGame', id, password);
   }
 
-  drawCard() {
-    this._hubConnection.invoke('DrawCard', this._activeGameObservable.getValue().gameSetup.id);
+  drawCard(count: number, changeTurn: boolean) {
+    this._hubConnection.invoke('DrawCard', this._activeGameObservable.getValue().gameSetup.id, count, changeTurn);
   }
 
   sendMessageToGameChat(message: string): any {

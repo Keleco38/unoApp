@@ -1,3 +1,4 @@
+import { LastCardPlayed } from './lastCardPlayed';
 import { Direction } from './enums';
 import { Player } from './player';
 import { Spectator } from './spectator';
@@ -14,5 +15,5 @@ export interface Game {
   gameStarted: boolean;
   deck: Deck;
   direction: Direction;
-  lastCardPlayed: Card;
+  lastCardPlayed: LastCardPlayed;
 }

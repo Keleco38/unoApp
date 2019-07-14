@@ -1,3 +1,4 @@
+import { CardValue } from './../../_models/enums';
 import { MyHand } from './../../_models/myHand';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from 'src/app/_models/user';
@@ -16,13 +17,17 @@ import { PickColorComponent } from '../_modals/pick-color/pick-color.component';
 })
 export class GameComponent implements OnInit {
   @ViewChild('cardsPlayedPopover')
-  private cardsPlayedPopover: NgbPopover;
+  private timer: NodeJS.Timer = null;
+  private interval: NodeJS.Timer = null;
+  private hasCalledUno: boolean;
 
   isGameChatSidebarOpen = false;
   currentUser: User;
   game: Game;
   numberUnreadMessages = 0;
   myHand: MyHand;
+  mustCallUno = false;
+  countdown = 2000;
 
   constructor(private _hubService: HubService, private _modalService: NgbModal) {}
 
@@ -41,6 +46,21 @@ export class GameComponent implements OnInit {
 
     this._hubService.myHand.subscribe(myHand => {
       this.myHand = myHand;
+      if (this.game.lastCardPlayed.playerPlayed === this.currentUser.name && this.myHand.cards.length === 1) {
+        if (this.timer == null) {
+          this.interval = setInterval(() => {
+            this.countdown -= 100;
+          }, 100);
+          this.hasCalledUno = false;
+          this.mustCallUno = true;
+          this.timer = setTimeout(() => {
+            if (!this.hasCalledUno) {
+              this.drawCard(2, false);
+              this.callUno();
+            }
+          }, 2000);
+        }
+      }
     });
 
     this._hubService.gameChatMessages.subscribe(messages => {
@@ -48,6 +68,16 @@ export class GameComponent implements OnInit {
         this.numberUnreadMessages++;
       }
     });
+  }
+
+  callUno() {
+    this.hasCalledUno = true;
+    this.mustCallUno = false;
+    this.countdown = 2000;
+    clearTimeout(this.timer);
+    clearInterval(this.interval);
+    this.interval = null;
+    this.timer = null;
   }
 
   playCard(card: Card) {
@@ -67,8 +97,8 @@ export class GameComponent implements OnInit {
     this._hubService.exitGame();
   }
 
-  drawCard() {
-    this._hubService.drawCard();
+  drawCard(count: number, changeTurn: boolean) {
+    this._hubService.drawCard(count, changeTurn);
   }
 
   toggleGameChatSidebar() {

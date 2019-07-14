@@ -13,6 +13,7 @@ namespace Uno.Helpers
             CreateMap<ChatMessage, ChatMessageDto>();
             CreateMap<User, UserDto>();
             CreateMap<Spectator, SpectatorDto>();
+            CreateMap<LastCardPlayed, LastCardPlayedDto>();
             CreateMap<Card, CardDto>();
 
             CreateMap<CardDto, Card>()

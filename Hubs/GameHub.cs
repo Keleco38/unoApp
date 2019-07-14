@@ -280,16 +280,24 @@ namespace Uno.Hubs
             }
         }
 
-        public async Task DrawCard(string gameId)
+        public async Task DrawCard(string gameId, int count, bool changeTurn)
         {
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             lock (game)
             {
-                if (game.PlayerToPlay.User.Name == user.Name)
+                if (changeTurn)
                 {
-                    game.DrawCard(game.PlayerToPlay, 1, true);
+                    if (game.PlayerToPlay.User.Name == user.Name)
+                    {
+                        game.DrawCard(game.PlayerToPlay, count, changeTurn);
+                    }
                 }
+                else
+                {
+                    game.DrawCard(game.PlayerToPlay, count, changeTurn);
+                }
+
             }
             await GameUpdated(game);
         }

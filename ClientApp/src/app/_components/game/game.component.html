@@ -56,8 +56,14 @@
               </div>
             </div>
             <div class="col-6 text-center">
-              <div>
-                <img (click)="drawCard()" src="/images/cards/small/card_back_alt.png" />
+              <div *ngIf="!mustCallUno">
+                <img (click)="drawCard(1, true)" src="/images/cards/small/card_back_alt.png" />
+              </div>
+              <div *ngIf="mustCallUno">
+                <br />
+                {{ countdown }}
+                <br />
+                <button class="btn btn-block btn-info" (click)="callUno()">Call Uno!</button>
               </div>
             </div>
           </div>

@@ -14,7 +14,7 @@ namespace Uno.Models
         public List<Card> DiscardedPile { get; set; }
         public GameSetup GameSetup { get; set; }
         public Direction Direction { get; set; }
-        public Card LastCardPlayed { get; set; }
+        public LastCardPlayed LastCardPlayed { get; set; }
         public Player PlayerToPlay { get; set; }
         public bool GameStarted { get; set; }
         public bool GameEnded { get; set; }
@@ -42,7 +42,7 @@ namespace Uno.Models
             DiscardedPile.Add(card);
 
 
-            LastCardPlayed = new Card(pickedCardColor, card.Value, card.ImageUrl);
+            LastCardPlayed = new LastCardPlayed(pickedCardColor, card.Value, card.ImageUrl, player.User.Name);
 
             if (card.Color == CardColor.Wild)
             {
@@ -102,7 +102,7 @@ namespace Uno.Models
                 lastCardDrew = Deck.Draw(1).First();
                 DiscardedPile.Add(lastCardDrew);
             } while (lastCardDrew.Color == CardColor.Wild);
-            LastCardPlayed = new Card(lastCardDrew.Color, lastCardDrew.Value);
+            LastCardPlayed = new LastCardPlayed(lastCardDrew.Color, lastCardDrew.Value, lastCardDrew.ImageUrl, string.Empty);
             Direction = Direction.Right;
             PlayerToPlay = Players.First();
             Players.ForEach(x => x.Cards = Deck.Draw(7));
@@ -110,7 +110,7 @@ namespace Uno.Models
         }
 
 
-        public void DrawCard(Player player, int count, bool normalDraw)
+        public void DrawCard(Player player, int count, bool changeTurn)
         {
             var deckCount = Deck.Cards.Count;
             if (deckCount < count)
@@ -126,7 +126,7 @@ namespace Uno.Models
                 player.Cards.AddRange(Deck.Draw(count));
             }
 
-            if (normalDraw)
+            if (changeTurn)
             {
                 // if it's normalDraw then it's not a result of a wildcard
                 PlayerToPlay = GetNextPlayerToPlay();
