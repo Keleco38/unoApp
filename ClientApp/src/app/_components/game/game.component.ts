@@ -50,13 +50,13 @@ export class GameComponent implements OnInit {
   }
 
   playCard(card: Card) {
-    let colorPicked = 0;
+    let pickedCardColor = card.color;
     if (card.color === CardColor.wild) {
       do {
-        colorPicked = parseInt(prompt('Type color (1=blue,2=green,3=red,4=yellow)'), 0);
-      } while ([1, 2, 3, 4].indexOf(colorPicked) === -1);
+        pickedCardColor = parseInt(prompt('Type color (1=blue,2=green,3=red,4=yellow)'), 0);
+      } while ([1, 2, 3, 4].indexOf(pickedCardColor) === -1);
     }
-    this._hubService.playCard(card, colorPicked);
+    this._hubService.playCard(card, pickedCardColor);
   }
 
   exitGame() {
@@ -71,16 +71,17 @@ export class GameComponent implements OnInit {
     this.isGameChatSidebarOpen = !this.isGameChatSidebarOpen;
     this.numberUnreadMessages = 0;
   }
-  getColorStringFromLastCard() {
+
+  getBorderColor() {
     switch (this.game.lastCardPlayed.color) {
       case CardColor.blue:
-        return 'Blue';
+        return '#00C3E5';
       case CardColor.green:
-        return 'Green';
+        return '#2FE29B';
       case CardColor.red:
-        return 'Red';
+        return '#F56462';
       case CardColor.yellow:
-        return 'Yellow';
+        return '#F7E359';
     }
   }
 

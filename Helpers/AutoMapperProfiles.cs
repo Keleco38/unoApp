@@ -14,6 +14,11 @@ namespace Uno.Helpers
             CreateMap<User, UserDto>();
             CreateMap<Spectator, SpectatorDto>();
             CreateMap<Card, CardDto>();
+
+            CreateMap<CardDto, Card>()
+                .ForCtorParam("cardColor", opt => opt.MapFrom(src => src.Color))
+                .ForCtorParam("cardValue", opt => opt.MapFrom(src => src.Value));
+
             CreateMap<Game, GameDto>();
 
             CreateMap<GameSetup, GameSetupDto>()
@@ -25,7 +30,7 @@ namespace Uno.Helpers
             CreateMap<List<Card>, MyHandDto>()
                 .ForMember(dest => dest.Cards, opt =>
                 {
-                    opt.MapFrom(src => src.OrderBy(y=>y.Color).ThenBy(y=>y.Value));
+                    opt.MapFrom(src => src.OrderBy(y => y.Color).ThenBy(y => y.Value));
                 });
 
             CreateMap<Player, PlayerDto>()

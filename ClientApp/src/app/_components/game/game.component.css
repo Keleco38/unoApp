@@ -1,6 +1,11 @@
 .player-hand-card {
   width: 10%;
 }
+.last-card-played {
+  padding: 5px;
+  border-width: 5px;
+  border-style: solid;
+}
 .deck-image-div {
   margin: 0 auto;
   width: 25%;

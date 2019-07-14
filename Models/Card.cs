@@ -6,9 +6,15 @@ namespace Uno.Models
     {
         public Card(CardColor cardColor, CardValue cardValue)
         {
-            Color=cardColor;
-            Value=cardValue;
+            Color = cardColor;
+            Value = cardValue;
             ImageUrl = $"/images/cards/small/{(int)cardColor}/{(int)cardValue}.png";
+        }
+        public Card(CardColor cardColor, CardValue cardValue, string imageUrl)
+        {
+            Color = cardColor;
+            Value = cardValue;
+            ImageUrl = imageUrl;
         }
         public CardColor Color { get; set; }
         public CardValue Value { get; set; }

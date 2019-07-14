@@ -24,12 +24,12 @@ namespace Uno.Models
             GameSetup = gameSetup;
             Players = new List<Player>();
             Spectators = new List<Spectator>();
+            DiscardedPile = new List<Card>();
         }
 
         public bool PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor)
         {
             var card = PlayerToPlay.Cards.Find(y => y.Color == cardPlayed.Color && y.Value == cardPlayed.Value);
-
 
             if (PlayerToPlay != player)
                 return false;
@@ -49,13 +49,10 @@ namespace Uno.Models
                 return true;
             }
 
-            LastCardPlayed = new Card(card.Color, card.Value);
+            LastCardPlayed = new Card(pickedCardColor, card.Value, card.ImageUrl);
 
             if (card.Color == CardColor.Wild)
             {
-                LastCardPlayed.ImageUrl = card.ImageUrl;
-                LastCardPlayed.Color = pickedCardColor;
-
                 if (card.Value == CardValue.DrawFour)
                 {
                     DrawCard(GetNextPlayerToPlay(), 4, false);
@@ -95,9 +92,14 @@ namespace Uno.Models
 
         public void StartGame()
         {
+            Card lastCardDrew;
             Deck = new Deck(GameSetup.GameMode);
-            DiscardedPile = Deck.Draw(1);
-            LastCardPlayed = DiscardedPile.First();
+            do
+            {
+                lastCardDrew = Deck.Draw(1).First();
+                DiscardedPile.Add(lastCardDrew);
+            } while (lastCardDrew.Color == CardColor.Wild);
+            LastCardPlayed = new Card(lastCardDrew.Color, lastCardDrew.Value);
             Direction = Direction.Right;
             PlayerToPlay = Players.First();
             Players.ForEach(x => x.Cards = Deck.Draw(7));

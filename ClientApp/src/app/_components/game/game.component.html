@@ -45,16 +45,14 @@
                   >-{{ player.user.name }}-
                 </span>
               </p>
-              <hr />
               <p class="text-center">Direction: {{ getDirectionStringFromGame() }}</p>
-              <p class="text-center">Color: {{ getColorStringFromLastCard() }}</p>
               <hr />
             </div>
           </div>
           <div class="row">
             <div class="col-6 text-center">
               <div>
-                <img [src]="game?.lastCardPlayed.imageUrl" alt="" />
+                <img class="last-card-played" [style.borderColor]="getBorderColor()" [src]="game?.lastCardPlayed.imageUrl" alt="" />
               </div>
             </div>
             <div class="col-6 text-center">

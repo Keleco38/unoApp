@@ -294,7 +294,7 @@ namespace Uno.Hubs
             await GameUpdated(game);
         }
 
-        public async Task PlayCard(string gameId, Card card, CardColor pickedCardColor = 0)
+        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor)
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
@@ -302,6 +302,7 @@ namespace Uno.Hubs
             {
                 if (game.GameEnded || !game.GameStarted || game.PlayerToPlay.User.Name != user.Name)
                     return;
+                var card = _mapper.Map<Card>(cardDto);
                 game.PlayCard(game.PlayerToPlay, card, pickedCardColor);
             }
             await GameUpdated(game);
