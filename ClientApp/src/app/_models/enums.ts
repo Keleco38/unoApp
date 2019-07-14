@@ -29,10 +29,11 @@ export enum CardValue {
   drawFour = 13,
   changeColor = 14,
   blackHole = 15,
-  discardAllWildCards = 16,
+  discardWildCards = 16,
   stealTurn = 17,
-  swapHands = 18
-
+  swapHands = 18,
+  doubleEdge = 19,
+  discardColor = 20
 }
 
 export enum Direction {
