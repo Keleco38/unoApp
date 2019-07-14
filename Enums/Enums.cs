@@ -27,7 +27,8 @@ namespace Uno.Enums
         DrawFour = 13,
         ChangeColor = 14,
         BlackHole = 15,
-        DiscardAllWildCards = 16
+        DiscardAllWildCards = 16,
+        StealTurn = 17
 
     }
 

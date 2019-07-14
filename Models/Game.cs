@@ -29,17 +29,14 @@ namespace Uno.Models
 
         public bool PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor)
         {
-            var card = PlayerToPlay.Cards.Find(y => y.Color == cardPlayed.Color && y.Value == cardPlayed.Value);
+            var card = player.Cards.Find(y => y.Color == cardPlayed.Color && y.Value == cardPlayed.Value);
 
-            if (PlayerToPlay != player)
+            if (PlayerToPlay != player && card.Value != CardValue.StealTurn)
                 return false;
 
             if (card.Color != CardColor.Wild && card.Color != LastCardPlayed.Color && card.Value != LastCardPlayed.Value)
                 return false;
 
-
-            PlayerToPlay.Cards.Remove(card);
-            DiscardedPile.Add(card);
 
 
             LastCardPlayed = new LastCardPlayed(pickedCardColor, card.Value, card.ImageUrl, player.User.Name);
@@ -50,7 +47,7 @@ namespace Uno.Models
                 {
                     DrawCard(GetNextPlayerToPlay(), 4, false);
                 }
-                if (card.Value == CardValue.DiscardAllWildCards)
+                else if (card.Value == CardValue.DiscardAllWildCards)
                 {
                     Players.ForEach(x =>
                     {
@@ -59,7 +56,7 @@ namespace Uno.Models
                         wildCards.ForEach(y => x.Cards.Remove(y));
                     });
                 }
-                if (card.Value == CardValue.BlackHole)
+                else if (card.Value == CardValue.BlackHole)
                 {
                     Players.ForEach(x =>
                     {
@@ -84,8 +81,14 @@ namespace Uno.Models
                 {
                     PlayerToPlay = GetNextPlayerToPlay();
                 }
+                else if (card.Value == CardValue.StealTurn)
+                {
+                    PlayerToPlay = player;
+                }
             }
 
+            player.Cards.Remove(card);
+            DiscardedPile.Add(card);
             GameEnded = DetectIfGameEnded();
             PlayerToPlay = GetNextPlayerToPlay();
             return true;

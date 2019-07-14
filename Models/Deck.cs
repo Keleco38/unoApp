@@ -65,8 +65,6 @@ namespace Uno.Models
                 }
                 else
                 {
-                    //Handle regular wild Cards here
-                    //Add four regular wild Cards
                     for (int i = 1; i <= 4; i++)
                     {
                         Cards.Add(new Card(color, CardValue.ChangeColor));
@@ -78,6 +76,10 @@ namespace Uno.Models
 
             if (gameMode == GameMode.SpecialCards || gameMode == GameMode.SpecialCardsAndAvalonCards)
             {
+                foreach (CardColor color in Enum.GetValues(typeof(CardColor)))
+                {
+                    Cards.Add(new Card(color, CardValue.StealTurn));
+                }
                 for (int i = 1; i <= 4; i++)
                 {
                     Cards.Add(new Card(CardColor.Wild, CardValue.BlackHole));
