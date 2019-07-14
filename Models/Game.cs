@@ -110,7 +110,7 @@ namespace Uno.Models
         }
 
 
-        public void DrawCard(Player player, int count, bool changeTurn)
+        public void DrawCard(Player player, int count, bool normalDraw)
         {
             var deckCount = Deck.Cards.Count;
             if (deckCount < count)
@@ -126,7 +126,7 @@ namespace Uno.Models
                 player.Cards.AddRange(Deck.Draw(count));
             }
 
-            if (changeTurn)
+            if (normalDraw)
             {
                 // if it's normalDraw then it's not a result of a wildcard
                 PlayerToPlay = GetNextPlayerToPlay();

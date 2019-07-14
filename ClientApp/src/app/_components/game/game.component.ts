@@ -17,9 +17,10 @@ import { PickColorComponent } from '../_modals/pick-color/pick-color.component';
 })
 export class GameComponent implements OnInit {
   @ViewChild('cardsPlayedPopover')
-  private timer: NodeJS.Timer = null;
-  private interval: NodeJS.Timer = null;
-  private hasCalledUno: boolean;
+  private _timer: NodeJS.Timer = null;
+  private _interval: NodeJS.Timer = null;
+  private _hasCalledUno: boolean;
+  private _hasPlayed: boolean;
 
   isGameChatSidebarOpen = false;
   currentUser: User;
@@ -46,15 +47,15 @@ export class GameComponent implements OnInit {
 
     this._hubService.myHand.subscribe(myHand => {
       this.myHand = myHand;
-      if (this.game.lastCardPlayed.playerPlayed === this.currentUser.name && this.myHand.cards.length === 1) {
-        if (this.timer == null) {
-          this.interval = setInterval(() => {
+      if (this.game.lastCardPlayed.playerPlayed === this.currentUser.name && this.myHand.cards.length === 1 && this._hasPlayed) {
+        if (this._timer == null) {
+          this._interval = setInterval(() => {
             this.countdown -= 100;
           }, 100);
-          this.hasCalledUno = false;
+          this._hasCalledUno = false;
           this.mustCallUno = true;
-          this.timer = setTimeout(() => {
-            if (!this.hasCalledUno) {
+          this._timer = setTimeout(() => {
+            if (!this._hasCalledUno) {
               this.drawCard(2, false);
               this.callUno();
             }
@@ -71,16 +72,18 @@ export class GameComponent implements OnInit {
   }
 
   callUno() {
-    this.hasCalledUno = true;
+    this._hasCalledUno = true;
     this.mustCallUno = false;
     this.countdown = 2000;
-    clearTimeout(this.timer);
-    clearInterval(this.interval);
-    this.interval = null;
-    this.timer = null;
+    clearTimeout(this._timer);
+    clearInterval(this._interval);
+    this._interval = null;
+    this._timer = null;
+    this._hasPlayed = false;
   }
 
   playCard(card: Card) {
+    this._hasPlayed = true;
     if (card.color === CardColor.wild) {
       this._modalService.open(PickColorComponent).result.then(
         result => {
