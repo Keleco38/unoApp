@@ -6,7 +6,8 @@ import { Card } from 'src/app/_models/card';
 import { HubService } from 'src/app/_services/hub.service';
 import { Router } from '@angular/router';
 import { CardColor, Direction } from 'src/app/_models/enums';
-import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PickColorComponent } from '../_modals/pick-color/pick-color.component';
 
 @Component({
   selector: 'app-game',
@@ -23,7 +24,7 @@ export class GameComponent implements OnInit {
   numberUnreadMessages = 0;
   myHand: MyHand;
 
-  constructor(private _hubService: HubService, private _router: Router) {}
+  constructor(private _hubService: HubService, private _modalService: NgbModal) {}
 
   ngOnInit() {
     this._hubService.activeGame.subscribe(game => {
@@ -50,13 +51,16 @@ export class GameComponent implements OnInit {
   }
 
   playCard(card: Card) {
-    let pickedCardColor = card.color;
     if (card.color === CardColor.wild) {
-      do {
-        pickedCardColor = parseInt(prompt('Type color (1=blue,2=green,3=red,4=yellow)'), 0);
-      } while ([1, 2, 3, 4].indexOf(pickedCardColor) === -1);
+      this._modalService.open(PickColorComponent).result.then(
+        result => {
+          this._hubService.playCard(card, result);
+        },
+        dismissed => {}
+      );
+    } else {
+      this._hubService.playCard(card, card.color);
     }
-    this._hubService.playCard(card, pickedCardColor);
   }
 
   exitGame() {
@@ -86,6 +90,6 @@ export class GameComponent implements OnInit {
   }
 
   getDirectionStringFromGame() {
-    return this.game.direction === Direction.right ? 'Right --->' : '<---Left';
+    return this.game.direction === Direction.right ? '------------>>>' : '<<<------------';
   }
 }

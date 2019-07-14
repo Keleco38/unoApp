@@ -1,0 +1,16 @@
+.pick {
+  padding: 50px;
+  margin: 5px;
+}
+.pick-blue {
+  background: #00c3e5;
+}
+.pick-green {
+  background: #2fe29b;
+}
+.pick-red {
+  background: #f56462;
+}
+.pick-yellow {
+  background: #f7e359;
+}
