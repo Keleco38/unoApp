@@ -28,7 +28,8 @@ namespace Uno.Enums
         ChangeColor = 14,
         BlackHole = 15,
         DiscardAllWildCards = 16,
-        StealTurn = 17
+        StealTurn = 17,
+        SwapHands = 18
 
     }
 

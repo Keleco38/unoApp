@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { CardColor, Direction } from 'src/app/_models/enums';
 import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PickColorComponent } from '../_modals/pick-color/pick-color.component';
+import { PickPlayerComponent } from '../_modals/pick-player/pick-player.component';
 
 @Component({
   selector: 'app-game',
@@ -86,8 +87,20 @@ export class GameComponent implements OnInit {
     this._hasPlayed = true;
     if (card.color === CardColor.wild) {
       this._modalService.open(PickColorComponent).result.then(
-        result => {
-          this._hubService.playCard(card, result);
+        pickedColor => {
+          if (card.value === CardValue.swapHands) {
+            const playerModal = this._modalService.open(PickPlayerComponent);
+            playerModal.componentInstance.players = this.game.players;
+            playerModal.componentInstance.currentUser = this.currentUser;
+            playerModal.result.then(
+              playerName => {
+                  this._hubService.playCard(card, pickedColor, playerName);
+              },
+              dismissed => {}
+            );
+          } else {
+            this._hubService.playCard(card, pickedColor);
+          }
         },
         dismissed => {}
       );

@@ -143,8 +143,8 @@ export class HubService {
     );
   }
 
-  playCard(card: Card, pickedCardColor: CardColor) {
-    this._hubConnection.invoke('PlayCard', this._activeGameObservable.getValue().gameSetup.id, card, pickedCardColor);
+  playCard(card: Card, pickedCardColor: CardColor, playerToSwapCards = '') {
+    this._hubConnection.invoke('PlayCard', this._activeGameObservable.getValue().gameSetup.id, card, pickedCardColor, playerToSwapCards);
   }
   createGame(gameMode: GameMode) {
     this._hubConnection.invoke('CreateGame', gameMode);

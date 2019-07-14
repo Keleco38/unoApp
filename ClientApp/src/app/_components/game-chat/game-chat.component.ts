@@ -40,7 +40,7 @@ export class GameChatComponent implements OnInit {
       return 'server-chat-message';
     }
   }
-  
+
   getChatMessageHidden(message: ChatMessage) {
     return message.typeOfMessage === TypeOfMessage.spectators && this.hideSpectatorsChat;
   }

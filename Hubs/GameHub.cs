@@ -304,7 +304,7 @@ namespace Uno.Hubs
             }
         }
 
-        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor)
+        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string playerToSwapCards)
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
@@ -313,8 +313,8 @@ namespace Uno.Hubs
                 if (game.GameEnded || !game.GameStarted)
                     return;
                 var card = _mapper.Map<Card>(cardDto);
-                var player=game.Players.Find(x=>x.User.Name==user.Name);
-                var success = game.PlayCard(player, card, pickedCardColor);
+                var player = game.Players.Find(x => x.User.Name == user.Name);
+                var success = game.PlayCard(player, card, pickedCardColor, playerToSwapCards);
                 if (success)
                     GameUpdated(game).ConfigureAwait(false);
             }

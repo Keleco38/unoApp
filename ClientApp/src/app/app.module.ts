@@ -1,3 +1,4 @@
+import { PickPlayerComponent } from './_components/_modals/pick-player/pick-player.component';
 import { GameDeactivateGuard } from './_guards/game-deactivate.guard';
 import { GameGuard } from './_guards/game.guard';
 import { GameComponent } from './_components/game/game.component';
@@ -37,7 +38,8 @@ import { PickColorComponent } from './_components/_modals/pick-color/pick-color.
     GameSpectatorsComponent,
     GameChatComponent,
     PickColorComponent,
-    GameComponent
+    GameComponent,
+    PickPlayerComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -61,6 +63,6 @@ import { PickColorComponent } from './_components/_modals/pick-color/pick-color.
   ],
   providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard],
   bootstrap: [AppComponent],
-  entryComponents: [PickColorComponent]
+  entryComponents: [PickColorComponent, PickPlayerComponent]
 })
 export class AppModule {}

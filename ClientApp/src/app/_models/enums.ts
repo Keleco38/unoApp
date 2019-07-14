@@ -30,7 +30,9 @@ export enum CardValue {
   changeColor = 14,
   blackHole = 15,
   discardAllWildCards = 16,
-  stealTurn = 17
+  stealTurn = 17,
+  swapHands = 18
+
 }
 
 export enum Direction {

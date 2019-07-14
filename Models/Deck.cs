@@ -31,6 +31,49 @@ namespace Uno.Models
         {
             Cards = new List<Card>();
 
+            AddNormalGameNormalCards();
+            AddNormalGameWildCards();
+
+            if (gameMode == GameMode.SpecialCards || gameMode == GameMode.SpecialCardsAndAvalonCards)
+            {
+               // AddNormalGameNormalCards();
+                AddSpecialWildCards();
+            }
+            if (gameMode == GameMode.SpecialCardsAndAvalonCards)
+            {
+                //todo
+            }
+        }
+
+        private void AddSpecialWildCards()
+        {
+            foreach (CardColor color in Enum.GetValues(typeof(CardColor)))
+            {
+                if (color != CardColor.Wild)
+                {
+                    Cards.Add(new Card(color, CardValue.StealTurn));
+                }
+            }
+            for (int i = 1; i <= 4; i++)
+            {
+                Cards.Add(new Card(CardColor.Wild, CardValue.BlackHole));
+                Cards.Add(new Card(CardColor.Wild, CardValue.DiscardAllWildCards));
+                Cards.Add(new Card(CardColor.Wild, CardValue.SwapHands));
+            }
+        }
+
+        private void AddNormalGameWildCards()
+        {
+            for (int i = 1; i <= 4; i++)
+            {
+                Cards.Add(new Card(CardColor.Wild, CardValue.ChangeColor));
+                Cards.Add(new Card(CardColor.Wild, CardValue.DrawFour));
+            }
+
+        }
+
+        private void AddNormalGameNormalCards()
+        {
             foreach (CardColor color in Enum.GetValues(typeof(CardColor)))
             {
                 //For every color we have defined
@@ -62,28 +105,6 @@ namespace Uno.Models
                                 break;
                         }
                     }
-                }
-                else
-                {
-                    for (int i = 1; i <= 4; i++)
-                    {
-                        Cards.Add(new Card(color, CardValue.ChangeColor));
-                        Cards.Add(new Card(color, CardValue.DrawFour));
-                    }
-
-                }
-            }
-
-            if (gameMode == GameMode.SpecialCards || gameMode == GameMode.SpecialCardsAndAvalonCards)
-            {
-                foreach (CardColor color in Enum.GetValues(typeof(CardColor)))
-                {
-                    Cards.Add(new Card(color, CardValue.StealTurn));
-                }
-                for (int i = 1; i <= 4; i++)
-                {
-                    Cards.Add(new Card(CardColor.Wild, CardValue.BlackHole));
-                    Cards.Add(new Card(CardColor.Wild, CardValue.DiscardAllWildCards));
                 }
             }
         }

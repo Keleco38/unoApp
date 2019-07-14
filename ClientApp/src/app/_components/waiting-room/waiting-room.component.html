@@ -16,9 +16,11 @@
         </div>
       </form>
     </div>
-    <button class="btn btn-primary my-3" *ngIf="userIsSpectator()" (click)="joinGame()">Join the game</button>
+    <button class="btn btn-primary my-3" *ngIf="userIsSpectator()" [hidden]="activeGame.players.length > 9" (click)="joinGame()">
+      Join the game
+    </button>
     <h4 class="text-success"><span class=""> Waiting for host can start the game! </span></h4>
-    <h4 class="text-success">Current number of players: {{ activeGame.players.length }}</h4>
+    <h4 class="text-success">Current number of players: {{ activeGame.players.length }} (MAX:10, MIN:2)</h4>
     <ul>
       <li *ngFor="let player of activeGame.players">
         {{ player?.user?.name }}
@@ -32,7 +34,12 @@
         >
       </li>
     </ul>
-    <button *ngIf="activeGame.players[0]?.user?.connectionId == currentUser.connectionId" class="btn btn-success" (click)="startGame()">
+    <button
+      *ngIf="activeGame.players[0]?.user?.connectionId == currentUser.connectionId"
+      [disabled]="activeGame.players.length < 2"
+      class="btn btn-success"
+      (click)="startGame()"
+    >
       Start game!
     </button>
   </div>

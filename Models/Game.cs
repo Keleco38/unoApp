@@ -27,7 +27,7 @@ namespace Uno.Models
             DiscardedPile = new List<Card>();
         }
 
-        public bool PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor)
+        public bool PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string playerNameToSwapCards)
         {
             var card = player.Cards.Find(y => y.Color == cardPlayed.Color && y.Value == cardPlayed.Value);
 
@@ -38,6 +38,8 @@ namespace Uno.Models
                 return false;
 
 
+            player.Cards.Remove(card);
+            DiscardedPile.Add(card);
 
             LastCardPlayed = new LastCardPlayed(pickedCardColor, card.Value, card.ImageUrl, player.User.Name);
 
@@ -55,6 +57,16 @@ namespace Uno.Models
                         DiscardedPile.AddRange(wildCards);
                         wildCards.ForEach(y => x.Cards.Remove(y));
                     });
+                }
+                else if (card.Value == CardValue.SwapHands)
+                {
+                    var targetedPlayer = Players.Find(x => x.User.Name == playerNameToSwapCards);
+
+                    var playersCards = PlayerToPlay.Cards.ToList();
+                    var targetedPlayerCards = targetedPlayer.Cards.ToList();
+
+                    PlayerToPlay.Cards = targetedPlayerCards;
+                    targetedPlayer.Cards = playersCards;
                 }
                 else if (card.Value == CardValue.BlackHole)
                 {
@@ -87,8 +99,6 @@ namespace Uno.Models
                 }
             }
 
-            player.Cards.Remove(card);
-            DiscardedPile.Add(card);
             GameEnded = DetectIfGameEnded();
             PlayerToPlay = GetNextPlayerToPlay();
             return true;

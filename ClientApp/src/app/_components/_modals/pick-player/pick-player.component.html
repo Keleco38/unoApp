@@ -1,0 +1,12 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Pick player</h4>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <ul>
+      <li *ngFor="let player of players" class="my-3" [hidden]="currentUser.name == player.user.name" (click)="selectPlayer(player)">
+        {{ player.user.name }} -({{ player.numberOfCards }})
+      </li>
+    </ul>
+  </div>
+</div>
