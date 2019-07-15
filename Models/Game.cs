@@ -95,6 +95,10 @@ namespace Uno.Models
                         DrawCard(targetedPlayer, 3, false);
                     }
                 }
+                else if (card.Value == CardValue.UnitedWeFall)
+                {
+                    Players.ForEach(x => DrawCard(x, 2, false));
+                }
             }
             else
             {

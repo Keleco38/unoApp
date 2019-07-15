@@ -31,7 +31,8 @@ namespace Uno.Enums
         StealTurn = 17,
         SwapHands = 18,
         HandOfGod=21,
-        Judgement=22
+        Judgement=22,
+        UnitedWeFall=23
 
     }
 

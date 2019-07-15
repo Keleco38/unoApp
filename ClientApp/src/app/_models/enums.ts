@@ -35,7 +35,8 @@ export enum CardValue {
   doubleEdge = 19,
   discardColor = 20,
   handOfGod = 21,
-  judgement = 22
+  judgement = 22,
+  unitedWeFall = 23
 }
 
 export enum Direction {
