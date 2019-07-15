@@ -43,41 +43,41 @@
   margin-left: 20px;
 }
 .animation-block-shine {
-  -webkit-animation-name: greenPulseBlock;
-  -webkit-animation-duration: 2s;
-  -webkit-animation-iteration-count: infinite;
+  animation-name: greenPulseBlock;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
 }
-@-webkit-keyframes greenPulseBlock {
+@keyframes greenPulseBlock {
   from {
     background-color: #c0ff02;
-    -webkit-box-shadow: 0 0 9px #333;
+    box-shadow: 0 0 9px #333;
   }
   50% {
     background-color: #4b610b;
-    -webkit-box-shadow: 0 0 18px #91bd09;
+    box-shadow: 0 0 18px #91bd09;
   }
   to {
     background-color: #c0ff02;
-    -webkit-box-shadow: 0 0 9px #333;
+    box-shadow: 0 0 9px #333;
   }
 }
 
 .animation-text-shine {
-  -webkit-animation-name: greenPulseText;
-  -webkit-animation-duration: 2s;
-  -webkit-animation-iteration-count: infinite;
+  animation-name: greenPulseText;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
 }
-@-webkit-keyframes greenPulseText {
+@keyframes greenPulseText {
   from {
     background-color: #c0ff02;
-    -webkit-box-shadow: 0 0 9px #333;
+    box-shadow: 0 0 9px #333;
   }
   50% {
     background-color: #4b610b;
-    -webkit-box-shadow: 0 0 18px #91bd09;
+    box-shadow: 0 0 18px #91bd09;
   }
   to {
     background-color: #c0ff02;
-    -webkit-box-shadow: 0 0 9px #333;
+    box-shadow: 0 0 9px #333;
   }
 }

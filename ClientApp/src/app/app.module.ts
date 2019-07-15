@@ -1,3 +1,4 @@
+import { HelpComponent } from './_components/help/help.component';
 import { DigCardComponent } from './_components/_modals/dig-card/dig-card.component';
 import { PickPlayerComponent } from './_components/_modals/pick-player/pick-player.component';
 import { GameDeactivateGuard } from './_guards/game-deactivate.guard';
@@ -43,7 +44,8 @@ import { ShowHandComponent } from './_components/_modals/show-hand/show-hand.com
     GameComponent,
     PickPlayerComponent,
     ShowHandComponent,
-    DigCardComponent
+    DigCardComponent,
+    HelpComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -62,6 +64,7 @@ import { ShowHandComponent } from './_components/_modals/show-hand/show-hand.com
         canActivate: [WaitingRoomGuard]
       },
       { path: 'game', component: GameComponent, canActivate: [GameGuard], canDeactivate: [GameDeactivateGuard] },
+      { path: 'help', component: HelpComponent },
       { path: '**', redirectTo: '/' }
     ])
   ],
