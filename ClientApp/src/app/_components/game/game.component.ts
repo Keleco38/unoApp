@@ -88,13 +88,13 @@ export class GameComponent implements OnInit {
     if (card.color === CardColor.wild) {
       this._modalService.open(PickColorComponent).result.then(
         pickedColor => {
-          if (card.value === CardValue.swapHands) {
+          if (card.value === CardValue.swapHands || CardValue.judgement) {
             const playerModal = this._modalService.open(PickPlayerComponent);
             playerModal.componentInstance.players = this.game.players;
             playerModal.componentInstance.currentUser = this.currentUser;
             playerModal.result.then(
               playerName => {
-                  this._hubService.playCard(card, pickedColor, playerName);
+                this._hubService.playCard(card, pickedColor, playerName);
               },
               dismissed => {}
             );

@@ -30,7 +30,8 @@ namespace Uno.Enums
         DiscardAllWildCards = 16,
         StealTurn = 17,
         SwapHands = 18,
-        HandOfGod=21
+        HandOfGod=21,
+        Judgement=22
 
     }
 

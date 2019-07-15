@@ -27,7 +27,7 @@ namespace Uno.Models
             DiscardedPile = new List<Card>();
         }
 
-        public bool PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string playerNameToSwapCards)
+        public bool PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName)
         {
             var card = player.Cards.Find(y => y.Color == cardPlayed.Color && y.Value == cardPlayed.Value);
 
@@ -60,7 +60,7 @@ namespace Uno.Models
                 }
                 else if (card.Value == CardValue.SwapHands)
                 {
-                    var targetedPlayer = Players.Find(x => x.User.Name == playerNameToSwapCards);
+                    var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
 
                     var playersCards = PlayerToPlay.Cards.ToList();
                     var targetedPlayerCards = targetedPlayer.Cards.ToList();
@@ -85,6 +85,14 @@ namespace Uno.Models
                         var cards = player.Cards.Take(4).ToList();
                         DiscardedPile.AddRange(cards);
                         cards.ForEach(y => player.Cards.Remove(y));
+                    }
+                }
+                else if (card.Value == CardValue.Judgement)
+                {
+                    var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
+                    if (targetedPlayer.Cards.Any(x => x.Color == CardColor.Wild))
+                    {
+                        DrawCard(targetedPlayer, 3, false);
                     }
                 }
             }

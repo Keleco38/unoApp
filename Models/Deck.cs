@@ -61,6 +61,7 @@ namespace Uno.Models
                 Cards.Add(new Card(CardColor.Wild, CardValue.DiscardAllWildCards));
                 Cards.Add(new Card(CardColor.Wild, CardValue.SwapHands));
                 Cards.Add(new Card(CardColor.Wild, CardValue.HandOfGod));
+                Cards.Add(new Card(CardColor.Wild, CardValue.Judgement));
             }
         }
 
