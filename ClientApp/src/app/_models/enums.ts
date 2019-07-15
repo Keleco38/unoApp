@@ -37,7 +37,8 @@ export enum CardValue {
   handOfGod = 21,
   judgement = 22,
   unitedWeFall = 23,
-  paradigmShift = 24
+  paradigmShift = 24,
+  deflect = 25
 }
 
 export enum Direction {

@@ -35,7 +35,8 @@ namespace Uno.Enums
         HandOfGod = 21,
         Judgement = 22,
         UnitedWeFall = 23,
-        ParadigmShift = 24
+        ParadigmShift = 24,
+        Deflect = 25
 
     }
 

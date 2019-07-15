@@ -53,7 +53,19 @@ namespace Uno.Models
             {
                 if (card.Value == CardValue.DrawFour)
                 {
-                    DrawCard(GetNextPlayerToPlay(), 4, false);
+                    var nextPlayer = GetNextPlayerToPlay();
+                    var deflectCard = nextPlayer.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);
+                    if (deflectCard == null)
+                    {
+                        DrawCard(nextPlayer, 4, false);
+                    }
+                    else
+                    {
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, nextPlayer.User.Name);
+                        nextPlayer.Cards.Remove(deflectCard);
+                        DiscardedPile.Add(deflectCard);
+                        DrawCard(player, 4, false);
+                    }
                 }
                 else if (card.Value == CardValue.DiscardWildCards)
                 {
@@ -88,8 +100,22 @@ namespace Uno.Models
                 {
                     var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
 
-                    DrawCard(targetedPlayer, 5, false);
-                    DrawCard(PlayerToPlay, 2, false);
+                    var deflectCard = targetedPlayer.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);
+                    if (deflectCard == null)
+                    {
+
+                        DrawCard(targetedPlayer, 5, false);
+                        DrawCard(PlayerToPlay, 2, false);
+                    }
+                    else
+                    {
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name);
+                        targetedPlayer.Cards.Remove(deflectCard);
+                        DiscardedPile.Add(deflectCard);
+                        DrawCard(PlayerToPlay, 5, false);
+                        DrawCard(targetedPlayer, 2, false);
+                    }
+
                 }
                 else if (card.Value == CardValue.DiscardColor)
                 {
@@ -120,7 +146,18 @@ namespace Uno.Models
                     var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
                     if (targetedPlayer.Cards.Any(x => x.Color == CardColor.Wild))
                     {
-                        DrawCard(targetedPlayer, 3, false);
+                        var deflectCard = targetedPlayer.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);
+                        if (deflectCard == null)
+                        {
+                            DrawCard(targetedPlayer, 3, false);
+                        }
+                        else
+                        {
+                            LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name);
+                            targetedPlayer.Cards.Remove(deflectCard);
+                            DiscardedPile.Add(deflectCard);
+                            DrawCard(PlayerToPlay, 3, false);
+                        }
                     }
                 }
                 else if (card.Value == CardValue.UnitedWeFall)
@@ -136,7 +173,7 @@ namespace Uno.Models
                             firstCardsBackup = Players[i].Cards.ToList();
                         if (i != Players.Count - 1)
                         {
-                            Players[i].Cards=Players[i+1].Cards;
+                            Players[i].Cards = Players[i + 1].Cards;
                         }
                         else
                         {
@@ -149,7 +186,19 @@ namespace Uno.Models
             {
                 if (card.Value == CardValue.DrawTwo)
                 {
-                    DrawCard(GetNextPlayerToPlay(), 2, false);
+                    var nextPlayer = GetNextPlayerToPlay();
+                    var deflectCard = nextPlayer.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);
+                    if (deflectCard == null)
+                    {
+                        DrawCard(nextPlayer, 2, false);
+                    }
+                    else
+                    {
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, nextPlayer.User.Name);
+                        nextPlayer.Cards.Remove(deflectCard);
+                        DiscardedPile.Add(deflectCard);
+                        DrawCard(player, 2, false);
+                    }
                 }
                 else if (card.Value == CardValue.Reverse)
                 {

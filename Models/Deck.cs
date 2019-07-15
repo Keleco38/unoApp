@@ -36,7 +36,7 @@ namespace Uno.Models
 
             if (gameMode == GameMode.SpecialCards || gameMode == GameMode.SpecialCardsAndAvalonCards)
             {
-            //    AddNormalGameNormalCards();
+                AddNormalGameNormalCards();
                 AddSpecialWildCards();
             }
             if (gameMode == GameMode.SpecialCardsAndAvalonCards)
@@ -66,6 +66,7 @@ namespace Uno.Models
                 Cards.Add(new Card(CardColor.Wild, CardValue.Judgement));
                 Cards.Add(new Card(CardColor.Wild, CardValue.UnitedWeFall));
                 Cards.Add(new Card(CardColor.Wild, CardValue.ParadigmShift));
+                Cards.Add(new Card(CardColor.Wild, CardValue.Deflect));
             }
         }
 
