@@ -52,6 +52,7 @@ namespace Uno.Models
                 if (color != CardColor.Wild)
                 {
                     Cards.Add(new Card(color, CardValue.StealTurn));
+                    Cards.Add(new Card(color, CardValue.StealTurn));
                 }
             }
             for (int i = 1; i <= 4; i++)
@@ -59,6 +60,7 @@ namespace Uno.Models
                 Cards.Add(new Card(CardColor.Wild, CardValue.BlackHole));
                 Cards.Add(new Card(CardColor.Wild, CardValue.DiscardAllWildCards));
                 Cards.Add(new Card(CardColor.Wild, CardValue.SwapHands));
+                Cards.Add(new Card(CardColor.Wild, CardValue.HandOfGod));
             }
         }
 

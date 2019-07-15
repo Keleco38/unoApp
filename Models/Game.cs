@@ -78,6 +78,15 @@ namespace Uno.Models
                         DrawCard(x, cardCount, false);
                     });
                 }
+                else if (card.Value == CardValue.HandOfGod)
+                {
+                    if (player.Cards.Count > 7)
+                    {
+                        var cards = player.Cards.Take(4).ToList();
+                        DiscardedPile.AddRange(cards);
+                        cards.ForEach(y => player.Cards.Remove(y));
+                    }
+                }
             }
             else
             {

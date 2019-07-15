@@ -29,7 +29,8 @@ namespace Uno.Enums
         BlackHole = 15,
         DiscardAllWildCards = 16,
         StealTurn = 17,
-        SwapHands = 18
+        SwapHands = 18,
+        HandOfGod=21
 
     }
 
