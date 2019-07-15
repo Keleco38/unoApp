@@ -57,7 +57,8 @@ export class GameComponent implements OnInit {
           this._timer = setTimeout(() => {
             if (!this._hasCalledUno) {
               this.drawCard(2, false);
-              this.callUno();
+              this.callUno(false);
+              this._hubService.sendMessageToGameChat('<--- Forgot to call uno! Drawing 2 cards.');
             }
           }, 2000);
         }
@@ -71,7 +72,7 @@ export class GameComponent implements OnInit {
     });
   }
 
-  callUno() {
+  callUno(playerCalled: boolean) {
     this._hasCalledUno = true;
     this.mustCallUno = false;
     this.countdown = 2000;
@@ -80,6 +81,9 @@ export class GameComponent implements OnInit {
     this._interval = null;
     this._timer = null;
     this._hasPlayed = false;
+    if (playerCalled) {
+      this._hubService.sendMessageToGameChat('UNO');
+    }
   }
 
   playCard(card: Card) {

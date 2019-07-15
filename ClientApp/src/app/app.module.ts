@@ -67,6 +67,6 @@ import { ShowHandComponent } from './_components/_modals/show-hand/show-hand.com
   ],
   providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard],
   bootstrap: [AppComponent],
-  entryComponents: [PickColorComponent, PickPlayerComponent, ShowHandComponent,DigCardComponent]
+  entryComponents: [PickColorComponent, PickPlayerComponent, ShowHandComponent, DigCardComponent]
 })
 export class AppModule {}
