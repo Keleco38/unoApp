@@ -63,6 +63,7 @@ namespace Uno.Models
                 Cards.Add(new Card(CardColor.Wild, CardValue.HandOfGod));
                 Cards.Add(new Card(CardColor.Wild, CardValue.Judgement));
                 Cards.Add(new Card(CardColor.Wild, CardValue.UnitedWeFall));
+                Cards.Add(new Card(CardColor.Wild, CardValue.ParadigmShift));
             }
         }
 

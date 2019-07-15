@@ -43,6 +43,12 @@ namespace Uno.Models
 
             LastCardPlayed = new LastCardPlayed(pickedCardColor, card.Value, card.ImageUrl, player.User.Name);
 
+            GameEnded = DetectIfGameEnded();
+            if (GameEnded)
+            {
+                return true;
+            }
+
             if (card.Color == CardColor.Wild)
             {
                 if (card.Value == CardValue.DrawFour)
@@ -99,6 +105,23 @@ namespace Uno.Models
                 {
                     Players.ForEach(x => DrawCard(x, 2, false));
                 }
+                else if (card.Value == CardValue.ParadigmShift)
+                {
+                    List<Card> firstCardsBackup = null;
+                    for (int i = 0; i < Players.Count; i++)
+                    {
+                        if (i == 0)
+                            firstCardsBackup = Players[i].Cards.ToList();
+                        if (i != Players.Count - 1)
+                        {
+                            Players[i].Cards=Players[i+1].Cards;
+                        }
+                        else
+                        {
+                            Players[i].Cards = firstCardsBackup;
+                        }
+                    }
+                }
             }
             else
             {
@@ -120,7 +143,6 @@ namespace Uno.Models
                 }
             }
 
-            GameEnded = DetectIfGameEnded();
             PlayerToPlay = GetNextPlayerToPlay();
             return true;
         }
