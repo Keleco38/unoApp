@@ -88,7 +88,7 @@ export class GameComponent implements OnInit {
     if (card.color === CardColor.wild) {
       this._modalService.open(PickColorComponent).result.then(
         pickedColor => {
-          if (card.value === CardValue.swapHands || card.value === CardValue.doubleEdge) {
+          if (card.value === CardValue.swapHands || card.value === CardValue.doubleEdge || CardValue.judgement) {
             const playerModal = this._modalService.open(PickPlayerComponent);
             playerModal.componentInstance.players = this.game.players;
             playerModal.componentInstance.currentUser = this.currentUser;

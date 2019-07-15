@@ -33,7 +33,11 @@ export enum CardValue {
   stealTurn = 17,
   swapHands = 18,
   doubleEdge = 19,
-  discardColor = 20
+  discardColor = 20,
+  handOfGod = 21,
+  judgement = 22,
+  unitedWeFall = 23,
+  paradigmShift = 24
 }
 
 export enum Direction {

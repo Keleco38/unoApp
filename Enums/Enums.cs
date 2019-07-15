@@ -32,6 +32,11 @@ namespace Uno.Enums
         SwapHands = 18,
         DoubleEdge = 19,
         DiscardColor = 20
+        HandOfGod = 21,
+        Judgement = 22,
+        UnitedWeFall = 23,
+        ParadigmShift = 24
+
     }
 
     public enum Direction

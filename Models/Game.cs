@@ -27,7 +27,7 @@ namespace Uno.Models
             DiscardedPile = new List<Card>();
         }
 
-        public bool PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string playerNameToSwapCards)
+        public bool PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName)
         {
             var card = player.Cards.Find(y => y.Color == cardPlayed.Color && y.Value == cardPlayed.Value);
 
@@ -42,6 +42,12 @@ namespace Uno.Models
             DiscardedPile.Add(card);
 
             LastCardPlayed = new LastCardPlayed(pickedCardColor, card.Value, card.ImageUrl, player.User.Name);
+
+            GameEnded = DetectIfGameEnded();
+            if (GameEnded)
+            {
+                return true;
+            }
 
             if (card.Color == CardColor.Wild)
             {
@@ -60,7 +66,7 @@ namespace Uno.Models
                 }
                 else if (card.Value == CardValue.SwapHands)
                 {
-                    var targetedPlayer = Players.Find(x => x.User.Name == playerNameToSwapCards);
+                    var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
 
                     var playersCards = PlayerToPlay.Cards.ToList();
                     var targetedPlayerCards = targetedPlayer.Cards.ToList();
@@ -100,6 +106,44 @@ namespace Uno.Models
                     int randomColor = numbers[(random.Next(4))];
                     LastCardPlayed.Color = (CardColor)randomColor;
                 }
+                else if (card.Value == CardValue.HandOfGod)
+                {
+                    if (player.Cards.Count > 7)
+                    {
+                        var cards = player.Cards.Take(4).ToList();
+                        DiscardedPile.AddRange(cards);
+                        cards.ForEach(y => player.Cards.Remove(y));
+                    }
+                }
+                else if (card.Value == CardValue.Judgement)
+                {
+                    var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
+                    if (targetedPlayer.Cards.Any(x => x.Color == CardColor.Wild))
+                    {
+                        DrawCard(targetedPlayer, 3, false);
+                    }
+                }
+                else if (card.Value == CardValue.UnitedWeFall)
+                {
+                    Players.ForEach(x => DrawCard(x, 2, false));
+                }
+                else if (card.Value == CardValue.ParadigmShift)
+                {
+                    List<Card> firstCardsBackup = null;
+                    for (int i = 0; i < Players.Count; i++)
+                    {
+                        if (i == 0)
+                            firstCardsBackup = Players[i].Cards.ToList();
+                        if (i != Players.Count - 1)
+                        {
+                            Players[i].Cards=Players[i+1].Cards;
+                        }
+                        else
+                        {
+                            Players[i].Cards = firstCardsBackup;
+                        }
+                    }
+                }
             }
             else
             {
@@ -121,7 +165,6 @@ namespace Uno.Models
                 }
             }
 
-            GameEnded = DetectIfGameEnded();
             PlayerToPlay = GetNextPlayerToPlay();
             return true;
         }
