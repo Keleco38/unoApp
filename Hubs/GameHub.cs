@@ -306,7 +306,6 @@ namespace Uno.Hubs
 
         public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string playerToSwapCards)
         {
-            bool success = false;
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             lock (game)
@@ -315,7 +314,7 @@ namespace Uno.Hubs
                     return;
                 var card = _mapper.Map<Card>(cardDto);
                 var player = game.Players.Find(x => x.User.Name == user.Name);
-                success = game.PlayCard(player, card, pickedCardColor, playerToSwapCards);
+                var success = game.PlayCard(player, card, pickedCardColor, playerToSwapCards);
                 if (success)
                 {
                     if (cardDto.Value == CardValue.InspectHand)
@@ -323,9 +322,26 @@ namespace Uno.Hubs
                         var targetedPlayer = game.Players.Find(x => x.User.Name == playerToSwapCards);
                         Clients.Caller.SendAsync("ShowInspectedHand", _mapper.Map<HandDto>(targetedPlayer.Cards));
                     }
+                    else if (cardDto.Value == CardValue.GraveDigger)
+                    {
+                        Clients.Caller.SendAsync("ShowDiscardedPile", game.DiscardedPile);
+                    }
                     GameUpdated(game).ConfigureAwait(false);
                 }
             }
+        }
+
+        public async Task DigCardFromDiscardedPile(string gameId, CardDto cardDto)
+        {
+            var game = _games.Find(x => x.GameSetup.Id == gameId);
+            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
+
+            var cardToPickUp = game.DiscardedPile.Find(x => x.Color == cardDto.Color && x.Value == cardDto.Value);
+
+            game.Players.Find(x => x.User.Name == user.Name).Cards.Add(cardToPickUp);
+            game.DiscardedPile.Remove(cardToPickUp);
+            await GameUpdated(game);
+
         }
 
 

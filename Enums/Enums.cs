@@ -37,7 +37,8 @@ namespace Uno.Enums
         UnitedWeFall = 23,
         ParadigmShift = 24,
         Deflect = 25,
-        InspectHand = 26
+        InspectHand = 26,
+        GraveDigger = 27
 
     }
 

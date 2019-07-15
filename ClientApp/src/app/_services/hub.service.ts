@@ -1,3 +1,4 @@
+import { DigCardComponent } from './../_components/_modals/dig-card/dig-card.component';
 import { ShowHandComponent } from './../_components/_modals/show-hand/show-hand.component';
 import { Hand } from '../_models/hand';
 import { GameMode, CardColor } from './../_models/enums';
@@ -94,6 +95,11 @@ export class HubService {
       modalRef.componentInstance.hand = hand;
     });
 
+    this._hubConnection.on('ShowDiscardedPile', (cards: Card[]) => {
+      const modalRef = this._modalService.open(DigCardComponent, { backdrop: 'static' });
+      modalRef.componentInstance.cards = cards;
+    });
+
     this._hubConnection.on('UpdateGame', (game: Game) => {
       this._activeGameObservable.next(game);
       if (game.gameStarted) {
@@ -153,6 +159,11 @@ export class HubService {
   playCard(card: Card, pickedCardColor: CardColor, playerToSwapCards = '') {
     this._hubConnection.invoke('PlayCard', this._activeGameObservable.getValue().gameSetup.id, card, pickedCardColor, playerToSwapCards);
   }
+
+  digCardFromDiscardedPile(card: Card) {
+    this._hubConnection.invoke('DigCardFromDiscardedPile', this._activeGameObservable.getValue().gameSetup.id, card);
+  }
+
   createGame(gameMode: GameMode) {
     this._hubConnection.invoke('CreateGame', gameMode);
   }

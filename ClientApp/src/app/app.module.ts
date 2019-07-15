@@ -1,3 +1,4 @@
+import { DigCardComponent } from './_components/_modals/dig-card/dig-card.component';
 import { PickPlayerComponent } from './_components/_modals/pick-player/pick-player.component';
 import { GameDeactivateGuard } from './_guards/game-deactivate.guard';
 import { GameGuard } from './_guards/game.guard';
@@ -41,7 +42,8 @@ import { ShowHandComponent } from './_components/_modals/show-hand/show-hand.com
     PickColorComponent,
     GameComponent,
     PickPlayerComponent,
-    ShowHandComponent
+    ShowHandComponent,
+    DigCardComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -65,6 +67,6 @@ import { ShowHandComponent } from './_components/_modals/show-hand/show-hand.com
   ],
   providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard],
   bootstrap: [AppComponent],
-  entryComponents: [PickColorComponent, PickPlayerComponent, ShowHandComponent]
+  entryComponents: [PickColorComponent, PickPlayerComponent, ShowHandComponent,DigCardComponent]
 })
 export class AppModule {}

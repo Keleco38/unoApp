@@ -83,7 +83,9 @@ export class GameComponent implements OnInit {
   }
 
   playCard(card: Card) {
-    this._hasPlayed = true;
+    if (card.value !== CardValue.graveDigger) {
+      this._hasPlayed = true;
+    }
     if (card.color === CardColor.wild) {
       this._modalService.open(PickColorComponent).result.then(
         pickedColor => {

@@ -39,7 +39,8 @@ export enum CardValue {
   unitedWeFall = 23,
   paradigmShift = 24,
   deflect = 25,
-  inspectHand = 26
+  inspectHand = 26,
+  graveDigger = 27
 }
 
 export enum Direction {
