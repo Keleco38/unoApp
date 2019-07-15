@@ -28,7 +28,7 @@ namespace Uno.Helpers
                     opt.MapFrom(src => src.IsPasswordProtected);
                 });
 
-            CreateMap<List<Card>, MyHandDto>()
+            CreateMap<List<Card>, HandDto>()
                 .ForMember(dest => dest.Cards, opt =>
                 {
                     opt.MapFrom(src => src.OrderBy(y => y.Color).ThenBy(y => y.Value));

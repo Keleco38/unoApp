@@ -1,0 +1,15 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Showing player's Hand</h4>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-12 p5">
+      <img
+        *ngFor="let card of hand?.cards; let firstItem = first"
+        [class.firstPlayedCard]="firstItem"
+        [src]="card.imageUrl"
+        class="player-hand-card"
+      />
+    </div>
+  </div>
+</div>

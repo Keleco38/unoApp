@@ -42,7 +42,7 @@
                     'text-primary font-weight-bold': player.user.name == game.playerToPlay.user.name,
                     'left-game': player.leftGame
                   }"
-                  >-{{ player.user.name }} ({{player.numberOfCards}})-
+                  >{{ player.user.name }}({{ player.numberOfCards }})-
                 </span>
               </p>
               <p class="text-center">{{ getDirectionStringFromGame() }}</p>

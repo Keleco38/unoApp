@@ -1,4 +1,5 @@
-import { MyHand } from './../_models/myHand';
+import { ShowHandComponent } from './../_components/_modals/show-hand/show-hand.component';
+import { Hand } from '../_models/hand';
 import { GameMode, CardColor } from './../_models/enums';
 import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
@@ -11,6 +12,7 @@ import { ChatMessage } from '../_models/chatMessage';
 import { Game } from '../_models/game';
 import { ToastrService } from 'ngx-toastr';
 import { Card } from '../_models/card';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +29,9 @@ export class HubService {
   private _availableGamesObservable = new BehaviorSubject<Game[]>(new Array<Game>());
   private _activeGameObservable = new BehaviorSubject<Game>(null);
   private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._gameChatMessages);
-  private _myHandObservable = new BehaviorSubject<MyHand>(null);
+  private _myHandObservable = new BehaviorSubject<Hand>(null);
 
-  constructor(private _router: Router, private _toastrService: ToastrService) {
+  constructor(private _router: Router, private _toastrService: ToastrService, private _modalService: NgbModal) {
     this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
     this._hubConnection.start().then(() => {
       this.rename(false);
@@ -83,8 +85,13 @@ export class HubService {
       this._toastrService.info(message, '', { timeOut: 8000 });
     });
 
-    this._hubConnection.on('UpdateMyHand', (myHand: MyHand) => {
+    this._hubConnection.on('UpdateMyHand', (myHand: Hand) => {
       this._myHandObservable.next(myHand);
+    });
+
+    this._hubConnection.on('ShowInspectedHand', (hand: Hand) => {
+      const modalRef = this._modalService.open(ShowHandComponent);
+      modalRef.componentInstance.hand = hand;
     });
 
     this._hubConnection.on('UpdateGame', (game: Game) => {

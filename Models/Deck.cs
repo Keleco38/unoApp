@@ -67,6 +67,7 @@ namespace Uno.Models
                 Cards.Add(new Card(CardColor.Wild, CardValue.UnitedWeFall));
                 Cards.Add(new Card(CardColor.Wild, CardValue.ParadigmShift));
                 Cards.Add(new Card(CardColor.Wild, CardValue.Deflect));
+                Cards.Add(new Card(CardColor.Wild, CardValue.InspectHand));
             }
         }
 

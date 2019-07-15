@@ -36,7 +36,8 @@ namespace Uno.Enums
         Judgement = 22,
         UnitedWeFall = 23,
         ParadigmShift = 24,
-        Deflect = 25
+        Deflect = 25,
+        InspectHand = 26
 
     }
 

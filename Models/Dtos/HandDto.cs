@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Uno.Models.Dtos
 {
-    public class MyHandDto
+    public class HandDto
     {
         public List<CardDto> Cards { get; set; }
     }

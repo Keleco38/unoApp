@@ -1,5 +1,5 @@
 import { Card } from './card';
 
-export interface MyHand {
+export interface Hand {
   cards: Card[];
 }

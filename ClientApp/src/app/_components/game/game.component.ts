@@ -1,5 +1,5 @@
 import { CardValue } from './../../_models/enums';
-import { MyHand } from './../../_models/myHand';
+import { Hand } from '../../_models/hand';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { Game } from 'src/app/_models/game';
@@ -17,7 +17,6 @@ import { PickPlayerComponent } from '../_modals/pick-player/pick-player.componen
   styleUrls: ['./game.component.css']
 })
 export class GameComponent implements OnInit {
-  @ViewChild('cardsPlayedPopover')
   private _timer: NodeJS.Timer = null;
   private _interval: NodeJS.Timer = null;
   private _hasCalledUno: boolean;
@@ -27,7 +26,7 @@ export class GameComponent implements OnInit {
   currentUser: User;
   game: Game;
   numberUnreadMessages = 0;
-  myHand: MyHand;
+  myHand: Hand;
   mustCallUno = false;
   countdown = 2000;
 
@@ -88,7 +87,12 @@ export class GameComponent implements OnInit {
     if (card.color === CardColor.wild) {
       this._modalService.open(PickColorComponent).result.then(
         pickedColor => {
-          if (card.value === CardValue.swapHands || card.value === CardValue.doubleEdge || card.value === CardValue.judgement) {
+          if (
+            card.value === CardValue.swapHands ||
+            card.value === CardValue.doubleEdge ||
+            card.value === CardValue.judgement ||
+            card.value === CardValue.inspectHand
+          ) {
             const playerModal = this._modalService.open(PickPlayerComponent);
             playerModal.componentInstance.players = this.game.players;
             playerModal.componentInstance.currentUser = this.currentUser;

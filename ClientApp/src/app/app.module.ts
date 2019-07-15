@@ -25,6 +25,7 @@ import { WaitingRoomGuard } from './_guards/waiting-room.guard';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WaitingRoomDeactivateGuard } from './_guards/waiting-room-deactivate.guard';
 import { PickColorComponent } from './_components/_modals/pick-color/pick-color.component';
+import { ShowHandComponent } from './_components/_modals/show-hand/show-hand.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { PickColorComponent } from './_components/_modals/pick-color/pick-color.
     GameChatComponent,
     PickColorComponent,
     GameComponent,
-    PickPlayerComponent
+    PickPlayerComponent,
+    ShowHandComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -63,6 +65,6 @@ import { PickColorComponent } from './_components/_modals/pick-color/pick-color.
   ],
   providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard],
   bootstrap: [AppComponent],
-  entryComponents: [PickColorComponent, PickPlayerComponent]
+  entryComponents: [PickColorComponent, PickPlayerComponent, ShowHandComponent]
 })
 export class AppModule {}

@@ -306,6 +306,7 @@ namespace Uno.Hubs
 
         public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string playerToSwapCards)
         {
+            bool success = false;
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             lock (game)
@@ -314,9 +315,16 @@ namespace Uno.Hubs
                     return;
                 var card = _mapper.Map<Card>(cardDto);
                 var player = game.Players.Find(x => x.User.Name == user.Name);
-                var success = game.PlayCard(player, card, pickedCardColor, playerToSwapCards);
+                success = game.PlayCard(player, card, pickedCardColor, playerToSwapCards);
                 if (success)
+                {
+                    if (cardDto.Value == CardValue.InspectHand)
+                    {
+                        var targetedPlayer = game.Players.Find(x => x.User.Name == playerToSwapCards);
+                        Clients.Caller.SendAsync("ShowInspectedHand", _mapper.Map<HandDto>(targetedPlayer.Cards));
+                    }
                     GameUpdated(game).ConfigureAwait(false);
+                }
             }
         }
 
@@ -345,7 +353,7 @@ namespace Uno.Hubs
                 foreach (var connectionId in allPlayersInTheGame)
                 {
                     var myHand = game.Players.FirstOrDefault(x => x.User.ConnectionId == connectionId).Cards;
-                    var myHandDto = _mapper.Map<MyHandDto>(myHand);
+                    var myHandDto = _mapper.Map<HandDto>(myHand);
                     await Clients.Client(connectionId).SendAsync("UpdateMyHand", myHandDto);
                 }
             }
