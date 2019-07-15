@@ -24,7 +24,7 @@
               <button
                 type="button"
                 class="btn btn-block  btn-success"
-                [ngClass]="{ 'chat-button-has-new-message': numberUnreadMessages > 0 }"
+                [ngClass]="{ 'animation-block-shine': numberUnreadMessages > 0 }"
                 (click)="toggleGameChatSidebar()"
               >
                 Chat &#9776;
@@ -46,6 +46,12 @@
                 </span>
               </p>
               <p class="text-center">{{ getDirectionStringFromGame() }}</p>
+              <p class="text-center">
+                <span class="text-muted" [hidden]="game?.playerToPlay.user.name == currentUser?.name"
+                  >Turn to play: {{ game?.playerToPlay.user.name }}</span
+                >
+                <span class="animation-text-shine" [hidden]="game?.playerToPlay.user.name != currentUser?.name">Your turn to play!!</span>
+              </p>
               <hr />
             </div>
           </div>

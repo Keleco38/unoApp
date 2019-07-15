@@ -251,7 +251,8 @@ namespace Uno.Hubs
             User user;
             lock (_users)
             {
-                name = Regex.Replace(name, @"\s+", "").ToLower();
+                name = Regex.Replace(name, @"[^a-zA-Z0-9]", "").ToLower();
+
                 if (name.Length > 10)
                     name = name.Substring(0, 10);
                 var nameExists = _users.Any(x => x.Name == name);
@@ -304,7 +305,7 @@ namespace Uno.Hubs
             }
         }
 
-        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string playerToSwapCards)
+        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string targetedPlayerName)
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
@@ -314,19 +315,24 @@ namespace Uno.Hubs
                     return;
                 var card = _mapper.Map<Card>(cardDto);
                 var player = game.Players.Find(x => x.User.Name == user.Name);
-                var success = game.PlayCard(player, card, pickedCardColor, playerToSwapCards);
-                if (success)
+                var successAndMessages = game.PlayCard(player, card, pickedCardColor, targetedPlayerName);
+                if (successAndMessages.Key)
                 {
                     if (cardDto.Value == CardValue.InspectHand)
                     {
-                        var targetedPlayer = game.Players.Find(x => x.User.Name == playerToSwapCards);
+                        var targetedPlayer = game.Players.Find(x => x.User.Name == targetedPlayerName);
                         Clients.Caller.SendAsync("ShowInspectedHand", _mapper.Map<HandDto>(targetedPlayer.Cards));
+                        successAndMessages.Value.Add($"Player {player.User.Name} has inspected {targetedPlayer.User.Name}'s hand.");
                     }
                     else if (cardDto.Value == CardValue.GraveDigger)
                     {
                         Clients.Caller.SendAsync("ShowDiscardedPile", game.DiscardedPile);
                     }
                     GameUpdated(game).ConfigureAwait(false);
+                }
+                if (successAndMessages.Value.Any())
+                {
+                    successAndMessages.Value.ForEach(x => SendMessageToGameChat(game.GameSetup.Id, "Server", x, TypeOfMessage.Server).ConfigureAwait(false));
                 }
             }
         }

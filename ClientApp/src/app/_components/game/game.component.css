@@ -42,12 +42,12 @@
 .chat-button {
   margin-left: 20px;
 }
-.chat-button-has-new-message {
-  -webkit-animation-name: greenPulse;
+.animation-block-shine {
+  -webkit-animation-name: greenPulseBlock;
   -webkit-animation-duration: 2s;
   -webkit-animation-iteration-count: infinite;
 }
-@-webkit-keyframes greenPulse {
+@-webkit-keyframes greenPulseBlock {
   from {
     background-color: #c0ff02;
     -webkit-box-shadow: 0 0 9px #333;
@@ -62,72 +62,22 @@
   }
 }
 
-.action-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+.animation-text-shine {
+  -webkit-animation-name: greenPulseText;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
 }
-.extra-points-button {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
+@-webkit-keyframes greenPulseText {
+  from {
+    background-color: #c0ff02;
+    -webkit-box-shadow: 0 0 9px #333;
+  }
+  50% {
+    background-color: #4b610b;
+    -webkit-box-shadow: 0 0 18px #91bd09;
+  }
+  to {
+    background-color: #c0ff02;
+    -webkit-box-shadow: 0 0 9px #333;
+  }
 }
-
-/* rounder card hand */
-/* 
-  .circle-container {
-    position: relative;
-    width: 20em;
-    height: 20em;
-    border-radius: 50%;
-    padding: 0;
-    list-style: none;
-    margin: 5em auto 0;
-  }
-  .circle-container > * {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -3em;
-    width: 6em;
-    height: 6em;
-  }
-  .circle-container > li > img:hover{
-    border:2px solid black;
-  }
-  .circle-container > *:nth-of-type(1) {
-    transform: rotate(0deg) translate(10em) rotate(20deg) skewY(30deg);
-  }
-  .circle-container > *:nth-of-type(2) {
-    transform: rotate(-20deg) translate(10em) rotate(40deg) skewY(30deg);
-  }
-  .circle-container > *:nth-of-type(3) {
-    transform: rotate(-40deg) translate(10em) rotate(60deg) skewY(30deg);
-  }
-  .circle-container > *:nth-of-type(4) {
-    transform: rotate(-60deg) translate(10em) rotate(80deg) skewY(30deg);
-  }
-  .circle-container > *:nth-of-type(5) {
-    transform: rotate(-80deg) translate(12em) rotate(100deg) skewY(30deg);
-  }
-  .circle-container > *:nth-of-type(6) {
-    transform: rotate(-100deg) translate(12em) rotate(100deg) skewY(-30deg);
-  }
-  .circle-container > *:nth-of-type(7) {
-    transform: rotate(-120deg) translate(10em) rotate(100deg) skewY(-30deg);
-  }
-  .circle-container > *:nth-of-type(8) {
-    transform: rotate(-140deg) translate(10em) rotate(120deg) skewY(-30deg);
-  }
-  .circle-container > *:nth-of-type(9) {
-    transform: rotate(-160deg) translate(10em) rotate(140deg) skewY(-30deg);
-  }
-  .circle-container > *:nth-of-type(10) {
-    transform: rotate(-180deg) translate(10em) rotate(160deg) skewY(-30deg);
-  }
-  
-  .circle-container img {
-    display: block;
-    max-width: 100%;
-  } */
