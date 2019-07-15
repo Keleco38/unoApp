@@ -86,7 +86,7 @@ namespace Uno.Models
                 }
                 else if (card.Value == CardValue.DoubleEdge)
                 {
-                    var targetedPlayer = Players.Find(x => x.User.Name == playerNameToSwapCards);
+                    var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
 
                     DrawCard(targetedPlayer, 5, false);
                     DrawCard(PlayerToPlay, 2, false);
