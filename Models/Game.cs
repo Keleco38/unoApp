@@ -49,7 +49,7 @@ namespace Uno.Models
                 {
                     DrawCard(GetNextPlayerToPlay(), 4, false);
                 }
-                else if (card.Value == CardValue.DiscardAllWildCards)
+                else if (card.Value == CardValue.DiscardWildCards)
                 {
                     Players.ForEach(x =>
                     {
@@ -77,6 +77,28 @@ namespace Uno.Models
                         x.Cards.Clear();
                         DrawCard(x, cardCount, false);
                     });
+                }
+                else if (card.Value == CardValue.DoubleEdge)
+                {
+                    var targetedPlayer = Players.Find(x => x.User.Name == playerNameToSwapCards);
+
+                    DrawCard(targetedPlayer, 5, false);
+                    DrawCard(PlayerToPlay, 2, false);
+                }
+                else if (card.Value == CardValue.DiscardColor)
+                {
+                    Players.ForEach(x =>
+                  {
+                      var cardsInThatColor = x.Cards.Where(y => y.Color == pickedCardColor).ToList();
+                      DiscardedPile.AddRange(cardsInThatColor);
+                      cardsInThatColor.ForEach(y => x.Cards.Remove(y));
+
+                  });
+                    // now randomize color
+                    Random random = new Random();
+                    var numbers = new int[] { 1, 2, 3, 4 };
+                    int randomColor = numbers[(random.Next(4))];
+                    LastCardPlayed.Color = (CardColor)randomColor;
                 }
             }
             else

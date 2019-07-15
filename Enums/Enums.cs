@@ -27,10 +27,11 @@ namespace Uno.Enums
         DrawFour = 13,
         ChangeColor = 14,
         BlackHole = 15,
-        DiscardAllWildCards = 16,
+        DiscardWildCards = 16,
         StealTurn = 17,
-        SwapHands = 18
-
+        SwapHands = 18,
+        DoubleEdge = 19,
+        DiscardColor = 20
     }
 
     public enum Direction

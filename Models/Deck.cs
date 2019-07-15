@@ -36,7 +36,7 @@ namespace Uno.Models
 
             if (gameMode == GameMode.SpecialCards || gameMode == GameMode.SpecialCardsAndAvalonCards)
             {
-               // AddNormalGameNormalCards();
+            //    AddNormalGameNormalCards();
                 AddSpecialWildCards();
             }
             if (gameMode == GameMode.SpecialCardsAndAvalonCards)
@@ -57,8 +57,10 @@ namespace Uno.Models
             for (int i = 1; i <= 4; i++)
             {
                 Cards.Add(new Card(CardColor.Wild, CardValue.BlackHole));
-                Cards.Add(new Card(CardColor.Wild, CardValue.DiscardAllWildCards));
+                Cards.Add(new Card(CardColor.Wild, CardValue.DiscardWildCards));
                 Cards.Add(new Card(CardColor.Wild, CardValue.SwapHands));
+                Cards.Add(new Card(CardColor.Wild, CardValue.DoubleEdge));
+                Cards.Add(new Card(CardColor.Wild, CardValue.DiscardColor));
             }
         }
 
