@@ -238,6 +238,15 @@ namespace Uno.Models
                 }
             }
 
+
+            GameEnded = DetectIfGameEnded();
+            if (GameEnded)
+            {
+                messagesToReturn.Add("Game has ended");
+                return new KeyValuePair<bool, List<string>>(true, messagesToReturn);
+            }
+
+
             PlayerToPlay = GetNextPlayerToPlay();
             return new KeyValuePair<bool, List<string>>(true, messagesToReturn);
         }

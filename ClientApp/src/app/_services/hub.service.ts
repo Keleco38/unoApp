@@ -22,7 +22,6 @@ export class HubService {
   private _hubConnection: signalR.HubConnection;
   private _allChatMessages: ChatMessage[] = [];
   private _gameChatMessages: ChatMessage[] = [];
-  private _buzzPlayerDisabled: boolean;
 
   private _onlineUsersObservable = new BehaviorSubject<User[]>(new Array<User>());
   private _currentUserObservable = new BehaviorSubject<User>(null);
@@ -65,16 +64,9 @@ export class HubService {
     });
 
     this._hubConnection.on('BuzzPlayer', () => {
-      if (this._buzzPlayerDisabled) {
-        return;
-      }
-      this._buzzPlayerDisabled = true;
       const alert = new Audio('/sounds/alert.mp3');
       alert.load();
       alert.play();
-      setTimeout(() => {
-        this._buzzPlayerDisabled = false;
-      }, 5000);
     });
 
     this._hubConnection.on('KickPlayerFromGame', () => {

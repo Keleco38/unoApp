@@ -5,9 +5,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using Uno.Contants;
 using Uno.Enums;
 using Uno.Models;
 using Uno.Models.Dtos;
+using unoApp.Models.Helpers;
 
 namespace Uno.Hubs
 {
@@ -41,62 +43,87 @@ namespace Uno.Hubs
         }
         public async Task SendMessageToAllChat(string username, string message, TypeOfMessage typeOfMessage = TypeOfMessage.Chat)
         {
-            ChatMessageDto msgDto = null;
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
 
-            var isBuzzAndExistingUser = GetIsBuzzAndTargetedUser(message);
+            var chatMessageIntentionResult = GetChatMessageIntention(message);
 
-            if (isBuzzAndExistingUser.Key == true)
+            if (chatMessageIntentionResult.ChatMessageIntention == ChatMessageIntention.Buzz)
             {
-                var targetedUser = isBuzzAndExistingUser.Value;
+                var targetedUser = _users.FirstOrDefault(x => x.Name == chatMessageIntentionResult.TargetedUsername);
                 if (targetedUser != null)
                 {
-                    await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer");
-                    await SendMessageToAllChat("Server", $"User {user.Name} has buzzed player {targetedUser.Name} ", TypeOfMessage.Server);
+                    var canBeBuzzedAfter = targetedUser.LastTimeBuzzed.AddSeconds(Constants.MINIMUM_TIME_SECONDS_BETWEEN_BUZZ);
+                    if (DateTime.Now > canBeBuzzedAfter)
+                    {
+                        await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer");
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has buzzed player {targetedUser.Name}", TypeOfMessage.Server));
+                        await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
+                    }
+                    else
+                    {
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not buzzed! Wait 5 seconds.", TypeOfMessage.Server));
+                        await Clients.Caller.SendAsync("PostNewMessageInAllChat", msgDto);
+                    }
+
                 }
                 else
                 {
-                    msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"Player {targetedUser.Name} not found", TypeOfMessage.Server));
+                    var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"Player {targetedUser.Name} not found", TypeOfMessage.Server));
                     await Clients.Caller.SendAsync("PostNewMessageInAllChat", msgDto);
                 }
             }
+            else if (chatMessageIntentionResult.ChatMessageIntention == ChatMessageIntention.Normal)
+            {
+                var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage(username, message, typeOfMessage));
+                await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
+            }
             else
             {
-                msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage(username, message, typeOfMessage));
-                await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
+                throw new Exception("Chat message intention not supported");
             }
         }
 
-
-
         public async Task SendMessageToGameChat(string gameId, string username, string message, TypeOfMessage typeOfMessage = TypeOfMessage.Chat)
         {
-            ChatMessageDto msgDto = null;
-            var game = _games.Find(x => x.GameSetup.Id == gameId);
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
+            var game = _games.Find(x => x.GameSetup.Id == gameId);
+            var allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
+            var chatMessageIntentionResult = GetChatMessageIntention(message);
 
-            var isBuzzAndExistingUser = GetIsBuzzAndTargetedUser(message);
 
-            if (isBuzzAndExistingUser.Key == true)
+            if (chatMessageIntentionResult.ChatMessageIntention == ChatMessageIntention.Buzz)
             {
-                var targetedUser = isBuzzAndExistingUser.Value;
+                var targetedUser = _users.FirstOrDefault(x => x.Name == chatMessageIntentionResult.TargetedUsername);
 
                 if (targetedUser != null)
                 {
-                    await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer");
-                    await SendMessageToGameChat(gameId, "Server", $"User {user.Name} has buzzed player {targetedUser.Name} ", TypeOfMessage.Server);
+                    var canBeBuzzedAfter = targetedUser.LastTimeBuzzed.AddSeconds(Constants.MINIMUM_TIME_SECONDS_BETWEEN_BUZZ);
+                    if (DateTime.Now > canBeBuzzedAfter)
+                    {
+                        await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer");
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has buzzed player {targetedUser.Name}", TypeOfMessage.Server));
+                        await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
+                    }
+                    else
+                    {
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not buzzed! Wait 5 seconds.", TypeOfMessage.Server));
+                        await Clients.Caller.SendAsync("PostNewMessageInGameChat", msgDto);
+                    }
                 }
                 else
                 {
-                    msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"Player {targetedUser.Name} not found", TypeOfMessage.Server));
+                    var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"Player {targetedUser.Name} not found", TypeOfMessage.Server));
                     await Clients.Caller.SendAsync("PostNewMessageInGameChat", msgDto);
                 }
             }
+            else if (chatMessageIntentionResult.ChatMessageIntention == ChatMessageIntention.Normal)
+            {
+                var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage(username, message, typeOfMessage));
+                await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
+            }
             else
             {
-                msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage(username, message, typeOfMessage));
-                var allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
-                await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
+                throw new Exception("Chat message intention not supported");
             }
         }
 
@@ -418,31 +445,20 @@ namespace Uno.Hubs
             await GetAllOnlineUsers();
         }
 
-        private KeyValuePair<bool, User> GetIsBuzzAndTargetedUser(string message)
+        private ChatMessageIntentionResult GetChatMessageIntention(string message)
         {
-            KeyValuePair<bool, User> objToReturn;
-
             Regex regex = new Regex(@"^/(slap|buzz|alert) ([A-Za-z0-9\s]*)$");
             Match match = regex.Match(message);
 
             if (match.Success)
             {
                 var targetedUsername = match.Groups[2].Value;
-                var targetedUser = _users.FirstOrDefault(x => x.Name == targetedUsername);
-                if (targetedUser != null)
-                {
-                    objToReturn = new KeyValuePair<bool, User>(true, targetedUser);
-                }
-                else
-                {
-                    objToReturn = new KeyValuePair<bool, User>(true, null);
-                }
+                return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Buzz, TargetedUsername = targetedUsername };
             }
             else
             {
-                objToReturn = new KeyValuePair<bool, User>(false, null);
+                return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Normal };
             }
-            return objToReturn;
         }
 
     }

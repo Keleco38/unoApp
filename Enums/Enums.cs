@@ -61,4 +61,10 @@ namespace Uno.Enums
         SpecialCardsAndAvalonCards = 3
     }
 
+    public enum ChatMessageIntention
+    {
+        Normal = 1,
+        Buzz = 2
+    }
+
 }
