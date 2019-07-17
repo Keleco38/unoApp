@@ -10,7 +10,7 @@ import { TypeOfMessage } from 'src/app/_models/enums';
   styleUrls: ['./all-chat.component.css']
 })
 export class AllChatComponent implements OnInit {
-  messages: ChatMessage[];
+  messages: ChatMessage[]=[];
   currentUser: User;
   newMessage = '';
 

@@ -19,6 +19,7 @@ namespace Uno
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseUrls("http://localhost:5053")
                 .UseStartup<Startup>();
     }
 }

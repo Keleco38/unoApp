@@ -159,7 +159,7 @@ namespace Uno.Models
                 else if (card.Value == CardValue.Judgement)
                 {
                     var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
-                    messagesToReturn.Add($"Player {player.User.Name} has played judgement card on player {player.User.Name}");
+                    messagesToReturn.Add($"Player {player.User.Name} has played judgement card on player {targetedPlayer.User.Name}");
                     if (targetedPlayer.Cards.Any(x => x.Color == CardColor.Wild))
                     {
                         var deflectCard = targetedPlayer.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);

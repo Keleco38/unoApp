@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { User } from '../_models/user';
 import { TypeOfMessage } from '../_models/enums';
 import { ChatMessage } from '../_models/chatMessage';
@@ -23,10 +23,10 @@ export class HubService {
 
   private _onlineUsersObservable = new BehaviorSubject<User[]>(new Array<User>());
   private _currentUserObservable = new BehaviorSubject<User>(null);
-  private _allChatMessagesObservable = new BehaviorSubject<ChatMessage>(null);
   private _availableGamesObservable = new BehaviorSubject<Game[]>(new Array<Game>());
   private _activeGameObservable = new BehaviorSubject<Game>(null);
-  private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage>(null);
+  private _gameChatMessagesObservable = new Subject<ChatMessage>();
+  private _allChatMessagesObservable = new Subject<ChatMessage>();
   private _myHandObservable = new BehaviorSubject<Hand>(null);
 
   constructor(private _router: Router, private _toastrService: ToastrService, private _modalService: NgbModal) {
@@ -127,7 +127,6 @@ export class HubService {
 
   joinGame(id: string, password: string): any {
     this._myHandObservable.next(null);
-    this._activeGameObservable.next(null);
     this._hubConnection.invoke('JoinGame', id, password);
   }
 

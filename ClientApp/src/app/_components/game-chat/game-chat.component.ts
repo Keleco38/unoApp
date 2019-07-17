@@ -11,7 +11,7 @@ import { TypeOfMessage } from 'src/app/_models/enums';
 })
 export class GameChatComponent implements OnInit {
   hideSpectatorsChat = false;
-  messages: ChatMessage[];
+  messages: ChatMessage[] = [];
   currentUser: User;
   newMessage = '';
 

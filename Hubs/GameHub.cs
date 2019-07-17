@@ -52,9 +52,10 @@ namespace Uno.Hubs
                 var targetedUser = _users.FirstOrDefault(x => x.Name == chatMessageIntentionResult.TargetedUsername);
                 if (targetedUser != null)
                 {
-                    var canBeBuzzedAfter = targetedUser.LastTimeBuzzed.AddSeconds(Constants.MINIMUM_TIME_SECONDS_BETWEEN_BUZZ);
+                    var canBeBuzzedAfter = targetedUser.LastBuzzedUtc.AddSeconds(Constants.MINIMUM_TIME_SECONDS_BETWEEN_BUZZ);
                     if (DateTime.Now > canBeBuzzedAfter)
                     {
+                        targetedUser.LastBuzzedUtc=DateTime.Now;
                         await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer");
                         var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has buzzed player {targetedUser.Name}", TypeOfMessage.Server));
                         await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
@@ -97,9 +98,10 @@ namespace Uno.Hubs
 
                 if (targetedUser != null)
                 {
-                    var canBeBuzzedAfter = targetedUser.LastTimeBuzzed.AddSeconds(Constants.MINIMUM_TIME_SECONDS_BETWEEN_BUZZ);
+                    var canBeBuzzedAfter = targetedUser.LastBuzzedUtc.AddSeconds(Constants.MINIMUM_TIME_SECONDS_BETWEEN_BUZZ);
                     if (DateTime.Now > canBeBuzzedAfter)
                     {
+                        targetedUser.LastBuzzedUtc=DateTime.Now;
                         await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer");
                         var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has buzzed player {targetedUser.Name}", TypeOfMessage.Server));
                         await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);

@@ -8,11 +8,11 @@ namespace Uno.Models
         {
             ConnectionId = connectionId;
             Name = name;
-            LastTimeBuzzed=DateTime.Now;
+            LastBuzzedUtc=DateTime.Now;
         }
         public string Name { get; set; }
         public string ConnectionId { get; set; }
-        public DateTime LastTimeBuzzed { get; set; }
+        public DateTime LastBuzzedUtc { get; set; }
 
     }
 }
