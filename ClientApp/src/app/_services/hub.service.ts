@@ -20,21 +20,19 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class HubService {
   private _hubConnection: signalR.HubConnection;
-  private _allChatMessages: ChatMessage[] = [];
-  private _gameChatMessages: ChatMessage[] = [];
 
   private _onlineUsersObservable = new BehaviorSubject<User[]>(new Array<User>());
   private _currentUserObservable = new BehaviorSubject<User>(null);
-  private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._allChatMessages);
+  private _allChatMessagesObservable = new BehaviorSubject<ChatMessage>(null);
   private _availableGamesObservable = new BehaviorSubject<Game[]>(new Array<Game>());
   private _activeGameObservable = new BehaviorSubject<Game>(null);
-  private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._gameChatMessages);
+  private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage>(null);
   private _myHandObservable = new BehaviorSubject<Hand>(null);
 
   constructor(private _router: Router, private _toastrService: ToastrService, private _modalService: NgbModal) {
     this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
     this._hubConnection.start().then(() => {
-      this.rename(false);
+      this.addOrRenameUser(false);
     });
 
     this._hubConnection.on('RefreshOnlineUsersList', (onlineUsers: User[]) => {
@@ -46,17 +44,15 @@ export class HubService {
     });
 
     this._hubConnection.on('RenamePlayer', () => {
-      this.rename(true);
+      this.addOrRenameUser(true);
     });
 
     this._hubConnection.on('PostNewMessageInAllChat', (message: ChatMessage) => {
-      this._allChatMessages.unshift(message);
-      this._allChatMessagesObservable.next(this._allChatMessages);
+      this._allChatMessagesObservable.next(message);
     });
 
     this._hubConnection.on('PostNewMessageInGameChat', (message: ChatMessage) => {
-      this._gameChatMessages.unshift(message);
-      this._gameChatMessagesObservable.next(this._gameChatMessages);
+      this._gameChatMessagesObservable.next(message);
     });
 
     this._hubConnection.on('RefreshAllGamesList', (games: Game[]) => {
@@ -110,7 +106,7 @@ export class HubService {
     this._hubConnection.invoke('SendMessageToAllChat', this._currentUserObservable.getValue().name, message, TypeOfMessage.chat);
   }
 
-  rename(forceRename: boolean) {
+  addOrRenameUser(forceRename: boolean) {
     let name;
     if (environment.production) {
       do {
@@ -130,7 +126,8 @@ export class HubService {
   }
 
   joinGame(id: string, password: string): any {
-    this._gameChatMessages = [];
+    this._myHandObservable.next(null);
+    this._activeGameObservable.next(null);
     this._hubConnection.invoke('JoinGame', id, password);
   }
 

@@ -11,7 +11,6 @@ import { TypeOfMessage } from 'src/app/_models/enums';
 })
 export class GameChatComponent implements OnInit {
   hideSpectatorsChat = false;
-
   messages: ChatMessage[];
   currentUser: User;
   newMessage = '';
@@ -19,8 +18,8 @@ export class GameChatComponent implements OnInit {
   constructor(private _hubService: HubService) {}
 
   ngOnInit(): void {
-    this._hubService.gameChatMessages.subscribe(nn => {
-      this.messages = nn;
+    this._hubService.gameChatMessages.subscribe(message => {
+      this.messages.unshift(message);
     });
     this._hubService.currentUser.subscribe(user => {
       this.currentUser = user;

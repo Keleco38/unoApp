@@ -17,10 +17,11 @@ import { PickPlayerComponent } from '../_modals/pick-player/pick-player.componen
   styleUrls: ['./game.component.css']
 })
 export class GameComponent implements OnInit {
-  private _timer: NodeJS.Timer = null;
-  private _interval: NodeJS.Timer = null;
+  private _timer: NodeJS.Timer;
+  private _interval: NodeJS.Timer;
   private _hasCalledUno: boolean;
   private _hasPlayed: boolean;
+  private _gameEnded = false;
 
   isGameChatSidebarOpen = false;
   currentUser: User;
@@ -34,11 +35,12 @@ export class GameComponent implements OnInit {
 
   ngOnInit() {
     this._hubService.activeGame.subscribe(game => {
-      if (this.game != null && !this.game.gameEnded && game != null && game.gameEnded) {
+      this.game = game;
+      if (this.game.gameEnded && !this._gameEnded) {
+        this._gameEnded = true;
         const message = `Game ended! Winner ${game.players.find(x => x.numberOfCards === 0).user.name}`;
         alert(message);
       }
-      this.game = game;
     });
 
     this._hubService.currentUser.subscribe(user => {
@@ -48,7 +50,7 @@ export class GameComponent implements OnInit {
     this._hubService.myHand.subscribe(myHand => {
       this.myHand = myHand;
       if (this.game.lastCardPlayed.playerPlayed === this.currentUser.name && this.myHand.cards.length === 1 && this._hasPlayed) {
-        if (this._timer == null) {
+        if (this._timer == null && this._interval == null) {
           this._interval = setInterval(() => {
             this.countdown -= 100;
           }, 100);
@@ -78,8 +80,6 @@ export class GameComponent implements OnInit {
     this.countdown = 2000;
     clearTimeout(this._timer);
     clearInterval(this._interval);
-    this._interval = null;
-    this._timer = null;
     this._hasPlayed = false;
     if (playerCalled) {
       this._hubService.sendMessageToGameChat('UNO');
@@ -93,12 +93,7 @@ export class GameComponent implements OnInit {
     if (card.color === CardColor.wild) {
       this._modalService.open(PickColorComponent).result.then(
         pickedColor => {
-          if (
-            card.value === CardValue.swapHands ||
-            card.value === CardValue.doubleEdge ||
-            card.value === CardValue.judgement ||
-            card.value === CardValue.inspectHand
-          ) {
+          if (card.value === CardValue.swapHands || card.value === CardValue.doubleEdge || card.value === CardValue.judgement || card.value === CardValue.inspectHand) {
             const playerModal = this._modalService.open(PickPlayerComponent);
             playerModal.componentInstance.players = this.game.players;
             playerModal.componentInstance.currentUser = this.currentUser;

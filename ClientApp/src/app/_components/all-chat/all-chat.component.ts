@@ -16,8 +16,8 @@ export class AllChatComponent implements OnInit {
 
   constructor(private _hubService: HubService) {}
   ngOnInit(): void {
-    this._hubService.allChatMessages.subscribe(nn => {
-      this.messages = nn;
+    this._hubService.allChatMessages.subscribe(message => {
+      this.messages.unshift(message);
     });
     this._hubService.currentUser.subscribe(user => {
       this.currentUser = user;

@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {}
   rename() {
-    this._hubService.rename(true);
+    this._hubService.addOrRenameUser(true);
   }
 
   createGame(gameMode: GameMode) {
