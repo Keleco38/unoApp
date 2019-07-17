@@ -10,14 +10,14 @@ import { TypeOfMessage } from 'src/app/_models/enums';
   styleUrls: ['./all-chat.component.css']
 })
 export class AllChatComponent implements OnInit {
-  messages: ChatMessage[]=[];
+  messages: ChatMessage[];
   currentUser: User;
   newMessage = '';
 
   constructor(private _hubService: HubService) {}
   ngOnInit(): void {
-    this._hubService.allChatMessages.subscribe(message => {
-      this.messages.unshift(message);
+    this._hubService.allChatMessages.subscribe(messages => {
+      this.messages = messages;
     });
     this._hubService.currentUser.subscribe(user => {
       this.currentUser = user;

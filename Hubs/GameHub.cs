@@ -34,16 +34,17 @@ namespace Uno.Hubs
         {
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
 
-            await SendMessageToAllChat("Server", $"{user.Name} has left the server.", TypeOfMessage.Server);
+            await SendMessageToAllChat($"{user.Name} has left the server.", TypeOfMessage.Server);
 
             await CleanupUserFromGames();
             await CleanupUserFromOnlineUsersList();
 
             await base.OnDisconnectedAsync(exception);
         }
-        public async Task SendMessageToAllChat(string username, string message, TypeOfMessage typeOfMessage = TypeOfMessage.Chat)
+        public async Task SendMessageToAllChat(string message, TypeOfMessage typeOfMessage = TypeOfMessage.Chat)
         {
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
+            var username = typeOfMessage == TypeOfMessage.Server ? "Server" : user.Name;
 
             var chatMessageIntentionResult = GetChatMessageIntention(message);
 
@@ -55,7 +56,7 @@ namespace Uno.Hubs
                     var canBeBuzzedAfter = targetedUser.LastBuzzedUtc.AddSeconds(Constants.MINIMUM_TIME_SECONDS_BETWEEN_BUZZ);
                     if (DateTime.Now > canBeBuzzedAfter)
                     {
-                        targetedUser.LastBuzzedUtc=DateTime.Now;
+                        targetedUser.LastBuzzedUtc = DateTime.Now;
                         await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer");
                         var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has buzzed player {targetedUser.Name}", TypeOfMessage.Server));
                         await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
@@ -84,9 +85,10 @@ namespace Uno.Hubs
             }
         }
 
-        public async Task SendMessageToGameChat(string gameId, string username, string message, TypeOfMessage typeOfMessage = TypeOfMessage.Chat)
+        public async Task SendMessageToGameChat(string gameId, string message, TypeOfMessage typeOfMessage = TypeOfMessage.Chat)
         {
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
+            var username = typeOfMessage == TypeOfMessage.Server ? "Server" : user.Name;
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             var allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
             var chatMessageIntentionResult = GetChatMessageIntention(message);
@@ -101,7 +103,7 @@ namespace Uno.Hubs
                     var canBeBuzzedAfter = targetedUser.LastBuzzedUtc.AddSeconds(Constants.MINIMUM_TIME_SECONDS_BETWEEN_BUZZ);
                     if (DateTime.Now > canBeBuzzedAfter)
                     {
-                        targetedUser.LastBuzzedUtc=DateTime.Now;
+                        targetedUser.LastBuzzedUtc = DateTime.Now;
                         await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer");
                         var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has buzzed player {targetedUser.Name}", TypeOfMessage.Server));
                         await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
@@ -161,7 +163,7 @@ namespace Uno.Hubs
             _games.Add(game);
             await GameUpdated(game);
             await GetAllGames();
-            await SendMessageToAllChat("Server", $"User {user.Name} has created new game", TypeOfMessage.Server);
+            await SendMessageToAllChat($"User {user.Name} has created new game", TypeOfMessage.Server);
         }
 
         public async Task ExitGame(string gameid)
@@ -190,7 +192,7 @@ namespace Uno.Hubs
             }
 
             await GameUpdated(game);
-            await SendMessageToGameChat(gameid, "Server", $"{user.Name} has left the game.", TypeOfMessage.Server);
+            await SendMessageToGameChat(gameid, $"{user.Name} has left the game.", TypeOfMessage.Server);
 
             if (!game.Players.Any(x => x.LeftGame == false) && !game.Spectators.Any())
                 _games.Remove(game);
@@ -245,7 +247,7 @@ namespace Uno.Hubs
                 {
                     //spectate game that hasn't started
                     game.Spectators.Add(new Spectator(user));
-                    await SendMessageToGameChat(gameId, "Server", $"{user.Name} has joined the game room.", TypeOfMessage.Server);
+                    await SendMessageToGameChat(gameId, $"{user.Name} has joined the game room.", TypeOfMessage.Server);
                 }
             }
             else
@@ -260,12 +262,12 @@ namespace Uno.Hubs
                     if (game.PlayerToPlay.User.Name == user.Name)
                         game.PlayerToPlay = playerLeftWithThisNickname;
                     await DisplayToastMessageToGame(gameId, $"PLAYER {user.Name} HAS RECONNECTED TO THE GAME");
-                    await SendMessageToGameChat(gameId, "Server", $"{user.Name} has joined the game room.", TypeOfMessage.Server);
+                    await SendMessageToGameChat(gameId, $"{user.Name} has joined the game room.", TypeOfMessage.Server);
                 }
                 else
                 {
                     game.Spectators.Add(new Spectator(user));
-                    await SendMessageToGameChat(gameId, "Server", $"{user.Name} has joined the game room.", TypeOfMessage.Server);
+                    await SendMessageToGameChat(gameId, $"{user.Name} has joined the game room.", TypeOfMessage.Server);
                 }
             }
 
@@ -290,14 +292,14 @@ namespace Uno.Hubs
                     user = _users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
                     if (user != null)
                     {
-                        SendMessageToAllChat("Server", $"{user.Name} has renamed to {name}", TypeOfMessage.Server).ConfigureAwait(false);
+                        SendMessageToAllChat($"{user.Name} has renamed to {name}", TypeOfMessage.Server).ConfigureAwait(false);
                         user.Name = name;
                     }
                     else
                     {
                         user = new User(Context.ConnectionId, name);
                         _users.Add(user);
-                        SendMessageToAllChat("Server", $"{user.Name} has connected to the server.", TypeOfMessage.Server).ConfigureAwait(false);
+                        SendMessageToAllChat($"{user.Name} has connected to the server.", TypeOfMessage.Server).ConfigureAwait(false);
                     }
                     GetAllOnlineUsers().ConfigureAwait(false);
                     var userDto = _mapper.Map<UserDto>(user);
@@ -361,7 +363,7 @@ namespace Uno.Hubs
                 }
                 if (successAndMessages.Value.Any())
                 {
-                    successAndMessages.Value.ForEach(x => SendMessageToGameChat(game.GameSetup.Id, "Server", x, TypeOfMessage.Server).ConfigureAwait(false));
+                    successAndMessages.Value.ForEach(x => SendMessageToGameChat(game.GameSetup.Id, x, TypeOfMessage.Server).ConfigureAwait(false));
                 }
             }
         }

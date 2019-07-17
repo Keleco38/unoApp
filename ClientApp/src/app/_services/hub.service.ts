@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
 import { User } from '../_models/user';
 import { TypeOfMessage } from '../_models/enums';
 import { ChatMessage } from '../_models/chatMessage';
@@ -20,13 +20,15 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class HubService {
   private _hubConnection: signalR.HubConnection;
+  private _gameChatMessages: ChatMessage[] = [];
+  private _allChatMessages: ChatMessage[] = [];
 
-  private _onlineUsersObservable = new BehaviorSubject<User[]>(new Array<User>());
   private _currentUserObservable = new BehaviorSubject<User>(null);
-  private _availableGamesObservable = new BehaviorSubject<Game[]>(new Array<Game>());
+  private _onlineUsersObservable = new ReplaySubject<User[]>(1);
+  private _availableGamesObservable = new ReplaySubject<Game[]>(1);
+  private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._gameChatMessages);
+  private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._allChatMessages);
   private _activeGameObservable = new BehaviorSubject<Game>(null);
-  private _gameChatMessagesObservable = new Subject<ChatMessage>();
-  private _allChatMessagesObservable = new Subject<ChatMessage>();
   private _myHandObservable = new BehaviorSubject<Hand>(null);
 
   constructor(private _router: Router, private _toastrService: ToastrService, private _modalService: NgbModal) {
@@ -48,11 +50,13 @@ export class HubService {
     });
 
     this._hubConnection.on('PostNewMessageInAllChat', (message: ChatMessage) => {
-      this._allChatMessagesObservable.next(message);
+      this._allChatMessages.unshift(message);
+      this._allChatMessagesObservable.next(this._allChatMessages);
     });
 
     this._hubConnection.on('PostNewMessageInGameChat', (message: ChatMessage) => {
-      this._gameChatMessagesObservable.next(message);
+      this._gameChatMessages.unshift(message);
+      this._gameChatMessagesObservable.next(this._gameChatMessages);
     });
 
     this._hubConnection.on('RefreshAllGamesList', (games: Game[]) => {
@@ -103,7 +107,7 @@ export class HubService {
   }
 
   sendMessageToAllChat(message: string): any {
-    this._hubConnection.invoke('SendMessageToAllChat', this._currentUserObservable.getValue().name, message, TypeOfMessage.chat);
+    this._hubConnection.invoke('SendMessageToAllChat', message, TypeOfMessage.chat);
   }
 
   addOrRenameUser(forceRename: boolean) {
@@ -126,7 +130,7 @@ export class HubService {
   }
 
   joinGame(id: string, password: string): any {
-    this._myHandObservable.next(null);
+    this._gameChatMessages = [];
     this._hubConnection.invoke('JoinGame', id, password);
   }
 
@@ -138,7 +142,6 @@ export class HubService {
     this._hubConnection.invoke(
       'SendMessageToGameChat',
       this._activeGameObservable.getValue().gameSetup.id,
-      this._currentUserObservable.getValue().name,
       message,
       TypeOfMessage.chat
     );
