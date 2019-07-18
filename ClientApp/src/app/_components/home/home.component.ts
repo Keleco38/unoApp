@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
     this._hubService.addOrRenameUser(true);
   }
 
-  createGame(gameMode: GameMode) {
-    this._hubService.createGame(gameMode);
+  createGame() {
+    this._hubService.createGame();
   }
 }

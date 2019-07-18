@@ -154,10 +154,10 @@ namespace Uno.Hubs
         }
 
 
-        public async Task CreateGame(GameMode gameMode)
+        public async Task CreateGame()
         {
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-            var gameSetup = new GameSetup(gameMode);
+            var gameSetup = new GameSetup();
             var game = new Game(gameSetup);
             game.Players.Add(new Player(user));
             _games.Add(game);
@@ -210,6 +210,17 @@ namespace Uno.Hubs
             await GameUpdated(game);
             await GetAllGames();
             await Clients.Client(playerToKick.User.ConnectionId).SendAsync("KickPlayerFromGame");
+        }
+
+        public async Task UpdateGameSetup(string gameId, GameMode gameMode, int roundsToWin)
+        {
+            var game = _games.Find(x => x.GameSetup.Id == gameId);
+
+            game.GameSetup.GameMode = gameMode;
+            game.GameSetup.RoundsToWin = roundsToWin;
+
+            await GameUpdated(game);
+            await GetAllGames();
         }
 
 

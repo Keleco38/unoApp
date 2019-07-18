@@ -4,12 +4,9 @@
       <div class="col-12 text-center fill-viewport-max-20">
         <h3 class=" h3 text-center text-primary">Uno - Card Game</h3>
         <div ngbDropdown>
-          <button class="btn btn-primary my-3" ngbDropdownToggle>New game</button>
+          <button class="btn btn-primary my-3">New game</button>
           <div ngbDropdownMenu>
-            <h5 class="dropdown-header">Choose setup</h5>
-            <button class="dropdown-item" (click)="createGame(1)">Normal</button>
-            <button class="dropdown-item" (click)="createGame(2)">Special Cards</button>
-            <button class="dropdown-item" disabled (click)="createGame(3)">Special Cards + Avalon Cards</button>
+            <h5 class="dropdown-header" (click)="createGame()">Choose setup</h5>
           </div>
         </div>
       </div>

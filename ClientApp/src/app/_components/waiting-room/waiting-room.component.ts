@@ -58,6 +58,9 @@ export class WaitingRoomComponent implements OnInit {
       this._hubService.kickPlayerFromGame(player.user);
     }
   }
+  updateGameSetup() {
+    this._hubService.updateGameSetup(this.activeGame.gameSetup.id, this.activeGame.gameSetup.gameMode, this.activeGame.gameSetup.roundsToWin);
+  }
   getGameModeText() {
     switch (this.activeGame.gameSetup.gameMode) {
       case GameMode.normal:

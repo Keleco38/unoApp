@@ -18,6 +18,7 @@ namespace Uno.Models
         public LastCardPlayed LastCardPlayed { get; set; }
         public Player PlayerToPlay { get; set; }
         public bool GameStarted { get; set; }
+        public bool RoundEnded { get; set; }
         public bool GameEnded { get; set; }
 
         public Game(GameSetup gameSetup)
@@ -46,12 +47,7 @@ namespace Uno.Models
 
             LastCardPlayed = new LastCardPlayed(pickedCardColor, card.Value, card.ImageUrl, player);
 
-            GameEnded = DetectIfGameEnded();
-            if (GameEnded)
-            {
-                turnResult.MessagesToLog.Add("Game has ended");
-                return turnResult;
-            }
+
 
             if (card.Color == CardColor.Wild)
             {
@@ -239,14 +235,18 @@ namespace Uno.Models
                 }
             }
 
-
-            GameEnded = DetectIfGameEnded();
+            UpdateGameAndRoundStatus();
             if (GameEnded)
             {
                 turnResult.MessagesToLog.Add("Game has ended");
                 return turnResult;
             }
-
+            if (RoundEnded)
+            {
+                StartGame();
+                turnResult.MessagesToLog.Add("Round ended! Starting new round!");
+                return turnResult;
+            }
 
             PlayerToPlay = GetNextPlayerToPlay();
             return turnResult;
@@ -268,6 +268,7 @@ namespace Uno.Models
             PlayerToPlay = Players.First();
             Players.ForEach(x => x.Cards = Deck.Draw(7));
             GameStarted = true;
+            RoundEnded = false;
         }
 
 
@@ -327,9 +328,22 @@ namespace Uno.Models
 
         }
 
-        private bool DetectIfGameEnded()
+        private void UpdateGameAndRoundStatus()
         {
-            return !PlayerToPlay.Cards.Any();
+            var playersWithoutCards = Players.Where(x => !x.Cards.Any());
+            if (playersWithoutCards.Any())
+            {
+                foreach (var player in playersWithoutCards)
+                {
+                    player.RoundsWonCount++;
+                }
+                RoundEnded = true;
+            }
+            var playersThatMatchWinCriteria = Players.Where(x => x.RoundsWonCount == GameSetup.RoundsToWin);
+            if (playersThatMatchWinCriteria.Any())
+            {
+                GameEnded = true;
+            }
         }
     }
 }

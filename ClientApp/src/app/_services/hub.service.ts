@@ -139,12 +139,7 @@ export class HubService {
   }
 
   sendMessageToGameChat(message: string): any {
-    this._hubConnection.invoke(
-      'SendMessageToGameChat',
-      this._activeGameObservable.getValue().gameSetup.id,
-      message,
-      TypeOfMessage.chat
-    );
+    this._hubConnection.invoke('SendMessageToGameChat', this._activeGameObservable.getValue().gameSetup.id, message, TypeOfMessage.chat);
   }
 
   playCard(card: Card, pickedCardColor: CardColor, playerToSwapCards = '') {
@@ -155,12 +150,16 @@ export class HubService {
     this._hubConnection.invoke('DigCardFromDiscardedPile', this._activeGameObservable.getValue().gameSetup.id, card);
   }
 
-  createGame(gameMode: GameMode) {
-    this._hubConnection.invoke('CreateGame', gameMode);
+  createGame() {
+    this._hubConnection.invoke('CreateGame');
   }
 
   kickPlayerFromGame(user: User): any {
     this._hubConnection.invoke('KickPlayerFromGame', user.name, this._activeGameObservable.getValue().gameSetup.id);
+  }
+
+  updateGameSetup(id: string, gameMode: GameMode, roundsToWin: number) {
+    this._hubConnection.invoke('UpdateGameSetup', id, gameMode, roundsToWin);
   }
 
   exitGame(): any {
