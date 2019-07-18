@@ -35,7 +35,9 @@ export class GameComponent implements OnInit {
 
   ngOnInit() {
     this._hubService.activeGame.subscribe(game => {
-      if (game === null) return;
+      if (game === null) {
+        return;
+      }
       this.game = game;
       if (this.game.gameEnded && !this._gameEnded) {
         this._gameEnded = true;
@@ -49,14 +51,11 @@ export class GameComponent implements OnInit {
     });
 
     this._hubService.myHand.subscribe(myHand => {
-      if (this.game == null) return;
+      if (this.game === null) {
+        return;
+      }
       this.myHand = myHand;
-      if (
-        this.game.lastCardPlayed.playerPlayed === this.currentUser.name &&
-        this.myHand.cards.length === 1 &&
-        this._hasPlayed &&
-        !this.mustCallUno
-      ) {
+      if (this.game.lastCardPlayed.playerPlayed.user.name === this.currentUser.name && this.myHand.cards.length === 1 && this._hasPlayed && !this.mustCallUno) {
         this._hasCalledUno = false;
         this.mustCallUno = true;
         this._interval = setInterval(() => {
@@ -104,12 +103,7 @@ export class GameComponent implements OnInit {
     if (card.color === CardColor.wild) {
       this._modalService.open(PickColorComponent).result.then(
         pickedColor => {
-          if (
-            card.value === CardValue.swapHands ||
-            card.value === CardValue.doubleEdge ||
-            card.value === CardValue.judgement ||
-            card.value === CardValue.inspectHand
-          ) {
+          if (card.value === CardValue.swapHands || card.value === CardValue.doubleEdge || card.value === CardValue.judgement || card.value === CardValue.inspectHand) {
             const playerModal = this._modalService.open(PickPlayerComponent);
             playerModal.componentInstance.players = this.game.players;
             playerModal.componentInstance.currentUser = this.currentUser;

@@ -4,7 +4,7 @@ namespace Uno.Models
 {
     public class LastCardPlayed
     {
-        public LastCardPlayed(CardColor color, CardValue value, string imageUrl, string playerPlayed)
+        public LastCardPlayed(CardColor color, CardValue value, string imageUrl, Player playerPlayed)
         {
             Color = color;
             Value = value;
@@ -14,6 +14,6 @@ namespace Uno.Models
         public CardColor Color { get; set; }
         public CardValue Value { get; set; }
         public string ImageUrl { get; set; }
-        public string PlayerPlayed { get; set; }
+        public Player PlayerPlayed { get; set; }
     }
 }

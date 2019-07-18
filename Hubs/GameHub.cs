@@ -277,38 +277,35 @@ namespace Uno.Hubs
         }
 
 
-        public void AddOrRenameUser(string name)
+        public async Task AddOrRenameUser(string name)
         {
             User user;
-            lock (_users)
-            {
-                name = Regex.Replace(name, @"[^a-zA-Z0-9]", "").ToLower();
+            name = Regex.Replace(name, @"[^a-zA-Z0-9]", "").ToLower();
 
-                if (name.Length > 10)
-                    name = name.Substring(0, 10);
-                var nameExists = _users.Any(x => x.Name == name);
-                if (!nameExists)
+            if (name.Length > 10)
+                name = name.Substring(0, 10);
+            var nameExists = _users.Any(x => x.Name == name);
+            if (!nameExists && name != "server")
+            {
+                user = _users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
+                if (user != null)
                 {
-                    user = _users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
-                    if (user != null)
-                    {
-                        SendMessageToAllChat($"{user.Name} has renamed to {name}", TypeOfMessage.Server).ConfigureAwait(false);
-                        user.Name = name;
-                    }
-                    else
-                    {
-                        user = new User(Context.ConnectionId, name);
-                        _users.Add(user);
-                        SendMessageToAllChat($"{user.Name} has connected to the server.", TypeOfMessage.Server).ConfigureAwait(false);
-                    }
-                    GetAllOnlineUsers().ConfigureAwait(false);
-                    var userDto = _mapper.Map<UserDto>(user);
-                    Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto).ConfigureAwait(false);
+                    await SendMessageToAllChat($"{user.Name} has renamed to {name}", TypeOfMessage.Server);
+                    user.Name = name;
                 }
                 else
                 {
-                    Clients.Caller.SendAsync("RenamePlayer").ConfigureAwait(false);
+                    user = new User(Context.ConnectionId, name);
+                    _users.Add(user);
+                    await SendMessageToAllChat($"{user.Name} has connected to the server.", TypeOfMessage.Server);
                 }
+                await GetAllOnlineUsers();
+                var userDto = _mapper.Map<UserDto>(user);
+                await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
+            }
+            else
+            {
+                await Clients.Caller.SendAsync("RenamePlayer");
             }
         }
 
@@ -316,56 +313,50 @@ namespace Uno.Hubs
         {
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             var game = _games.Find(x => x.GameSetup.Id == gameId);
-            lock (game)
+            if (normalDraw)
             {
-                if (normalDraw)
+                if (game.PlayerToPlay.User.Name == user.Name)
                 {
-                    if (game.PlayerToPlay.User.Name == user.Name)
-                    {
-                        game.DrawCard(game.PlayerToPlay, count, normalDraw);
-                        GameUpdated(game).ConfigureAwait(false);
-                    }
+                    game.DrawCard(game.PlayerToPlay, count, normalDraw);
+                    await GameUpdated(game);
                 }
-                else
-                {
-                    var player = game.Players.Find(x => x.User.Name == user.Name);
-                    game.DrawCard(player, count, normalDraw);
-                    GameUpdated(game).ConfigureAwait(false);
-                }
-
+            }
+            else
+            {
+                var player = game.Players.Find(x => x.User.Name == user.Name);
+                game.DrawCard(player, count, normalDraw);
+                await GameUpdated(game);
             }
         }
 
         public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string targetedPlayerName)
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
+            if (game.GameEnded || !game.GameStarted)
+                return;
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-            lock (game)
+            var player = game.Players.Find(x => x.User.Name == user.Name);
+            var card = _mapper.Map<Card>(cardDto);
+            var turnResult = game.PlayCard(player, card, pickedCardColor, targetedPlayerName);
+            if (turnResult.Success == true)
             {
-                if (game.GameEnded || !game.GameStarted)
-                    return;
-                var card = _mapper.Map<Card>(cardDto);
-                var player = game.Players.Find(x => x.User.Name == user.Name);
-                var successAndMessages = game.PlayCard(player, card, pickedCardColor, targetedPlayerName);
-                if (successAndMessages.Key)
+                if (cardDto.Value == CardValue.InspectHand)
                 {
-                    if (cardDto.Value == CardValue.InspectHand)
-                    {
-                        var targetedPlayer = game.Players.Find(x => x.User.Name == targetedPlayerName);
-                        Clients.Caller.SendAsync("ShowInspectedHand", _mapper.Map<HandDto>(targetedPlayer.Cards));
-                        successAndMessages.Value.Add($"Player {player.User.Name} has inspected {targetedPlayer.User.Name}'s hand.");
-                    }
-                    else if (cardDto.Value == CardValue.GraveDigger)
-                    {
-                        Clients.Caller.SendAsync("ShowDiscardedPile", game.DiscardedPile);
-                    }
-                    GameUpdated(game).ConfigureAwait(false);
+                    var targetedPlayer = game.Players.Find(x => x.User.Name == targetedPlayerName);
+                    await Clients.Caller.SendAsync("ShowInspectedHand", _mapper.Map<HandDto>(targetedPlayer.Cards));
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} has inspected {targetedPlayer.User.Name}'s hand.");
                 }
-                if (successAndMessages.Value.Any())
+                else if (cardDto.Value == CardValue.GraveDigger)
                 {
-                    successAndMessages.Value.ForEach(x => SendMessageToGameChat(game.GameSetup.Id, x, TypeOfMessage.Server).ConfigureAwait(false));
+                    await Clients.Caller.SendAsync("ShowDiscardedPile", game.DiscardedPile);
                 }
+                if (turnResult.MessagesToLog.Any())
+                {
+                    turnResult.MessagesToLog.ForEach(async x => await SendMessageToGameChat(game.GameSetup.Id, x, TypeOfMessage.Server));
+                }
+                await GameUpdated(game);
             }
+
         }
 
         public async Task DigCardFromDiscardedPile(string gameId, CardDto cardDto)
@@ -380,8 +371,6 @@ namespace Uno.Hubs
             await GameUpdated(game);
 
         }
-
-
 
         //-------------------------- private
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Uno.Contants;
 using Uno.Enums;
+using unoApp.Models.Helpers;
 
 namespace Uno.Models
 {
@@ -27,29 +28,29 @@ namespace Uno.Models
             DiscardedPile = new List<Card>();
         }
 
-        public KeyValuePair<bool, List<string>> PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName)
+        public TurnResult PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName)
         {
-            var messagesToReturn = new List<string>();
+            var turnResult = new TurnResult();
 
             var card = player.Cards.Find(y => y.Color == cardPlayed.Color && y.Value == cardPlayed.Value);
 
             if (PlayerToPlay != player && card.Value != CardValue.StealTurn)
-                return new KeyValuePair<bool, List<string>>(false, messagesToReturn);
-
+                return turnResult;
             if (card.Color != CardColor.Wild && card.Color != LastCardPlayed.Color && card.Value != LastCardPlayed.Value)
-                return new KeyValuePair<bool, List<string>>(false, messagesToReturn);
+                return turnResult;
 
+            turnResult.Success = true;
 
             player.Cards.Remove(card);
             DiscardedPile.Add(card);
 
-            LastCardPlayed = new LastCardPlayed(pickedCardColor, card.Value, card.ImageUrl, player.User.Name);
+            LastCardPlayed = new LastCardPlayed(pickedCardColor, card.Value, card.ImageUrl, player);
 
             GameEnded = DetectIfGameEnded();
             if (GameEnded)
             {
-                messagesToReturn.Add("Game has ended");
-                return new KeyValuePair<bool, List<string>>(true, messagesToReturn);
+                turnResult.MessagesToLog.Add("Game has ended");
+                return turnResult;
             }
 
             if (card.Color == CardColor.Wild)
@@ -64,11 +65,11 @@ namespace Uno.Models
                     }
                     else
                     {
-                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, nextPlayer.User.Name);
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, nextPlayer);
                         nextPlayer.Cards.Remove(deflectCard);
                         DiscardedPile.Add(deflectCard);
                         DrawCard(player, 4, false);
-                        messagesToReturn.Add($"Player {nextPlayer.User.Name} has auto deflected +4 card. {player.User.Name} must draw 4 cards");
+                        turnResult.MessagesToLog.Add($"Player {nextPlayer.User.Name} has auto deflected +4 card. {player.User.Name} must draw 4 cards");
                     }
                 }
                 else if (card.Value == CardValue.DiscardWildCards)
@@ -90,7 +91,7 @@ namespace Uno.Models
                     PlayerToPlay.Cards = targetedPlayerCards;
                     targetedPlayer.Cards = playersCards;
 
-                    messagesToReturn.Add($"Player {player.User.Name} has swapped hands with {targetedPlayer.User.Name}");
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} has swapped hands with {targetedPlayer.User.Name}");
                 }
                 else if (card.Value == CardValue.BlackHole)
                 {
@@ -106,7 +107,7 @@ namespace Uno.Models
                 {
                     var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
 
-                    messagesToReturn.Add($"Player {player.User.Name} has targeted {targetedPlayer.User.Name} with double edge card");
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} has targeted {targetedPlayer.User.Name} with double edge card");
 
                     var deflectCard = targetedPlayer.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);
                     if (deflectCard == null)
@@ -116,12 +117,12 @@ namespace Uno.Models
                     }
                     else
                     {
-                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name);
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer);
                         targetedPlayer.Cards.Remove(deflectCard);
                         DiscardedPile.Add(deflectCard);
                         DrawCard(PlayerToPlay, 5, false);
                         DrawCard(targetedPlayer, 2, false);
-                        messagesToReturn.Add($"Player {targetedPlayer.User.Name} has auto deflected double edge card. He will draw 2 cards and {player.User.Name} must draw 5 cards");
+                        turnResult.MessagesToLog.Add($"Player {targetedPlayer.User.Name} has auto deflected double edge card. He will draw 2 cards and {player.User.Name} must draw 5 cards");
                     }
 
                 }
@@ -139,53 +140,53 @@ namespace Uno.Models
                     var numbers = new int[] { 1, 2, 3, 4 };
                     int randomColor = numbers[(random.Next(4))];
                     LastCardPlayed.Color = (CardColor)randomColor;
-                    messagesToReturn.Add($"Player {player.User.Name} has played discard color card. Random color has been assigned.");
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} has played discard color card. Random color has been assigned.");
 
                 }
                 else if (card.Value == CardValue.HandOfGod)
                 {
                     if (player.Cards.Count > 7)
                     {
-                        messagesToReturn.Add($"Player {player.User.Name} discardeed 4 cards (hand of god).");
+                        turnResult.MessagesToLog.Add($"Player {player.User.Name} discardeed 4 cards (hand of god).");
                         var cards = player.Cards.Take(4).ToList();
                         DiscardedPile.AddRange(cards);
                         cards.ForEach(y => player.Cards.Remove(y));
                     }
                     else
                     {
-                        messagesToReturn.Add($"Player {player.User.Name} didn't discard any cards. He had less than 8 cards.");
+                        turnResult.MessagesToLog.Add($"Player {player.User.Name} didn't discard any cards. He had less than 8 cards.");
                     }
                 }
                 else if (card.Value == CardValue.Judgement)
                 {
                     var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
-                    messagesToReturn.Add($"Player {player.User.Name} has played judgement card on player {targetedPlayer.User.Name}");
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} has played judgement card on player {targetedPlayer.User.Name}");
                     if (targetedPlayer.Cards.Any(x => x.Color == CardColor.Wild))
                     {
                         var deflectCard = targetedPlayer.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);
                         if (deflectCard == null)
                         {
-                            messagesToReturn.Add($"Player {targetedPlayer.User.Name} drew 3 cards. He had wild cards.");
+                            turnResult.MessagesToLog.Add($"Player {targetedPlayer.User.Name} drew 3 cards. He had wild cards.");
                             DrawCard(targetedPlayer, 3, false);
                         }
                         else
                         {
-                            LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name);
+                            LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer);
                             targetedPlayer.Cards.Remove(deflectCard);
                             DiscardedPile.Add(deflectCard);
                             DrawCard(PlayerToPlay, 3, false);
-                            messagesToReturn.Add($"Player {targetedPlayer.User.Name} has auto deflected judgement card. {player.User.Name} must draw 3 cards");
+                            turnResult.MessagesToLog.Add($"Player {targetedPlayer.User.Name} has auto deflected judgement card. {player.User.Name} must draw 3 cards");
                         }
                     }
                     else
                     {
-                        messagesToReturn.Add($"Player {targetedPlayer.User.Name} didn't have any wild cards.");
+                        turnResult.MessagesToLog.Add($"Player {targetedPlayer.User.Name} didn't have any wild cards.");
                     }
                 }
                 else if (card.Value == CardValue.UnitedWeFall)
                 {
                     Players.ForEach(x => DrawCard(x, 2, false));
-                    messagesToReturn.Add($"Every player has drew 2 cards.");
+                    turnResult.MessagesToLog.Add($"Every player has drew 2 cards.");
                 }
                 else if (card.Value == CardValue.ParadigmShift)
                 {
@@ -203,7 +204,7 @@ namespace Uno.Models
                             Players[i].Cards = firstCardsBackup;
                         }
                     }
-                    messagesToReturn.Add($"All players exchanged their hand with the next players.");
+                    turnResult.MessagesToLog.Add($"All players exchanged their hand with the next players.");
                 }
             }
             else
@@ -218,7 +219,7 @@ namespace Uno.Models
                     }
                     else
                     {
-                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, nextPlayer.User.Name);
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, nextPlayer);
                         nextPlayer.Cards.Remove(deflectCard);
                         DiscardedPile.Add(deflectCard);
                         DrawCard(player, 2, false);
@@ -242,13 +243,13 @@ namespace Uno.Models
             GameEnded = DetectIfGameEnded();
             if (GameEnded)
             {
-                messagesToReturn.Add("Game has ended");
-                return new KeyValuePair<bool, List<string>>(true, messagesToReturn);
+                turnResult.MessagesToLog.Add("Game has ended");
+                return turnResult;
             }
 
 
             PlayerToPlay = GetNextPlayerToPlay();
-            return new KeyValuePair<bool, List<string>>(true, messagesToReturn);
+            return turnResult;
         }
 
 
@@ -262,7 +263,7 @@ namespace Uno.Models
                 lastCardDrew = Deck.Draw(1).First();
                 DiscardedPile.Add(lastCardDrew);
             } while (lastCardDrew.Color == CardColor.Wild);
-            LastCardPlayed = new LastCardPlayed(lastCardDrew.Color, lastCardDrew.Value, lastCardDrew.ImageUrl, string.Empty);
+            LastCardPlayed = new LastCardPlayed(lastCardDrew.Color, lastCardDrew.Value, lastCardDrew.ImageUrl, new Player(new User(string.Empty, "Server")));
             Direction = Direction.Right;
             PlayerToPlay = Players.First();
             Players.ForEach(x => x.Cards = Deck.Draw(7));
