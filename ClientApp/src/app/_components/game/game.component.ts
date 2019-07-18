@@ -92,6 +92,9 @@ export class GameComponent implements OnInit {
   }
 
   playCard(card: Card) {
+    if (this.mustCallUno) {
+      return;
+    }
     if (this.game.playerToPlay.user.name !== this.currentUser.name && card.value !== CardValue.stealTurn) {
       return;
     }
