@@ -1,74 +1,102 @@
 <div class="row mb-3">
-  <div class="col-sm-12 fill-viewport-50 scrollable-div-y">
-    <button class="btn btn-danger btn-block mb-2" (click)="leaveWaitingRoom()">Leave waiting room</button>
+  <div class="col-sm-12 fill-viewport-max-70 scrollable-div-y">
     <div class="alert alert-primary">
       <div class="row">
         <div class="col-sm-6">
-          <p><strong>Game mode: </strong> {{ getGameModeText() }}</p>
-          <p><strong>Play until: </strong> {{ activeGame.gameSetup.roundsToWin }}</p>
-          <p><strong>Password protected:</strong> {{ activeGame.gameSetup.isPasswordProtected }}</p>
-          <form *ngIf="activeGame.players[0]?.user.name == currentUser.name">
-            <div class="form-group row">
-              <label for="password" class="col-3 col-sm-2 col-form-label"><strong>Password:</strong> </label>
-              <div class="col-5 col-sm-4">
-                <input type="password" [(ngModel)]="password" name="password" class="form-control" id="password" placeholder="(Optional)" />
-              </div>
-              <div class="col-4 col-sm-2">
-                <button class="btn btn-primary btn-block" (click)="setRoomPassword()">Set</button>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="col-sm-6">
           <div *ngIf="activeGame.players[0]?.user.name == currentUser.name">
-            <form>
-              <div class="form-group">
-                <label for="gameMode">Game mode:</label>
-                <select [(ngModel)]="activeGame.gameSetup.gameMode" (change)="updateGameSetup()" class="form-control" id="gameMode">
-                  <option value="1">Normal</option>
-                  <option value="1">Special wild cards</option>
-                </select>
+            <form name="gameSetupForm" id="gameSetupForm">
+              <div class="form-group row">
+                <label for="gameMode" class="col-4 col-form-label">Game mode</label>
+                <div class="col-8">
+                  <select
+                    [(ngModel)]="activeGame.gameSetup.gameMode"
+                    (change)="updateGameSetup()"
+                    class="form-control form-control-sm"
+                    id="gameMode"
+                    name="gameMode"
+                  >
+                    <option value="1">Normal</option>
+                    <option value="2">Special wild cards</option>
+                  </select>
+                </div>
               </div>
-              <div class="form-group">
-                  <label for="playuntil">Play until:</label>
-                  <select [(ngModel)]="activeGame.gameSetup.roundsToWin" (change)="updateGameSetup()"  class="form-control" id="playuntil">
+              <div class="form-group row">
+                <label for="playuntil" class="col-4 col-form-label">Play until</label>
+                <div class="col-8">
+                  <select
+                    [(ngModel)]="activeGame.gameSetup.roundsToWin"
+                    (change)="updateGameSetup()"
+                    class="form-control form-control-sm"
+                    name="playuntil"
+                    id="playuntil"
+                  >
                     <option value="1">1</option>
                     <option value="3">3</option>
                     <option value="5">5</option>
                     <option value="7">7</option>
                   </select>
                 </div>
+              </div>
+              <div class="form-group row">
+                <label for="password" class="col-4 col-form-label">Password</label>
+                <div class="col-5">
+                  <input
+                    type="password"
+                    [(ngModel)]="password"
+                    class="form-control"
+                    name="password"
+                    id="password"
+                    placeholder="{{ getPasswordPlaceholder() }}"
+                  />
+                </div>
+                <div class="col-3">
+                  <button class="btn btn-primary btn-block" (click)="setRoomPassword()">&#10003;</button>
+                </div>
+              </div>
             </form>
           </div>
-          <div *ngIf="activeGame.players[0]?.user.name != currentUser.name">
-            //todo not admin
+          <div id="gameSetupInfo" *ngIf="activeGame.players[0]?.user.name != currentUser.name">
+            <p><strong>Game mode: </strong> {{ getGameModeText() }}</p>
+            <p><strong>Play until: </strong> {{ activeGame.gameSetup.roundsToWin }}</p>
+            <p><strong>Password protected:</strong> {{ activeGame.gameSetup.isPasswordProtected }}</p>
           </div>
+        </div>
+        <div class="col-sm-6">
+          <button class="btn btn-sm btn-danger btn-block" (click)="leaveWaitingRoom()">Leave waiting room</button>
+          <button class="btn btn-sm btn-primary btn-block" *ngIf="userIsSpectator() && activeGame.players.length < 11" (click)="joinGame()">
+            Join the game
+          </button>
+          <button
+            *ngIf="activeGame.players[0]?.user?.connectionId == currentUser.connectionId"
+            [disabled]="activeGame.players.length < 2"
+            class="btn btn-sm btn-success btn-block"
+            (click)="startGame()"
+          >
+            Start game!
+          </button>
         </div>
       </div>
     </div>
-    <button class="btn btn-primary my-3" *ngIf="userIsSpectator()" [hidden]="activeGame.players.length > 9" (click)="joinGame()">
-      Join the game
-    </button>
-    <h5 class="text-success">Current number of players: {{ activeGame.players.length }} (MAX:10, MIN:2)</h5>
+
+    <h5 class="text-success">Currently players: {{ activeGame.players.length }} (MAX:10, MIN:2)</h5>
     <ul>
       <li *ngFor="let player of activeGame.players">
         {{ player?.user?.name }}
         <strong
-          *ngIf="currentUser.connectionId == activeGame.players[0].user.connectionId && currentUser.connectionId != player.user.connectionId"
+          *ngIf="
+            currentUser.connectionId == activeGame.players[0].user.connectionId && currentUser.connectionId != player.user.connectionId
+          "
           class="ml-2 text-danger cursor-pointer"
           (click)="kickPlayerFromGame(player)"
           >[KICK]</strong
         >
       </li>
     </ul>
-    <button *ngIf="activeGame.players[0]?.user?.connectionId == currentUser.connectionId" [disabled]="activeGame.players.length < 2" class="btn btn-success" (click)="startGame()">
-      Start game!
-    </button>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-12  fill-viewport-50 scrollable-div-y bg-white">
+  <div class="col-12  fill-viewport-max-100 scrollable-div-y bg-white">
     <app-game-tabs></app-game-tabs>
   </div>
 </div>

@@ -231,7 +231,7 @@ namespace Uno.Hubs
             game.StartGame();
 
             await UpdateGame(game);
-            await HandsUpdated(game);
+            await UpdateHands(game);
             await GetAllGames();
         }
 
@@ -273,7 +273,7 @@ namespace Uno.Hubs
 
                     await DisplayToastMessageToGame(gameId, $"PLAYER {user.Name} HAS RECONNECTED TO THE GAME");
                     await SendMessageToGameChat(gameId, $"{user.Name} has joined the game room.", TypeOfMessage.Server);
-                    await HandsUpdated(game);
+                    await UpdateHands(game);
                 }
                 else
                 {
@@ -299,19 +299,18 @@ namespace Uno.Hubs
                 var existingUser = _users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
                 if (existingUser != null)
                 {
-                    _users.Remove(existingUser);
-                    _users.Add(new User(existingUser.ConnectionId, name));
                     await SendMessageToAllChat($"{existingUser.Name} has renamed to {name}", TypeOfMessage.Server);
+                    _users.Remove(existingUser);
                 }
                 else
                 {
-                    var user = new User(Context.ConnectionId, name);
-                    _users.Add(user);
-                    await SendMessageToAllChat($"{user.Name} has connected to the server.", TypeOfMessage.Server);
+                    await SendMessageToAllChat($"{name} has connected to the server.", TypeOfMessage.Server);
                 }
-                await GetAllOnlineUsers();
-                var userDto = _mapper.Map<UserDto>(existingUser);
+                var user = new User(Context.ConnectionId, name);
+                _users.Add(user);
+                var userDto = _mapper.Map<UserDto>(user);
                 await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
+                await GetAllOnlineUsers();
             }
             else
             {
@@ -336,7 +335,7 @@ namespace Uno.Hubs
                 game.DrawCard(player, count, normalDraw);
             }
             await UpdateGame(game);
-            await HandsUpdated(game);
+            await UpdateHands(game);
 
         }
 
@@ -366,7 +365,7 @@ namespace Uno.Hubs
                     turnResult.MessagesToLog.ForEach(async x => await SendMessageToGameChat(game.GameSetup.Id, x, TypeOfMessage.Server));
                 }
                 await UpdateGame(game);
-                await HandsUpdated(game);
+                await UpdateHands(game);
             }
 
         }
@@ -381,7 +380,7 @@ namespace Uno.Hubs
             game.Players.Find(x => x.User.Name == user.Name).Cards.Add(cardToPickUp);
             game.DiscardedPile.Remove(cardToPickUp);
             await UpdateGame(game);
-            await HandsUpdated(game);
+            await UpdateHands(game);
         }
 
         //-------------------------- private
@@ -412,7 +411,7 @@ namespace Uno.Hubs
                 }
             }
         }
-        private async Task HandsUpdated(Game game)
+        private async Task UpdateHands(Game game)
         {
             if (game.GameStarted)
             {

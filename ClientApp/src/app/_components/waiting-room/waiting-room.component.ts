@@ -59,7 +59,11 @@ export class WaitingRoomComponent implements OnInit {
     }
   }
   updateGameSetup() {
-    this._hubService.updateGameSetup(this.activeGame.gameSetup.id, this.activeGame.gameSetup.gameMode, this.activeGame.gameSetup.roundsToWin);
+    this._hubService.updateGameSetup(
+      this.activeGame.gameSetup.id,
+      this.activeGame.gameSetup.gameMode,
+      this.activeGame.gameSetup.roundsToWin
+    );
   }
   getGameModeText() {
     switch (this.activeGame.gameSetup.gameMode) {
@@ -70,5 +74,9 @@ export class WaitingRoomComponent implements OnInit {
       case GameMode.specialCardsAndAvalonCards:
         return 'Special cards + Avalon cards';
     }
+  }
+
+  getPasswordPlaceholder() {
+    return this.activeGame.gameSetup.isPasswordProtected ? 'Already Set' : '(Optional)';
   }
 }

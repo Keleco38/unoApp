@@ -29,7 +29,7 @@ export class HubService {
   private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._gameChatMessages);
   private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._allChatMessages);
   private _activeGameObservable = new BehaviorSubject<Game>(null);
-  private _myHandObservable = new BehaviorSubject<Hand>(null);
+  private _myHandObservable = new Subject<Hand>();
 
   constructor(private _router: Router, private _toastrService: ToastrService, private _modalService: NgbModal) {
     this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
