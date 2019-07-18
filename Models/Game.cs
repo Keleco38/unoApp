@@ -45,7 +45,7 @@ namespace Uno.Models
             player.Cards.Remove(card);
             DiscardedPile.Add(card);
 
-            LastCardPlayed = new LastCardPlayed(pickedCardColor, card.Value, card.ImageUrl, player);
+            LastCardPlayed = new LastCardPlayed(pickedCardColor, card.Value, card.ImageUrl, player.User.Name);
 
 
 
@@ -61,7 +61,7 @@ namespace Uno.Models
                     }
                     else
                     {
-                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, nextPlayer);
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, nextPlayer.User.Name);
                         nextPlayer.Cards.Remove(deflectCard);
                         DiscardedPile.Add(deflectCard);
                         DrawCard(player, 4, false);
@@ -113,7 +113,7 @@ namespace Uno.Models
                     }
                     else
                     {
-                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer);
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name);
                         targetedPlayer.Cards.Remove(deflectCard);
                         DiscardedPile.Add(deflectCard);
                         DrawCard(PlayerToPlay, 5, false);
@@ -167,7 +167,7 @@ namespace Uno.Models
                         }
                         else
                         {
-                            LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer);
+                            LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name);
                             targetedPlayer.Cards.Remove(deflectCard);
                             DiscardedPile.Add(deflectCard);
                             DrawCard(PlayerToPlay, 3, false);
@@ -215,7 +215,7 @@ namespace Uno.Models
                     }
                     else
                     {
-                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, nextPlayer);
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, nextPlayer.User.Name);
                         nextPlayer.Cards.Remove(deflectCard);
                         DiscardedPile.Add(deflectCard);
                         DrawCard(player, 2, false);
@@ -263,7 +263,7 @@ namespace Uno.Models
                 lastCardDrew = Deck.Draw(1).First();
                 DiscardedPile.Add(lastCardDrew);
             } while (lastCardDrew.Color == CardColor.Wild);
-            LastCardPlayed = new LastCardPlayed(lastCardDrew.Color, lastCardDrew.Value, lastCardDrew.ImageUrl, new Player(new User(string.Empty, "Server")));
+            LastCardPlayed = new LastCardPlayed(lastCardDrew.Color, lastCardDrew.Value, lastCardDrew.ImageUrl, string.Empty);
             Direction = Direction.Right;
             PlayerToPlay = Players.First();
             Players.ForEach(x => x.Cards = Deck.Draw(7));

@@ -55,7 +55,7 @@ export class GameComponent implements OnInit {
         return;
       }
       this.myHand = myHand;
-      if (this.game.lastCardPlayed.playerPlayed.user.name === this.currentUser.name && this.myHand.cards.length === 1 && this._hasPlayed && !this.mustCallUno) {
+      if (this.game.lastCardPlayed.playerPlayed === this.currentUser.name && this.myHand.cards.length === 1 && this._hasPlayed && !this.mustCallUno) {
         this._hasCalledUno = false;
         this.mustCallUno = true;
         this._interval = setInterval(() => {

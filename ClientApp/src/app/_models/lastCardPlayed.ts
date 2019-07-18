@@ -5,5 +5,5 @@ export interface LastCardPlayed {
   imageUrl: string;
   color: CardColor;
   value: CardValue;
-  playerPlayed: Player;
+  playerPlayed: string;
 }
