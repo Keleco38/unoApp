@@ -1,12 +1,19 @@
 #game-short-info p {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   margin-bottom: 0.5rem;
+}
+#game-short-info hr {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.log-entry{
+  font-size: 0.8rem;
 }
 #button-top-container button {
   font-size: 0.8rem;
 }
 .player-hand-card {
-  width: 10%;
+  /* set width here */
 }
 .last-card-played,
 .deck-card {

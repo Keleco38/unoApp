@@ -233,9 +233,9 @@ namespace Uno.Hubs
             await UpdateGame(game);
             await UpdateHands(game);
             await GetAllGames();
-            await AddToGameLog(gameId,"This is the game log summary. We will display the last 3 entries here.");
-            await AddToGameLog(gameId,"If you need more detailed log info, press the 'Game info' button. !");
             await AddToGameLog(gameId,"Game started!");
+            await AddToGameLog(gameId,"If you need more detailed log info, press the 'Game info' button.");
+            await AddToGameLog(gameId,"This is the game log summary. We will display the last 3 entries here.");
         }
 
         public async Task JoinGame(string gameId, string password)
