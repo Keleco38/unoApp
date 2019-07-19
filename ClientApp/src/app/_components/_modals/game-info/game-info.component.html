@@ -1,0 +1,27 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Game info</h4>
+</div>
+<div class="modal-body">
+  <div class="col-12">
+    <p><b>Game Mode:</b> {{ getGameModeText() }}</p>
+    <p><b>Play Until:</b> {{ game.gameSetup.roundsToWin }}</p>
+    <table class="table">
+      <thead>
+        <th>Name</th>
+        <th>Cards Left</th>
+        <th>Rounds Won</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let player of game.players">
+          <td>{{ player.user.name }}</td>
+          <td>{{ player.numberOfCards }}</td>
+          <td>{{ player.roundsWonCount }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-12 fill-viewport-max-100 scrollable-div-y">
+    <h4 class="text-primary">Log</h4>
+    <p *ngFor="let log of gameLog">*{{ log }}</p>
+  </div>
+</div>

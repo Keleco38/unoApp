@@ -1,29 +1,24 @@
+#game-short-info p {
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+#button-top-container button {
+  font-size: 0.8rem;
+}
 .player-hand-card {
   width: 10%;
 }
-.last-card-played {
+.last-card-played,
+.deck-card {
   padding: 5px;
   border-width: 5px;
   border-style: solid;
-}
-.deck-image-div {
-  margin: 0 auto;
-  width: 25%;
-}
-.deck-image-div > .card-body {
-  padding: 0;
 }
 
 .player-hand-card:hover {
   margin-top: -5%;
 }
-.extraPointsCardSelected {
-  opacity: 1 !important;
-  margin-top: -5%;
-}
-.extraPointsCardUnselected {
-  opacity: 0.3 !important;
-}
+
 .first-played-card {
   margin-left: 0;
 }
@@ -32,16 +27,14 @@
   .player-hand-card {
     width: 20%;
   }
-  .deck-image-div {
-    width: 50%;
+  #card-container img{
+    width:50%;
   }
 }
 .left-game {
   border: 2px solid red;
 }
-.chat-button {
-  margin-left: 20px;
-}
+
 .animation-block-shine {
   animation-name: greenPulseBlock;
   animation-duration: 2s;
@@ -69,15 +62,15 @@
 }
 @keyframes greenPulseText {
   from {
-    background-color: #c0ff02;
-    box-shadow: 0 0 9px #333;
+    color: #c0ff02;
+    border: 1px solid #c0ff02;
   }
   50% {
-    background-color: #4b610b;
-    box-shadow: 0 0 18px #91bd09;
+    color: #4b610b;
+    border: 1px solid #4b610b;
   }
   to {
-    background-color: #c0ff02;
-    box-shadow: 0 0 9px #333;
+    color: #c0ff02;
+    border: 1px solid #c0ff02;
   }
 }

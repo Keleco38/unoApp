@@ -1,3 +1,4 @@
+import { GameInfoComponent } from './../_modals/game-info/game-info.component';
 import { CardValue } from './../../_models/enums';
 import { Hand } from '../../_models/hand';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -30,6 +31,7 @@ export class GameComponent implements OnInit {
   myHand: Hand;
   mustCallUno = false;
   countdown = 2000;
+  gameLog: string[];
 
   constructor(private _hubService: HubService, private _modalService: NgbModal) {}
 
@@ -46,6 +48,10 @@ export class GameComponent implements OnInit {
       }
     });
 
+    this._hubService.gameLog.subscribe(gameLog => {
+      this.gameLog = gameLog;
+    });
+
     this._hubService.currentUser.subscribe(user => {
       this.currentUser = user;
     });
@@ -55,7 +61,12 @@ export class GameComponent implements OnInit {
         return;
       }
       this.myHand = myHand;
-      if (this.game.lastCardPlayed.playerPlayed === this.currentUser.name && this.myHand.cards.length === 1 && this._hasPlayed && !this.mustCallUno) {
+      if (
+        this.game.lastCardPlayed.playerPlayed === this.currentUser.name &&
+        this.myHand.cards.length === 1 &&
+        this._hasPlayed &&
+        !this.mustCallUno
+      ) {
         this._hasCalledUno = false;
         this.mustCallUno = true;
         this._interval = setInterval(() => {
@@ -64,7 +75,9 @@ export class GameComponent implements OnInit {
 
         this._timer = setTimeout(() => {
           if (!this._hasCalledUno) {
-            this.drawCard(2, false);
+            if (!this.game.gameEnded) {
+              this.drawCard(2, false);
+            }
             this.callUno(false);
             this._hubService.sendMessageToGameChat('<--- Forgot to call uno! Drawing 2 cards.');
           }
@@ -106,7 +119,12 @@ export class GameComponent implements OnInit {
     if (card.color === CardColor.wild) {
       this._modalService.open(PickColorComponent).result.then(
         pickedColor => {
-          if (card.value === CardValue.swapHands || card.value === CardValue.doubleEdge || card.value === CardValue.judgement || card.value === CardValue.inspectHand) {
+          if (
+            card.value === CardValue.swapHands ||
+            card.value === CardValue.doubleEdge ||
+            card.value === CardValue.judgement ||
+            card.value === CardValue.inspectHand
+          ) {
             const playerModal = this._modalService.open(PickPlayerComponent);
             playerModal.componentInstance.players = this.game.players;
             playerModal.componentInstance.currentUser = this.currentUser;
@@ -135,6 +153,10 @@ export class GameComponent implements OnInit {
     this._hubService.drawCard(count, changeTurn);
   }
 
+  openGameInfoModal() {
+    var modalRef = this._modalService.open(GameInfoComponent);
+  }
+
   toggleGameChatSidebar() {
     this.isGameChatSidebarOpen = !this.isGameChatSidebarOpen;
     this.numberUnreadMessages = 0;
@@ -154,6 +176,6 @@ export class GameComponent implements OnInit {
   }
 
   getDirectionStringFromGame() {
-    return this.game.direction === Direction.right ? '------------>>>' : '<<<------------';
+    return this.game.direction === Direction.right ? '-->' : '<--';
   }
 }

@@ -21,6 +21,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class HubService {
   private _hubConnection: signalR.HubConnection;
   private _gameChatMessages: ChatMessage[] = [];
+  private _gameLog: string[] = [];
   private _allChatMessages: ChatMessage[] = [];
 
   private _currentUserObservable = new BehaviorSubject<User>(null);
@@ -28,6 +29,7 @@ export class HubService {
   private _availableGamesObservable = new ReplaySubject<Game[]>(1);
   private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._gameChatMessages);
   private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._allChatMessages);
+  private _gameLogObservable = new BehaviorSubject<string[]>(this._gameLog);
   private _activeGameObservable = new BehaviorSubject<Game>(null);
   private _myHandObservable = new Subject<Hand>();
 
@@ -59,6 +61,11 @@ export class HubService {
       this._gameChatMessagesObservable.next(this._gameChatMessages);
     });
 
+    this._hubConnection.on('AddToGameLog', (message: string) => {
+      this._gameLog.unshift(message);
+      this._gameLogObservable.next(this._gameLog);
+    });
+
     this._hubConnection.on('RefreshAllGamesList', (games: Game[]) => {
       this._availableGamesObservable.next(games);
     });
@@ -75,7 +82,7 @@ export class HubService {
     });
 
     this._hubConnection.on('DisplayToastMessage', (message: string) => {
-      this._toastrService.info(message, '', { timeOut: 8000 });
+      this._toastrService.info(message, '', { timeOut: 3000 });
     });
 
     this._hubConnection.on('UpdateMyHand', (myHand: Hand) => {
@@ -131,6 +138,7 @@ export class HubService {
 
   joinGame(id: string, password: string): any {
     this._gameChatMessages = [];
+    this._gameLog = [];
     this._hubConnection.invoke('JoinGame', id, password);
   }
 
@@ -201,6 +209,9 @@ export class HubService {
 
   get gameChatMessages() {
     return this._gameChatMessagesObservable.asObservable();
+  }
+  get gameLog() {
+    return this._gameLogObservable.asObservable();
   }
 
   get myHand() {

@@ -1,5 +1,5 @@
 import { HubService } from './../../../_services/hub.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Injector } from '@angular/core';
 import { Card } from 'src/app/_models/card';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -10,7 +10,10 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class DigCardComponent implements OnInit {
   @Input() 'cards': Card[];
-  constructor(private _hubService: HubService, private _activeModal: NgbActiveModal) {}
+  private _hubService: HubService;
+  constructor(private _injector: Injector, private _activeModal: NgbActiveModal) {
+    this._hubService = this._injector.get(HubService);
+  }
 
   ngOnInit() {}
 

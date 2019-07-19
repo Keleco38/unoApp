@@ -233,6 +233,9 @@ namespace Uno.Hubs
             await UpdateGame(game);
             await UpdateHands(game);
             await GetAllGames();
+            await AddToGameLog(gameId,"This is the game log summary. We will display the last 3 entries here.");
+            await AddToGameLog(gameId,"If you need more detailed log info, press the 'Game info' button. !");
+            await AddToGameLog(gameId,"Game started!");
         }
 
         public async Task JoinGame(string gameId, string password)
@@ -327,6 +330,7 @@ namespace Uno.Hubs
                 if (game.PlayerToPlay.User.Name == user.Name)
                 {
                     game.DrawCard(game.PlayerToPlay, count, normalDraw);
+                    await AddToGameLog(gameId, $"Player {user.Name} drew a card (normal draw)");
                 }
             }
             else
@@ -359,10 +363,12 @@ namespace Uno.Hubs
                 else if (cardDto.Value == CardValue.GraveDigger)
                 {
                     await Clients.Caller.SendAsync("ShowDiscardedPile", game.DiscardedPile);
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} digged a card from the discarded pile.");
+
                 }
                 if (turnResult.MessagesToLog.Any())
                 {
-                    turnResult.MessagesToLog.ForEach(async x => await SendMessageToGameChat(game.GameSetup.Id, x, TypeOfMessage.Server));
+                    turnResult.MessagesToLog.ForEach(async x => await AddToGameLog(game.GameSetup.Id, x));
                 }
                 await UpdateGame(game);
                 await UpdateHands(game);
@@ -384,6 +390,14 @@ namespace Uno.Hubs
         }
 
         //-------------------------- private
+
+        private async Task AddToGameLog(string gameid, string message)
+        {
+            var game = _games.Find(x => x.GameSetup.Id == gameid);
+            var allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
+
+            await Clients.Clients(allUsersInGame).SendAsync("AddToGameLog", message);
+        }
 
         private async Task DisplayToastMessageToGame(string gameid, string message)
         {

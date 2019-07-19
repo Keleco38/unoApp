@@ -1,16 +1,10 @@
 <div class="row">
-  <div class="col-sm-8 col-6">
-    <div class="row">
-      <div class="col-12 text-center fill-viewport-max-20">
-        <h3 class=" h3 text-center text-primary">Uno - Card Game</h3>
-        <div ngbDropdown>
-          <button class="btn btn-primary my-3" (click)="createGame()">New game</button>
-        </div>
-      </div>
-      <div class="col-12 scrollable-div-y fill-viewport-max-80">
-        <app-all-chat></app-all-chat>
-      </div>
+  <div class="col-sm-8 col-6  fill-viewport-max-100 scrollable-div-y">
+    <h3 class=" h3 text-center text-primary">Uno - Card Game</h3>
+    <div class="text-center">
+        <button class="btn btn-primary my-3" (click)="createGame()">New game</button>
     </div>
+    <app-all-chat></app-all-chat>
   </div>
   <div class="col-sm-4 col-6 fill-viewport-max-100 scrollable-div-y">
     <button class="btn btn-outline-info btn-sm btn-block my-2" [routerLink]="['/help']">Help</button>
