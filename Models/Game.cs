@@ -258,16 +258,14 @@ namespace Uno.Models
                 }
             }
 
-            UpdateGameAndRoundStatus();
+            UpdateGameAndRoundStatus(turnResult);
             if (GameEnded)
             {
-                turnResult.MessagesToLog.Add("Game has ended");
                 return turnResult;
             }
             if (RoundEnded)
             {
                 StartGame();
-                turnResult.MessagesToLog.Add("Round ended! Starting new round!");
                 return turnResult;
             }
 
@@ -351,7 +349,7 @@ namespace Uno.Models
 
         }
 
-        private void UpdateGameAndRoundStatus()
+        private void UpdateGameAndRoundStatus(TurnResult turnResult)
         {
             var playersWithoutCards = Players.Where(x => !x.Cards.Any());
             if (playersWithoutCards.Any())
@@ -361,11 +359,13 @@ namespace Uno.Models
                     player.RoundsWonCount++;
                 }
                 RoundEnded = true;
+                turnResult.MessagesToLog.Add($"Round ended! Players that won that round: {string.Join(',', playersWithoutCards)}");
             }
             var playersThatMatchWinCriteria = Players.Where(x => x.RoundsWonCount == GameSetup.RoundsToWin);
             if (playersThatMatchWinCriteria.Any())
             {
                 GameEnded = true;
+                turnResult.MessagesToLog.Add($"Game ended! Players that won the game: {string.Join(',', playersThatMatchWinCriteria)}");
             }
         }
     }

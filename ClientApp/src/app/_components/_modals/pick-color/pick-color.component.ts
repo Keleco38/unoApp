@@ -15,4 +15,7 @@ export class PickColorComponent implements OnInit {
   pickColor(cardColor: CardColor) {
     this._activeModal.close(cardColor);
   }
+  closeModal(){
+    this._activeModal.dismiss();
+  }
 }
