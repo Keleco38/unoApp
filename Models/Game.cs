@@ -359,13 +359,13 @@ namespace Uno.Models
                     player.RoundsWonCount++;
                 }
                 RoundEnded = true;
-                turnResult.MessagesToLog.Add($"Round ended! Players that won that round: {string.Join(',', playersWithoutCards)}");
+                turnResult.MessagesToLog.Add($"Round ended! Players that won that round: {string.Join(',', playersWithoutCards.Select(x => x.User.Name))}");
             }
             var playersThatMatchWinCriteria = Players.Where(x => x.RoundsWonCount == GameSetup.RoundsToWin);
             if (playersThatMatchWinCriteria.Any())
             {
                 GameEnded = true;
-                turnResult.MessagesToLog.Add($"Game ended! Players that won the game: {string.Join(',', playersThatMatchWinCriteria)}");
+                turnResult.MessagesToLog.Add($"Game ended! Players that won the game: {string.Join(',', playersThatMatchWinCriteria.Select(x => x.User.Name))}");
             }
         }
     }

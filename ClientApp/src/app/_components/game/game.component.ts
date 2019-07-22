@@ -43,7 +43,7 @@ export class GameComponent implements OnInit {
       this.game = game;
       if (this.game.gameEnded && !this._gameEnded) {
         this._gameEnded = true;
-        const message = `Game ended! Winner ${game.players.find(x => x.numberOfCards === 0).user.name}`;
+        const message = `Game ended!`;
         alert(message);
       }
     });
