@@ -90,8 +90,10 @@ export class HubService {
     });
 
     this._hubConnection.on('ShowInspectedHand', (hand: Hand) => {
-      const modalRef = this._modalService.open(ShowHandComponent);
-      modalRef.componentInstance.hand = hand;
+      setTimeout(() => {
+        const modalRef = this._modalService.open(ShowHandComponent);
+        modalRef.componentInstance.hand = hand;
+      }, 2000);
     });
 
     this._hubConnection.on('UpdateGame', (game: Game) => {

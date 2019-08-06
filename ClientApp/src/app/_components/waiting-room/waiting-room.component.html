@@ -82,7 +82,7 @@
 </div>
 <div class="row">
   <div class="col-12">
-    <h5 class="text-success">Currently: {{ activeGame.players.length }} (MAX:10, MIN:2)</h5>
+    <h5 class="text-success">Players currently: {{ activeGame.players.length }} (MAX:10, MIN:2)</h5>
     <ul>
       <li *ngFor="let player of activeGame.players">
         {{ player?.user?.name }}

@@ -111,6 +111,7 @@ export class GameComponent implements OnInit {
     }
     if (card.value === CardValue.stealTurn && card.color == this.game.lastCardPlayed.color) {
       this._hubService.playCard(card, card.color);
+      return;
     }
     if (this.game.playerToPlay.user.name !== this.currentUser.name) {
       return;
@@ -129,7 +130,7 @@ export class GameComponent implements OnInit {
           playerModal.componentInstance.players = this.game.players;
           playerModal.componentInstance.currentUser = this.currentUser;
           playerModal.result.then(playerName => {
-            this._hubService.playCard(card, pickedColor, playerName);
+              this._hubService.playCard(card, pickedColor, playerName);
           });
         } else if (card.value === CardValue.graveDigger) {
           const digModal = this._modalService.open(DigCardComponent);
@@ -153,14 +154,14 @@ export class GameComponent implements OnInit {
   }
 
   drawCard(count: number, changeTurn: boolean) {
-    if(this.game.playerToPlay.user.name!=this.currentUser.name){
+    if (changeTurn && this.game.playerToPlay.user.name != this.currentUser.name) {
       return;
     }
     this._hubService.drawCard(count, changeTurn);
   }
 
   openGameInfoModal() {
-    var modalRef = this._modalService.open(GameInfoComponent);
+    this._modalService.open(GameInfoComponent);
   }
 
   toggleGameChatSidebar() {

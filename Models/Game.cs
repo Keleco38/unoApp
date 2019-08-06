@@ -312,7 +312,7 @@ namespace Uno.Models
                 player.Cards.AddRange(Deck.Draw(deckCount));
                 Deck.Cards = DiscardedPile.ToList();
                 Deck.Shuffle();
-                DiscardedPile.Clear();
+                DiscardedPile.RemoveRange(0,DiscardedPile.Count-1);
                 player.Cards.AddRange(Deck.Draw(count - deckCount));
             }
             else
