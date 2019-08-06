@@ -13,6 +13,7 @@ namespace Uno.Models.Dtos
         public LastCardPlayedDto LastCardPlayed { get; set; }
         public PlayerDto PlayerToPlay { get; set; }
         public bool GameStarted { get; set; }
+        public List<CardDto> DiscardedPile { get; set; }
         public bool GameEnded { get; set; }
     }
 

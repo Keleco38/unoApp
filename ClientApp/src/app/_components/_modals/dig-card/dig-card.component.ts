@@ -9,16 +9,12 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./dig-card.component.css']
 })
 export class DigCardComponent implements OnInit {
-  @Input() 'cards': Card[];
-  private _hubService: HubService;
-  constructor(private _injector: Injector, private _activeModal: NgbActiveModal) {
-    this._hubService = this._injector.get(HubService);
-  }
+  @Input() 'discardedPile': Card[];
+  constructor(private _activeModal: NgbActiveModal) {}
 
   ngOnInit() {}
 
-  digCardFromDiscardedPile(card: Card) {
-    this._hubService.digCardFromDiscardedPile(card);
-    this._activeModal.dismiss();
+  digCardFromDiscardedPile(cardToDig: Card) {
+    this._activeModal.close(cardToDig);
   }
 }

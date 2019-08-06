@@ -11,6 +11,7 @@ import { CardColor, Direction } from 'src/app/_models/enums';
 import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PickColorComponent } from '../_modals/pick-color/pick-color.component';
 import { PickPlayerComponent } from '../_modals/pick-player/pick-player.component';
+import { DigCardComponent } from '../_modals/dig-card/dig-card.component';
 
 @Component({
   selector: 'app-game',
@@ -108,39 +109,41 @@ export class GameComponent implements OnInit {
     if (this.mustCallUno) {
       return;
     }
-    if (this.game.playerToPlay.user.name !== this.currentUser.name && card.value !== CardValue.stealTurn) {
+    if (card.value === CardValue.stealTurn && card.color == this.game.lastCardPlayed.color) {
+      this._hubService.playCard(card, card.color);
+    }
+    if (this.game.playerToPlay.user.name !== this.currentUser.name) {
       return;
     }
-    if (card.value !== CardValue.graveDigger) {
-      this._hasPlayed = true;
-    } else {
-      this._hasPlayed = false;
-    }
+
     if (card.color === CardColor.wild) {
-      this._modalService.open(PickColorComponent).result.then(
-        pickedColor => {
-          if (
-            card.value === CardValue.swapHands ||
-            card.value === CardValue.doubleEdge ||
-            card.value === CardValue.judgement ||
-            card.value === CardValue.inspectHand
-          ) {
-            const playerModal = this._modalService.open(PickPlayerComponent);
-            playerModal.componentInstance.players = this.game.players;
-            playerModal.componentInstance.currentUser = this.currentUser;
-            playerModal.result.then(
-              playerName => {
-                this._hubService.playCard(card, pickedColor, playerName);
-              },
-              dismissed => {}
-            );
-          } else {
-            this._hubService.playCard(card, pickedColor);
-          }
-        },
-        dismissed => {}
-      );
-    } else {
+      this._hasPlayed = true;
+      this._modalService.open(PickColorComponent).result.then(pickedColor => {
+        if (
+          card.value === CardValue.swapHands ||
+          card.value === CardValue.doubleEdge ||
+          card.value === CardValue.judgement ||
+          card.value === CardValue.inspectHand
+        ) {
+          const playerModal = this._modalService.open(PickPlayerComponent);
+          playerModal.componentInstance.players = this.game.players;
+          playerModal.componentInstance.currentUser = this.currentUser;
+          playerModal.result.then(playerName => {
+            this._hubService.playCard(card, pickedColor, playerName);
+          });
+        } else if (card.value === CardValue.graveDigger) {
+          const digModal = this._modalService.open(DigCardComponent);
+          digModal.componentInstance.discardedPile = this.game.discardedPile;
+          digModal.result.then(cardToDig => {
+            this._hubService.playCard(card, pickedColor, null, cardToDig);
+          });
+        } else {
+          this._hubService.playCard(card, pickedColor);
+        }
+      });
+    }
+    if (card.color == this.game.lastCardPlayed.color || card.value == this.game.lastCardPlayed.value) {
+      this._hasPlayed = true;
       this._hubService.playCard(card, card.color);
     }
   }
@@ -150,6 +153,9 @@ export class GameComponent implements OnInit {
   }
 
   drawCard(count: number, changeTurn: boolean) {
+    if(this.game.playerToPlay.user.name!=this.currentUser.name){
+      return;
+    }
     this._hubService.drawCard(count, changeTurn);
   }
 

@@ -94,11 +94,6 @@ export class HubService {
       modalRef.componentInstance.hand = hand;
     });
 
-    this._hubConnection.on('ShowDiscardedPile', (cards: Card[]) => {
-      const modalRef = this._modalService.open(DigCardComponent, { backdrop: 'static' });
-      modalRef.componentInstance.cards = cards;
-    });
-
     this._hubConnection.on('UpdateGame', (game: Game) => {
       this._activeGameObservable.next(game);
       if (game.gameStarted) {
@@ -151,8 +146,15 @@ export class HubService {
     this._hubConnection.invoke('SendMessageToGameChat', this._activeGameObservable.getValue().gameSetup.id, message, TypeOfMessage.chat);
   }
 
-  playCard(card: Card, pickedCardColor: CardColor, playerToSwapCards = '') {
-    this._hubConnection.invoke('PlayCard', this._activeGameObservable.getValue().gameSetup.id, card, pickedCardColor, playerToSwapCards);
+  playCard(card: Card, pickedCardColor: CardColor, playerToSwapCards: string = '', cardToDig: Card = null) {
+    this._hubConnection.invoke(
+      'PlayCard',
+      this._activeGameObservable.getValue().gameSetup.id,
+      card,
+      pickedCardColor,
+      playerToSwapCards,
+      cardToDig
+    );
   }
 
   digCardFromDiscardedPile(card: Card) {

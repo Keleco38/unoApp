@@ -5,7 +5,7 @@
   <div class="row">
     <div class="col-12 p5">
       <img
-        *ngFor="let card of cards; let firstItem = first"
+        *ngFor="let card of discardedPile; let firstItem = first"
         (click)="digCardFromDiscardedPile(card)"
         [src]="card.imageUrl"
         class="player-hand-card"

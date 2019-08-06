@@ -26,10 +26,9 @@ namespace Uno.Models
             GameSetup = gameSetup;
             Players = new List<Player>();
             Spectators = new List<Spectator>();
-            DiscardedPile = new List<Card>();
         }
 
-        public TurnResult PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName)
+        public TurnResult PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName, Card cardToDig)
         {
             var turnResult = new TurnResult();
 
@@ -51,7 +50,11 @@ namespace Uno.Models
 
             if (card.Color == CardColor.Wild)
             {
-                if (card.Value == CardValue.DrawFour)
+                if (card.Value == CardValue.ChangeColor)
+                {
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} changed color to {pickedCardColor}.");
+                }
+                else if (card.Value == CardValue.DrawFour)
                 {
                     var targetedPlayer = GetNextPlayerToPlay();
                     var messageToLog = $"Player {player.User.Name} targeted player {targetedPlayer.User.Name} with +4 card.";
@@ -96,7 +99,7 @@ namespace Uno.Models
                 }
                 else if (card.Value == CardValue.BlackHole)
                 {
-                    turnResult.MessagesToLog.Add($"Player {player.User.Name} played black hole card.");
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} played black hole card. Every player drew new hand");
                     Players.ForEach(x =>
                     {
                         var cardCount = x.Cards.Count;
@@ -212,6 +215,12 @@ namespace Uno.Models
                     }
                     turnResult.MessagesToLog.Add($"Player {player.User.Name} played paradigm shift card. Every player exchanged their hand with the next player.");
                 }
+                else if (card.Value == CardValue.GraveDigger)
+                {
+                    player.Cards.Add(cardToDig);
+                    DiscardedPile.Remove(cardToDig);
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} digged card {cardToDig.Color.ToString()} {cardToDig.Value.ToString()} from the discarded pile.");
+                }
             }
             else
             {
@@ -254,9 +263,10 @@ namespace Uno.Models
                 else
                 {
                     //normal card
-                    turnResult.MessagesToLog.Add($"Player {player.User.Name} played card number {card.Value.ToString()} in color {card.Color.ToString()}.");
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} played card {card.Color.ToString()} {card.Value.ToString()}.");
                 }
             }
+
 
             UpdateGameAndRoundStatus(turnResult);
             if (GameEnded)
@@ -265,7 +275,7 @@ namespace Uno.Models
             }
             if (RoundEnded)
             {
-                StartGame();
+                StartNewGame();
                 return turnResult;
             }
 
@@ -275,9 +285,10 @@ namespace Uno.Models
 
 
 
-        public void StartGame()
+        public void StartNewGame()
         {
             Card lastCardDrew;
+            DiscardedPile = new List<Card>();
             Deck = new Deck(GameSetup.GameMode);
             do
             {

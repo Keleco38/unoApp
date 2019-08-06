@@ -228,7 +228,7 @@ namespace Uno.Hubs
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
 
-            game.StartGame();
+            game.StartNewGame();
 
             await UpdateGame(game);
             await UpdateHands(game);
@@ -343,7 +343,7 @@ namespace Uno.Hubs
 
         }
 
-        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string targetedPlayerName)
+        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string targetedPlayerName, CardDto cardToDigDto)
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             if (game.GameEnded || !game.GameStarted)
@@ -351,7 +351,8 @@ namespace Uno.Hubs
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             var player = game.Players.Find(x => x.User.Name == user.Name);
             var card = _mapper.Map<Card>(cardDto);
-            var turnResult = game.PlayCard(player, card, pickedCardColor, targetedPlayerName);
+            var cardToDig = _mapper.Map<Card>(cardToDigDto);
+            var turnResult = game.PlayCard(player, card, pickedCardColor, targetedPlayerName,cardToDig);
             if (turnResult.Success == true)
             {
                 if (cardDto.Value == CardValue.InspectHand)
@@ -360,12 +361,6 @@ namespace Uno.Hubs
                     await Clients.Caller.SendAsync("ShowInspectedHand", _mapper.Map<HandDto>(targetedPlayer.Cards));
                     turnResult.MessagesToLog.Add($"Player {player.User.Name} has inspected {targetedPlayer.User.Name}'s hand.");
                 }
-                else if (cardDto.Value == CardValue.GraveDigger)
-                {
-                    await Clients.Caller.SendAsync("ShowDiscardedPile", game.DiscardedPile);
-                    turnResult.MessagesToLog.Add($"Player {player.User.Name} digged a card from the discarded pile.");
-
-                }
                 if (turnResult.MessagesToLog.Any())
                 {
                     turnResult.MessagesToLog.ForEach(async x => await AddToGameLog(game.GameSetup.Id, x));
@@ -373,22 +368,7 @@ namespace Uno.Hubs
                 await UpdateGame(game);
                 await UpdateHands(game);
             }
-
         }
-
-        public async Task DigCardFromDiscardedPile(string gameId, CardDto cardDto)
-        {
-            var game = _games.Find(x => x.GameSetup.Id == gameId);
-            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-
-            var cardToPickUp = game.DiscardedPile.Find(x => x.Color == cardDto.Color && x.Value == cardDto.Value);
-
-            game.Players.Find(x => x.User.Name == user.Name).Cards.Add(cardToPickUp);
-            game.DiscardedPile.Remove(cardToPickUp);
-            await UpdateGame(game);
-            await UpdateHands(game);
-        }
-
         //-------------------------- private
 
         private async Task AddToGameLog(string gameid, string message)

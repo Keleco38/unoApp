@@ -16,4 +16,5 @@ export interface Game {
   deck: Deck;
   direction: Direction;
   lastCardPlayed: LastCardPlayed;
+  discardedPile: Card[];
 }
