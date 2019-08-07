@@ -367,6 +367,10 @@ namespace Uno.Hubs
                 }
                 await UpdateGame(game);
                 await UpdateHands(game);
+                if(player.Cards.Count==1){
+                    await Clients.Caller.SendAsync("MustCallUno");
+                }
+
             }
         }
         //-------------------------- private

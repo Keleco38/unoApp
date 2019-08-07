@@ -21,8 +21,6 @@ import { DigCardComponent } from '../_modals/dig-card/dig-card.component';
 export class GameComponent implements OnInit {
   private _timer: NodeJS.Timer;
   private _interval: NodeJS.Timer;
-  private _hasCalledUno: boolean;
-  private _hasPlayed: boolean;
   private _gameEnded = false;
 
   isGameChatSidebarOpen = false;
@@ -53,6 +51,22 @@ export class GameComponent implements OnInit {
       this.gameLog = gameLog;
     });
 
+    this._hubService.mustCallUno.subscribe(() => {
+      this.mustCallUno = true;
+      this._interval = setInterval(() => {
+        this.countdown -= 100;
+      }, 100);
+      this._timer = setTimeout(() => {
+        if (this.mustCallUno) {
+          if (!this.game.gameEnded) {
+            this.drawCard(2, false);
+            this.callUno(false);
+            this._hubService.sendMessageToGameChat('<--- Forgot to call uno! Drawing 2 cards.');
+          }
+        }
+      }, 2000);
+    });
+
     this._hubService.currentUser.subscribe(user => {
       this.currentUser = user;
     });
@@ -62,28 +76,6 @@ export class GameComponent implements OnInit {
         return;
       }
       this.myHand = myHand;
-      if (
-        this.game.lastCardPlayed.playerPlayed === this.currentUser.name &&
-        this.myHand.cards.length === 1 &&
-        this._hasPlayed &&
-        !this.mustCallUno
-      ) {
-        this._hasCalledUno = false;
-        this.mustCallUno = true;
-        this._interval = setInterval(() => {
-          this.countdown -= 100;
-        }, 100);
-
-        this._timer = setTimeout(() => {
-          if (!this._hasCalledUno) {
-            if (!this.game.gameEnded) {
-              this.drawCard(2, false);
-            }
-            this.callUno(false);
-            this._hubService.sendMessageToGameChat('<--- Forgot to call uno! Drawing 2 cards.');
-          }
-        }, 2000);
-      }
     });
 
     this._hubService.gameChatMessages.subscribe(messages => {
@@ -94,12 +86,10 @@ export class GameComponent implements OnInit {
   }
 
   callUno(playerCalled: boolean) {
-    this._hasCalledUno = true;
     this.mustCallUno = false;
     this.countdown = 2000;
     clearTimeout(this._timer);
     clearInterval(this._interval);
-    this._hasPlayed = false;
     if (playerCalled) {
       this._hubService.sendMessageToGameChat('UNO');
     }
@@ -118,7 +108,6 @@ export class GameComponent implements OnInit {
     }
 
     if (card.color === CardColor.wild) {
-      this._hasPlayed = true;
       this._modalService.open(PickColorComponent).result.then(pickedColor => {
         if (
           card.value === CardValue.swapHands ||
@@ -146,7 +135,6 @@ export class GameComponent implements OnInit {
         }
       });
     } else if (card.color == this.game.lastCardPlayed.color || card.value == this.game.lastCardPlayed.value) {
-      this._hasPlayed = true;
       this._hubService.playCard(card, card.color);
       return;
     }

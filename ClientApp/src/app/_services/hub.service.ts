@@ -32,6 +32,7 @@ export class HubService {
   private _gameLogObservable = new BehaviorSubject<string[]>(this._gameLog);
   private _activeGameObservable = new BehaviorSubject<Game>(null);
   private _myHandObservable = new BehaviorSubject<Hand>(null);
+  private _mustCallUnoObservable = new Subject();
 
   constructor(private _router: Router, private _toastrService: ToastrService, private _modalService: NgbModal) {
     this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
@@ -64,6 +65,10 @@ export class HubService {
     this._hubConnection.on('AddToGameLog', (message: string) => {
       this._gameLog.unshift(message);
       this._gameLogObservable.next(this._gameLog);
+    });
+
+    this._hubConnection.on('MustCallUno', () => {
+      this._mustCallUnoObservable.next();
     });
 
     this._hubConnection.on('RefreshAllGamesList', (games: Game[]) => {
@@ -164,6 +169,9 @@ export class HubService {
   }
 
   createGame() {
+    this._gameChatMessages = [];
+    this._gameLog = [];
+    this._myHandObservable.next(null);
     this._hubConnection.invoke('CreateGame');
   }
 
@@ -221,5 +229,8 @@ export class HubService {
 
   get myHand() {
     return this._myHandObservable.asObservable();
+  }
+  get mustCallUno() {
+    return this._mustCallUnoObservable.asObservable();
   }
 }
