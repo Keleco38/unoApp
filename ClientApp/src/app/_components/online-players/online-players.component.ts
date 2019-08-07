@@ -19,8 +19,8 @@ export class OnlinePlayersComponent implements OnInit {
     });
   }
 
-  buzzUser(user: User) {
-    this._hubService.sendMessageToAllChat(`/buzz ${user.name}`);
+  buzzUser(user: User, buzzType:string) {
+    this._hubService.sendMessageToAllChat(`/${buzzType} ${user.name}`);
   }
 
 }

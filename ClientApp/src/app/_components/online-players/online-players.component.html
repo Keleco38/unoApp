@@ -3,6 +3,16 @@
     <div class="alert alert-primary">
       <h4 class="h4">Online players ({{ onlineUsers.length }}):</h4>
     </div>
-    <p *ngFor="let user of onlineUsers">{{ user.name }} <span class="cursor-pointer" (click)="buzzUser(user)">&#x260A;</span></p>
+    <div *ngFor="let user of onlineUsers" ngbDropdown>
+      <p>{{ user.name }} <span ngbDropdownToggle class="cursor-pointer">&#x260A;</span></p>
+      <div ngbDropdownMenu>
+        <p class="btn btn-block btn-sm" (click)="buzzUser(user, 'alert')" ngbDropdownItem>alert</p>
+        <p class="btn btn-block btn-sm" (click)="buzzUser(user, 'ding')" ngbDropdownItem>ding</p>
+        <p class="btn btn-block btn-sm" (click)="buzzUser(user, 'lick')" ngbDropdownItem>lick</p>
+        <p class="btn btn-block btn-sm" (click)="buzzUser(user, 'poke')" ngbDropdownItem>poke</p>
+        <p class="btn btn-block btn-sm" (click)="buzzUser(user, 'punch')" ngbDropdownItem>punch</p>
+        <p class="btn btn-block btn-sm" (click)="buzzUser(user, 'slap')" ngbDropdownItem>slap</p>
+      </div>
+    </div>
   </div>
 </div>

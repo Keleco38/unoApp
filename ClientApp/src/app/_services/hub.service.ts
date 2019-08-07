@@ -75,8 +75,8 @@ export class HubService {
       this._availableGamesObservable.next(games);
     });
 
-    this._hubConnection.on('BuzzPlayer', () => {
-      const alert = new Audio('/sounds/alert.mp3');
+    this._hubConnection.on('BuzzPlayer', (buzzType:string) => {
+      const alert = new Audio(`/sounds/${buzzType}.mp3`);
       alert.load();
       alert.play();
     });

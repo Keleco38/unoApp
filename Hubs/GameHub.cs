@@ -57,13 +57,13 @@ namespace Uno.Hubs
                     if (DateTime.Now > canBeBuzzedAfter)
                     {
                         targetedUser.LastBuzzedUtc = DateTime.Now;
-                        await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer");
-                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has buzzed player {targetedUser.Name}", TypeOfMessage.Server));
+                        await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer",chatMessageIntentionResult.BuzzType);
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has {chatMessageIntentionResult.BuzzType}ed player {targetedUser.Name}", TypeOfMessage.Server));
                         await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
                     }
                     else
                     {
-                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not buzzed! Wait 5 seconds.", TypeOfMessage.Server));
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not {chatMessageIntentionResult.BuzzType}ed! Wait 5 seconds.", TypeOfMessage.Server));
                         await Clients.Caller.SendAsync("PostNewMessageInAllChat", msgDto);
                     }
 
@@ -104,13 +104,13 @@ namespace Uno.Hubs
                     if (DateTime.Now > canBeBuzzedAfter)
                     {
                         targetedUser.LastBuzzedUtc = DateTime.Now;
-                        await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer");
-                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has buzzed player {targetedUser.Name}", TypeOfMessage.Server));
+                        await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer", chatMessageIntentionResult.BuzzType);
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has {chatMessageIntentionResult.BuzzType}ed player {targetedUser.Name}", TypeOfMessage.Server));
                         await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
                     }
                     else
                     {
-                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not buzzed! Wait 5 seconds.", TypeOfMessage.Server));
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not {chatMessageIntentionResult.BuzzType}ed! Wait 5 seconds.", TypeOfMessage.Server));
                         await Clients.Caller.SendAsync("PostNewMessageInGameChat", msgDto);
                     }
                 }
@@ -233,9 +233,9 @@ namespace Uno.Hubs
             await UpdateGame(game);
             await UpdateHands(game);
             await GetAllGames();
-            await AddToGameLog(gameId,"Game started!");
-            await AddToGameLog(gameId,"If you need more detailed log info, press the 'Game info' button.");
-            await AddToGameLog(gameId,"This is the game log summary. We will display the last 3 entries here.");
+            await AddToGameLog(gameId, "Game started!");
+            await AddToGameLog(gameId, "If you need more detailed log info, press the 'Game info' button.");
+            await AddToGameLog(gameId, "This is the game log summary. We will display the last 3 entries here.");
         }
 
         public async Task JoinGame(string gameId, string password)
@@ -352,7 +352,7 @@ namespace Uno.Hubs
             var player = game.Players.Find(x => x.User.Name == user.Name);
             var card = _mapper.Map<Card>(cardDto);
             var cardToDig = _mapper.Map<Card>(cardToDigDto);
-            var turnResult = game.PlayCard(player, card, pickedCardColor, targetedPlayerName,cardToDig);
+            var turnResult = game.PlayCard(player, card, pickedCardColor, targetedPlayerName, cardToDig);
             if (turnResult.Success == true)
             {
                 if (cardDto.Value == CardValue.InspectHand)
@@ -367,7 +367,8 @@ namespace Uno.Hubs
                 }
                 await UpdateGame(game);
                 await UpdateHands(game);
-                if(player.Cards.Count==1){
+                if (player.Cards.Count == 1)
+                {
                     await Clients.Caller.SendAsync("MustCallUno");
                 }
 
@@ -462,13 +463,14 @@ namespace Uno.Hubs
 
         private ChatMessageIntentionResult GetChatMessageIntention(string message)
         {
-            Regex regex = new Regex(@"^/(slap|buzz|alert) ([A-Za-z0-9\s]*)$");
+            Regex regex = new Regex(@"^/(slap|ding|alert|lick|poke|punch) ([A-Za-z0-9\s]*)$");
             Match match = regex.Match(message);
 
             if (match.Success)
             {
                 var targetedUsername = match.Groups[2].Value;
-                return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Buzz, TargetedUsername = targetedUsername };
+                var buzzType = match.Groups[1].Value;
+                return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Buzz, TargetedUsername = targetedUsername, BuzzType = buzzType };
             }
             else
             {

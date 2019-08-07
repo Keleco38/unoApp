@@ -19,8 +19,8 @@ import { DigCardComponent } from '../_modals/dig-card/dig-card.component';
   styleUrls: ['./game.component.css']
 })
 export class GameComponent implements OnInit {
-  private _timer: NodeJS.Timer;
-  private _interval: NodeJS.Timer;
+  private _timer: number;
+  private _interval: number;
   private _gameEnded = false;
 
   isGameChatSidebarOpen = false;
@@ -52,11 +52,13 @@ export class GameComponent implements OnInit {
     });
 
     this._hubService.mustCallUno.subscribe(() => {
+      window.clearTimeout(this._timer);
+      window.clearInterval(this._interval);
       this.mustCallUno = true;
-      this._interval = setInterval(() => {
+      this._interval = window.setInterval(() => {
         this.countdown -= 100;
       }, 100);
-      this._timer = setTimeout(() => {
+      this._timer = window.setTimeout(() => {
         if (this.mustCallUno) {
           if (!this.game.gameEnded) {
             this.drawCard(2, false);
@@ -87,9 +89,9 @@ export class GameComponent implements OnInit {
 
   callUno(playerCalled: boolean) {
     this.mustCallUno = false;
+    window.clearTimeout(this._timer);
+    window.clearInterval(this._interval);
     this.countdown = 2000;
-    clearTimeout(this._timer);
-    clearInterval(this._interval);
     if (playerCalled) {
       this._hubService.sendMessageToGameChat('UNO');
     }
