@@ -11,7 +11,7 @@ namespace Uno.Models
             Id = Guid.NewGuid().ToString();
             Password = string.Empty;
             GameMode = GameMode.SpecialCards;
-            RoundsToWin = 3;
+            RoundsToWin = 2;
         }
         public string Id { get; set; }
         public string Password { get; set; }

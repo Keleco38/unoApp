@@ -130,22 +130,25 @@ export class GameComponent implements OnInit {
           playerModal.componentInstance.players = this.game.players;
           playerModal.componentInstance.currentUser = this.currentUser;
           playerModal.result.then(playerName => {
-              this._hubService.playCard(card, pickedColor, playerName);
+            this._hubService.playCard(card, pickedColor, playerName);
+            return;
           });
         } else if (card.value === CardValue.graveDigger) {
           const digModal = this._modalService.open(DigCardComponent);
           digModal.componentInstance.discardedPile = this.game.discardedPile;
           digModal.result.then(cardToDig => {
             this._hubService.playCard(card, pickedColor, null, cardToDig);
+            return;
           });
         } else {
           this._hubService.playCard(card, pickedColor);
+          return;
         }
       });
-    }
-    if (card.color == this.game.lastCardPlayed.color || card.value == this.game.lastCardPlayed.value) {
+    } else if (card.color == this.game.lastCardPlayed.color || card.value == this.game.lastCardPlayed.value) {
       this._hasPlayed = true;
       this._hubService.playCard(card, card.color);
+      return;
     }
   }
 
