@@ -38,7 +38,8 @@ namespace Uno.Enums
         ParadigmShift = 24,
         Deflect = 25,
         InspectHand = 26,
-        GraveDigger = 27
+        GraveDigger = 27,
+        RussianRoulette = 28
 
     }
 

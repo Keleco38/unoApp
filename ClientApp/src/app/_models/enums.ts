@@ -40,7 +40,8 @@ export enum CardValue {
   paradigmShift = 24,
   deflect = 25,
   inspectHand = 26,
-  graveDigger = 27
+  graveDigger = 27,
+  russianRoulette = 28
 }
 
 export enum Direction {

@@ -56,7 +56,7 @@ namespace Uno.Models
                 }
                 else if (card.Value == CardValue.DrawFour)
                 {
-                    var targetedPlayer = GetNextPlayerToPlay();
+                    var targetedPlayer = GetNextPlayer(PlayerToPlay);
                     var messageToLog = $"Player {player.User.Name} targeted player {targetedPlayer.User.Name} with +4 card.";
                     var deflectCard = targetedPlayer.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);
                     if (deflectCard == null)
@@ -145,8 +145,8 @@ namespace Uno.Models
                     });
                     // now randomize color
                     Random random = new Random();
-                    var numbers = new int[] { 1, 2, 3, 4 };
-                    int randomColor = numbers[(random.Next(4))];
+                    var colorIds = new int[] { 1, 2, 3, 4 };
+                    int randomColor = colorIds[(random.Next(4))];
                     LastCardPlayed.Color = (CardColor)randomColor;
                     turnResult.MessagesToLog.Add($"Player {player.User.Name} has played discard color card. All players discarded {pickedCardColor} and a random color has been assigned.");
 
@@ -200,19 +200,25 @@ namespace Uno.Models
                 else if (card.Value == CardValue.ParadigmShift)
                 {
                     List<Card> firstCardsBackup = null;
+                    var loopingPlayer = PlayerToPlay;
+
                     for (int i = 0; i < Players.Count; i++)
                     {
                         if (i == 0)
-                            firstCardsBackup = Players[i].Cards.ToList();
+                            firstCardsBackup = loopingPlayer.Cards.ToList();
+
                         if (i != Players.Count - 1)
                         {
-                            Players[i].Cards = Players[i + 1].Cards;
+                            loopingPlayer.Cards = GetNextPlayer(loopingPlayer).Cards;
                         }
                         else
                         {
-                            Players[i].Cards = firstCardsBackup;
+                            loopingPlayer.Cards = firstCardsBackup;
                         }
+                        loopingPlayer = GetNextPlayer(loopingPlayer);
                     }
+
+
                     turnResult.MessagesToLog.Add($"Player {player.User.Name} played paradigm shift card. Every player exchanged their hand with the next player.");
                 }
                 else if (card.Value == CardValue.GraveDigger)
@@ -221,12 +227,32 @@ namespace Uno.Models
                     DiscardedPile.Remove(cardToDig);
                     turnResult.MessagesToLog.Add($"Player {player.User.Name} digged card {cardToDig.Color.ToString()} {cardToDig.Value.ToString()} from the discarded pile.");
                 }
+                else if (card.Value == CardValue.RussianRoulette)
+                {
+                    var messageToLog = $"Player {player.User.Name} played Russian Roulette. Every player rolled a dice.";
+                    var playerRolling = GetNextPlayer(PlayerToPlay);
+                    Random random = new Random();
+
+                    while (true)
+                    {
+                        int rolledNumber = random.Next(1, 7);
+                        messageToLog += $" {playerRolling.User.Name}: {rolledNumber}.";
+                        if (rolledNumber == 1)
+                        {
+                            messageToLog += $" {playerRolling.User.Name} drew 6 cards.";
+                            DrawCard(playerRolling, 6, false);
+                            break;
+                        }
+                        playerRolling = GetNextPlayer(playerRolling);
+                    }
+                    turnResult.MessagesToLog.Add(messageToLog);
+                }
             }
             else
             {
                 if (card.Value == CardValue.DrawTwo)
                 {
-                    var targetedPlayer = GetNextPlayerToPlay();
+                    var targetedPlayer = GetNextPlayer(PlayerToPlay);
                     var messageToLog = $"Player {player.User.Name} targeted player {targetedPlayer.User.Name} with +2 card.";
                     var deflectCard = targetedPlayer.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);
                     if (deflectCard == null)
@@ -252,8 +278,8 @@ namespace Uno.Models
                 }
                 else if (card.Value == CardValue.Skip)
                 {
-                    turnResult.MessagesToLog.Add($"Player {player.User.Name} played skip turn. Player {GetNextPlayerToPlay().User.Name} was skipped");
-                    PlayerToPlay = GetNextPlayerToPlay();
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} played skip turn. Player {GetNextPlayer(PlayerToPlay).User.Name} was skipped");
+                    PlayerToPlay = GetNextPlayer(PlayerToPlay);
                 }
                 else if (card.Value == CardValue.StealTurn)
                 {
@@ -279,7 +305,7 @@ namespace Uno.Models
                 return turnResult;
             }
 
-            PlayerToPlay = GetNextPlayerToPlay();
+            PlayerToPlay = GetNextPlayer(PlayerToPlay);
             return turnResult;
         }
 
@@ -287,6 +313,7 @@ namespace Uno.Models
 
         public void StartNewGame()
         {
+            Random random=new Random();
             Card lastCardDrew;
             DiscardedPile = new List<Card>();
             Deck = new Deck(GameSetup.GameMode);
@@ -297,7 +324,7 @@ namespace Uno.Models
             } while (lastCardDrew.Color == CardColor.Wild);
             LastCardPlayed = new LastCardPlayed(lastCardDrew.Color, lastCardDrew.Value, lastCardDrew.ImageUrl, string.Empty);
             Direction = Direction.Right;
-            PlayerToPlay = Players.First();
+            PlayerToPlay = Players[random.Next(Players.Count)];
             Players.ForEach(x => x.Cards = Deck.Draw(7));
             GameStarted = true;
             RoundEnded = false;
@@ -312,7 +339,7 @@ namespace Uno.Models
                 player.Cards.AddRange(Deck.Draw(deckCount));
                 Deck.Cards = DiscardedPile.ToList();
                 Deck.Shuffle();
-                DiscardedPile.RemoveRange(0,DiscardedPile.Count-1);
+                DiscardedPile.RemoveRange(0, DiscardedPile.Count - 1);
                 player.Cards.AddRange(Deck.Draw(count - deckCount));
             }
             else
@@ -323,7 +350,7 @@ namespace Uno.Models
             if (normalDraw)
             {
                 // if it's normalDraw then it's not a result of a wildcard
-                PlayerToPlay = GetNextPlayerToPlay();
+                PlayerToPlay = GetNextPlayer(PlayerToPlay);
             }
         }
 
@@ -331,9 +358,9 @@ namespace Uno.Models
         // -------------------------------------private------------
 
 
-        private Player GetNextPlayerToPlay()
+        private Player GetNextPlayer(Player player)
         {
-            var indexOfCurrentPlayer = Players.IndexOf(PlayerToPlay);
+            var indexOfCurrentPlayer = Players.IndexOf(player);
             if (Direction == Direction.Right)
             {
                 if (indexOfCurrentPlayer == Players.Count - 1)
