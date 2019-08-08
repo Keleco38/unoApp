@@ -72,6 +72,7 @@ namespace Uno.Models
                 Cards.Add(new Card(CardColor.Wild, CardValue.RussianRoulette));
                 Cards.Add(new Card(CardColor.Wild, CardValue.Roulette));
                 Cards.Add(new Card(CardColor.Wild, CardValue.Duel));
+                Cards.Add(new Card(CardColor.Wild, CardValue.KeepMyHand));
             }
         }
 

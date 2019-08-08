@@ -43,7 +43,8 @@ export enum CardValue {
   graveDigger = 27,
   russianRoulette = 28,
   roulette = 29,
-  duel = 30
+  duel = 30,
+  keepMyHand = 30
 }
 
 export enum Direction {

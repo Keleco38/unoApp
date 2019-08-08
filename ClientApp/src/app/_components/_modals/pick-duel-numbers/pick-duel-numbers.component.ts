@@ -26,7 +26,6 @@ export class PickDuelNumbersComponent implements OnInit {
     } else {
       this.duelNumbers.splice(index, 1);
     }
-    console.log(this.duelNumbers);
   }
   getBtnClass(number: number) {
     var index = this.duelNumbers.indexOf(number);

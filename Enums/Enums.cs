@@ -41,7 +41,8 @@ namespace Uno.Enums
         GraveDigger = 27,
         RussianRoulette = 28,
         Roulette = 29,
-        Duel = 30
+        Duel = 30,
+        KeepMyHand= 31
 
     }
 
