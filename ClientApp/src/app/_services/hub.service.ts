@@ -75,7 +75,7 @@ export class HubService {
       this._availableGamesObservable.next(games);
     });
 
-    this._hubConnection.on('BuzzPlayer', (buzzType:string) => {
+    this._hubConnection.on('BuzzPlayer', (buzzType: string) => {
       const alert = new Audio(`/sounds/${buzzType}.mp3`);
       alert.load();
       alert.play();
@@ -153,14 +153,15 @@ export class HubService {
     this._hubConnection.invoke('SendMessageToGameChat', this._activeGameObservable.getValue().gameSetup.id, message, TypeOfMessage.chat);
   }
 
-  playCard(card: Card, pickedCardColor: CardColor, playerToSwapCards: string = '', cardToDig: Card = null) {
+  playCard(card: Card, pickedCardColor: CardColor, playerToSwapCards: string = '', cardToDig: Card = null, duelNumbers: number[] = null) {
     this._hubConnection.invoke(
       'PlayCard',
       this._activeGameObservable.getValue().gameSetup.id,
       card,
       pickedCardColor,
       playerToSwapCards,
-      cardToDig
+      cardToDig,
+      duelNumbers
     );
   }
 

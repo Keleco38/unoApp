@@ -57,7 +57,7 @@ namespace Uno.Hubs
                     if (DateTime.Now > canBeBuzzedAfter)
                     {
                         targetedUser.LastBuzzedUtc = DateTime.Now;
-                        await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer",chatMessageIntentionResult.BuzzType);
+                        await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer", chatMessageIntentionResult.BuzzType);
                         var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has {chatMessageIntentionResult.BuzzType}ed player {targetedUser.Name}", TypeOfMessage.Server));
                         await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
                     }
@@ -343,7 +343,7 @@ namespace Uno.Hubs
 
         }
 
-        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string targetedPlayerName, CardDto cardToDigDto)
+        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string targetedPlayerName, CardDto cardToDigDto, List<int> duelNumbers)
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             if (game.GameEnded || !game.GameStarted)
@@ -352,7 +352,7 @@ namespace Uno.Hubs
             var player = game.Players.Find(x => x.User.Name == user.Name);
             var card = _mapper.Map<Card>(cardDto);
             var cardToDig = _mapper.Map<Card>(cardToDigDto);
-            var turnResult = game.PlayCard(player, card, pickedCardColor, targetedPlayerName, cardToDig);
+            var turnResult = game.PlayCard(player, card, pickedCardColor, targetedPlayerName, cardToDig, duelNumbers);
             if (turnResult.Success == true)
             {
                 if (cardDto.Value == CardValue.InspectHand)

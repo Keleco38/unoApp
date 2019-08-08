@@ -40,7 +40,8 @@ namespace Uno.Enums
         InspectHand = 26,
         GraveDigger = 27,
         RussianRoulette = 28,
-        Roulette = 29
+        Roulette = 29,
+        Duel = 30
 
     }
 

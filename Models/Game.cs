@@ -28,7 +28,7 @@ namespace Uno.Models
             Spectators = new List<Spectator>();
         }
 
-        public TurnResult PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName, Card cardToDig)
+        public TurnResult PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName, Card cardToDig, List<int> duelNumbers)
         {
             var turnResult = new TurnResult();
 
@@ -267,7 +267,26 @@ namespace Uno.Models
                         DrawCard(playerAffected, numberOfCardsToDraw, false);
                     }
 
-
+                    turnResult.MessagesToLog.Add(messageToLog);
+                }
+                else if (card.Value == CardValue.Duel)
+                {
+                    Random random = new Random();
+                    var numberRolled = random.Next(1, 7);
+                    var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
+                    var maxNumberCalledPicked = duelNumbers.Max();
+                    var callerWon = duelNumbers.Contains(numberRolled);
+                    var messageToLog = $"Player {player.User.Name} targeted player {targetedPlayer.User.Name} with card Duel. Numbers he picked: {String.Join(' ', duelNumbers)}. Number rolled: {numberRolled}. ";
+                    if (callerWon)
+                    {
+                        DrawCard(targetedPlayer, maxNumberCalledPicked, false);
+                        messageToLog += $"Player {PlayerToPlay.User.Name} won! {targetedPlayer.User.Name} will draw {maxNumberCalledPicked} cards (max number player selected).";
+                    }
+                    else
+                    {
+                        DrawCard(PlayerToPlay, maxNumberCalledPicked, false);
+                        messageToLog += $"Player {targetedPlayer.User.Name} won! {PlayerToPlay.User.Name} will draw {maxNumberCalledPicked} (max number player selected) cards.";
+                    }
                     turnResult.MessagesToLog.Add(messageToLog);
                 }
             }

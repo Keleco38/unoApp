@@ -1,3 +1,4 @@
+import { PickDuelNumbersComponent } from './_components/_modals/pick-duel-numbers/pick-duel-numbers.component';
 import { GameInfoComponent } from './_components/_modals/game-info/game-info.component';
 import { HelpComponent } from './_components/help/help.component';
 import { PickPlayerComponent } from './_components/_modals/pick-player/pick-player.component';
@@ -47,7 +48,8 @@ import { DigCardComponent } from './_components/_modals/dig-card/dig-card.compon
     ShowHandComponent,
     DigCardComponent,
     HelpComponent,
-    GameInfoComponent
+    GameInfoComponent,
+    PickDuelNumbersComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -72,6 +74,6 @@ import { DigCardComponent } from './_components/_modals/dig-card/dig-card.compon
   ],
   providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard],
   bootstrap: [AppComponent],
-  entryComponents: [PickColorComponent, PickPlayerComponent, ShowHandComponent, DigCardComponent, GameInfoComponent]
+  entryComponents: [PickColorComponent, PickPlayerComponent, ShowHandComponent, DigCardComponent, GameInfoComponent,PickDuelNumbersComponent]
 })
 export class AppModule {}

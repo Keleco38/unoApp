@@ -12,6 +12,7 @@ import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PickColorComponent } from '../_modals/pick-color/pick-color.component';
 import { PickPlayerComponent } from '../_modals/pick-player/pick-player.component';
 import { DigCardComponent } from '../_modals/dig-card/dig-card.component';
+import { PickDuelNumbersComponent } from '../_modals/pick-duel-numbers/pick-duel-numbers.component';
 
 @Component({
   selector: 'app-game',
@@ -52,8 +53,7 @@ export class GameComponent implements OnInit {
     });
 
     this._hubService.mustCallUno.subscribe(() => {
-      window.clearTimeout(this._timer);
-      window.clearInterval(this._interval);
+      this.callUno(false);
       this.mustCallUno = true;
       this._interval = window.setInterval(() => {
         this.countdown -= 100;
@@ -91,6 +91,8 @@ export class GameComponent implements OnInit {
     this.mustCallUno = false;
     window.clearTimeout(this._timer);
     window.clearInterval(this._interval);
+    this._timer=null;
+    this._interval=null;
     this.countdown = 2000;
     if (playerCalled) {
       this._hubService.sendMessageToGameChat('UNO');
@@ -115,14 +117,23 @@ export class GameComponent implements OnInit {
           card.value === CardValue.swapHands ||
           card.value === CardValue.doubleEdge ||
           card.value === CardValue.judgement ||
-          card.value === CardValue.inspectHand
+          card.value === CardValue.duel ||
+          card.value === CardValue.inspectHand 
         ) {
           const playerModal = this._modalService.open(PickPlayerComponent);
           playerModal.componentInstance.players = this.game.players;
           playerModal.componentInstance.currentUser = this.currentUser;
           playerModal.result.then(playerName => {
-            this._hubService.playCard(card, pickedColor, playerName);
-            return;
+            if (card.value == CardValue.duel) {
+              //open dialog todo
+              this._modalService.open(PickDuelNumbersComponent).result.then((duelNumbers: number[]) => {
+                this._hubService.playCard(card, pickedColor, playerName, null, duelNumbers);
+                return;
+              });
+            } else {
+              this._hubService.playCard(card, pickedColor, playerName);
+              return;
+            }
           });
         } else if (card.value === CardValue.graveDigger) {
           const digModal = this._modalService.open(DigCardComponent);
