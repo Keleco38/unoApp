@@ -70,6 +70,7 @@ namespace Uno.Models
                 Cards.Add(new Card(CardColor.Wild, CardValue.InspectHand));
                 Cards.Add(new Card(CardColor.Wild, CardValue.GraveDigger));
                 Cards.Add(new Card(CardColor.Wild, CardValue.RussianRoulette));
+                Cards.Add(new Card(CardColor.Wild, CardValue.Roulette));
             }
         }
 

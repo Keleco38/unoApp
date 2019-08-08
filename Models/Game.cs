@@ -218,7 +218,6 @@ namespace Uno.Models
                         loopingPlayer = GetNextPlayer(loopingPlayer);
                     }
 
-
                     turnResult.MessagesToLog.Add($"Player {player.User.Name} played paradigm shift card. Every player exchanged their hand with the next player.");
                 }
                 else if (card.Value == CardValue.GraveDigger)
@@ -236,7 +235,7 @@ namespace Uno.Models
                     while (true)
                     {
                         int rolledNumber = random.Next(1, 7);
-                        messageToLog += $" {playerRolling.User.Name}: {rolledNumber}.";
+                        messageToLog += $" [{playerRolling.User.Name}: {rolledNumber}] ";
                         if (rolledNumber == 1)
                         {
                             messageToLog += $" {playerRolling.User.Name} drew 6 cards.";
@@ -245,6 +244,30 @@ namespace Uno.Models
                         }
                         playerRolling = GetNextPlayer(playerRolling);
                     }
+                    turnResult.MessagesToLog.Add(messageToLog);
+                }
+                else if (card.Value == CardValue.Roulette)
+                {
+                    Random random = new Random();
+                    var messageToLog = $"Player {player.User.Name} played Roulette. ";
+                    var drawOrDiscard = random.Next(2);
+                    var playerAffected = Players[random.Next(Players.Count)];
+                    if (drawOrDiscard == 0)
+                    {
+                        //discard   
+                        var numberOfCardsToDiscard = random.Next(1, 5);
+                        messageToLog += $"Player {playerAffected.User.Name} is a lucky winner! He will discard {numberOfCardsToDiscard} cards.";
+                        playerAffected.Cards.RemoveRange(0, numberOfCardsToDiscard);
+                    }
+                    else
+                    {
+                        //draw
+                        var numberOfCardsToDraw = random.Next(1, 5);
+                        messageToLog += $"Player {playerAffected.User.Name} didn't have any luck! He will draw {numberOfCardsToDraw} cards.";
+                        DrawCard(playerAffected, numberOfCardsToDraw, false);
+                    }
+
+
                     turnResult.MessagesToLog.Add(messageToLog);
                 }
             }
@@ -313,7 +336,7 @@ namespace Uno.Models
 
         public void StartNewGame()
         {
-            Random random=new Random();
+            Random random = new Random();
             Card lastCardDrew;
             DiscardedPile = new List<Card>();
             Deck = new Deck(GameSetup.GameMode);

@@ -39,7 +39,8 @@ namespace Uno.Enums
         Deflect = 25,
         InspectHand = 26,
         GraveDigger = 27,
-        RussianRoulette = 28
+        RussianRoulette = 28,
+        Roulette = 29
 
     }
 
