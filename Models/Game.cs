@@ -306,7 +306,7 @@ namespace Uno.Models
                     if (drawOrDiscard == 0)
                     {
                         //discard   
-                        var numberOfCardsToDiscard = random.Next(1, 5);
+                        var numberOfCardsToDiscard = random.Next(1, 3);
                         messageToLog += $"{playerAffected.User.Name} is a lucky winner! He will discard {numberOfCardsToDiscard} cards.";
                         playerAffected.Cards.RemoveRange(0, numberOfCardsToDiscard);
                     }
