@@ -42,7 +42,13 @@ namespace Uno.Enums
         RussianRoulette = 28,
         Roulette = 29,
         Duel = 30,
-        KeepMyHand= 31
+        KeepMyHand= 31,
+        Charity=32,
+        Blackjack=33,
+        FairPlay=34,
+        TricksOfTheTrade=35,
+        DiscardNumber=36,
+        TheLastStand=37
 
     }
 

@@ -73,6 +73,8 @@ namespace Uno.Models
                 Cards.Add(new Card(CardColor.Wild, CardValue.Roulette));
                 Cards.Add(new Card(CardColor.Wild, CardValue.Duel));
                 Cards.Add(new Card(CardColor.Wild, CardValue.KeepMyHand));
+                Cards.Add(new Card(CardColor.Wild, CardValue.FairPlay));
+                Cards.Add(new Card(CardColor.Wild, CardValue.TheLastStand));
             }
         }
 

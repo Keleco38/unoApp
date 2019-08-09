@@ -62,6 +62,10 @@ namespace Uno.Models
                 {
                     turnResult.MessagesToLog.Add($"Player {player.User.Name} changed color to {pickedCardColor} (keep my hand card).");
                 }
+                if (card.Value == CardValue.TheLastStand)
+                {
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} changed color to {pickedCardColor} (keep my hand card).");
+                }
                 else if (card.Value == CardValue.DrawFour)
                 {
                     var targetedPlayer = GetNextPlayer(PlayerToPlay, Players);
@@ -340,6 +344,33 @@ namespace Uno.Models
                     }
                     turnResult.MessagesToLog.Add(messageToLog);
                 }
+                else if (card.Value == CardValue.FairPlay)
+                {
+                    var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
+                    var messageToLog = $"{player.User.Name} targeted {targetedPlayer.User.Name} with card Fair Play. ";
+
+                    var cardDifference = targetedPlayer.Cards.Count - PlayerToPlay.Cards.Count;
+
+                    if (cardDifference == 0)
+                    {
+                        messageToLog += "No effect. They had the same numer of cards.";
+                    }
+                    else if (cardDifference > 0)
+                    {
+                        //targeted Player discards
+                        targetedPlayer.Cards.RemoveRange(0, cardDifference);
+                        messageToLog += $"{targetedPlayer.User.Name} discarded {cardDifference} cards. He had more cards.";
+                    }
+                    else
+                    {
+                        //targeted Player draws
+                        var numberInPositiveValue = cardDifference * -1;
+                        DrawCard(targetedPlayer, numberInPositiveValue, false);
+                        messageToLog += $"{targetedPlayer.User.Name} must draw {numberInPositiveValue} cards. He had less cards.";
+                    }
+
+                    turnResult.MessagesToLog.Add(messageToLog);
+                }
             }
             else
             {
@@ -485,6 +516,22 @@ namespace Uno.Models
             var playersWithoutCards = Players.Where(x => !x.Cards.Any());
             if (playersWithoutCards.Any())
             {
+                var firstPlayerWithTheLastStand = Players.Where(x => x.Cards.Any()).FirstOrDefault(x => x.Cards.FirstOrDefault(y => y.Value == CardValue.TheLastStand) != null);
+
+                if (firstPlayerWithTheLastStand != null)
+                {
+                    var theLastStandCard = firstPlayerWithTheLastStand.Cards.First(x => x.Value == CardValue.TheLastStand);
+                    LastCardPlayed = new LastCardPlayed(LastCardPlayed.Color, theLastStandCard.Value, theLastStandCard.ImageUrl, PlayerToPlay.User.Name);
+                    firstPlayerWithTheLastStand.Cards.Remove(theLastStandCard);
+                    DiscardedPile.Add(theLastStandCard);
+                    turnResult.MessagesToLog.Add($"{firstPlayerWithTheLastStand.User.Name} saved the day! He played The Last Stand. Every player that had 0 cards will draw 2 cards.");
+                    foreach (var player in playersWithoutCards)
+                    {
+                        DrawCard(player, 2, false);
+                    }
+                    return;
+                }
+
                 foreach (var player in playersWithoutCards)
                 {
                     player.RoundsWonCount++;

@@ -118,7 +118,9 @@ export class GameComponent implements OnInit {
           card.value === CardValue.doubleEdge ||
           card.value === CardValue.judgement ||
           card.value === CardValue.duel ||
-          card.value === CardValue.inspectHand 
+          card.value === CardValue.inspectHand ||
+          card.value === CardValue.fairPlay
+
         ) {
           const playerModal = this._modalService.open(PickPlayerComponent);
           playerModal.componentInstance.players = this.game.players;

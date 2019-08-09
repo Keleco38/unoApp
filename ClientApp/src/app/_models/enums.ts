@@ -44,7 +44,13 @@ export enum CardValue {
   russianRoulette = 28,
   roulette = 29,
   duel = 30,
-  keepMyHand = 30
+  keepMyHand = 31,
+  charity = 32,
+  blackjack = 33,
+  fairPlay = 34,
+  tricksOfTheTrade = 35,
+  discardNumber = 36,
+  theLastStand = 37
 }
 
 export enum Direction {
