@@ -58,12 +58,12 @@ namespace Uno.Hubs
                     {
                         targetedUser.LastBuzzedUtc = DateTime.Now;
                         await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer", chatMessageIntentionResult.BuzzType);
-                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has {chatMessageIntentionResult.BuzzType}ed player {targetedUser.Name}", TypeOfMessage.Server));
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has {chatMessageIntentionResult.BuzzTypeStringForChat} player {targetedUser.Name}", TypeOfMessage.Server));
                         await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
                     }
                     else
                     {
-                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not {chatMessageIntentionResult.BuzzType}ed! Wait 5 seconds.", TypeOfMessage.Server));
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not {chatMessageIntentionResult.BuzzTypeStringForChat}! Wait 5 seconds.", TypeOfMessage.Server));
                         await Clients.Caller.SendAsync("PostNewMessageInAllChat", msgDto);
                     }
 
@@ -105,12 +105,12 @@ namespace Uno.Hubs
                     {
                         targetedUser.LastBuzzedUtc = DateTime.Now;
                         await Clients.Client(targetedUser.ConnectionId).SendAsync("BuzzPlayer", chatMessageIntentionResult.BuzzType);
-                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has {chatMessageIntentionResult.BuzzType}ed player {targetedUser.Name}", TypeOfMessage.Server));
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {user.Name} has {chatMessageIntentionResult.BuzzTypeStringForChat} player {targetedUser.Name}", TypeOfMessage.Server));
                         await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
                     }
                     else
                     {
-                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not {chatMessageIntentionResult.BuzzType}ed! Wait 5 seconds.", TypeOfMessage.Server));
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not {chatMessageIntentionResult.BuzzTypeStringForChat}! Wait 5 seconds.", TypeOfMessage.Server));
                         await Clients.Caller.SendAsync("PostNewMessageInGameChat", msgDto);
                     }
                 }
@@ -470,7 +470,29 @@ namespace Uno.Hubs
             {
                 var targetedUsername = match.Groups[2].Value;
                 var buzzType = match.Groups[1].Value;
-                return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Buzz, TargetedUsername = targetedUsername, BuzzType = buzzType };
+                var buzzTypeStringForChat = string.Empty; ;
+                switch (buzzType)
+                {
+                    case "slap":
+                        buzzTypeStringForChat = "slapped";
+                        break;
+                    case "ding":
+                        buzzTypeStringForChat = "dinged";
+                        break;
+                    case "alert":
+                        buzzTypeStringForChat = "alerted";
+                        break;
+                    case "lick":
+                        buzzTypeStringForChat = "licked";
+                        break;
+                    case "poke":
+                        buzzTypeStringForChat = "poked";
+                        break;
+                    case "punch":
+                        buzzTypeStringForChat = "punched";
+                        break;
+                }
+                return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Buzz, TargetedUsername = targetedUsername, BuzzType = buzzType, BuzzTypeStringForChat = buzzTypeStringForChat };
             }
             else
             {
