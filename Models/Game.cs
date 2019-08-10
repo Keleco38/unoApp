@@ -28,7 +28,7 @@ namespace Uno.Models
             Spectators = new List<Spectator>();
         }
 
-        public TurnResult PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName, Card cardToDig, List<int> duelNumbers)
+        public TurnResult PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName, Card cardToDig, List<int> duelNumbers, List<Card> charityCards)
         {
             var turnResult = new TurnResult();
 
@@ -369,6 +369,17 @@ namespace Uno.Models
                         messageToLog += $"{targetedPlayer.User.Name} must draw {numberInPositiveValue} cards. He had less cards.";
                     }
 
+                    turnResult.MessagesToLog.Add(messageToLog);
+                }
+                else if (card.Value == CardValue.Charity)
+                {
+                    var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
+                    var messageToLog = $"{player.User.Name} targeted {targetedPlayer.User.Name} with card Charity. He gave him two cards.";
+                    charityCards.ForEach(x =>
+                    {
+                        player.Cards.Remove(player.Cards.First(c => c.Value == x.Value && c.Color == x.Color));
+                        targetedPlayer.Cards.Add(x);
+                    });
                     turnResult.MessagesToLog.Add(messageToLog);
                 }
             }

@@ -75,6 +75,7 @@ namespace Uno.Models
                 Cards.Add(new Card(CardColor.Wild, CardValue.KeepMyHand));
                 Cards.Add(new Card(CardColor.Wild, CardValue.FairPlay));
                 Cards.Add(new Card(CardColor.Wild, CardValue.TheLastStand));
+                Cards.Add(new Card(CardColor.Wild, CardValue.Charity));
             }
         }
 

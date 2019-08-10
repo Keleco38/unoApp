@@ -294,6 +294,10 @@ namespace Uno.Hubs
         {
             name = Regex.Replace(name, @"[^a-zA-Z0-9]", "").ToLower();
 
+            if(!name.Any()){
+                await Clients.Caller.SendAsync("RenamePlayer");
+            }
+
             if (name.Length > 10)
                 name = name.Substring(0, 10);
             var nameExists = _users.Any(x => x.Name == name);
@@ -343,7 +347,7 @@ namespace Uno.Hubs
 
         }
 
-        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string targetedPlayerName, CardDto cardToDigDto, List<int> duelNumbers)
+        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string targetedPlayerName, CardDto cardToDigDto, List<int> duelNumbers, List<CardDto> charityCardsDto)
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             if (game.GameEnded || !game.GameStarted)
@@ -352,7 +356,8 @@ namespace Uno.Hubs
             var player = game.Players.Find(x => x.User.Name == user.Name);
             var card = _mapper.Map<Card>(cardDto);
             var cardToDig = _mapper.Map<Card>(cardToDigDto);
-            var turnResult = game.PlayCard(player, card, pickedCardColor, targetedPlayerName, cardToDig, duelNumbers);
+            var charityCards = _mapper.Map<List<Card>>(charityCardsDto);
+            var turnResult = game.PlayCard(player, card, pickedCardColor, targetedPlayerName, cardToDig, duelNumbers, charityCards);
             if (turnResult.Success == true)
             {
                 if (cardDto.Value == CardValue.InspectHand)

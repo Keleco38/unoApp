@@ -153,7 +153,14 @@ export class HubService {
     this._hubConnection.invoke('SendMessageToGameChat', this._activeGameObservable.getValue().gameSetup.id, message, TypeOfMessage.chat);
   }
 
-  playCard(card: Card, pickedCardColor: CardColor, playerToSwapCards: string = '', cardToDig: Card = null, duelNumbers: number[] = null) {
+  playCard(
+    card: Card,
+    pickedCardColor: CardColor,
+    playerToSwapCards: string = '',
+    cardToDig: Card = null,
+    duelNumbers: number[] = null,
+    charityCards: Card[] = null
+  ) {
     this._hubConnection.invoke(
       'PlayCard',
       this._activeGameObservable.getValue().gameSetup.id,
@@ -161,7 +168,8 @@ export class HubService {
       pickedCardColor,
       playerToSwapCards,
       cardToDig,
-      duelNumbers
+      duelNumbers,
+      charityCards
     );
   }
 

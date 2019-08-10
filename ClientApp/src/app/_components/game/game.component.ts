@@ -1,3 +1,4 @@
+import { PickCharityCardsComponent } from './../_modals/pick-charity-cards/pick-charity-cards.component';
 import { GameInfoComponent } from './../_modals/game-info/game-info.component';
 import { CardValue } from './../../_models/enums';
 import { Hand } from '../../_models/hand';
@@ -90,8 +91,8 @@ export class GameComponent implements OnInit {
     this.mustCallUno = false;
     window.clearTimeout(this._timer);
     window.clearInterval(this._interval);
-    this._timer=null;
-    this._interval=null;
+    this._timer = null;
+    this._interval = null;
     this.countdown = 2000;
     if (playerCalled) {
       this._hubService.sendMessageToGameChat('UNO');
@@ -118,17 +119,23 @@ export class GameComponent implements OnInit {
           card.value === CardValue.judgement ||
           card.value === CardValue.duel ||
           card.value === CardValue.inspectHand ||
+          card.value === CardValue.charity ||
           card.value === CardValue.fairPlay
-
         ) {
           const playerModal = this._modalService.open(PickPlayerComponent);
           playerModal.componentInstance.players = this.game.players;
           playerModal.componentInstance.currentUser = this.currentUser;
           playerModal.result.then(playerName => {
             if (card.value == CardValue.duel) {
-              //open dialog todo
               this._modalService.open(PickDuelNumbersComponent).result.then((duelNumbers: number[]) => {
                 this._hubService.playCard(card, pickedColor, playerName, null, duelNumbers);
+                return;
+              });
+            } else if (card.value == CardValue.charity) {
+              const modalRef = this._modalService.open(PickCharityCardsComponent);
+              modalRef.componentInstance.hand = this.myHand;
+              modalRef.result.then((charityCards: Card[]) => {
+                this._hubService.playCard(card, pickedColor, playerName, null, null, charityCards);
                 return;
               });
             } else {
