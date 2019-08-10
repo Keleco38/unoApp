@@ -1,12 +1,11 @@
 import { GameInfoComponent } from './../_modals/game-info/game-info.component';
 import { CardValue } from './../../_models/enums';
 import { Hand } from '../../_models/hand';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { Game } from 'src/app/_models/game';
 import { Card } from 'src/app/_models/card';
 import { HubService } from 'src/app/_services/hub.service';
-import { Router } from '@angular/router';
 import { CardColor, Direction } from 'src/app/_models/enums';
 import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PickColorComponent } from '../_modals/pick-color/pick-color.component';
