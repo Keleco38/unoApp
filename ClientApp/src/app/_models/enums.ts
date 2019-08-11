@@ -50,7 +50,8 @@ export enum CardValue {
   fairPlay = 34,
   tricksOfTheTrade = 35,
   discardNumber = 36,
-  theLastStand = 37
+  theLastStand = 37,
+  magneticPolarity = 38
 }
 
 export enum Direction {

@@ -15,6 +15,7 @@ import { PickPlayerComponent } from '../_modals/pick-player/pick-player.componen
 import { DigCardComponent } from '../_modals/dig-card/dig-card.component';
 import { PickDuelNumbersComponent } from '../_modals/pick-duel-numbers/pick-duel-numbers.component';
 import { PickNumbersToDiscardComponent } from '../_modals/pick-numbers-to-discard/pick-numbers-to-discard.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-game',
@@ -35,7 +36,7 @@ export class GameComponent implements OnInit {
   countdown = 2000;
   gameLog: string[];
 
-  constructor(private _hubService: HubService, private _modalService: NgbModal) {}
+  constructor(private _hubService: HubService, private _modalService: NgbModal, private _toastrService: ToastrService) {}
 
   ngOnInit() {
     this._hubService.activeGame.subscribe(game => {
@@ -115,6 +116,11 @@ export class GameComponent implements OnInit {
       return;
     }
 
+    if (card.value === CardValue.magneticPolarity && this.game.lastCardPlayed.wasWildCard === false) {
+      this._toastrService.info('Magnetic polarity can be played only if last card played was a wildcard.', '', { timeOut: 3000 });
+      return;
+    }
+
     if (card.color === CardColor.wild) {
       this._modalService.open(PickColorComponent).result.then(pickedColor => {
         if (
@@ -160,10 +166,9 @@ export class GameComponent implements OnInit {
             this._hubService.playCard(card, pickedColor, null, null, null, null, blackjackNumber);
             return;
           });
-        }
-        else if (card.value === CardValue.discardNumber) {
+        } else if (card.value === CardValue.discardNumber) {
           this._modalService.open(PickNumbersToDiscardComponent).result.then(numbersToDiscard => {
-            this._hubService.playCard(card, pickedColor, null, null, null, null, 0,numbersToDiscard);
+            this._hubService.playCard(card, pickedColor, null, null, null, null, 0, numbersToDiscard);
             return;
           });
         } else {

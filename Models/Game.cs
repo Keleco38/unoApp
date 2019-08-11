@@ -44,8 +44,24 @@ namespace Uno.Models
             player.Cards.Remove(card);
             DiscardedPile.Add(card);
 
-            LastCardPlayed = new LastCardPlayed(pickedCardColor, card.Value, card.ImageUrl, player.User.Name);
+            LastCardPlayed = new LastCardPlayed(pickedCardColor, card.Value, card.ImageUrl, player.User.Name, cardPlayed.Color == CardColor.Wild);
 
+
+            if (!string.IsNullOrEmpty(targetedPlayerName))
+            {
+                Players.Where(p => p != player).ToList().ForEach(x =>
+                        {
+                            var magneticCard = x.Cards.FirstOrDefault(c => c.Value == CardValue.MagneticPolarity);
+                            if (magneticCard != null)
+                            {
+                                LastCardPlayed = new LastCardPlayed(pickedCardColor, magneticCard.Value, magneticCard.ImageUrl, x.User.Name, true);
+                                x.Cards.Remove(magneticCard);
+                                DiscardedPile.Add(magneticCard);
+                                turnResult.MessagesToLog.Add($"Player {x.User.Name} activated magnetic polarity. He was the target instead of {targetedPlayerName}.");
+                                targetedPlayerName = x.User.Name;
+                            }
+                        });
+            }
 
 
             if (card.Color == CardColor.Wild)
@@ -53,6 +69,10 @@ namespace Uno.Models
                 if (card.Value == CardValue.ChangeColor)
                 {
                     turnResult.MessagesToLog.Add($"Player {player.User.Name} changed color to {pickedCardColor}.");
+                }
+                if (card.Value == CardValue.MagneticPolarity)
+                {
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} changed color to {pickedCardColor} (magneticpolarity).");
                 }
                 if (card.Value == CardValue.Deflect)
                 {
@@ -78,7 +98,7 @@ namespace Uno.Models
                     }
                     else
                     {
-                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name);
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name, true);
                         targetedPlayer.Cards.Remove(deflectCard);
                         DiscardedPile.Add(deflectCard);
                         DrawCard(player, 4, false);
@@ -105,7 +125,7 @@ namespace Uno.Models
                     var keepMyHandCard = targetedPlayer.Cards.FirstOrDefault(y => y.Value == CardValue.KeepMyHand);
                     if (keepMyHandCard != null)
                     {
-                        LastCardPlayed = new LastCardPlayed(pickedCardColor, keepMyHandCard.Value, keepMyHandCard.ImageUrl, PlayerToPlay.User.Name);
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, keepMyHandCard.Value, keepMyHandCard.ImageUrl, PlayerToPlay.User.Name, true);
                         targetedPlayer.Cards.Remove(keepMyHandCard);
                         DiscardedPile.Add(keepMyHandCard);
                         messageToLog += $"{targetedPlayer.User.Name} kept his hand safe. ";
@@ -130,7 +150,7 @@ namespace Uno.Models
                         var keepMyHandCard = x.Cards.FirstOrDefault(y => y.Value == CardValue.KeepMyHand);
                         if (keepMyHandCard != null)
                         {
-                            LastCardPlayed = new LastCardPlayed(pickedCardColor, keepMyHandCard.Value, keepMyHandCard.ImageUrl, PlayerToPlay.User.Name);
+                            LastCardPlayed = new LastCardPlayed(pickedCardColor, keepMyHandCard.Value, keepMyHandCard.ImageUrl, PlayerToPlay.User.Name, true);
                             x.Cards.Remove(keepMyHandCard);
                             DiscardedPile.Add(keepMyHandCard);
                             messageToLog += $"{x.User.Name} kept his hand safe. ";
@@ -162,7 +182,7 @@ namespace Uno.Models
                     }
                     else
                     {
-                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name);
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name, true);
                         targetedPlayer.Cards.Remove(deflectCard);
                         DiscardedPile.Add(deflectCard);
                         DrawCard(PlayerToPlay, 5, false);
@@ -217,7 +237,7 @@ namespace Uno.Models
                         }
                         else
                         {
-                            LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name);
+                            LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name, true);
                             targetedPlayer.Cards.Remove(deflectCard);
                             DiscardedPile.Add(deflectCard);
                             DrawCard(PlayerToPlay, 3, false);
@@ -246,7 +266,7 @@ namespace Uno.Models
                     playersWithKeepMyHandCard.ForEach(x =>
                     {
                         var keepMyHandCard = x.Cards.FirstOrDefault(y => y.Value == CardValue.KeepMyHand);
-                        LastCardPlayed = new LastCardPlayed(pickedCardColor, keepMyHandCard.Value, keepMyHandCard.ImageUrl, PlayerToPlay.User.Name);
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, keepMyHandCard.Value, keepMyHandCard.ImageUrl, PlayerToPlay.User.Name, true);
                         x.Cards.Remove(keepMyHandCard);
                         DiscardedPile.Add(keepMyHandCard);
                         messageToLog += $"{x.User.Name} kept his hand safe. ";
@@ -441,8 +461,8 @@ namespace Uno.Models
                     var messageToLog = $"{player.User.Name} played discard number. Numbers that are discarded: {string.Join(' ', numbersToDiscard)}. ";
                     Players.ForEach(p =>
                     {
-                        var cardsToDiscard=p.Cards.Where(c=>numbersToDiscard.Contains((int)c.Value)).ToList();
-                        cardsToDiscard.ForEach(x=>p.Cards.Remove(x));
+                        var cardsToDiscard = p.Cards.Where(c => numbersToDiscard.Contains((int)c.Value)).ToList();
+                        cardsToDiscard.ForEach(x => p.Cards.Remove(x));
                     });
                     turnResult.MessagesToLog.Add(messageToLog);
                 }
@@ -461,7 +481,7 @@ namespace Uno.Models
                     }
                     else
                     {
-                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name);
+                        LastCardPlayed = new LastCardPlayed(pickedCardColor, deflectCard.Value, deflectCard.ImageUrl, targetedPlayer.User.Name, true);
                         targetedPlayer.Cards.Remove(deflectCard);
                         DiscardedPile.Add(deflectCard);
                         DrawCard(player, 2, false);
@@ -521,7 +541,7 @@ namespace Uno.Models
                 lastCardDrew = Deck.Draw(1).First();
                 DiscardedPile.Add(lastCardDrew);
             } while (lastCardDrew.Color == CardColor.Wild);
-            LastCardPlayed = new LastCardPlayed(lastCardDrew.Color, lastCardDrew.Value, lastCardDrew.ImageUrl, string.Empty);
+            LastCardPlayed = new LastCardPlayed(lastCardDrew.Color, lastCardDrew.Value, lastCardDrew.ImageUrl, string.Empty, false);
             Direction = Direction.Right;
             PlayerToPlay = Players[random.Next(Players.Count)];
             Players.ForEach(x => x.Cards = Deck.Draw(7));
@@ -596,7 +616,7 @@ namespace Uno.Models
                 if (firstPlayerWithTheLastStand != null)
                 {
                     var theLastStandCard = firstPlayerWithTheLastStand.Cards.First(x => x.Value == CardValue.TheLastStand);
-                    LastCardPlayed = new LastCardPlayed(LastCardPlayed.Color, theLastStandCard.Value, theLastStandCard.ImageUrl, PlayerToPlay.User.Name);
+                    LastCardPlayed = new LastCardPlayed(LastCardPlayed.Color, theLastStandCard.Value, theLastStandCard.ImageUrl, PlayerToPlay.User.Name, true);
                     firstPlayerWithTheLastStand.Cards.Remove(theLastStandCard);
                     DiscardedPile.Add(theLastStandCard);
                     turnResult.MessagesToLog.Add($"{firstPlayerWithTheLastStand.User.Name} saved the day! He played The Last Stand. Every player that had 0 cards will draw 2 cards.");

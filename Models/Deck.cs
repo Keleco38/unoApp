@@ -37,6 +37,7 @@ namespace Uno.Models
             if (gameMode == GameMode.SpecialCards || gameMode == GameMode.SpecialCardsAndAvalonCards)
             {
                 AddNormalGameNormalCards();
+                AddNormalGameNormalCards();
                 AddSpecialWildCards();
             }
             if (gameMode == GameMode.SpecialCardsAndAvalonCards)
@@ -81,6 +82,9 @@ namespace Uno.Models
                 Cards.Add(new Card(CardColor.Wild, CardValue.TricksOfTheTrade));
                 Cards.Add(new Card(CardColor.Wild, CardValue.Blackjack));
                 Cards.Add(new Card(CardColor.Wild, CardValue.DiscardNumber));
+                //adding magnetic polarity 2 times
+                Cards.Add(new Card(CardColor.Wild, CardValue.MagneticPolarity));
+                Cards.Add(new Card(CardColor.Wild, CardValue.MagneticPolarity));
             }
         }
 

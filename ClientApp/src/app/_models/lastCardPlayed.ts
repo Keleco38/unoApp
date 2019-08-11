@@ -6,4 +6,6 @@ export interface LastCardPlayed {
   color: CardColor;
   value: CardValue;
   playerPlayed: string;
+  wasWildCard :boolean;
+
 }
