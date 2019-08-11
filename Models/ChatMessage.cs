@@ -1,3 +1,4 @@
+using System;
 using Uno.Enums;
 
 namespace Uno.Models
@@ -9,8 +10,10 @@ namespace Uno.Models
             Username = name;
             Text = message;
             TypeOfMessage=typeOfMessage;
+            CreatedUtc=DateTime.Now;
         }
         public string Username { get; set; }
+        public DateTime CreatedUtc { get; set; }
         public string Text { get; set; }
         public TypeOfMessage TypeOfMessage { get; set; }
     }

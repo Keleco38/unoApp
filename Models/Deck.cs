@@ -72,11 +72,14 @@ namespace Uno.Models
                 Cards.Add(new Card(CardColor.Wild, CardValue.RussianRoulette));
                 Cards.Add(new Card(CardColor.Wild, CardValue.Roulette));
                 Cards.Add(new Card(CardColor.Wild, CardValue.Duel));
+                //adding keep my hand 2 times
+                Cards.Add(new Card(CardColor.Wild, CardValue.KeepMyHand));
                 Cards.Add(new Card(CardColor.Wild, CardValue.KeepMyHand));
                 Cards.Add(new Card(CardColor.Wild, CardValue.FairPlay));
                 Cards.Add(new Card(CardColor.Wild, CardValue.TheLastStand));
                 Cards.Add(new Card(CardColor.Wild, CardValue.Charity));
                 Cards.Add(new Card(CardColor.Wild, CardValue.TricksOfTheTrade));
+                Cards.Add(new Card(CardColor.Wild, CardValue.Blackjack));
             }
         }
 

@@ -4,4 +4,5 @@ export interface ChatMessage {
   username: string;
   text: string;
   typeOfMessage: TypeOfMessage;
+  createdUtc: Date;
 }

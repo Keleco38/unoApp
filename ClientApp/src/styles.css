@@ -97,6 +97,11 @@ body {
   font-style: italic;
 }
 
+.spectators-chat-message {
+  color: lightblue;
+  font-style: italic;
+}
+
 .nav-link {
   padding: 0.5rem !important;
 }

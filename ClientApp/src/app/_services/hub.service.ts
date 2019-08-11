@@ -149,27 +149,29 @@ export class HubService {
     this._hubConnection.invoke('DrawCard', this._activeGameObservable.getValue().gameSetup.id, count, changeTurn);
   }
 
-  sendMessageToGameChat(message: string): any {
-    this._hubConnection.invoke('SendMessageToGameChat', this._activeGameObservable.getValue().gameSetup.id, message, TypeOfMessage.chat);
+  sendMessageToGameChat(message: string, typeOfMessage: TypeOfMessage): any {
+    this._hubConnection.invoke('SendMessageToGameChat', this._activeGameObservable.getValue().gameSetup.id, message, typeOfMessage);
   }
 
   playCard(
     card: Card,
     pickedCardColor: CardColor,
-    playerToSwapCards: string = '',
+    targetedPlayer: string = '',
     cardToDig: Card = null,
     duelNumbers: number[] = null,
-    charityCards: Card[] = null
+    charityCards: Card[] = null,
+    blackjackNumber: number = 0
   ) {
     this._hubConnection.invoke(
       'PlayCard',
       this._activeGameObservable.getValue().gameSetup.id,
       card,
       pickedCardColor,
-      playerToSwapCards,
+      targetedPlayer,
       cardToDig,
       duelNumbers,
-      charityCards
+      charityCards,
+      blackjackNumber
     );
   }
 

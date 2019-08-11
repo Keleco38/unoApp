@@ -1,6 +1,7 @@
+import { BlackjackComponent } from './../_modals/Blackjack/Blackjack.component';
 import { PickCharityCardsComponent } from './../_modals/pick-charity-cards/pick-charity-cards.component';
 import { GameInfoComponent } from './../_modals/game-info/game-info.component';
-import { CardValue } from './../../_models/enums';
+import { CardValue, TypeOfMessage } from './../../_models/enums';
 import { Hand } from '../../_models/hand';
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/_models/user';
@@ -63,7 +64,7 @@ export class GameComponent implements OnInit {
           if (!this.game.gameEnded) {
             this.drawCard(2, false);
             this.callUno(false);
-            this._hubService.sendMessageToGameChat('<--- Forgot to call uno! Drawing 2 cards.');
+            this._hubService.sendMessageToGameChat('<--- Forgot to call uno! Drawing 2 cards.',TypeOfMessage.chat);
           }
         }
       }, 2000);
@@ -95,7 +96,7 @@ export class GameComponent implements OnInit {
     this._interval = null;
     this.countdown = 2000;
     if (playerCalled) {
-      this._hubService.sendMessageToGameChat('UNO');
+      this._hubService.sendMessageToGameChat('UNO',TypeOfMessage.chat);
     }
   }
 
@@ -149,6 +150,11 @@ export class GameComponent implements OnInit {
           digModal.componentInstance.discardedPile = this.game.discardedPile;
           digModal.result.then(cardToDig => {
             this._hubService.playCard(card, pickedColor, null, cardToDig);
+            return;
+          });
+        } else if (card.value === CardValue.blackjack) {
+          this._modalService.open(BlackjackComponent, { backdrop: 'static' }).result.then(blackjackNumber => {
+            this._hubService.playCard(card, pickedColor, null, null, null, null, blackjackNumber);
             return;
           });
         } else {

@@ -28,7 +28,7 @@ namespace Uno.Models
             Spectators = new List<Spectator>();
         }
 
-        public TurnResult PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName, Card cardToDig, List<int> duelNumbers, List<Card> charityCards)
+        public TurnResult PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName, Card cardToDig, List<int> duelNumbers, List<Card> charityCards, int blackjackNumber)
         {
             var turnResult = new TurnResult();
 
@@ -404,6 +404,36 @@ namespace Uno.Models
                     targetedPlayer.Cards.AddRange(cardsCallerTraded);
                     cardsCallerTraded.ForEach(x => player.Cards.Remove(x));
                     cardsTargetTraded.ForEach(x => targetedPlayer.Cards.Remove(x));
+                    turnResult.MessagesToLog.Add(messageToLog);
+                }
+                else if (card.Value == CardValue.Blackjack)
+                {
+                    var messageToLog = $"{player.User.Name} played blackjack. He hit {blackjackNumber}. ";
+                    if (blackjackNumber > 21)
+                    {
+                        DrawCard(player, 7, false);
+                        messageToLog += $"He went over 21. He will draw 7 cards.";
+                    }
+                    else if (blackjackNumber == 21)
+                    {
+                        player.Cards.RemoveRange(0, 5);
+                        messageToLog += $"He hit the blackjack. He will discard 5 cards.";
+                    }
+                    else if (blackjackNumber < 21 && blackjackNumber > 17)
+                    {
+                        player.Cards.RemoveRange(0, 2);
+                        messageToLog += $"He beat the dealer. He will discard 2 cards.";
+                    }
+                    else if (blackjackNumber == 17)
+                    {
+                        messageToLog += $"It's a draw. Nothing happens. ";
+                    }
+                    else
+                    {
+                        var difference = 17 - blackjackNumber;
+                        DrawCard(player, difference, false);
+                        messageToLog += $"Player pulled out. He will draw {difference} cards.";
+                    }
                     turnResult.MessagesToLog.Add(messageToLog);
                 }
             }

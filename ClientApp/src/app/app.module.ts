@@ -1,3 +1,4 @@
+import { BlackjackComponent } from './_components/_modals/Blackjack/Blackjack.component';
 import { PickCharityCardsComponent } from './_components/_modals/pick-charity-cards/pick-charity-cards.component';
 import { PickDuelNumbersComponent } from './_components/_modals/pick-duel-numbers/pick-duel-numbers.component';
 import { GameInfoComponent } from './_components/_modals/game-info/game-info.component';
@@ -50,6 +51,7 @@ import { DigCardComponent } from './_components/_modals/dig-card/dig-card.compon
     DigCardComponent,
     HelpComponent,
     GameInfoComponent,
+    BlackjackComponent,
     PickCharityCardsComponent,
     PickDuelNumbersComponent
   ],
@@ -76,6 +78,6 @@ import { DigCardComponent } from './_components/_modals/dig-card/dig-card.compon
   ],
   providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard],
   bootstrap: [AppComponent],
-  entryComponents: [PickColorComponent, PickPlayerComponent, ShowHandComponent, DigCardComponent, GameInfoComponent,PickDuelNumbersComponent,PickCharityCardsComponent]
+  entryComponents: [PickColorComponent, PickPlayerComponent, ShowHandComponent, DigCardComponent, GameInfoComponent,PickDuelNumbersComponent,PickCharityCardsComponent, BlackjackComponent]
 })
 export class AppModule {}

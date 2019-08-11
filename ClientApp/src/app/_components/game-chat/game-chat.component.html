@@ -4,6 +4,10 @@
       <h5 class="card-header">
         <h5>
           Hello, <strong>{{ currentUser?.name }}</strong>
+          <small class="float-right">
+            | Mute specs <input type="checkbox" [(ngModel)]="hideSpectatorsChat" /> | Mute server
+            <input type="checkbox" [(ngModel)]="hideServerChat" />
+          </small>
         </h5>
         <form novalidate name="newMessageForm" (ngSubmit)="sendMessageToGameChat()">
           <input type="text" name="newMessage" autocomplete="off" class="form-control" placeholder="New Message" [(ngModel)]="newMessage" />
@@ -17,7 +21,7 @@
           [ngClass]="getChatMessageClass(message)"
           *ngFor="let message of messages"
         >
-          <strong> [{{ message.username }}]: </strong> {{ message.text }}
+          <strong> [{{ message.createdUtc | date: 'shortTime' }} | {{ message.username }}]: </strong> {{ message.text }}
         </p>
       </div>
     </div>
