@@ -120,6 +120,7 @@ export class GameComponent implements OnInit {
           card.value === CardValue.duel ||
           card.value === CardValue.inspectHand ||
           card.value === CardValue.charity ||
+          card.value === CardValue.tricksOfTheTrade ||
           card.value === CardValue.fairPlay
         ) {
           const playerModal = this._modalService.open(PickPlayerComponent);

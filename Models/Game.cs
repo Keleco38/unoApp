@@ -373,13 +373,37 @@ namespace Uno.Models
                 }
                 else if (card.Value == CardValue.Charity)
                 {
+                    var charityCardsString = string.Empty;
                     var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
-                    var messageToLog = $"{player.User.Name} targeted {targetedPlayer.User.Name} with card Charity. He gave him two cards.";
                     charityCards.ForEach(x =>
                     {
+                        charityCardsString += x.Color + " " + x.Value + ", ";
                         player.Cards.Remove(player.Cards.First(c => c.Value == x.Value && c.Color == x.Color));
                         targetedPlayer.Cards.Add(x);
                     });
+
+                    var messageToLog = $"{player.User.Name} targeted {targetedPlayer.User.Name} with card Charity. He gave him two cards: {charityCardsString}";
+                    turnResult.MessagesToLog.Add(messageToLog);
+                }
+                else if (card.Value == CardValue.TricksOfTheTrade)
+                {
+                    Random random = new Random();
+                    var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
+                    var messageToLog = $"{player.User.Name} targeted {targetedPlayer.User.Name} with card Tricks of the trade. ";
+                    var callerNumberToTrade = random.Next(1, player.Cards.Count < 4 ? player.Cards.Count : 4);
+                    var targetNumberToTrade = random.Next(1, targetedPlayer.Cards.Count < 4 ? targetedPlayer.Cards.Count : 4);
+                    var cardsCallerTraded = player.Cards.GetRange(0, callerNumberToTrade);
+                    var cardsTargetTraded = targetedPlayer.Cards.GetRange(0, targetNumberToTrade);
+                    var cardsCallerTradedString = string.Empty;
+                    cardsCallerTraded.ForEach(x => { cardsCallerTradedString += (x.Color + " " + x.Value + ", "); });
+                    messageToLog += $"{player.User.Name} gave {callerNumberToTrade} cards: {cardsCallerTradedString}. ";
+                    var cardsTargetTradedString = string.Empty;
+                    cardsTargetTraded.ForEach(x => { cardsTargetTradedString += (x.Color + " " + x.Value + ", "); });
+                    messageToLog += $"{targetedPlayer.User.Name} gave {targetNumberToTrade} cards: {cardsTargetTradedString}. ";
+                    player.Cards.AddRange(cardsTargetTraded);
+                    targetedPlayer.Cards.AddRange(cardsCallerTraded);
+                    cardsCallerTraded.ForEach(x => player.Cards.Remove(x));
+                    cardsTargetTraded.ForEach(x => targetedPlayer.Cards.Remove(x));
                     turnResult.MessagesToLog.Add(messageToLog);
                 }
             }
