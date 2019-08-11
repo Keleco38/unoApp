@@ -14,6 +14,7 @@ import { PickColorComponent } from '../_modals/pick-color/pick-color.component';
 import { PickPlayerComponent } from '../_modals/pick-player/pick-player.component';
 import { DigCardComponent } from '../_modals/dig-card/dig-card.component';
 import { PickDuelNumbersComponent } from '../_modals/pick-duel-numbers/pick-duel-numbers.component';
+import { PickNumbersToDiscardComponent } from '../_modals/pick-numbers-to-discard/pick-numbers-to-discard.component';
 
 @Component({
   selector: 'app-game',
@@ -54,20 +55,22 @@ export class GameComponent implements OnInit {
     });
 
     this._hubService.mustCallUno.subscribe(() => {
-      this.callUno(false);
-      this.mustCallUno = true;
-      this._interval = window.setInterval(() => {
-        this.countdown -= 100;
-      }, 100);
-      this._timer = window.setTimeout(() => {
-        if (this.mustCallUno) {
-          if (!this.game.gameEnded) {
-            this.drawCard(2, false);
-            this.callUno(false);
-            this._hubService.sendMessageToGameChat('<--- Forgot to call uno! Drawing 2 cards.',TypeOfMessage.chat);
-          }
-        }
-      }, 2000);
+      console.log('must call uno........' + new Date());
+      return;
+      // this.callUno(false);
+      // this.mustCallUno = true;
+      // this._interval = window.setInterval(() => {
+      //   this.countdown -= 100;
+      // }, 100);
+      // this._timer = window.setTimeout(() => {
+      //   if (this.mustCallUno) {
+      //     if (!this.game.gameEnded) {
+      //       this.drawCard(2, false);
+      //       this.callUno(false);
+      //       this._hubService.sendMessageToGameChat('<--- Forgot to call uno! Drawing 2 cards.', TypeOfMessage.chat);
+      //     }
+      //   }
+      // }, 2000);
     });
 
     this._hubService.currentUser.subscribe(user => {
@@ -96,7 +99,7 @@ export class GameComponent implements OnInit {
     this._interval = null;
     this.countdown = 2000;
     if (playerCalled) {
-      this._hubService.sendMessageToGameChat('UNO',TypeOfMessage.chat);
+      this._hubService.sendMessageToGameChat('UNO', TypeOfMessage.chat);
     }
   }
 
@@ -155,6 +158,12 @@ export class GameComponent implements OnInit {
         } else if (card.value === CardValue.blackjack) {
           this._modalService.open(BlackjackComponent, { backdrop: 'static' }).result.then(blackjackNumber => {
             this._hubService.playCard(card, pickedColor, null, null, null, null, blackjackNumber);
+            return;
+          });
+        }
+        else if (card.value === CardValue.discardNumber) {
+          this._modalService.open(PickNumbersToDiscardComponent).result.then(numbersToDiscard => {
+            this._hubService.playCard(card, pickedColor, null, null, null, null, 0,numbersToDiscard);
             return;
           });
         } else {

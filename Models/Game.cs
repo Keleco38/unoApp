@@ -28,7 +28,7 @@ namespace Uno.Models
             Spectators = new List<Spectator>();
         }
 
-        public TurnResult PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName, Card cardToDig, List<int> duelNumbers, List<Card> charityCards, int blackjackNumber)
+        public TurnResult PlayCard(Player player, Card cardPlayed, CardColor pickedCardColor, string targetedPlayerName, Card cardToDig, List<int> duelNumbers, List<Card> charityCards, int blackjackNumber, List<int> numbersToDiscard)
         {
             var turnResult = new TurnResult();
 
@@ -434,6 +434,16 @@ namespace Uno.Models
                         DrawCard(player, difference, false);
                         messageToLog += $"Player pulled out. He will draw {difference} cards.";
                     }
+                    turnResult.MessagesToLog.Add(messageToLog);
+                }
+                else if (card.Value == CardValue.DiscardNumber)
+                {
+                    var messageToLog = $"{player.User.Name} played discard number. Numbers that are discarded: {string.Join(' ', numbersToDiscard)}. ";
+                    Players.ForEach(p =>
+                    {
+                        var cardsToDiscard=p.Cards.Where(c=>numbersToDiscard.Contains((int)c.Value)).ToList();
+                        cardsToDiscard.ForEach(x=>p.Cards.Remove(x));
+                    });
                     turnResult.MessagesToLog.Add(messageToLog);
                 }
             }

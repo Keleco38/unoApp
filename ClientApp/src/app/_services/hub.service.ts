@@ -160,7 +160,8 @@ export class HubService {
     cardToDig: Card = null,
     duelNumbers: number[] = null,
     charityCards: Card[] = null,
-    blackjackNumber: number = 0
+    blackjackNumber: number = 0,
+    numbersToDiscard: number[] = null
   ) {
     this._hubConnection.invoke(
       'PlayCard',
@@ -171,7 +172,8 @@ export class HubService {
       cardToDig,
       duelNumbers,
       charityCards,
-      blackjackNumber
+      blackjackNumber,
+      numbersToDiscard
     );
   }
 

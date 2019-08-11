@@ -80,6 +80,7 @@ namespace Uno.Models
                 Cards.Add(new Card(CardColor.Wild, CardValue.Charity));
                 Cards.Add(new Card(CardColor.Wild, CardValue.TricksOfTheTrade));
                 Cards.Add(new Card(CardColor.Wild, CardValue.Blackjack));
+                Cards.Add(new Card(CardColor.Wild, CardValue.DiscardNumber));
             }
         }
 

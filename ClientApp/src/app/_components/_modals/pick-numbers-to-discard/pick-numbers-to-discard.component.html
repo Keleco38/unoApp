@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Pick three numbers to discard</h4>
+  <button type="button" class="close" aria-describedby="modal-title" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-12">
+      <h5 class="text-info">
+        Numbers picked: <span class="mx-1" *ngFor="let number of numbersToDiscard">{{ number }}</span>
+      </h5>
+      <hr />
+    </div>
+    <div class="col-4"><button class="btn-block  btn-lg" [ngClass]="getBtnClass(0)" (click)="selectOrUnselect(0)">0</button></div>
+    <div class="col-4"><button class="btn-block  btn-lg" [ngClass]="getBtnClass(1)" (click)="selectOrUnselect(1)">1</button></div>
+    <div class="col-4"><button class="btn-block  btn-lg" [ngClass]="getBtnClass(2)" (click)="selectOrUnselect(2)">2</button></div>
+    <div class="col-4"><button class="btn-block  btn-lg" [ngClass]="getBtnClass(3)" (click)="selectOrUnselect(3)">3</button></div>
+    <div class="col-4"><button class="btn-block  btn-lg" [ngClass]="getBtnClass(4)" (click)="selectOrUnselect(4)">4</button></div>
+    <div class="col-4"><button class="btn-block  btn-lg" [ngClass]="getBtnClass(5)" (click)="selectOrUnselect(5)">5</button></div>
+    <div class="col-4"><button class="btn-block  btn-lg" [ngClass]="getBtnClass(6)" (click)="selectOrUnselect(6)">6</button></div>
+    <div class="col-4"><button class="btn-block  btn-lg" [ngClass]="getBtnClass(7)" (click)="selectOrUnselect(6)">7</button></div>
+    <div class="col-4"><button class="btn-block  btn-lg" [ngClass]="getBtnClass(8)" (click)="selectOrUnselect(6)">8</button></div>
+    <div class="col-4"><button class="btn-block  btn-lg" [ngClass]="getBtnClass(9)" (click)="selectOrUnselect(6)">9</button></div>
+    <div class="col-12">
+      <hr />
+      <button class="btn btn-info btn-block btn-lg" *ngIf="numbersToDiscard.length == 3" (click)="confirm()">Confirm</button>
+    </div>
+  </div>
+</div>

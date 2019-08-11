@@ -347,7 +347,7 @@ namespace Uno.Hubs
 
         }
 
-        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string targetedPlayerName, CardDto cardToDigDto, List<int> duelNumbers, List<CardDto> charityCardsDto,int blackjackNumber)
+        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string targetedPlayerName, CardDto cardToDigDto, List<int> duelNumbers, List<CardDto> charityCardsDto,int blackjackNumber, List<int> numbersToDiscard)
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             if (game.GameEnded || !game.GameStarted)
@@ -357,7 +357,7 @@ namespace Uno.Hubs
             var card = _mapper.Map<Card>(cardDto);
             var cardToDig = _mapper.Map<Card>(cardToDigDto);
             var charityCards = _mapper.Map<List<Card>>(charityCardsDto);
-            var turnResult = game.PlayCard(player, card, pickedCardColor, targetedPlayerName, cardToDig, duelNumbers, charityCards, blackjackNumber);
+            var turnResult = game.PlayCard(player, card, pickedCardColor, targetedPlayerName, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard);
             if (turnResult.Success == true)
             {
                 if (cardDto.Value == CardValue.InspectHand)
