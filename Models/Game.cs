@@ -74,6 +74,11 @@ namespace Uno.Models
                 {
                     turnResult.MessagesToLog.Add($"Player {player.User.Name} changed color to {pickedCardColor} (magneticpolarity).");
                 }
+                   if (card.Value == CardValue.InspectHand)
+                {
+                    var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
+                    turnResult.MessagesToLog.Add($"Player {player.User.Name} has inspected {targetedPlayer.User.Name}'s hand.");
+                }
                 if (card.Value == CardValue.Deflect)
                 {
                     turnResult.MessagesToLog.Add($"Player {player.User.Name} changed color to {pickedCardColor} (deflect card).");

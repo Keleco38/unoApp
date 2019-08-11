@@ -3,15 +3,15 @@
     <div class="alert alert-primary">
       <h4 class="h4">Online players ({{ onlineUsers.length }}):</h4>
     </div>
-    <div *ngFor="let user of onlineUsers" ngbDropdown>
+    <div *ngFor="let user of onlineUsers" container="body" ngbDropdown>
       <p>{{ user.name }} <span ngbDropdownToggle class="cursor-pointer">&#x260A;</span></p>
-      <div ngbDropdownMenu>
-        <p class="btn btn-block btn-sm" (click)="buzzUser(user, 'alert')" ngbDropdownItem>alert</p>
-        <p class="btn btn-block btn-sm" (click)="buzzUser(user, 'ding')" ngbDropdownItem>ding</p>
-        <p class="btn btn-block btn-sm" (click)="buzzUser(user, 'lick')" ngbDropdownItem>lick</p>
-        <p class="btn btn-block btn-sm" (click)="buzzUser(user, 'poke')" ngbDropdownItem>poke</p>
-        <p class="btn btn-block btn-sm" (click)="buzzUser(user, 'punch')" ngbDropdownItem>punch</p>
-        <p class="btn btn-block btn-sm" (click)="buzzUser(user, 'slap')" ngbDropdownItem>slap</p>
+      <div ngbDropdownMenu class="my-dropdown">
+        <button (click)="buzzUser(user, 'alert')" ngbDropdownItem>alert</button>
+        <button (click)="buzzUser(user, 'ding')" ngbDropdownItem>ding</button>
+        <button (click)="buzzUser(user, 'lick')" ngbDropdownItem>lick</button>
+        <button (click)="buzzUser(user, 'poke')" ngbDropdownItem>poke</button>
+        <button (click)="buzzUser(user, 'punch')" ngbDropdownItem>punch</button>
+        <button (click)="buzzUser(user, 'slap')" ngbDropdownItem>slap</button>
       </div>
     </div>
   </div>

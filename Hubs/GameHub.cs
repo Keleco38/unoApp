@@ -354,6 +354,7 @@ namespace Uno.Hubs
                 return;
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             var player = game.Players.Find(x => x.User.Name == user.Name);
+            var playersNumberOfCard=player.Cards.Count;
             var card = _mapper.Map<Card>(cardDto);
             var cardToDig = _mapper.Map<Card>(cardToDigDto);
             var charityCards = _mapper.Map<List<Card>>(charityCardsDto);
@@ -362,9 +363,10 @@ namespace Uno.Hubs
             {
                 if (cardDto.Value == CardValue.InspectHand)
                 {
+                    if(playersNumberOfCard>1){
                     var targetedPlayer = game.Players.Find(x => x.User.Name == targetedPlayerName);
                     await Clients.Caller.SendAsync("ShowInspectedHand", _mapper.Map<HandDto>(targetedPlayer.Cards));
-                    turnResult.MessagesToLog.Add($"Player {player.User.Name} has inspected {targetedPlayer.User.Name}'s hand.");
+                    }
                 }
                 if (turnResult.MessagesToLog.Any())
                 {
