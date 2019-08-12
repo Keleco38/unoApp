@@ -74,7 +74,7 @@ namespace Uno.Models
                 {
                     turnResult.MessagesToLog.Add($"Player {player.User.Name} changed color to {pickedCardColor} (magneticpolarity).");
                 }
-                   if (card.Value == CardValue.InspectHand)
+                if (card.Value == CardValue.InspectHand)
                 {
                     var targetedPlayer = Players.Find(x => x.User.Name == targetedPlayerName);
                     turnResult.MessagesToLog.Add($"Player {player.User.Name} has inspected {targetedPlayer.User.Name}'s hand.");
@@ -335,9 +335,13 @@ namespace Uno.Models
                     if (drawOrDiscard == 0)
                     {
                         //discard   
-                        var numberOfCardsToDiscard = random.Next(1, 3);
-                        messageToLog += $"{playerAffected.User.Name} is a lucky winner! He will discard {numberOfCardsToDiscard} cards.";
-                        playerAffected.Cards.RemoveRange(0, numberOfCardsToDiscard);
+                        if (player.Cards.Count > 0)
+                        {
+                            var numberToDiscard = player.Cards.Count < 3 ? player.Cards.Count : 3;
+                            var numberOfCardsToDiscard = random.Next(1, numberToDiscard);
+                            playerAffected.Cards.RemoveRange(0, numberOfCardsToDiscard);
+                            messageToLog += $"{playerAffected.User.Name} is a lucky winner! He will discard {numberOfCardsToDiscard} cards.";
+                        }
                     }
                     else
                     {
@@ -441,12 +445,21 @@ namespace Uno.Models
                     }
                     else if (blackjackNumber == 21)
                     {
-                        player.Cards.RemoveRange(0, 5);
+                        if (player.Cards.Count > 0)
+                        {
+                            var numberToDiscard = player.Cards.Count < 5 ? player.Cards.Count : 5;
+                            player.Cards.RemoveRange(0, numberToDiscard);
+                        }
                         messageToLog += $"He hit the blackjack. He will discard 5 cards.";
+
                     }
                     else if (blackjackNumber < 21 && blackjackNumber > 17)
                     {
-                        player.Cards.RemoveRange(0, 2);
+                        if (player.Cards.Count > 0)
+                        {
+                            var numberToDiscard = player.Cards.Count < 2 ? player.Cards.Count : 2;
+                            player.Cards.RemoveRange(0, numberToDiscard);
+                        }
                         messageToLog += $"He beat the dealer. He will discard 2 cards.";
                     }
                     else if (blackjackNumber == 17)
