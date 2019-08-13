@@ -15,6 +15,6 @@ export class DigCardComponent implements OnInit {
   ngOnInit() {}
 
   digCardFromDiscardedPile(cardToDig: Card) {
-    this._activeModal.close(cardToDig);
+    this._activeModal.close(cardToDig.id);
   }
 }

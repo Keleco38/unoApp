@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Uno.Enums;
+using unoApp.Models.Abstraction;
+using unoApp.Models.Entities.Cards.Colored;
+using unoApp.Models.Entities.Cards.Wild;
 
 namespace Uno.Models
 {
@@ -13,10 +16,10 @@ namespace Uno.Models
             Shuffle();
         }
 
-        public List<Card> Cards { get; set; }
+        public List<ICard> Cards { get; set; }
 
 
-        public List<Card> Draw(int count)
+        public List<ICard> Draw(int count)
         {
             var cardsDrew = Cards.Take(count).ToList();
 
@@ -29,15 +32,18 @@ namespace Uno.Models
 
         private void InitializeCards(GameMode gameMode)
         {
-            Cards = new List<Card>();
+            Cards = new List<ICard>();
 
-            AddNormalGameNormalCards();
-            AddNormalGameWildCards();
+            // AddNormalGameNormalCards();
+            // AddNormalGameWildCards();
 
             if (gameMode == GameMode.SpecialCards || gameMode == GameMode.SpecialCardsAndAvalonCards)
             {
-                AddNormalGameNormalCards();
-                AddNormalGameNormalCards();
+                // AddNormalGameNormalCards();
+                // AddNormalGameNormalCards();
+                // AddNormalGameWildCards();
+                // AddNormalGameWildCards();
+                AddSpecialWildCards();
                 AddSpecialWildCards();
             }
             if (gameMode == GameMode.SpecialCardsAndAvalonCards)
@@ -52,48 +58,49 @@ namespace Uno.Models
             {
                 if (color != CardColor.Wild)
                 {
-                    Cards.Add(new Card(color, CardValue.StealTurn));
-                    Cards.Add(new Card(color, CardValue.StealTurn));
+                    Cards.Add(new StealTurn(color));
+                    Cards.Add(new StealTurn(color));
                 }
             }
             for (int i = 1; i <= 4; i++)
             {
-                Cards.Add(new Card(CardColor.Wild, CardValue.BlackHole));
-                Cards.Add(new Card(CardColor.Wild, CardValue.DiscardWildCards));
-                Cards.Add(new Card(CardColor.Wild, CardValue.SwapHands));
-                Cards.Add(new Card(CardColor.Wild, CardValue.DoubleEdge));
-                Cards.Add(new Card(CardColor.Wild, CardValue.DiscardColor));
-                Cards.Add(new Card(CardColor.Wild, CardValue.HandOfGod));
-                Cards.Add(new Card(CardColor.Wild, CardValue.Judgement));
-                Cards.Add(new Card(CardColor.Wild, CardValue.UnitedWeFall));
-                Cards.Add(new Card(CardColor.Wild, CardValue.ParadigmShift));
-                Cards.Add(new Card(CardColor.Wild, CardValue.Deflect));
-                Cards.Add(new Card(CardColor.Wild, CardValue.InspectHand));
-                Cards.Add(new Card(CardColor.Wild, CardValue.GraveDigger));
-                Cards.Add(new Card(CardColor.Wild, CardValue.RussianRoulette));
-                Cards.Add(new Card(CardColor.Wild, CardValue.Roulette));
-                Cards.Add(new Card(CardColor.Wild, CardValue.Duel));
-                //adding keep my hand 2 times
-                Cards.Add(new Card(CardColor.Wild, CardValue.KeepMyHand));
-                Cards.Add(new Card(CardColor.Wild, CardValue.KeepMyHand));
-                Cards.Add(new Card(CardColor.Wild, CardValue.FairPlay));
-                Cards.Add(new Card(CardColor.Wild, CardValue.TheLastStand));
-                Cards.Add(new Card(CardColor.Wild, CardValue.Charity));
-                Cards.Add(new Card(CardColor.Wild, CardValue.TricksOfTheTrade));
-                Cards.Add(new Card(CardColor.Wild, CardValue.Blackjack));
-                Cards.Add(new Card(CardColor.Wild, CardValue.DiscardNumber));
-                //adding magnetic polarity 2 times
-                Cards.Add(new Card(CardColor.Wild, CardValue.MagneticPolarity));
-                Cards.Add(new Card(CardColor.Wild, CardValue.MagneticPolarity));
+                Cards.Add(new BlackHole());
+                Cards.Add(new DiscardWildCards());
+                Cards.Add(new SwapHands());
+                Cards.Add(new DoubleEdge());
+                Cards.Add(new DiscardColor());
+                Cards.Add(new HandOfGod());
+                Cards.Add(new Judgement());
+                Cards.Add(new UnitedWeFall());
+                Cards.Add(new ParadigmShift());
+                Cards.Add(new InspectHand());
+                Cards.Add(new GraveDigger());
+                Cards.Add(new RussianRoulette());
+                Cards.Add(new Roulette());
+                Cards.Add(new Duel());
+                Cards.Add(new FairPlay());
+                Cards.Add(new TheLastStand());
+                Cards.Add(new Charity());
+                Cards.Add(new TricksOfTheTrade());
+                Cards.Add(new Blackjack());
+                Cards.Add(new DiscardNumber());
+                //cads added 2 times
+                Cards.Add(new MagneticPolarity());
+                Cards.Add(new MagneticPolarity());
+                Cards.Add(new KeepMyHand());
+                Cards.Add(new KeepMyHand());
+                Cards.Add(new Deflect());
+                Cards.Add(new Deflect());
             }
+
         }
 
         private void AddNormalGameWildCards()
         {
             for (int i = 1; i <= 4; i++)
             {
-                Cards.Add(new Card(CardColor.Wild, CardValue.ChangeColor));
-                Cards.Add(new Card(CardColor.Wild, CardValue.DrawFour));
+                Cards.Add(new ChangeColor());
+                Cards.Add(new DrawFour());
             }
 
         }
@@ -119,15 +126,18 @@ namespace Uno.Models
                             case CardValue.Seven:
                             case CardValue.Eight:
                             case CardValue.Nine:
+                                Cards.Add(new Number(color, val));
+                                Cards.Add(new Number(color, val));
+                                break;
                             case CardValue.Skip:
                             case CardValue.Reverse:
                             case CardValue.DrawTwo:
-                                Cards.Add(new Card(color, val));
-                                Cards.Add(new Card(color, val));
+                                Cards.Add(new DrawTwo(color));
+                                Cards.Add(new DrawTwo(color));
                                 break;
                             case CardValue.Zero:
                                 //Add one copy per color for 0
-                                Cards.Add(new Card(color, val));
+                                Cards.Add(new Number(color, val));
                                 break;
                         }
                     }
@@ -139,17 +149,14 @@ namespace Uno.Models
         {
             Random r = new Random();
 
-
             for (int n = Cards.Count - 1; n > 0; --n)
             {
                 int k = r.Next(n + 1);
-                Card temp = Cards[n];
+                ICard temp = Cards[n];
                 Cards[n] = Cards[k];
                 Cards[k] = temp;
             }
         }
-
-
 
     }
 }

@@ -63,10 +63,9 @@ namespace Uno.Hubs
                     }
                     else
                     {
-                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not {chatMessageIntentionResult.BuzzTypeStringForChat}! Wait 5 seconds.", TypeOfMessage.Server));
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not {chatMessageIntentionResult.BuzzTypeStringForChat}! Wait {Constants.MINIMUM_TIME_SECONDS_BETWEEN_BUZZ} seconds.", TypeOfMessage.Server));
                         await Clients.Caller.SendAsync("PostNewMessageInAllChat", msgDto);
                     }
-
                 }
                 else
                 {
@@ -110,7 +109,7 @@ namespace Uno.Hubs
                     }
                     else
                     {
-                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not {chatMessageIntentionResult.BuzzTypeStringForChat}! Wait 5 seconds.", TypeOfMessage.Server));
+                        var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {targetedUser.Name} was not {chatMessageIntentionResult.BuzzTypeStringForChat}! Wait {Constants.MINIMUM_TIME_SECONDS_BETWEEN_BUZZ} seconds.", TypeOfMessage.Server));
                         await Clients.Caller.SendAsync("PostNewMessageInGameChat", msgDto);
                     }
                 }
@@ -294,7 +293,8 @@ namespace Uno.Hubs
         {
             name = Regex.Replace(name, @"[^a-zA-Z0-9]", "").ToLower();
 
-            if(!name.Any()){
+            if (!name.Any())
+            {
                 await Clients.Caller.SendAsync("RenamePlayer");
             }
 
@@ -334,7 +334,7 @@ namespace Uno.Hubs
                 if (game.PlayerToPlay.User.Name == user.Name)
                 {
                     game.DrawCard(game.PlayerToPlay, count, normalDraw);
-                    await AddToGameLog(gameId, $"Player {user.Name} drew a card (normal draw)");
+                    await AddToGameLog(gameId, $"{user.Name} drew a card (normal draw)");
                 }
             }
             else
@@ -347,39 +347,32 @@ namespace Uno.Hubs
 
         }
 
-        public async Task PlayCard(string gameId, CardDto cardDto, CardColor pickedCardColor, string targetedPlayerName, CardDto cardToDigDto, List<int> duelNumbers, List<CardDto> charityCardsDto,int blackjackNumber, List<int> numbersToDiscard)
+        public async Task PlayCard(string gameId, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard)
         {
             var game = _games.Find(x => x.GameSetup.Id == gameId);
             if (game.GameEnded || !game.GameStarted)
                 return;
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             var player = game.Players.Find(x => x.User.Name == user.Name);
-            var playersNumberOfCard=player.Cards.Count;
-            var card = _mapper.Map<Card>(cardDto);
-            var cardToDig = _mapper.Map<Card>(cardToDigDto);
-            var charityCards = _mapper.Map<List<Card>>(charityCardsDto);
-            var turnResult = game.PlayCard(player, card, pickedCardColor, targetedPlayerName, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard);
-            if (turnResult.Success == true)
-            {
-                if (cardDto.Value == CardValue.InspectHand)
-                {
-                    if(playersNumberOfCard>1){
-                    var targetedPlayer = game.Players.Find(x => x.User.Name == targetedPlayerName);
-                    await Clients.Caller.SendAsync("ShowInspectedHand", _mapper.Map<HandDto>(targetedPlayer.Cards));
-                    }
-                }
-                if (turnResult.MessagesToLog.Any())
-                {
-                    turnResult.MessagesToLog.ForEach(async x => await AddToGameLog(game.GameSetup.Id, x));
-                }
-                await UpdateGame(game);
-                await UpdateHands(game);
-                if (player.Cards.Count == 1)
-                {
-                    await Clients.Caller.SendAsync("MustCallUno");
-                }
+            var moveResult = game.PlayCard(player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard);
+            
+            if (moveResult == null)
+                return;
 
+            moveResult.MoveResultCallbackParams.ForEach(async callbackParam =>
+            {
+                await Clients.Client(callbackParam.ConnectionId).SendAsync(callbackParam.Command, callbackParam.Object);
+            });
+            moveResult.MessagesToLog.ForEach(async x => await AddToGameLog(game.GameSetup.Id, x));
+
+            await UpdateGame(game);
+            await UpdateHands(game);
+
+            if (player.Cards.Count == 1)
+            {
+                await Clients.Caller.SendAsync("MustCallUno");
             }
+
         }
         //-------------------------- private
 
@@ -406,16 +399,6 @@ namespace Uno.Hubs
             var allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
             await Clients.Clients(allUsersInGame).SendAsync("UpdateGame", gameDto);
 
-            if (game.GameStarted)
-            {
-                var allPlayersInTheGame = GetPlayersFromGame(game);
-                foreach (var connectionId in allPlayersInTheGame)
-                {
-                    var myHand = game.Players.FirstOrDefault(x => x.User.ConnectionId == connectionId).Cards;
-                    var myHandDto = _mapper.Map<HandDto>(myHand);
-                    await Clients.Client(connectionId).SendAsync("UpdateMyHand", myHandDto);
-                }
-            }
         }
         private async Task UpdateHands(Game game)
         {
@@ -424,9 +407,9 @@ namespace Uno.Hubs
                 var allPlayersInTheGame = GetPlayersFromGame(game);
                 foreach (var connectionId in allPlayersInTheGame)
                 {
-                    var myHand = game.Players.FirstOrDefault(x => x.User.ConnectionId == connectionId).Cards;
-                    var myHandDto = _mapper.Map<HandDto>(myHand);
-                    await Clients.Client(connectionId).SendAsync("UpdateMyHand", myHandDto);
+                    var myCards = game.Players.FirstOrDefault(x => x.User.ConnectionId == connectionId).Cards;
+                    var myCardsDto = _mapper.Map<List<CardDto>>(myCards);
+                    await Clients.Client(connectionId).SendAsync("UpdateMyHand", myCardsDto);
                 }
             }
         }

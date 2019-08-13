@@ -1,6 +1,5 @@
 import { DigCardComponent } from './../_components/_modals/dig-card/dig-card.component';
 import { ShowHandComponent } from './../_components/_modals/show-hand/show-hand.component';
-import { Hand } from '../_models/hand';
 import { GameMode, CardColor } from './../_models/enums';
 import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
@@ -31,7 +30,7 @@ export class HubService {
   private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._allChatMessages);
   private _gameLogObservable = new BehaviorSubject<string[]>(this._gameLog);
   private _activeGameObservable = new BehaviorSubject<Game>(null);
-  private _myHandObservable = new BehaviorSubject<Hand>(null);
+  private _myHandObservable = new BehaviorSubject<Card[]>(null);
   private _mustCallUnoObservable = new Subject();
 
   constructor(private _router: Router, private _toastrService: ToastrService, private _modalService: NgbModal) {
@@ -90,14 +89,14 @@ export class HubService {
       this._toastrService.info(message, '', { timeOut: 3000 });
     });
 
-    this._hubConnection.on('UpdateMyHand', (myHand: Hand) => {
-      this._myHandObservable.next(myHand);
+    this._hubConnection.on('UpdateMyHand', (myCards: Card[]) => {
+      this._myHandObservable.next(myCards);
     });
 
-    this._hubConnection.on('ShowInspectedHand', (hand: Hand) => {
+    this._hubConnection.on('ShowInspectedHand', (cards: Card[]) => {
       setTimeout(() => {
         const modalRef = this._modalService.open(ShowHandComponent);
-        modalRef.componentInstance.hand = hand;
+        modalRef.componentInstance.cards = cards;
       }, 2000);
     });
 
@@ -154,24 +153,24 @@ export class HubService {
   }
 
   playCard(
-    card: Card,
-    pickedCardColor: CardColor,
+    cardPlayedId: string,
+    targetedCardColor: CardColor = 0,
     targetedPlayer: string = '',
-    cardToDig: Card = null,
+    cardToDigId: string = '',
     duelNumbers: number[] = null,
-    charityCards: Card[] = null,
+    charityCardsIds: string[] = null,
     blackjackNumber: number = 0,
     numbersToDiscard: number[] = null
   ) {
     this._hubConnection.invoke(
       'PlayCard',
       this._activeGameObservable.getValue().gameSetup.id,
-      card,
-      pickedCardColor,
+      cardPlayedId,
+      targetedCardColor,
       targetedPlayer,
-      cardToDig,
+      cardToDigId,
       duelNumbers,
-      charityCards,
+      charityCardsIds,
       blackjackNumber,
       numbersToDiscard
     );

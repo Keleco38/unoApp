@@ -16,6 +16,6 @@ export class PickPlayerComponent implements OnInit {
   ngOnInit() {
   }
   selectPlayer(player: Player) {
-    this.activeModal.close(player.user.name);
+    this.activeModal.close(player.id);
   }
 }

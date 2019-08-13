@@ -1,6 +1,5 @@
 import { CardValue } from './../../../_models/enums';
 import { Component, OnInit, Input } from '@angular/core';
-import { Hand } from 'src/app/_models/hand';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Card } from 'src/app/_models/card';
 
@@ -10,7 +9,7 @@ import { Card } from 'src/app/_models/card';
   styleUrls: ['./pick-charity-cards.component.css']
 })
 export class PickCharityCardsComponent implements OnInit {
-  @Input() hand: Hand;
+  @Input() cards: Card[];
 
   selectedCards: Card[] = [];
 
@@ -46,6 +45,6 @@ export class PickCharityCardsComponent implements OnInit {
     this._activeModal.dismiss();
   }
   confirm() {
-    this._activeModal.close(this.selectedCards);
+    this._activeModal.close(this.selectedCards.map(card=>card.id));
   }
 }

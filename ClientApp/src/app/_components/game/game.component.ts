@@ -2,7 +2,6 @@ import { BlackjackComponent } from './../_modals/Blackjack/Blackjack.component';
 import { PickCharityCardsComponent } from './../_modals/pick-charity-cards/pick-charity-cards.component';
 import { GameInfoComponent } from './../_modals/game-info/game-info.component';
 import { CardValue, TypeOfMessage } from './../../_models/enums';
-import { Hand } from '../../_models/hand';
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { Game } from 'src/app/_models/game';
@@ -31,7 +30,7 @@ export class GameComponent implements OnInit {
   currentUser: User;
   game: Game;
   numberUnreadMessages = 0;
-  myHand: Hand;
+  myCards: Card[];
   mustCallUno = false;
   countdown = 2000;
   gameLog: string[];
@@ -78,11 +77,11 @@ export class GameComponent implements OnInit {
       this.currentUser = user;
     });
 
-    this._hubService.myHand.subscribe(myHand => {
+    this._hubService.myHand.subscribe((myCards:Card[]) => {
       if (this.game === null) {
         return;
       }
-      this.myHand = myHand;
+      this.myCards = myCards;
     });
 
     this._hubService.gameChatMessages.subscribe(messages => {
@@ -109,7 +108,7 @@ export class GameComponent implements OnInit {
       return;
     }
     if (card.value === CardValue.stealTurn && card.color == this.game.lastCardPlayed.color) {
-      this._hubService.playCard(card, card.color);
+      this._hubService.playCard(card.id, card.color);
       return;
     }
     if (this.game.playerToPlay.user.name !== this.currentUser.name) {
@@ -136,48 +135,48 @@ export class GameComponent implements OnInit {
           const playerModal = this._modalService.open(PickPlayerComponent);
           playerModal.componentInstance.players = this.game.players;
           playerModal.componentInstance.currentUser = this.currentUser;
-          playerModal.result.then(playerName => {
+          playerModal.result.then((playerId:string) => {
             if (card.value == CardValue.duel) {
               this._modalService.open(PickDuelNumbersComponent).result.then((duelNumbers: number[]) => {
-                this._hubService.playCard(card, pickedColor, playerName, null, duelNumbers);
+                this._hubService.playCard(card.id, pickedColor, playerId, null, duelNumbers);
                 return;
               });
             } else if (card.value == CardValue.charity) {
               const modalRef = this._modalService.open(PickCharityCardsComponent);
-              modalRef.componentInstance.hand = this.myHand;
-              modalRef.result.then((charityCards: Card[]) => {
-                this._hubService.playCard(card, pickedColor, playerName, null, null, charityCards);
+              modalRef.componentInstance.cards = this.myCards;
+              modalRef.result.then((charityCardsIds: string[]) => {
+                this._hubService.playCard(card.id, pickedColor, playerId, null, null, charityCardsIds);
                 return;
               });
             } else {
-              this._hubService.playCard(card, pickedColor, playerName);
+              this._hubService.playCard(card.id, pickedColor, playerId);
               return;
             }
           });
         } else if (card.value === CardValue.graveDigger) {
           const digModal = this._modalService.open(DigCardComponent);
           digModal.componentInstance.discardedPile = this.game.discardedPile;
-          digModal.result.then(cardToDig => {
-            this._hubService.playCard(card, pickedColor, null, cardToDig);
+          digModal.result.then((cardToDigId: string) => {
+            this._hubService.playCard(card.id, pickedColor, null, cardToDigId);
             return;
           });
         } else if (card.value === CardValue.blackjack) {
           this._modalService.open(BlackjackComponent, { backdrop: 'static' }).result.then(blackjackNumber => {
-            this._hubService.playCard(card, pickedColor, null, null, null, null, blackjackNumber);
+            this._hubService.playCard(card.id, pickedColor, null, null, null, null, blackjackNumber);
             return;
           });
         } else if (card.value === CardValue.discardNumber) {
           this._modalService.open(PickNumbersToDiscardComponent).result.then(numbersToDiscard => {
-            this._hubService.playCard(card, pickedColor, null, null, null, null, 0, numbersToDiscard);
+            this._hubService.playCard(card.id, pickedColor, null, null, null, null, 0, numbersToDiscard);
             return;
           });
         } else {
-          this._hubService.playCard(card, pickedColor);
+          this._hubService.playCard(card.id, pickedColor);
           return;
         }
       });
     } else if (card.color == this.game.lastCardPlayed.color || card.value == this.game.lastCardPlayed.value) {
-      this._hubService.playCard(card, card.color);
+      this._hubService.playCard(card.id);
       return;
     }
   }
