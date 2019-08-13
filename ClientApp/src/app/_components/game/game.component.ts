@@ -27,7 +27,7 @@ export class GameComponent implements OnInit {
   private _gameEnded = false;
 
   isSidebarOpen = false;
-  keepSidebarOpen: boolean;
+  keepSidebarOpen: boolean = true;
   currentUser: User;
   game: Game;
   numberUnreadMessages = 0;
@@ -35,10 +35,15 @@ export class GameComponent implements OnInit {
   mustCallUno = false;
   countdown = 2000;
   gameLog: string[];
+  sidebarSize: number = 30;
 
   constructor(private _hubService: HubService, private _modalService: NgbModal, private _toastrService: ToastrService) {}
 
   ngOnInit() {
+    if (window.innerWidth < 768) {
+      this.keepSidebarOpen = false;
+      this.sidebarSize = 50;
+    }
     this._hubService.activeGame.subscribe(game => {
       if (game === null) {
         return;
@@ -186,6 +191,10 @@ export class GameComponent implements OnInit {
     this._hubService.exitGame();
   }
 
+  getSidebarClass() {
+    return `fill-viewport-${this.sidebarSize}`;
+  }
+
   drawCard(count: number, changeTurn: boolean) {
     if (changeTurn && this.game.playerToPlay.user.name != this.currentUser.name) {
       return;
@@ -201,9 +210,12 @@ export class GameComponent implements OnInit {
     this.isSidebarOpen = !this.isSidebarOpen;
     this.numberUnreadMessages = 0;
   }
+  changeSidebarSize(sidebarSize) {
+    this.sidebarSize = sidebarSize;
+  }
 
-  toggleKeepSidebarOpen(event) {
-    this.keepSidebarOpen = event;
+  toggleKeepSidebarOpen(keepSidebarOpen) {
+    this.keepSidebarOpen = keepSidebarOpen;
   }
 
   getBorderColor() {

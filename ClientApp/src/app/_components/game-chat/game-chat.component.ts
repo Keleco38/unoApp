@@ -12,6 +12,7 @@ import { Game } from 'src/app/_models/game';
 })
 export class GameChatComponent implements OnInit {
   @Output('toggleKeepSidebarOpen') toggleKeepSidebarOpenEmitter = new EventEmitter();
+  @Output('changeSidebarSize') changeSidebarSizeEmitter = new EventEmitter();
 
   hideSpectatorsChat = false;
   hideServerChat = false;
@@ -19,7 +20,8 @@ export class GameChatComponent implements OnInit {
   currentUser: User;
   newMessage = '';
   activeGame: Game;
-  keepSidebarOpen: boolean = false;
+  keepSidebarOpen: boolean = true;
+  sidebarSize: number = 30;
 
   constructor(private _hubService: HubService) {}
 
@@ -33,6 +35,11 @@ export class GameChatComponent implements OnInit {
     this._hubService.activeGame.subscribe(game => {
       this.activeGame = game;
     });
+
+    if (window.innerWidth < 768) {
+      this.keepSidebarOpen = false;
+      this.sidebarSize = 50;
+    } 
   }
 
   sendMessageToGameChat() {

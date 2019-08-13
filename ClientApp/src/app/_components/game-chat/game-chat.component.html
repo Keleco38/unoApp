@@ -11,29 +11,43 @@
           <div class="col-6">
             <div class="float-right">
               <div container="body" ngbDropdown>
-                <button class="btn  btn-outline-light text-dark" ngbDropdownToggle>Sidebar Options</button>
+                <button class="btn  btn-outline-light text-dark" ngbDropdownToggle>Sidebar Settings</button>
                 <div ngbDropdownMenu>
                   <div class="px-4 py-3">
+                    <div class="form-group row">
+                      <label class="col-4 col-form-label">Size</label>
+                      <div class="col-8">
+                        <select
+                          (change)="changeSidebarSizeEmitter.emit(sidebarSize)"
+                          [(ngModel)]="sidebarSize"
+                          class="form-control form-control-sm"
+                        >
+                          <option value="30">30%</option>
+                          <option value="50">50%</option>
+                        </select>
+                      </div>
+                    </div>
                     <div class="form-check">
                       <input
                         type="checkbox"
                         (change)="toggleKeepSidebarOpenEmitter.emit(keepSidebarOpen)"
                         [(ngModel)]="keepSidebarOpen"
                         class="form-check-input"
+                        id="sidebarOpenCheckbox"
                       />
-                      <label class="form-check-label">
-                        Keep open
+                      <label class="form-check-label" for="sidebarOpenCheckbox">
+                        Keep sidebar open
                       </label>
                     </div>
                     <div class="form-check">
-                      <input type="checkbox" [(ngModel)]="hideSpectatorsChat" class="form-check-input" />
-                      <label class="form-check-label">
+                      <input type="checkbox" [(ngModel)]="hideSpectatorsChat" class="form-check-input" id="hideSpectatorChatCheckbox" />
+                      <label class="form-check-label" for="hideSpectatorChatCheckbox">
                         Mute specs
                       </label>
                     </div>
                     <div class="form-check">
-                      <input type="checkbox" [(ngModel)]="hideServerChat" class="form-check-input" />
-                      <label class="form-check-label">
+                      <input type="checkbox" [(ngModel)]="hideServerChat" class="form-check-input" id="hideServerChatCheckbox" />
+                      <label class="form-check-label" for="hideServerChatCheckbox">
                         Mute server
                       </label>
                     </div>

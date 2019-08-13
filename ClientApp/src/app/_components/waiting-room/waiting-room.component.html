@@ -69,7 +69,7 @@
           </button>
           <button
             *ngIf="activeGame.players[0]?.user?.connectionId == currentUser.connectionId"
-            [disabled]="activeGame.players.length < 1"
+            [disabled]="activeGame.players.length < 2"
             class="btn btn-sm btn-success btn-block"
             (click)="startGame()"
           >

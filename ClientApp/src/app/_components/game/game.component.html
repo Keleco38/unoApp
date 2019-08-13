@@ -2,10 +2,13 @@
   <!-- Container for sidebar(s) + page content -->
   <ng-sidebar-container style="height:100vh">
     <!-- A sidebar -->
-    <ng-sidebar  [(opened)]="isSidebarOpen" [position]="'bottom'" [closeOnClickOutside]="!keepSidebarOpen">
+    <ng-sidebar [(opened)]="isSidebarOpen" [position]="'bottom'" [closeOnClickOutside]="!keepSidebarOpen">
       <div class="row">
-        <div class="col-12  fill-viewport-50 scrollable-div-y bg-white">
-          <app-game-tabs (toggleKeepSidebarOpen)="toggleKeepSidebarOpen($event)"></app-game-tabs>
+        <div class="col-12   scrollable-div-y bg-white" [ngClass]="getSidebarClass()">
+          <app-game-tabs
+            (toggleKeepSidebarOpen)="toggleKeepSidebarOpen($event)"
+            (changeSidebarSize)="changeSidebarSize($event)"
+          ></app-game-tabs>
         </div>
       </div>
     </ng-sidebar>
