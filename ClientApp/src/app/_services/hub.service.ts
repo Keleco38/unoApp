@@ -1,6 +1,6 @@
 import { DigCardComponent } from './../_components/_modals/dig-card/dig-card.component';
 import { ShowHandComponent } from './../_components/_modals/show-hand/show-hand.component';
-import { GameMode, CardColor } from './../_models/enums';
+import { CardColor, CardValue } from './../_models/enums';
 import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
 import { Router } from '@angular/router';
@@ -138,8 +138,6 @@ export class HubService {
   }
 
   joinGame(id: string, password: string): any {
-    this._gameChatMessages = [];
-    this._gameLog = [];
     this._myHandObservable.next(null);
     this._hubConnection.invoke('JoinGame', id, password);
   }
@@ -191,14 +189,16 @@ export class HubService {
     this._hubConnection.invoke('KickPlayerFromGame', user.name, this._activeGameObservable.getValue().id);
   }
 
-  updateGameSetup(id: string, gameMode: GameMode, roundsToWin: number) {
-    this._hubConnection.invoke('UpdateGameSetup', id, gameMode, roundsToWin);
+  updateGameSetup(id: string, bannedCards: CardValue[], roundsToWin: number) {
+    this._hubConnection.invoke('UpdateGameSetup', id, bannedCards, roundsToWin);
   }
 
   exitGame(): any {
     if (!this._activeGameObservable.getValue()) {
       return;
     }
+    this._gameChatMessages = [];
+    this._gameLog = [];
     this._hubConnection.invoke('ExitGame', this._activeGameObservable.getValue().id);
     this._router.navigate(['/home']);
     this._activeGameObservable.next(null);

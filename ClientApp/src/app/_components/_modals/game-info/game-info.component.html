@@ -6,7 +6,9 @@
 </div>
 <div class="modal-body">
   <div class="col-12">
-    <p><b>Game Mode:</b> {{ getGameModeText() }}</p>
+    <p *ngIf="game.gameSetup.bannedCards.length > 0">
+      <strong>Banned cards: </strong> <span *ngFor="let bannedCard of game.gameSetup.bannedCards">{{ bannedCard }}</span>
+    </p>
     <p><b>Play Until:</b> {{ game.gameSetup.roundsToWin }}</p>
     <table class="table">
       <thead>

@@ -1,7 +1,7 @@
 import { HubService } from 'src/app/_services/hub.service';
 import { Game } from './../../../_models/game';
 import { Component, OnInit } from '@angular/core';
-import { Direction, GameMode } from 'src/app/_models/enums';
+import { Direction } from 'src/app/_models/enums';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -28,14 +28,4 @@ export class GameInfoComponent implements OnInit {
     this._activeModal.dismiss();
   }
 
-  getGameModeText() {
-    switch (this.game.gameSetup.gameMode) {
-      case GameMode.normal:
-        return 'Normal';
-      case GameMode.specialCards:
-        return 'Special cards';
-      case GameMode.specialCardsAndAvalonCards:
-        return 'Special cards + Avalon cards';
-    }
-  }
 }

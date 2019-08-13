@@ -65,12 +65,6 @@ namespace Uno.Enums
         Server = 2,
         Spectators = 3
     }
-    public enum GameMode
-    {
-        Normal = 1,
-        SpecialCards = 2,
-        SpecialCardsAndAvalonCards = 3
-    }
 
     public enum ChatMessageIntention
     {

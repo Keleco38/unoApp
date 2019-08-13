@@ -1,3 +1,4 @@
+import { PickBannedCardsComponent } from './_components/_modals/pick-banned-cards/pick-banned-cards.component';
 import { PickNumbersToDiscardComponent } from './_components/_modals/pick-numbers-to-discard/pick-numbers-to-discard.component';
 import { BlackjackComponent } from './_components/_modals/Blackjack/Blackjack.component';
 import { PickCharityCardsComponent } from './_components/_modals/pick-charity-cards/pick-charity-cards.component';
@@ -55,6 +56,7 @@ import { DigCardComponent } from './_components/_modals/dig-card/dig-card.compon
     BlackjackComponent,
     PickCharityCardsComponent,
     PickNumbersToDiscardComponent,
+    PickBannedCardsComponent,
     PickDuelNumbersComponent
   ],
   imports: [
@@ -80,6 +82,6 @@ import { DigCardComponent } from './_components/_modals/dig-card/dig-card.compon
   ],
   providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard],
   bootstrap: [AppComponent],
-  entryComponents: [PickColorComponent, PickPlayerComponent, ShowHandComponent, DigCardComponent, GameInfoComponent,PickDuelNumbersComponent, PickNumbersToDiscardComponent,PickCharityCardsComponent, BlackjackComponent]
+  entryComponents: [PickColorComponent, PickBannedCardsComponent,PickPlayerComponent, ShowHandComponent, DigCardComponent, GameInfoComponent,PickDuelNumbersComponent, PickNumbersToDiscardComponent,PickCharityCardsComponent, BlackjackComponent]
 })
 export class AppModule {}

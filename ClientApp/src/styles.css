@@ -31,6 +31,9 @@ body {
 .fill-viewport-30 {
   height: 30vh;
 }
+.fill-viewport-40 {
+  height: 40vh;
+}
 .fill-viewport--20 {
   height: 20vh;
 }
@@ -50,6 +53,9 @@ body {
 .fill-viewport-max-30 {
   max-height: 30vh;
 }
+.fill-viewport-max-40 {
+  max-height: 40vh;
+}
 .fill-viewport-max-20 {
   max-height: 20vh;
 }
@@ -63,6 +69,9 @@ body {
 }
 
 .fill-viewport-min-50 {
+  min-height: 50vh;
+}
+.fill-viewport-min-40 {
   min-height: 50vh;
 }
 
@@ -100,6 +109,14 @@ body {
 .spectators-chat-message {
   color: lightskyblue;
   font-style: italic;
+}
+
+.btn-group.special {
+  display: flex;
+}
+
+.special .btn {
+  flex: 1
 }
 
 .nav-link {

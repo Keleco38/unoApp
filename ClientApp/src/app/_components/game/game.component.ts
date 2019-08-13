@@ -35,7 +35,7 @@ export class GameComponent implements OnInit {
   mustCallUno = false;
   countdown = 2000;
   gameLog: string[];
-  sidebarSize: number = 30;
+  sidebarSize: number = 40;
 
   constructor(private _hubService: HubService, private _modalService: NgbModal, private _toastrService: ToastrService) {}
 

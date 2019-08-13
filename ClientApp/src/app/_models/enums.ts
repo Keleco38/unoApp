@@ -59,8 +59,3 @@ export enum Direction {
   left = 2
 }
 
-export enum GameMode {
-  normal = 1,
-  specialCards = 2,
-  specialCardsAndAvalonCards = 3
-}

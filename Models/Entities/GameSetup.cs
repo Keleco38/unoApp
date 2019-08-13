@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Uno.Enums;
 
 namespace Uno.Models.Entities
@@ -8,11 +9,11 @@ namespace Uno.Models.Entities
         public GameSetup()
         {
             Password = string.Empty;
-            GameMode = GameMode.SpecialCards;
+            BannedCards=new List<CardValue>();
             RoundsToWin = 2;
         }
         public string Password { get; set; }
-        public GameMode GameMode { get; set; }
+        public List<CardValue> BannedCards { get; set; }
         public int RoundsToWin { get; set; }
         public bool IsPasswordProtected { get => Password.Length > 0; }
     }

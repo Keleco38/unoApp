@@ -10,9 +10,9 @@ namespace Uno.Models.Entities
 {
     public class Deck
     {
-        public Deck(GameMode gameMode)
+        public Deck(List<CardValue> bannedCards)
         {
-            InitializeCards(gameMode);
+            InitializeCards(bannedCards);
             Shuffle();
         }
 
@@ -30,26 +30,29 @@ namespace Uno.Models.Entities
         }
 
 
-        private void InitializeCards(GameMode gameMode)
+        private void InitializeCards(List<CardValue> bannedCards)
         {
             Cards = new List<ICard>();
 
             AddNormalGameNormalCards();
+            AddNormalGameNormalCards();
+            AddNormalGameNormalCards();
+
+            AddNormalGameWildCards();
+            AddNormalGameWildCards();
             AddNormalGameWildCards();
 
-            if (gameMode == GameMode.SpecialCards || gameMode == GameMode.SpecialCardsAndAvalonCards)
-            {
-                AddNormalGameNormalCards();
-                AddNormalGameNormalCards();
-                AddNormalGameWildCards();
-                AddNormalGameWildCards();
-                AddSpecialWildCards();
-                AddSpecialWildCards();
-            }
-            if (gameMode == GameMode.SpecialCardsAndAvalonCards)
-            {
-                //todo
-            }
+
+            AddSpecialWildCards();
+            AddSpecialWildCards();
+
+            FilterBannedCards(bannedCards);
+
+        }
+
+        private void FilterBannedCards(List<CardValue> bannedCards)
+        {
+            Cards.RemoveAll(x => bannedCards.Contains(x.Value));
         }
 
         private void AddSpecialWildCards()

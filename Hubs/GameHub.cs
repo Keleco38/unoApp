@@ -211,11 +211,11 @@ namespace Uno.Hubs
             await Clients.Client(playerToKick.User.ConnectionId).SendAsync("KickPlayerFromGame");
         }
 
-        public async Task UpdateGameSetup(string gameId, GameMode gameMode, int roundsToWin)
+        public async Task UpdateGameSetup(string gameId, List<CardValue> bannedCards, int roundsToWin)
         {
             var game = _games.Find(x => x.Id == gameId);
 
-            game.GameSetup.GameMode = gameMode;
+            game.GameSetup.BannedCards = bannedCards;
             game.GameSetup.RoundsToWin = roundsToWin;
 
             await UpdateGame(game);

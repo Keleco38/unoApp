@@ -79,7 +79,7 @@ namespace Uno.Models.Entities
             Random random = new Random();
             ICard lastCardDrew;
             DiscardedPile = new List<ICard>();
-            Deck = new Deck(GameSetup.GameMode);
+            Deck = new Deck(GameSetup.BannedCards);
             do
             {
                 lastCardDrew = Deck.Draw(1).First();

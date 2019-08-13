@@ -21,7 +21,7 @@ export class GameChatComponent implements OnInit {
   newMessage = '';
   activeGame: Game;
   keepSidebarOpen: boolean = true;
-  sidebarSize: number = 30;
+  sidebarSize: number = 40;
 
   constructor(private _hubService: HubService) {}
 

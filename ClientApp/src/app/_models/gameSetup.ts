@@ -1,7 +1,7 @@
-import { GameMode } from './enums';
+import {  CardValue } from './enums';
 
 export interface GameSetup {
   isPasswordProtected: boolean;
-  gameMode: GameMode;
+  bannedCards: CardValue[];
   roundsToWin: number;
 }

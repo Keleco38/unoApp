@@ -4,7 +4,7 @@
     <!-- A sidebar -->
     <ng-sidebar [(opened)]="isSidebarOpen" [position]="'bottom'" [closeOnClickOutside]="!keepSidebarOpen">
       <div class="row">
-        <div class="col-12   scrollable-div-y bg-white" [ngClass]="getSidebarClass()">
+        <div class="col-12  scrollable-div-y bg-white" [ngClass]="getSidebarClass()">
           <app-game-tabs
             (toggleKeepSidebarOpen)="toggleKeepSidebarOpen($event)"
             (changeSidebarSize)="changeSidebarSize($event)"
@@ -19,7 +19,7 @@
         <div id="button-top-container" class="row">
           <div class="col-4">
             <button class="btn btn-danger btn-block" (click)="exitGame()">
-              Exit game &#10007;
+              EXIT GAME &#10007;
             </button>
           </div>
           <div class="col-4">
@@ -29,12 +29,12 @@
               [ngClass]="{ 'animation-block-shine': numberUnreadMessages > 0 }"
               (click)="toggleGameChatSidebar()"
             >
-              Chat &#9776;
+              CHAT &#9776;
               <span [hidden]="numberUnreadMessages == 0" class="badge badge-light">{{ numberUnreadMessages }}</span>
             </button>
           </div>
           <div class="col-4">
-            <button class="btn btn-info btn-block" (click)="openGameInfoModal()">Game info &#9432;</button>
+            <button class="btn btn-info btn-block" (click)="openGameInfoModal()">GAME INFO &#9432;</button>
           </div>
         </div>
         <div class="row" id="game-short-info">
