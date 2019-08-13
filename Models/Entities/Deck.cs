@@ -34,15 +34,15 @@ namespace Uno.Models.Entities
         {
             Cards = new List<ICard>();
 
-            // AddNormalGameNormalCards();
-            // AddNormalGameWildCards();
+            AddNormalGameNormalCards();
+            AddNormalGameWildCards();
 
             if (gameMode == GameMode.SpecialCards || gameMode == GameMode.SpecialCardsAndAvalonCards)
             {
-                // AddNormalGameNormalCards();
-                // AddNormalGameNormalCards();
-                // AddNormalGameWildCards();
-                // AddNormalGameWildCards();
+                AddNormalGameNormalCards();
+                AddNormalGameNormalCards();
+                AddNormalGameWildCards();
+                AddNormalGameWildCards();
                 AddSpecialWildCards();
                 AddSpecialWildCards();
             }

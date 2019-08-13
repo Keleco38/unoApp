@@ -5,6 +5,7 @@ namespace Uno.Models.Dtos
 {
     public class GameDto
     {
+        public string Id { get; set; }
         public DeckDto Deck { get; set; }
         public List<PlayerDto> Players { get; set; }
         public List<SpectatorDto> Spectators { get; set; }

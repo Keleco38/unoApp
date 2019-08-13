@@ -26,7 +26,8 @@ export class GameComponent implements OnInit {
   private _interval: number;
   private _gameEnded = false;
 
-  isGameChatSidebarOpen = false;
+  isSidebarOpen = false;
+  keepSidebarOpen: boolean;
   currentUser: User;
   game: Game;
   numberUnreadMessages = 0;
@@ -77,7 +78,7 @@ export class GameComponent implements OnInit {
       this.currentUser = user;
     });
 
-    this._hubService.myHand.subscribe((myCards:Card[]) => {
+    this._hubService.myHand.subscribe((myCards: Card[]) => {
       if (this.game === null) {
         return;
       }
@@ -85,7 +86,7 @@ export class GameComponent implements OnInit {
     });
 
     this._hubService.gameChatMessages.subscribe(messages => {
-      if (!this.isGameChatSidebarOpen) {
+      if (!this.isSidebarOpen) {
         this.numberUnreadMessages++;
       }
     });
@@ -135,7 +136,7 @@ export class GameComponent implements OnInit {
           const playerModal = this._modalService.open(PickPlayerComponent);
           playerModal.componentInstance.players = this.game.players;
           playerModal.componentInstance.currentUser = this.currentUser;
-          playerModal.result.then((playerId:string) => {
+          playerModal.result.then((playerId: string) => {
             if (card.value == CardValue.duel) {
               this._modalService.open(PickDuelNumbersComponent).result.then((duelNumbers: number[]) => {
                 this._hubService.playCard(card.id, pickedColor, playerId, null, duelNumbers);
@@ -197,8 +198,12 @@ export class GameComponent implements OnInit {
   }
 
   toggleGameChatSidebar() {
-    this.isGameChatSidebarOpen = !this.isGameChatSidebarOpen;
+    this.isSidebarOpen = !this.isSidebarOpen;
     this.numberUnreadMessages = 0;
+  }
+
+  toggleKeepSidebarOpen(event) {
+    this.keepSidebarOpen = event;
   }
 
   getBorderColor() {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ChatMessage } from 'src/app/_models/chatMessage';
 import { User } from 'src/app/_models/user';
 import { HubService } from 'src/app/_services/hub.service';
@@ -11,12 +11,15 @@ import { Game } from 'src/app/_models/game';
   styleUrls: ['./game-chat.component.css']
 })
 export class GameChatComponent implements OnInit {
+  @Output('toggleKeepSidebarOpen') toggleKeepSidebarOpenEmitter = new EventEmitter();
+
   hideSpectatorsChat = false;
   hideServerChat = false;
   messages: ChatMessage[];
   currentUser: User;
   newMessage = '';
   activeGame: Game;
+  keepSidebarOpen: boolean = false;
 
   constructor(private _hubService: HubService) {}
 

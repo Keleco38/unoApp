@@ -2,10 +2,10 @@
   <!-- Container for sidebar(s) + page content -->
   <ng-sidebar-container style="height:100vh">
     <!-- A sidebar -->
-    <ng-sidebar [(opened)]="isGameChatSidebarOpen" [position]="'bottom'" [closeOnClickOutside]="true">
+    <ng-sidebar  [(opened)]="isSidebarOpen" [position]="'bottom'" [closeOnClickOutside]="!keepSidebarOpen">
       <div class="row">
         <div class="col-12  fill-viewport-50 scrollable-div-y bg-white">
-          <app-game-tabs></app-game-tabs>
+          <app-game-tabs (toggleKeepSidebarOpen)="toggleKeepSidebarOpen($event)"></app-game-tabs>
         </div>
       </div>
     </ng-sidebar>
@@ -50,9 +50,9 @@
             </p>
           </div>
           <div class="col-12">
-            <hr>
+            <hr />
             <p class="text-center log-entry" *ngFor="let log of gameLog | slice: 0:3">*{{ log }}</p>
-            <hr>
+            <hr />
           </div>
         </div>
         <div class="row" id="card-container">
