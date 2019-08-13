@@ -1,7 +1,7 @@
 using System;
 using Uno.Enums;
 
-namespace Uno.Models
+namespace Uno.Models.Entities
 {
     public class ChatMessage
     {

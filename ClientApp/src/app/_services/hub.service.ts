@@ -145,11 +145,11 @@ export class HubService {
   }
 
   drawCard(count: number, changeTurn: boolean) {
-    this._hubConnection.invoke('DrawCard', this._activeGameObservable.getValue().gameSetup.id, count, changeTurn);
+    this._hubConnection.invoke('DrawCard', this._activeGameObservable.getValue().id, count, changeTurn);
   }
 
   sendMessageToGameChat(message: string, typeOfMessage: TypeOfMessage): any {
-    this._hubConnection.invoke('SendMessageToGameChat', this._activeGameObservable.getValue().gameSetup.id, message, typeOfMessage);
+    this._hubConnection.invoke('SendMessageToGameChat', this._activeGameObservable.getValue().id, message, typeOfMessage);
   }
 
   playCard(
@@ -164,7 +164,7 @@ export class HubService {
   ) {
     this._hubConnection.invoke(
       'PlayCard',
-      this._activeGameObservable.getValue().gameSetup.id,
+      this._activeGameObservable.getValue().id,
       cardPlayedId,
       targetedCardColor,
       targetedPlayer,
@@ -177,7 +177,7 @@ export class HubService {
   }
 
   digCardFromDiscardedPile(card: Card) {
-    this._hubConnection.invoke('DigCardFromDiscardedPile', this._activeGameObservable.getValue().gameSetup.id, card);
+    this._hubConnection.invoke('DigCardFromDiscardedPile', this._activeGameObservable.getValue().id, card);
   }
 
   createGame() {
@@ -188,7 +188,7 @@ export class HubService {
   }
 
   kickPlayerFromGame(user: User): any {
-    this._hubConnection.invoke('KickPlayerFromGame', user.name, this._activeGameObservable.getValue().gameSetup.id);
+    this._hubConnection.invoke('KickPlayerFromGame', user.name, this._activeGameObservable.getValue().id);
   }
 
   updateGameSetup(id: string, gameMode: GameMode, roundsToWin: number) {
@@ -199,13 +199,13 @@ export class HubService {
     if (!this._activeGameObservable.getValue()) {
       return;
     }
-    this._hubConnection.invoke('ExitGame', this._activeGameObservable.getValue().gameSetup.id);
+    this._hubConnection.invoke('ExitGame', this._activeGameObservable.getValue().id);
     this._router.navigate(['/home']);
     this._activeGameObservable.next(null);
   }
 
   startGame(): any {
-    this._hubConnection.invoke('StartGame', this._activeGameObservable.getValue().gameSetup.id);
+    this._hubConnection.invoke('StartGame', this._activeGameObservable.getValue().id);
   }
 
   setGamePassword(id: string, roomPassword: string): any {

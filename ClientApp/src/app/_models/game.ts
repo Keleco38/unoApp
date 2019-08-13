@@ -7,6 +7,7 @@ import { Deck } from './deck';
 import { Card } from './card';
 
 export interface Game {
+  id: string;
   gameSetup: GameSetup;
   players: Player[];
   spectators: Spectator[];

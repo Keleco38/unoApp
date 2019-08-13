@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace unoApp.Models.Helpers
+namespace Uno.Models.Helpers
 {
     public class MoveResult
     {

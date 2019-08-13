@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Uno.Enums;
-using unoApp.Models.Abstraction;
-using unoApp.Models.Entities.Cards.Colored;
-using unoApp.Models.Entities.Cards.Wild;
+using Uno.Models.Entities.Cards.Abstraction;
+using Uno.Models.Entities.Cards.Colored;
+using Uno.Models.Entities.Cards.Wild;
 
-namespace Uno.Models
+namespace Uno.Models.Entities
 {
     public class Deck
     {

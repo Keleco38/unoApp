@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Uno.Enums;
-using Uno.Models;
-using unoApp.Models.Abstraction;
-using unoApp.Models.Helpers;
+using Uno.Models.Entities.Cards.Abstraction;
+using Uno.Models.Helpers;
 
-namespace unoApp.Models.Entities.Cards.Wild
+namespace Uno.Models.Entities.Cards.Wild
 {
     public class RussianRoulette : ICard
     {

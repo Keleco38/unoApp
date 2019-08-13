@@ -27,6 +27,6 @@ export class AvailableGamesComponent implements OnInit {
         return;
       }
     }
-    this._hubService.joinGame(game.gameSetup.id, password);
+    this._hubService.joinGame(game.id, password);
   }
 }

@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using Uno.Enums;
-using Uno.Models;
-using unoApp.Models.Helpers;
+using Uno.Models.Helpers;
 
-namespace unoApp.Models.Abstraction
+namespace Uno.Models.Entities.Cards.Abstraction
 {
     public interface ICard
     {

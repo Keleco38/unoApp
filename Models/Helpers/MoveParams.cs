@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Uno.Enums;
-using Uno.Models;
-using unoApp.Models.Abstraction;
+using Uno.Models.Entities;
+using Uno.Models.Entities.Cards.Abstraction;
 
-namespace unoApp.Models.Helpers
+namespace Uno.Models.Helpers
 {
     public class MoveParams
     {

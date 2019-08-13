@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Uno.Contants;
 using Uno.Enums;
-using unoApp.Models.Abstraction;
-using unoApp.Models.Entities.Cards.Wild;
-using unoApp.Models.Helpers;
+using Uno.Models.Entities.Cards.Abstraction;
+using Uno.Models.Helpers;
 
-namespace Uno.Models
+namespace Uno.Models.Entities
 {
     public class Game
     {
+        public string Id { get; set; }
         public Deck Deck { get; set; }
         public List<Player> Players { get; set; }
         public List<Spectator> Spectators { get; set; }
@@ -23,9 +22,10 @@ namespace Uno.Models
         public bool RoundEnded { get; set; }
         public bool GameEnded { get; set; }
 
-        public Game(GameSetup gameSetup)
+        public Game()
         {
-            GameSetup = gameSetup;
+            Id = Guid.NewGuid().ToString();
+            GameSetup = new GameSetup();
             Players = new List<Player>();
             Spectators = new List<Spectator>();
         }

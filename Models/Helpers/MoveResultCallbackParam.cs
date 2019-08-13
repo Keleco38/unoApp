@@ -1,4 +1,4 @@
-namespace unoApp.Models.Helpers
+namespace Uno.Models.Helpers
 {
     public class MoveResultCallbackParam
     {

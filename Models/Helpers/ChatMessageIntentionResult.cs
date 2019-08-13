@@ -1,7 +1,6 @@
 using Uno.Enums;
-using Uno.Models;
 
-namespace unoApp.Models.Helpers
+namespace Uno.Models.Helpers
 {
     public class ChatMessageIntentionResult
     {

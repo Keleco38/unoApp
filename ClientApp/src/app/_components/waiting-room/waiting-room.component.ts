@@ -33,7 +33,7 @@ export class WaitingRoomComponent implements OnInit {
   }
 
   joinGame() {
-    this._hubService.joinGame(this.activeGame.gameSetup.id, '');
+    this._hubService.joinGame(this.activeGame.id, '');
   }
 
   userIsSpectator() {
@@ -48,7 +48,7 @@ export class WaitingRoomComponent implements OnInit {
   }
 
   setRoomPassword() {
-    this._hubService.setGamePassword(this.activeGame.gameSetup.id, this.password);
+    this._hubService.setGamePassword(this.activeGame.id, this.password);
     this.password = '';
   }
 
@@ -60,7 +60,7 @@ export class WaitingRoomComponent implements OnInit {
   }
   updateGameSetup() {
     this._hubService.updateGameSetup(
-      this.activeGame.gameSetup.id,
+      this.activeGame.id,
       this.activeGame.gameSetup.gameMode,
       this.activeGame.gameSetup.roundsToWin
     );

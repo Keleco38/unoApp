@@ -9,7 +9,8 @@ using Uno.Contants;
 using Uno.Enums;
 using Uno.Models;
 using Uno.Models.Dtos;
-using unoApp.Models.Helpers;
+using Uno.Models.Entities;
+using Uno.Models.Helpers;
 
 namespace Uno.Hubs
 {
@@ -88,7 +89,7 @@ namespace Uno.Hubs
         {
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             var username = typeOfMessage == TypeOfMessage.Server ? "Server" : user.Name;
-            var game = _games.Find(x => x.GameSetup.Id == gameId);
+            var game = _games.Find(x => x.Id == gameId);
             var allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
             var chatMessageIntentionResult = GetChatMessageIntention(message);
 
@@ -132,7 +133,7 @@ namespace Uno.Hubs
 
         public async Task SetGamePassword(string id, string password)
         {
-            var game = _games.First(x => x.GameSetup.Id == id);
+            var game = _games.First(x => x.Id == id);
             game.GameSetup.Password = password;
             await GetAllGames();
             await UpdateGame(game);
@@ -156,8 +157,7 @@ namespace Uno.Hubs
         public async Task CreateGame()
         {
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-            var gameSetup = new GameSetup();
-            var game = new Game(gameSetup);
+            var game = new Game();
             game.Players.Add(new Player(user));
             _games.Add(game);
             await UpdateGame(game);
@@ -167,7 +167,7 @@ namespace Uno.Hubs
 
         public async Task ExitGame(string gameid)
         {
-            var game = _games.Find(x => x.GameSetup.Id == gameid);
+            var game = _games.Find(x => x.Id == gameid);
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
 
             var allPlayersFromGame = GetPlayersFromGame(game);
@@ -200,7 +200,7 @@ namespace Uno.Hubs
 
         public async Task KickPlayerFromGame(string name, string gameId)
         {
-            var game = _games.Find(x => x.GameSetup.Id == gameId);
+            var game = _games.Find(x => x.Id == gameId);
 
             var playerToKick = game.Players.Find(y => y.User.Name == name);
 
@@ -213,7 +213,7 @@ namespace Uno.Hubs
 
         public async Task UpdateGameSetup(string gameId, GameMode gameMode, int roundsToWin)
         {
-            var game = _games.Find(x => x.GameSetup.Id == gameId);
+            var game = _games.Find(x => x.Id == gameId);
 
             game.GameSetup.GameMode = gameMode;
             game.GameSetup.RoundsToWin = roundsToWin;
@@ -225,7 +225,7 @@ namespace Uno.Hubs
 
         public async Task StartGame(string gameId)
         {
-            var game = _games.Find(x => x.GameSetup.Id == gameId);
+            var game = _games.Find(x => x.Id == gameId);
 
             game.StartNewGame();
 
@@ -241,7 +241,7 @@ namespace Uno.Hubs
         {
             await CleanupUserFromGamesExceptThisGame(gameId);
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-            var game = _games.Find(x => x.GameSetup.Id == gameId);
+            var game = _games.Find(x => x.Id == gameId);
 
             var spectator = game.Spectators.FirstOrDefault(x => x.User == user);
 
@@ -328,7 +328,7 @@ namespace Uno.Hubs
         public async Task DrawCard(string gameId, int count, bool normalDraw)
         {
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-            var game = _games.Find(x => x.GameSetup.Id == gameId);
+            var game = _games.Find(x => x.Id == gameId);
             if (normalDraw)
             {
                 if (game.PlayerToPlay.User.Name == user.Name)
@@ -349,13 +349,13 @@ namespace Uno.Hubs
 
         public async Task PlayCard(string gameId, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard)
         {
-            var game = _games.Find(x => x.GameSetup.Id == gameId);
+            var game = _games.Find(x => x.Id == gameId);
             if (game.GameEnded || !game.GameStarted)
                 return;
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
             var player = game.Players.Find(x => x.User.Name == user.Name);
             var moveResult = game.PlayCard(player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard);
-            
+
             if (moveResult == null)
                 return;
 
@@ -363,7 +363,7 @@ namespace Uno.Hubs
             {
                 await Clients.Client(callbackParam.ConnectionId).SendAsync(callbackParam.Command, callbackParam.Object);
             });
-            moveResult.MessagesToLog.ForEach(async x => await AddToGameLog(game.GameSetup.Id, x));
+            moveResult.MessagesToLog.ForEach(async x => await AddToGameLog(game.Id, x));
 
             await UpdateGame(game);
             await UpdateHands(game);
@@ -378,7 +378,7 @@ namespace Uno.Hubs
 
         private async Task AddToGameLog(string gameid, string message)
         {
-            var game = _games.Find(x => x.GameSetup.Id == gameid);
+            var game = _games.Find(x => x.Id == gameid);
             var allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
 
             await Clients.Clients(allUsersInGame).SendAsync("AddToGameLog", message);
@@ -386,7 +386,7 @@ namespace Uno.Hubs
 
         private async Task DisplayToastMessageToGame(string gameid, string message)
         {
-            var game = _games.Find(x => x.GameSetup.Id == gameid);
+            var game = _games.Find(x => x.Id == gameid);
             var allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
 
             await Clients.Clients(allUsersInGame).SendAsync("DisplayToastMessage", message);
@@ -430,17 +430,17 @@ namespace Uno.Hubs
 
             foreach (var game in games)
             {
-                await ExitGame(game.GameSetup.Id);
+                await ExitGame(game.Id);
             }
         }
 
         private async Task CleanupUserFromGamesExceptThisGame(string gameId)
         {
-            List<Game> games = _games.Where(x => x.GameSetup.Id != gameId && GetPlayersAndSpectatorsFromGame(x).Where(y => y == Context.ConnectionId).Any()).ToList();
+            List<Game> games = _games.Where(x => x.Id != gameId && GetPlayersAndSpectatorsFromGame(x).Where(y => y == Context.ConnectionId).Any()).ToList();
 
             foreach (var game in games)
             {
-                await ExitGame(game.GameSetup.Id);
+                await ExitGame(game.Id);
             }
         }
 

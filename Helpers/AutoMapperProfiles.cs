@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using AutoMapper;
 using Uno.Models;
 using Uno.Models.Dtos;
-using unoApp.Models.Abstraction;
+using Uno.Models.Entities;
+using Uno.Models.Entities.Cards.Abstraction;
 
 namespace Uno.Helpers
 {

@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Uno.Enums;
-using unoApp.Models.Abstraction;
+using Uno.Models.Entities.Cards.Abstraction;
 
-namespace Uno.Models
+namespace Uno.Models.Entities
 {
     public class Player
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Uno.Models
+namespace Uno.Models.Entities
 {
     public class User
     {
