@@ -1,6 +1,5 @@
 import { PickBannedCardsComponent } from './_components/_modals/pick-banned-cards/pick-banned-cards.component';
 import { PickNumbersToDiscardComponent } from './_components/_modals/pick-numbers-to-discard/pick-numbers-to-discard.component';
-import { BlackjackComponent } from './_components/_modals/Blackjack/Blackjack.component';
 import { PickCharityCardsComponent } from './_components/_modals/pick-charity-cards/pick-charity-cards.component';
 import { PickDuelNumbersComponent } from './_components/_modals/pick-duel-numbers/pick-duel-numbers.component';
 import { GameInfoComponent } from './_components/_modals/game-info/game-info.component';
@@ -34,6 +33,7 @@ import { WaitingRoomDeactivateGuard } from './_guards/waiting-room-deactivate.gu
 import { PickColorComponent } from './_components/_modals/pick-color/pick-color.component';
 import { ShowHandComponent } from './_components/_modals/show-hand/show-hand.component';
 import { DigCardComponent } from './_components/_modals/dig-card/dig-card.component';
+import { BlackjackComponent } from './_components/_modals/blackjack/blackjack.component';
 
 @NgModule({
   declarations: [

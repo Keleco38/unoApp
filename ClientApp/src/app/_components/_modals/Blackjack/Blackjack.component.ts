@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-Blackjack',
-  templateUrl: './Blackjack.component.html',
-  styleUrls: ['./Blackjack.component.css']
+  selector: 'app-blackjack',
+  templateUrl: './blackjack.component.html',
+  styleUrls: ['./blackjack.component.css']
 })
 export class BlackjackComponent implements OnInit {
   blackjackNumber: number = 0;
   numbersHit: number[] = [];
-  lastNumberHit: number=0;
+  lastNumberHit: number = 0;
   possibleNumbers: number[] = [];
   constructor(private _activeModal: NgbActiveModal) {}
 

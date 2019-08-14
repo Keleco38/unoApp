@@ -1,4 +1,4 @@
-import { BlackjackComponent } from './../_modals/Blackjack/Blackjack.component';
+import { BlackjackComponent } from './../_modals/blackjack/blackjack.component';
 import { PickCharityCardsComponent } from './../_modals/pick-charity-cards/pick-charity-cards.component';
 import { GameInfoComponent } from './../_modals/game-info/game-info.component';
 import { CardValue, TypeOfMessage } from './../../_models/enums';
