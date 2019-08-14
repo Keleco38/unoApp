@@ -52,7 +52,7 @@
                 <button class="btn btn-sm btn-warning" (click)="openBanCardsDialog()">
                   BAN CARDS
                 </button>
-                <button [disabled]="activeGame.players.length < 2" class="btn btn-sm btn-success" (click)="startGame()">
+                <button [disabled]="activeGame.players.length < 1" class="btn btn-sm btn-success" (click)="startGame()">
                   START GAME
                 </button>
               </div>
@@ -89,7 +89,7 @@
           "
           class="ml-2 text-danger cursor-pointer"
           (click)="kickPlayerFromGame(player)"
-          >[KICK]</strong
+          >[X]</strong
         >
       </li>
     </ul>

@@ -19,7 +19,7 @@
         <div id="button-top-container" class="row">
           <div class="col-4">
             <button class="btn btn-danger btn-block" (click)="exitGame()">
-              EXIT GAME &#10007;
+              EXIT GAME
             </button>
           </div>
           <div class="col-4">
@@ -29,12 +29,12 @@
               [ngClass]="{ 'animation-block-shine': numberUnreadMessages > 0 }"
               (click)="toggleGameChatSidebar()"
             >
-              CHAT &#9776;
+              CHAT
               <span [hidden]="numberUnreadMessages == 0" class="badge badge-light">{{ numberUnreadMessages }}</span>
             </button>
           </div>
           <div class="col-4">
-            <button class="btn btn-info btn-block" (click)="openGameInfoModal()">GAME INFO &#9432;</button>
+            <button class="btn btn-info btn-block" (click)="openGameInfoModal()">GAME INFO</button>
           </div>
         </div>
         <div class="row" id="game-short-info">
