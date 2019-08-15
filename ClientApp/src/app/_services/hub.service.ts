@@ -27,6 +27,7 @@ export class HubService {
   private _onlineUsersObservable = new ReplaySubject<User[]>(1);
   private _availableGamesObservable = new ReplaySubject<Game[]>(1);
   private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._gameChatMessages);
+  private _gameChatNumberOfMessagesObservable = new Subject<ChatMessage>();
   private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._allChatMessages);
   private _gameLogObservable = new BehaviorSubject<string[]>(this._gameLog);
   private _activeGameObservable = new BehaviorSubject<Game>(null);
@@ -39,6 +40,14 @@ export class HubService {
       this.addOrRenameUser(false);
     });
 
+    this._hubConnection.on('ExitGame', () => {
+      this._gameChatMessages = [];
+      this._gameLog = [];
+      this._gameLogObservable.next(this._gameLog);
+      this._gameChatMessagesObservable.next(this._gameChatMessages);
+      this._router.navigateByUrl('/');
+      this._activeGameObservable.next(null);
+    });
     this._hubConnection.on('RefreshOnlineUsersList', (onlineUsers: User[]) => {
       this._onlineUsersObservable.next(onlineUsers);
     });
@@ -58,6 +67,7 @@ export class HubService {
 
     this._hubConnection.on('PostNewMessageInGameChat', (message: ChatMessage) => {
       this._gameChatMessages.unshift(message);
+      this._gameChatNumberOfMessagesObservable.next(message);
       this._gameChatMessagesObservable.next(this._gameChatMessages);
     });
 
@@ -81,8 +91,8 @@ export class HubService {
     });
 
     this._hubConnection.on('KickPlayerFromGame', () => {
-      this._activeGameObservable.next(null);
-      this._router.navigateByUrl('home');
+      this._toastrService.info('You have been kicked from the game');
+      this.exitGame();
     });
 
     this._hubConnection.on('DisplayToastMessage', (message: string) => {
@@ -197,11 +207,7 @@ export class HubService {
     if (!this._activeGameObservable.getValue()) {
       return;
     }
-    this._gameChatMessages = [];
-    this._gameLog = [];
     this._hubConnection.invoke('ExitGame', this._activeGameObservable.getValue().id);
-    this._router.navigate(['/home']);
-    this._activeGameObservable.next(null);
   }
 
   startGame(): any {
@@ -234,6 +240,9 @@ export class HubService {
 
   get gameChatMessages() {
     return this._gameChatMessagesObservable.asObservable();
+  }
+  get gameChatNumberOfMessages() {
+    return this._gameChatNumberOfMessagesObservable.asObservable();
   }
   get gameLog() {
     return this._gameLogObservable.asObservable();

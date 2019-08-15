@@ -137,8 +137,6 @@ namespace Uno.Hubs
             game.GameSetup.Password = password;
             await GetAllGames();
             await UpdateGame(game);
-            var message = string.IsNullOrEmpty(password) ? "Password Removed" : "Password updated";
-            await DisplayToastMessageToGame(id, message);
         }
 
         public async Task GetAllOnlineUsers()
@@ -165,9 +163,9 @@ namespace Uno.Hubs
             await SendMessageToAllChat($"User {user.Name} has created new game", TypeOfMessage.Server);
         }
 
-        public async Task ExitGame(string gameid)
+        public async Task ExitGame(string gameId)
         {
-            var game = _games.Find(x => x.Id == gameid);
+            var game = _games.Find(x => x.Id == gameId);
             var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
 
             var allPlayersFromGame = GetPlayersFromGame(game);
@@ -178,7 +176,7 @@ namespace Uno.Hubs
                 if (game.GameStarted)
                 {
                     player.LeftGame = true;
-                    await DisplayToastMessageToGame(gameid, $"USER {player.User.Name} HAS LEFT THE GAME.");
+                    await DisplayToastMessageToGame(gameId, $"USER {player.User.Name} HAS LEFT THE GAME.");
                 }
                 else
                 {
@@ -191,11 +189,12 @@ namespace Uno.Hubs
             }
 
             await UpdateGame(game);
-            await SendMessageToGameChat(gameid, $"{user.Name} has left the game.", TypeOfMessage.Server);
+            await SendMessageToGameChat(gameId, $"{user.Name} has left the game.", TypeOfMessage.Server);
 
-            if (!game.Players.Any(x => x.LeftGame == false) && !game.Spectators.Any())
+            if (game.Players.All(x => x.LeftGame) && !game.Spectators.Any())
                 _games.Remove(game);
             await GetAllGames();
+            await Clients.Caller.SendAsync("ExitGame");
         }
 
         public async Task KickPlayerFromGame(string name, string gameId)
@@ -407,8 +406,8 @@ namespace Uno.Hubs
                 var allPlayersInTheGame = GetPlayersFromGame(game);
                 foreach (var connectionId in allPlayersInTheGame)
                 {
-                    var myCards = game.Players.FirstOrDefault(x => x.User.ConnectionId == connectionId).Cards;
-                    var myCardsDto = _mapper.Map<List<CardDto>>(myCards);
+                    var myCards = game.Players.Find(x => x.User.ConnectionId == connectionId).Cards;
+                    var myCardsDto = _mapper.Map<List<CardDto>>(myCards).OrderBy(x => x.Color).ThenBy(x => x.Value);
                     await Clients.Client(connectionId).SendAsync("UpdateMyHand", myCardsDto);
                 }
             }
@@ -426,7 +425,7 @@ namespace Uno.Hubs
 
         private async Task CleanupUserFromGames()
         {
-            List<Game> games = _games.Where(x => GetPlayersAndSpectatorsFromGame(x).Where(y => y == Context.ConnectionId).Any()).ToList();
+            List<Game> games = _games.Where(x => GetPlayersAndSpectatorsFromGame(x).Any(y => y == Context.ConnectionId)).ToList();
 
             foreach (var game in games)
             {
@@ -436,7 +435,7 @@ namespace Uno.Hubs
 
         private async Task CleanupUserFromGamesExceptThisGame(string gameId)
         {
-            List<Game> games = _games.Where(x => x.Id != gameId && GetPlayersAndSpectatorsFromGame(x).Where(y => y == Context.ConnectionId).Any()).ToList();
+            List<Game> games = _games.Where(x => x.Id != gameId && GetPlayersAndSpectatorsFromGame(x).Any(y => y == Context.ConnectionId)).ToList();
 
             foreach (var game in games)
             {
@@ -453,7 +452,7 @@ namespace Uno.Hubs
 
         private ChatMessageIntentionResult GetChatMessageIntention(string message)
         {
-            Regex regex = new Regex(@"^/(slap|ding|alert|lick|poke|punch) ([A-Za-z0-9\s]*)$");
+            Regex regex = new Regex(@"^/(slap|ding|alert|lick|poke|punch|shoot|scream|laugh) ([A-Za-z0-9\s]*)$");
             Match match = regex.Match(message);
 
             if (match.Success)
@@ -480,6 +479,15 @@ namespace Uno.Hubs
                         break;
                     case "punch":
                         buzzTypeStringForChat = "punched";
+                        break;
+                    case "shoot":
+                        buzzTypeStringForChat = "shot";
+                        break;
+                    case "scream":
+                        buzzTypeStringForChat = "screamed at";
+                        break;
+                    case "laugh":
+                        buzzTypeStringForChat = "laughed at";
                         break;
                 }
                 return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Buzz, TargetedUsername = targetedUsername, BuzzType = buzzType, BuzzTypeStringForChat = buzzTypeStringForChat };

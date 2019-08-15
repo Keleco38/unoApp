@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-12">
+    <div class="alert alert-primary">Sidebar settings</div>
+      <div class="form-group row">
+        <label class="col-4 col-form-label">Size</label>
+        <div class="col-8">
+          <select [(ngModel)]="sidebarSettings.sidebarSize" class="form-control form-control-sm">
+            <option value="30">30%</option>
+            <option value="40">40%</option>
+            <option value="50">50%</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" [(ngModel)]="sidebarSettings.keepSidebarOpen" class="form-check-input" id="sidebarOpenCheckbox" />
+        <label class="form-check-label" for="sidebarOpenCheckbox">
+          Keep sidebar open
+        </label>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" [(ngModel)]="sidebarSettings.muteSpectators" class="form-check-input" id="hideSpectatorChatCheckbox" />
+        <label class="form-check-label" for="hideSpectatorChatCheckbox">
+          Mute specs
+        </label>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" [(ngModel)]="sidebarSettings.muteServer" class="form-check-input" id="hideServerChatCheckbox" />
+        <label class="form-check-label" for="hideServerChatCheckbox">
+          Mute server
+        </label>
+      </div>
+  </div>
+</div>

@@ -6,9 +6,12 @@
 </div>
 <div class="modal-body">
   <div class="col-12">
-    <p *ngIf="game.gameSetup.bannedCards.length > 0">
-      <strong>Banned cards: </strong> <span *ngFor="let bannedCard of game.gameSetup.bannedCards">{{ bannedCard }}</span>
-    </p>
+    <div *ngIf="game.gameSetup.bannedCards.length > 0">
+      <strong>Banned cards: </strong>
+      <ul>
+        <li *ngFor="let bannedCard of game.gameSetup.bannedCards">{{ getBannedCardName(bannedCard) | dividePerCapital }}</li>
+      </ul>
+    </div>
     <p><b>Play Until:</b> {{ game.gameSetup.roundsToWin }}</p>
     <table class="table">
       <thead>

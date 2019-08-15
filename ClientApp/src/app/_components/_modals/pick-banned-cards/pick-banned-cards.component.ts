@@ -1,3 +1,4 @@
+import { UtilityService } from './../../../_services/utility.service';
 import { CardValue } from './../../../_models/enums';
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -10,13 +11,12 @@ import { KeyValue } from '@angular/common';
 })
 export class PickBannedCardsComponent implements OnInit {
   @Input() bannedCards: CardValue[];
-  @Input() allCards: KeyValue<string, number>[] = [];
+  allCards: KeyValue<string, number>[];
 
-  constructor(private _activeModal: NgbActiveModal) {}
+  constructor(private _activeModal: NgbActiveModal, private _utilityService: UtilityService) {}
 
   ngOnInit() {
-    
-
+    this.allCards = this._utilityService.allCards;
   }
 
   closeModal() {
@@ -25,7 +25,7 @@ export class PickBannedCardsComponent implements OnInit {
 
   getBannedCardName(bannedCard: CardValue) {
     return this.allCards.find(c => c.value == bannedCard).key;
-   }
+  }
 
   selectOrUnselect(bannedCard: CardValue) {
     var index = this.bannedCards.indexOf(bannedCard);
@@ -38,7 +38,7 @@ export class PickBannedCardsComponent implements OnInit {
       this.bannedCards.splice(index, 1);
     }
   }
-  getBtnClass(bannedCard:CardValue) {
+  getBtnClass(bannedCard: CardValue) {
     var index = this.bannedCards.indexOf(bannedCard);
     if (index == -1) {
       return 'btn-primary';

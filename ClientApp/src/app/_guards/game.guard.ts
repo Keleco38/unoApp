@@ -13,8 +13,7 @@ export class GameGuard implements CanActivate {
         if (activeGame !== null && activeGame.gameStarted === true) {
           return true;
         } else {
-          this._router.navigate(['/home']);
-          return false;
+          this._router.navigate(['/']);
         }
       })
     );

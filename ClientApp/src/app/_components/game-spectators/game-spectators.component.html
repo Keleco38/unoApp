@@ -1,8 +1,6 @@
 <div class="row">
   <div class="col-12">
-    <div class="alert alert-primary">
-      <h4 class="h4">Spectators ({{ game.spectators.length }})</h4>
-    </div>
+    <div class="alert alert-primary">Spectators ({{ game.spectators.length }})</div>
     <ul>
       <li *ngFor="let spectator of game.spectators">{{ spectator.user.name }}</li>
     </ul>

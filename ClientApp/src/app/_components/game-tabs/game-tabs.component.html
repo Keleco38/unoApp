@@ -3,10 +3,7 @@
     <ngb-tabset>
       <ngb-tab title="Game chat">
         <ng-template ngbTabContent>
-          <app-game-chat
-            (toggleKeepSidebarOpen)="toggleKeepSidebarOpenEmitter.emit($event)"
-            (changeSidebarSize)="changeSidebarSizeEmitter.emit($event)"
-          ></app-game-chat>
+          <app-game-chat></app-game-chat>
         </ng-template>
       </ngb-tab>
       <ngb-tab title="All chat">
@@ -14,14 +11,17 @@
           <app-all-chat></app-all-chat>
         </ng-template>
       </ngb-tab>
-      <ngb-tab title="Lobby">
+      <ngb-tab title="Misc.">
         <ng-template ngbTabContent>
-          <app-online-players></app-online-players>
-        </ng-template>
-      </ngb-tab>
-      <ngb-tab title="Spectators">
-        <ng-template ngbTabContent>
-          <app-game-spectators></app-game-spectators>
+          <div class="row">
+            <div class="col-6">
+              <app-online-players></app-online-players>
+              <app-game-spectators></app-game-spectators>
+            </div>
+            <div class="col-6">
+              <app-sidebar-settings></app-sidebar-settings>
+            </div>
+          </div>
         </ng-template>
       </ngb-tab>
     </ngb-tabset>

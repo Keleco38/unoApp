@@ -1,94 +1,76 @@
-<div class="row">
-  <!-- Container for sidebar(s) + page content -->
-  <ng-sidebar-container style="height:100vh">
-    <!-- A sidebar -->
-    <ng-sidebar [(opened)]="isSidebarOpen" [position]="'bottom'" [closeOnClickOutside]="!keepSidebarOpen">
-      <div class="row">
-        <div class="col-12  scrollable-div-y bg-white" [ngClass]="getSidebarClass()">
-          <app-game-tabs
-            (toggleKeepSidebarOpen)="toggleKeepSidebarOpen($event)"
-            (changeSidebarSize)="changeSidebarSize($event)"
-          ></app-game-tabs>
-        </div>
-      </div>
-    </ng-sidebar>
-
-    <!-- Page content -->
-    <div ng-sidebar-content>
-      <div class="col-12">
-        <div id="button-top-container" class="row">
-          <div class="col-4">
-            <button class="btn btn-danger btn-block" (click)="exitGame()">
-              EXIT GAME
-            </button>
-          </div>
-          <div class="col-4">
-            <button
-              type="button"
-              class="btn btn-block  btn-success"
-              [ngClass]="{ 'animation-block-shine': numberUnreadMessages > 0 }"
-              (click)="toggleGameChatSidebar()"
-            >
-              CHAT
-              <span [hidden]="numberUnreadMessages == 0" class="badge badge-light">{{ numberUnreadMessages }}</span>
-            </button>
-          </div>
-          <div class="col-4">
-            <button class="btn btn-info btn-block" (click)="openGameInfoModal()">GAME INFO</button>
-          </div>
-        </div>
-        <div class="row" id="game-short-info">
-          <div class="col-12">
-            <hr />
-            <p class="text-center">
-              <span
-                *ngFor="let player of game?.players"
-                [ngClass]="{
-                  'text-primary font-weight-bold': player.id == game.playerToPlay.id,
-                  'left-game': player.leftGame,
-                  'animation-text-shine': player.id == game.playerToPlay.id && currentUser.name == player.user.name
-                }"
-                >{{ getDirectionStringFromGame() }}{{ player.user.name }}({{ player.numberOfCards }}){{ getDirectionStringFromGame() }}
-              </span>
-            </p>
-          </div>
-          <div class="col-12">
-            <hr />
-            <p class="text-center log-entry" *ngFor="let log of gameLog | slice: 0:3">*{{ log }}</p>
-            <hr />
-          </div>
-        </div>
-        <div class="row" id="card-container">
-          <div class="col-6 text-center">
-            <div>
-              <img class="last-card-played" [style.borderColor]="getBorderColor()" [src]="game?.lastCardPlayed.imageUrl" alt="" />
-            </div>
-          </div>
-          <div class="col-6 text-center">
-            <div *ngIf="!mustCallUno">
-              <img (click)="drawCard(1, true)" class="deck-card" src="/images/cards/small/card_back_alt.png" />
-            </div>
-            <div *ngIf="mustCallUno">
-              <br />
-              {{ countdown }}
-              <br />
-              <button class="btn btn-block btn-info" (click)="callUno(true)">Call Uno!</button>
-            </div>
-          </div>
-        </div>
-        <hr />
-        <div class="row">
-          <div class="col-12 p5">
-            <img
-              *ngFor="let card of myCards; let firstItem = first"
-              (click)="playCard(card)"
-              [class.firstPlayedCard]="firstItem"
-              [src]="card.imageUrl"
-              class="player-hand-card animate"
-            />
-          </div>
-        </div>
+<!-- Container for sidebar(s) + page content -->
+<ng-sidebar-container style="height:100vh">
+  <!-- A sidebar -->
+  <ng-sidebar  [(opened)]="isSidebarOpen" [position]="'bottom'" [closeOnClickOutside]="!sidebarSettings.keepSidebarOpen">
+    <div class="row">
+      <div class="col-12  scrollable-div-y bg-white" [ngClass]="getSidebarClass()">
+        <app-game-tabs></app-game-tabs>
       </div>
     </div>
-  </ng-sidebar-container>
-</div>
+  </ng-sidebar>
+
+  <!-- Page content -->
+  <div ng-sidebar-content>
+    <div class="row" id="button-top-container">
+      <div class="col-4">
+        <button class="btn btn-danger btn-block" (click)="exitGame()">
+          Exit Game
+        </button>
+      </div>
+      <div class="col-4">
+        <button
+          type="button"
+          class="btn btn-block  btn-success"
+          [ngClass]="{ 'animation-block-shine': numberUnreadMessages > 0 }"
+          (click)="toggleGameChatSidebar()"
+        >
+          Chat
+          <span [hidden]="numberUnreadMessages == 0" class="badge badge-light">{{ numberUnreadMessages }}</span>
+        </button>
+      </div>
+      <div class="col-4">
+        <button class="btn btn-info btn-block" (click)="openGameInfoModal()">Game Info</button>
+      </div>
+    </div>
+    <div class="row" id="game-short-info">
+      <div class="col-12">
+        <hr />
+        <p class="text-center">
+          <span
+            *ngFor="let player of game?.players"
+            [ngClass]="{
+              'text-primary font-weight-bold': player.id == game.playerToPlay.id,
+              'left-game': player.leftGame,
+              'animation-text-shine': player.id == game.playerToPlay.id && currentUser.name == player.user.name
+            }"
+            >{{ getDirectionStringFromGame() }}{{ player.user.name }}({{ player.numberOfCards }}){{ getDirectionStringFromGame() }}
+          </span>
+        </p>
+      </div>
+      <div class="col-12">
+        <hr />
+        <p class="text-center log-entry" *ngFor="let log of gameLog | slice: 0:3">*{{ log }}</p>
+        <hr />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <img class="last-card-played float-left float-sm-none" [style.borderColor]="getBorderColor()" [src]="game?.lastCardPlayed.imageUrl" alt="" />
+        <button class="btn uno btn-primary" (click)="callUno(true)">Uno!</button>
+        <img (click)="drawCard(1, true)" class="deck-card float-right float-sm-none" src="/images/cards/small/card_back_alt.png" />
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-12 p5 text-center">
+        <img
+          *ngFor="let card of myCards; let firstItem = first"
+          (click)="playCard(card)"
+          [class.firstPlayedCard]="firstItem"
+          [src]="card.imageUrl"
+          class="player-hand-card animate"
+        />
+      </div>
+    </div>
+  </div>
+</ng-sidebar-container>

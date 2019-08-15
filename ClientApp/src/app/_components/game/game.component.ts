@@ -1,8 +1,10 @@
+import { ChatMessage } from './../../_models/chatMessage';
+import { UtilityService } from './../../_services/utility.service';
 import { BlackjackComponent } from './../_modals/blackjack/blackjack.component';
 import { PickCharityCardsComponent } from './../_modals/pick-charity-cards/pick-charity-cards.component';
 import { GameInfoComponent } from './../_modals/game-info/game-info.component';
 import { CardValue, TypeOfMessage } from './../../_models/enums';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { Game } from 'src/app/_models/game';
 import { Card } from 'src/app/_models/card';
@@ -15,102 +17,97 @@ import { DigCardComponent } from '../_modals/dig-card/dig-card.component';
 import { PickDuelNumbersComponent } from '../_modals/pick-duel-numbers/pick-duel-numbers.component';
 import { PickNumbersToDiscardComponent } from '../_modals/pick-numbers-to-discard/pick-numbers-to-discard.component';
 import { ToastrService } from 'ngx-toastr';
+import { SidebarSettings } from 'src/app/_models/sidebarSettings';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
   private _timer: number;
-  private _interval: number;
-  private _gameEnded = false;
+  private _gameEnded: boolean = false;
+  private _mustCallUno: boolean = false;
+  private _isAlive: boolean = true;
 
   isSidebarOpen = false;
-  keepSidebarOpen: boolean = true;
   currentUser: User;
   game: Game;
   numberUnreadMessages = 0;
   myCards: Card[];
-  mustCallUno = false;
-  countdown = 2000;
+  sidebarSettings: SidebarSettings;
   gameLog: string[];
-  sidebarSize: number = 40;
 
-  constructor(private _hubService: HubService, private _modalService: NgbModal, private _toastrService: ToastrService) {}
+  constructor(
+    private _hubService: HubService,
+    private _modalService: NgbModal,
+    private _toastrService: ToastrService,
+    private _utilityService: UtilityService
+  ) {}
 
   ngOnInit() {
-    if (window.innerWidth < 768) {
-      this.keepSidebarOpen = false;
-      this.sidebarSize = 50;
-    }
-    this._hubService.activeGame.subscribe(game => {
+    this.sidebarSettings = this._utilityService.sidebarSettings;
+    this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       if (game === null) {
         return;
       }
       this.game = game;
       if (this.game.gameEnded && !this._gameEnded) {
         this._gameEnded = true;
-        const message = `Game ended!`;
-        alert(message);
+        alert('Game ended');
       }
     });
 
-    this._hubService.gameLog.subscribe(gameLog => {
+    this._hubService.gameLog.pipe(takeWhile(() => this._isAlive)).subscribe(gameLog => {
       this.gameLog = gameLog;
     });
 
-    this._hubService.mustCallUno.subscribe(() => {
-      console.log('must call uno........' + new Date());
-      return;
-      // this.callUno(false);
-      // this.mustCallUno = true;
-      // this._interval = window.setInterval(() => {
-      //   this.countdown -= 100;
-      // }, 100);
-      // this._timer = window.setTimeout(() => {
-      //   if (this.mustCallUno) {
-      //     if (!this.game.gameEnded) {
-      //       this.drawCard(2, false);
-      //       this.callUno(false);
-      //       this._hubService.sendMessageToGameChat('<--- Forgot to call uno! Drawing 2 cards.', TypeOfMessage.chat);
-      //     }
-      //   }
-      // }, 2000);
+    this._hubService.mustCallUno.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
+      this._mustCallUno = true;
+      window.clearTimeout(this._timer);
+      this._timer = window.setTimeout(() => {
+        if (this._mustCallUno) {
+          if (!this.game.gameEnded) {
+            this.drawCard(2, false);
+            this.callUno(false);
+            this._hubService.sendMessageToGameChat('<--- This person forgot to call uno! Drawing 2 cards.', TypeOfMessage.chat);
+          }
+        }
+      }, 2000);
     });
 
-    this._hubService.currentUser.subscribe(user => {
+    this._hubService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
 
-    this._hubService.myHand.subscribe((myCards: Card[]) => {
+    this._hubService.myHand.pipe(takeWhile(() => this._isAlive)).subscribe((myCards: Card[]) => {
       if (this.game === null) {
         return;
       }
       this.myCards = myCards;
     });
 
-    this._hubService.gameChatMessages.subscribe(messages => {
+    this._hubService.gameChatNumberOfMessages.pipe(takeWhile(() => this._isAlive)).subscribe((message: ChatMessage) => {
       if (!this.isSidebarOpen) {
+        if (message.typeOfMessage == TypeOfMessage.server && this.sidebarSettings.muteServer) return;
+        if (message.typeOfMessage == TypeOfMessage.spectators && this.sidebarSettings.muteSpectators) return;
         this.numberUnreadMessages++;
       }
     });
   }
 
   callUno(playerCalled: boolean) {
-    this.mustCallUno = false;
+    if (!this._mustCallUno) return;
+    this._mustCallUno = false;
     window.clearTimeout(this._timer);
-    window.clearInterval(this._interval);
-    this._timer = null;
-    this._interval = null;
-    this.countdown = 2000;
     if (playerCalled) {
       this._hubService.sendMessageToGameChat('UNO', TypeOfMessage.chat);
     }
   }
 
   playCard(card: Card) {
-    if (this.mustCallUno) {
+    if (this._mustCallUno) {
       return;
     }
     if (card.value === CardValue.stealTurn && card.color == this.game.lastCardPlayed.color) {
@@ -192,7 +189,7 @@ export class GameComponent implements OnInit {
   }
 
   getSidebarClass() {
-    return `fill-viewport-${this.sidebarSize}`;
+    return `fill-viewport-${this.sidebarSettings.sidebarSize}`;
   }
 
   drawCard(count: number, changeTurn: boolean) {
@@ -210,13 +207,6 @@ export class GameComponent implements OnInit {
     this.isSidebarOpen = !this.isSidebarOpen;
     this.numberUnreadMessages = 0;
   }
-  changeSidebarSize(sidebarSize) {
-    this.sidebarSize = sidebarSize;
-  }
-
-  toggleKeepSidebarOpen(keepSidebarOpen) {
-    this.keepSidebarOpen = keepSidebarOpen;
-  }
 
   getBorderColor() {
     switch (this.game.lastCardPlayed.color) {
@@ -233,5 +223,9 @@ export class GameComponent implements OnInit {
 
   getDirectionStringFromGame() {
     return this.game.direction === Direction.right ? '-->' : '<--';
+  }
+
+  ngOnDestroy(): void {
+    this._isAlive = false;
   }
 }

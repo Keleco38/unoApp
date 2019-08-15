@@ -1,3 +1,5 @@
+import { SidebarSettingsComponent } from './_components/sidebar-settings/sidebar-settings.component';
+import { UtilityService } from './_services/utility.service';
 import { PickBannedCardsComponent } from './_components/_modals/pick-banned-cards/pick-banned-cards.component';
 import { PickNumbersToDiscardComponent } from './_components/_modals/pick-numbers-to-discard/pick-numbers-to-discard.component';
 import { PickCharityCardsComponent } from './_components/_modals/pick-charity-cards/pick-charity-cards.component';
@@ -34,6 +36,7 @@ import { PickColorComponent } from './_components/_modals/pick-color/pick-color.
 import { ShowHandComponent } from './_components/_modals/show-hand/show-hand.component';
 import { DigCardComponent } from './_components/_modals/dig-card/dig-card.component';
 import { BlackjackComponent } from './_components/_modals/blackjack/blackjack.component';
+import { DividePerCapitalPipe } from './_pipes/divide-per-capital.pipe';
 
 @NgModule({
   declarations: [
@@ -57,7 +60,9 @@ import { BlackjackComponent } from './_components/_modals/blackjack/blackjack.co
     PickCharityCardsComponent,
     PickNumbersToDiscardComponent,
     PickBannedCardsComponent,
-    PickDuelNumbersComponent
+    PickDuelNumbersComponent,
+    SidebarSettingsComponent,
+    DividePerCapitalPipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -80,7 +85,7 @@ import { BlackjackComponent } from './_components/_modals/blackjack/blackjack.co
       { path: '**', redirectTo: '/' }
     ])
   ],
-  providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard],
+  providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard, UtilityService],
   bootstrap: [AppComponent],
   entryComponents: [PickColorComponent, PickBannedCardsComponent,PickPlayerComponent, ShowHandComponent, DigCardComponent, GameInfoComponent,PickDuelNumbersComponent, PickNumbersToDiscardComponent,PickCharityCardsComponent, BlackjackComponent]
 })

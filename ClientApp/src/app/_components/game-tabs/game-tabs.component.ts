@@ -6,9 +6,6 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./game-tabs.component.css']
 })
 export class GameTabsComponent implements OnInit {
-  @Output('toggleKeepSidebarOpen') toggleKeepSidebarOpenEmitter = new EventEmitter();
-  @Output('changeSidebarSize') changeSidebarSizeEmitter = new EventEmitter();
-
   constructor() { }
 
   ngOnInit() {

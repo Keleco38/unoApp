@@ -1,45 +1,42 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { SidebarSettings } from './../../_models/sidebarSettings';
+import { UtilityService } from './../../_services/utility.service';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ChatMessage } from 'src/app/_models/chatMessage';
 import { User } from 'src/app/_models/user';
 import { HubService } from 'src/app/_services/hub.service';
 import { TypeOfMessage } from 'src/app/_models/enums';
 import { Game } from 'src/app/_models/game';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-game-chat',
   templateUrl: './game-chat.component.html',
   styleUrls: ['./game-chat.component.css']
 })
-export class GameChatComponent implements OnInit {
-  @Output('toggleKeepSidebarOpen') toggleKeepSidebarOpenEmitter = new EventEmitter();
-  @Output('changeSidebarSize') changeSidebarSizeEmitter = new EventEmitter();
-
-  hideSpectatorsChat = false;
-  hideServerChat = false;
+export class GameChatComponent implements OnInit, OnDestroy {
+  ngOnDestroy(): void {
+    this._isAlive = false;
+  }
+  private _isAlive: boolean = true;
   messages: ChatMessage[];
   currentUser: User;
   newMessage = '';
   activeGame: Game;
-  keepSidebarOpen: boolean = true;
-  sidebarSize: number = 40;
+  sidebarSettings: SidebarSettings;
 
-  constructor(private _hubService: HubService) {}
+  constructor(private _hubService: HubService, private _utilityService: UtilityService) {}
 
   ngOnInit(): void {
-    this._hubService.gameChatMessages.subscribe(messages => {
+    this._hubService.gameChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
       this.messages = messages;
     });
-    this._hubService.currentUser.subscribe(user => {
+    this._hubService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
-    this._hubService.activeGame.subscribe(game => {
+    this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.activeGame = game;
     });
-
-    if (window.innerWidth < 768) {
-      this.keepSidebarOpen = false;
-      this.sidebarSize = 50;
-    } 
+    this.sidebarSettings = this._utilityService.sidebarSettings;
   }
 
   sendMessageToGameChat() {
@@ -67,9 +64,9 @@ export class GameChatComponent implements OnInit {
   }
 
   getChatMessageHidden(message: ChatMessage) {
-    if (message.typeOfMessage === TypeOfMessage.spectators && this.hideSpectatorsChat) {
+    if (message.typeOfMessage === TypeOfMessage.spectators && this.sidebarSettings.muteSpectators) {
       return true;
-    } else if (message.typeOfMessage === TypeOfMessage.server && this.hideServerChat) {
+    } else if (message.typeOfMessage === TypeOfMessage.server && this.sidebarSettings.muteServer) {
       return true;
     }
     return false;

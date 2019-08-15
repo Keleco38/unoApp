@@ -13,8 +13,7 @@ export class WaitingRoomGuard implements CanActivate {
         if (activeGame !== null && activeGame.gameStarted === false) {
           return true;
         } else {
-          this._router.navigate(['/home']);
-          return false;
+          this._router.navigate(['/']);
         }
       })
     );

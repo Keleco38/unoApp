@@ -8,7 +8,7 @@
   <div class="row">
     <div class="col-6" *ngFor="let card of allCards">
       <button class="btn btn-block btn-sm" [ngClass]="getBtnClass(card.value)" (click)="selectOrUnselect(card.value)">
-        {{ card.key }}
+        {{ card.key | dividePerCapital }}
       </button>
     </div>
   </div>

@@ -26,7 +26,7 @@ namespace Uno.Helpers
                     opt.MapFrom(src => src.IsPasswordProtected);
                 });
 
-       
+
 
             CreateMap<Player, PlayerDto>()
                 .ForMember(dest => dest.NumberOfCards, opt =>

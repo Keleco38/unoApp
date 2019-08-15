@@ -1,12 +1,13 @@
+
 #game-short-info p {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   margin-bottom: 0.5rem;
 }
 #game-short-info hr {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
-.log-entry{
+.log-entry {
   font-size: 0.8rem;
 }
 #button-top-container button {
@@ -22,6 +23,10 @@
   border-style: solid;
 }
 
+button.uno {
+  margin: 0 50px;
+}
+
 .player-hand-card:hover {
   margin-top: -5%;
 }
@@ -34,8 +39,12 @@
   .player-hand-card {
     width: 20%;
   }
-  #card-container img{
-    width:50%;
+  .last-card-played,
+  .deck-card {
+    width: 25%;
+  }
+  button.uno {
+    margin: 0 10px;
   }
 }
 .left-game {
