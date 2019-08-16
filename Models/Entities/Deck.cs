@@ -134,7 +134,13 @@ namespace Uno.Models.Entities
                                 Cards.Add(new Number(color, val));
                                 break;
                             case CardValue.Skip:
+                                Cards.Add(new Skip(color));
+                                Cards.Add(new Skip(color));
+                                break;
                             case CardValue.Reverse:
+                                Cards.Add(new Reverse(color));
+                                Cards.Add(new Reverse(color));
+                                break;
                             case CardValue.DrawTwo:
                                 Cards.Add(new DrawTwo(color));
                                 Cards.Add(new DrawTwo(color));

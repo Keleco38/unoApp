@@ -30,14 +30,33 @@ export class HubService {
   private _gameChatNumberOfMessagesObservable = new Subject<ChatMessage>();
   private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>([]);
   private _gameLogObservable = new BehaviorSubject<string[]>([]);
-  private _activeGameObservable = new BehaviorSubject<Game>({} as Game);
+  private _activeGameObservable = new BehaviorSubject<Game>(null);
   private _myHandObservable = new BehaviorSubject<Card[]>([]);
   private _mustCallUnoObservable = new Subject();
+  private _reconnectObservable = new Subject();
+
+  private async startConnection(isReconnect:Boolean) {
+    try {
+      await this._hubConnection.start().then(() => {
+        this.addOrRenameUser(false);
+        if(isReconnect){
+          this._router.navigateByUrl('/');
+          this._activeGameObservable.next(null);
+          this._reconnectObservable.next();
+        }
+
+      });
+    } catch (err) {
+      setTimeout(() => this.startConnection(true), 5000);
+    }
+  }
 
   constructor(private _router: Router, private _toastrService: ToastrService, private _modalService: NgbModal) {
     this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
-    this._hubConnection.start().then(() => {
-      this.addOrRenameUser(false);
+    this.startConnection(false);
+
+    this._hubConnection.onclose(async () => {
+      await this.startConnection(true);
     });
 
     this._hubConnection.on('ExitGame', () => {
@@ -260,5 +279,8 @@ export class HubService {
   }
   get mustCallUno() {
     return this._mustCallUnoObservable.asObservable();
+  }
+  get onReconnect() {
+    return this._reconnectObservable.asObservable();
   }
 }

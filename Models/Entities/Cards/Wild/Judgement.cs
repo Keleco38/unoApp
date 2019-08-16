@@ -57,7 +57,7 @@ namespace Uno.Models.Entities.Cards.Wild
                     moveParams.PlayerTargeted.Cards.Remove(deflectCard);
                     game.DiscardedPile.Add(deflectCard);
                     game.DrawCard(moveParams.PlayerPlayed, 3, false);
-                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} auto deflected judgement card. {moveParams.PlayerPlayed.User.Name} must draw 3 cards.";
+                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} deflected judgement card. {moveParams.PlayerPlayed.User.Name} must draw 3 cards.";
                 }
             }
             else

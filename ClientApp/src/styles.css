@@ -24,6 +24,10 @@ html {
     /* Increase all font sizes on mobile */
     /* default is 1rem or 16px */
   }
+  .alert{
+    padding: 0.5rem 0.8rem;
+  }
+  
 }
 
 :disabled {

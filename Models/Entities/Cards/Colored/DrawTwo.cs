@@ -37,7 +37,7 @@ namespace Uno.Models.Entities.Cards.Colored
                 moveParams.PlayerTargeted.Cards.Remove(deflectCard);
                 game.DiscardedPile.Add(deflectCard);
                 game.DrawCard(moveParams.PlayerPlayed, 2, false);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} auto deflected +2 card. {moveParams.PlayerPlayed.User.Name} must draw 2 cards.";
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} deflected +2 card. {moveParams.PlayerPlayed.User.Name} must draw 2 cards.";
 
             }
             messagesToLog.Add(messageToLog);

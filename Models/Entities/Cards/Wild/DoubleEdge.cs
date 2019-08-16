@@ -58,7 +58,7 @@ namespace Uno.Models.Entities.Cards.Wild
                 game.DiscardedPile.Add(deflectCard);
                 game.DrawCard(moveParams.PlayerPlayed, 5, false);
                 game.DrawCard(moveParams.PlayerTargeted, 2, false);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} auto deflected double edge card. They will draw 2 cards and {moveParams.PlayerPlayed.User.Name}  must draw 5 cards.";
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} deflected double edge card. They will draw 2 cards and {moveParams.PlayerPlayed.User.Name}  must draw 5 cards.";
             }
             messagesToLog.Add(messageToLog);
            return new MoveResult(messagesToLog);

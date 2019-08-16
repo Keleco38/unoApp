@@ -63,7 +63,7 @@
       <div class="row" *ngIf="activeGame.players[0]?.user.name != currentUser.name">
         <div class="col-12">
           <div class="btn-group special">
-            <button class="btn btn-sm btn-danger" (click)="leaveWaitingRoom()">LEAVE ROOM</button>
+            <button class="btn btn-sm btn-danger" (click)="leaveWaitingRoom()">Leave room</button>
             <button class="btn btn-sm btn-primary" [disabled]="!userIsSpectator() || activeGame.players.length > 9" (click)="joinGame()">
               Join Game
             </button>
