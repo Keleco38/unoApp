@@ -164,7 +164,7 @@ namespace Uno.Models.Entities
                     LastCardPlayed = new LastCardPlayed(LastCardPlayed.Color, theLastStandCard.Value, theLastStandCard.ImageUrl, PlayerToPlay.User.Name, true);
                     firstPlayerWithTheLastStand.Cards.Remove(theLastStandCard);
                     DiscardedPile.Add(theLastStandCard);
-                    moveResult.MessagesToLog.Add($"{firstPlayerWithTheLastStand.User.Name} saved the day! He/she played The Last Stand. Every player that had 0 cards will draw 2 cards.");
+                    moveResult.MessagesToLog.Add($"{firstPlayerWithTheLastStand.User.Name} saved the day! They played The Last Stand. Every player that had 0 cards will draw 2 cards.");
                     foreach (var player in playersWithoutCards)
                     {
                         DrawCard(player, 2, false);

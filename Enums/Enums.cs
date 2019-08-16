@@ -49,7 +49,8 @@ namespace Uno.Enums
         TricksOfTheTrade=35,
         DiscardNumber=36,
         TheLastStand=37,
-        MagneticPolarity=38
+        MagneticPolarity=38,
+        FortuneTeller=39
 
     }
 

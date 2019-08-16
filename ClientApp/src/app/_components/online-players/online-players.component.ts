@@ -21,7 +21,7 @@ export class OnlinePlayersComponent implements OnInit, OnDestroy {
   }
 
   buzzUser(user: User, buzzType: string) {
-    this._hubService.sendMessageToAllChat(`/${buzzType} ${user.name}`);
+    this._hubService.sendMessageToAllChat(`/${buzzType} ${user.name}`, true);
   }
 
   ngOnDestroy(): void {

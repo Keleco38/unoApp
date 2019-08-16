@@ -1,5 +1,5 @@
 import { DigCardComponent } from './../_components/_modals/dig-card/dig-card.component';
-import { ShowHandComponent } from './../_components/_modals/show-hand/show-hand.component';
+import { ShowCardsComponent } from './../_components/_modals/show-cards/show-cards.component';
 import { CardColor, CardValue } from './../_models/enums';
 import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
@@ -23,15 +23,15 @@ export class HubService {
   private _gameLog: string[] = [];
   private _allChatMessages: ChatMessage[] = [];
 
-  private _currentUserObservable = new BehaviorSubject<User>(null);
-  private _onlineUsersObservable = new ReplaySubject<User[]>(1);
-  private _availableGamesObservable = new ReplaySubject<Game[]>(1);
-  private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._gameChatMessages);
+  private _currentUserObservable = new BehaviorSubject<User>({} as User);
+  private _onlineUsersObservable = new BehaviorSubject<User[]>([]);
+  private _availableGamesObservable = new BehaviorSubject<Game[]>([]);
+  private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>([]);
   private _gameChatNumberOfMessagesObservable = new Subject<ChatMessage>();
-  private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>(this._allChatMessages);
-  private _gameLogObservable = new BehaviorSubject<string[]>(this._gameLog);
-  private _activeGameObservable = new BehaviorSubject<Game>(null);
-  private _myHandObservable = new BehaviorSubject<Card[]>(null);
+  private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>([]);
+  private _gameLogObservable = new BehaviorSubject<string[]>([]);
+  private _activeGameObservable = new BehaviorSubject<Game>({} as Game);
+  private _myHandObservable = new BehaviorSubject<Card[]>([]);
   private _mustCallUnoObservable = new Subject();
 
   constructor(private _router: Router, private _toastrService: ToastrService, private _modalService: NgbModal) {
@@ -103,9 +103,9 @@ export class HubService {
       this._myHandObservable.next(myCards);
     });
 
-    this._hubConnection.on('ShowInspectedHand', (cards: Card[]) => {
+    this._hubConnection.on('ShowCards', (cards: Card[]) => {
       setTimeout(() => {
-        const modalRef = this._modalService.open(ShowHandComponent);
+        const modalRef = this._modalService.open(ShowCardsComponent);
         modalRef.componentInstance.cards = cards;
       }, 2000);
     });
@@ -124,8 +124,19 @@ export class HubService {
     });
   }
 
-  sendMessageToAllChat(message: string): any {
-    this._hubConnection.invoke('SendMessageToAllChat', message, TypeOfMessage.chat);
+  sendMessageToAllChat(message: string, isBuzz: boolean) {
+    if (message == '') return;
+    if (isBuzz) {
+      if (this._activeGameObservable.getValue() != null) {
+        this._hubConnection.invoke('SendMessage', message, this._activeGameObservable.getValue().id);
+        return;
+      }
+    }
+    this._hubConnection.invoke('SendMessage', message, '');
+  }
+  sendMessageToGameChat(message: string) {
+    if (message == '') return;
+    this._hubConnection.invoke('SendMessage', message, this._activeGameObservable.getValue().id);
   }
 
   addOrRenameUser(forceRename: boolean) {
@@ -154,10 +165,6 @@ export class HubService {
 
   drawCard(count: number, changeTurn: boolean) {
     this._hubConnection.invoke('DrawCard', this._activeGameObservable.getValue().id, count, changeTurn);
-  }
-
-  sendMessageToGameChat(message: string, typeOfMessage: TypeOfMessage): any {
-    this._hubConnection.invoke('SendMessageToGameChat', this._activeGameObservable.getValue().id, message, typeOfMessage);
   }
 
   playCard(

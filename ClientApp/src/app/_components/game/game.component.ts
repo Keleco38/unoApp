@@ -71,7 +71,7 @@ export class GameComponent implements OnInit, OnDestroy {
           if (!this.game.gameEnded) {
             this.drawCard(2, false);
             this.callUno(false);
-            this._hubService.sendMessageToGameChat('<--- This person forgot to call uno! Drawing 2 cards.', TypeOfMessage.chat);
+            this._hubService.sendMessageToGameChat('<--- This person forgot to call uno! Drawing 2 cards.');
           }
         }
       }, 2000);
@@ -102,7 +102,7 @@ export class GameComponent implements OnInit, OnDestroy {
     this._mustCallUno = false;
     window.clearTimeout(this._timer);
     if (playerCalled) {
-      this._hubService.sendMessageToGameChat('UNO', TypeOfMessage.chat);
+      this._hubService.sendMessageToGameChat('UNO');
     }
   }
 

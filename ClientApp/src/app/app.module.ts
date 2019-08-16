@@ -33,10 +33,10 @@ import { WaitingRoomGuard } from './_guards/waiting-room.guard';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WaitingRoomDeactivateGuard } from './_guards/waiting-room-deactivate.guard';
 import { PickColorComponent } from './_components/_modals/pick-color/pick-color.component';
-import { ShowHandComponent } from './_components/_modals/show-hand/show-hand.component';
 import { DigCardComponent } from './_components/_modals/dig-card/dig-card.component';
 import { BlackjackComponent } from './_components/_modals/blackjack/blackjack.component';
 import { DividePerCapitalPipe } from './_pipes/divide-per-capital.pipe';
+import { ShowCardsComponent } from './_components/_modals/show-cards/show-cards.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +52,7 @@ import { DividePerCapitalPipe } from './_pipes/divide-per-capital.pipe';
     PickColorComponent,
     GameComponent,
     PickPlayerComponent,
-    ShowHandComponent,
+    ShowCardsComponent,
     DigCardComponent,
     HelpComponent,
     GameInfoComponent,
@@ -87,6 +87,17 @@ import { DividePerCapitalPipe } from './_pipes/divide-per-capital.pipe';
   ],
   providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard, UtilityService],
   bootstrap: [AppComponent],
-  entryComponents: [PickColorComponent, PickBannedCardsComponent,PickPlayerComponent, ShowHandComponent, DigCardComponent, GameInfoComponent,PickDuelNumbersComponent, PickNumbersToDiscardComponent,PickCharityCardsComponent, BlackjackComponent]
+  entryComponents: [
+    PickColorComponent,
+    PickBannedCardsComponent,
+    PickPlayerComponent,
+    ShowCardsComponent,
+    DigCardComponent,
+    GameInfoComponent,
+    PickDuelNumbersComponent,
+    PickNumbersToDiscardComponent,
+    PickCharityCardsComponent,
+    BlackjackComponent
+  ]
 })
 export class AppModule {}

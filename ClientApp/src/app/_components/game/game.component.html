@@ -37,7 +37,7 @@
         <hr />
         <p class="text-center">
           <span
-            *ngFor="let player of game?.players"
+            *ngFor="let player of game.players"
             [ngClass]="{
               'text-primary font-weight-bold': player.id == game.playerToPlay.id,
               'left-game': player.leftGame,
@@ -55,7 +55,7 @@
     </div>
     <div class="row">
       <div class="col-12 text-center">
-        <img class="last-card-played float-left float-sm-none" [style.borderColor]="getBorderColor()" [src]="game?.lastCardPlayed.imageUrl" alt="" />
+        <img class="last-card-played float-left float-sm-none" [style.borderColor]="getBorderColor()" [src]="game.lastCardPlayed.imageUrl" alt="" />
         <button class="btn uno btn-primary" (click)="callUno(true)">Uno!</button>
         <img (click)="drawCard(1, true)" class="deck-card float-right float-sm-none" src="/images/cards/small/card_back_alt.png" />
       </div>

@@ -40,18 +40,7 @@ export class GameChatComponent implements OnInit, OnDestroy {
   }
 
   sendMessageToGameChat() {
-    if (!this.newMessage) {
-      return;
-    }
-    const isSpectator = this.activeGame.spectators.find(spectator => {
-      return spectator.user.name === this.currentUser.name;
-    });
-    if (isSpectator != null) {
-      this._hubService.sendMessageToGameChat(this.newMessage, TypeOfMessage.spectators);
-    } else {
-      this._hubService.sendMessageToGameChat(this.newMessage, TypeOfMessage.chat);
-    }
-
+    this._hubService.sendMessageToGameChat(this.newMessage);
     this.newMessage = '';
   }
 

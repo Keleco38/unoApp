@@ -1,19 +1,20 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Uno.Contants;
 using Uno.Enums;
 using Uno.Models.Entities.Cards.Abstraction;
 using Uno.Models.Helpers;
 
 namespace Uno.Models.Entities.Cards.Wild
 {
-    public class HandOfGod : ICard
+    public class FortuneTeller : ICard
     {
-        public HandOfGod()
+        public FortuneTeller()
         {
             Id = Guid.NewGuid().ToString();
             Color = CardColor.Wild;
-            Value = CardValue.HandOfGod;
+            Value = CardValue.FortuneTeller;
             ImageUrl = $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         }
         public string Id { get; set; }
@@ -23,19 +24,17 @@ namespace Uno.Models.Entities.Cards.Wild
 
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
+            var callbackParams = new List<MoveResultCallbackParam>();
             var messagesToLog = new List<string>();
-            if (moveParams.PlayerPlayed.Cards.Count > 7)
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} inspected top 5 cards from the deck";
+            messagesToLog.Add(messageToLog);
+
+            if (game.PlayerToPlay.Cards.Any())
             {
-                messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} discarded 4 cards (hand of god). ");
-                var cards = moveParams.PlayerPlayed.Cards.Take(4).ToList();
-                game.DiscardedPile.AddRange(cards);
-                cards.ForEach(y => moveParams.PlayerPlayed.Cards.Remove(y));
+                callbackParams.Add(new MoveResultCallbackParam(Constants.SHOW_CARDS_CALLBACK_COMMAND, moveParams.PlayerPlayed.User.ConnectionId, game.Deck.Cards.Take(5)));
             }
-            else
-            {
-                messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} didn't discard any cards. They had less than 8 cards. (hand of god)");
-            }
-           return new MoveResult(messagesToLog);
+
+            return new MoveResult(messagesToLog, callbackParams);
         }
     }
 }

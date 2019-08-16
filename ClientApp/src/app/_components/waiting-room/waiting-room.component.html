@@ -52,7 +52,7 @@
                 <button class="btn btn-sm btn-warning" (click)="openBanCardsDialog()">
                   Ban Cards
                 </button>
-                <button [disabled]="activeGame.players.length < 1" class="btn btn-sm btn-success" (click)="startGame()">
+                <button [disabled]="activeGame.players.length < 2" class="btn btn-sm btn-success" (click)="startGame()">
                   Start Game
                 </button>
               </div>

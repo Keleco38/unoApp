@@ -28,7 +28,7 @@ namespace Uno.Models.Entities.Cards.Wild
             var numberRolled = random.Next(1, 7);
             var maxNumberCalledPicked = moveParams.DuelNumbers.Max();
             var callerWon = moveParams.DuelNumbers.Contains(numberRolled);
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name}  targeted {moveParams.PlayerTargeted.User.Name} with card Duel. Numbers He/she picked: {String.Join(' ', moveParams.DuelNumbers)}. Number rolled: {numberRolled}. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name}  targeted {moveParams.PlayerTargeted.User.Name} with card Duel. Numbers they picked: {String.Join(' ', moveParams.DuelNumbers)}. Number rolled: {numberRolled}. ";
 
             Player loopingPlayer = moveParams.PlayerPlayed;
             var playerExcludingPlayerPlaying = game.Players.Where(p => p != moveParams.PlayerPlayed).ToList();
@@ -41,7 +41,7 @@ namespace Uno.Models.Entities.Cards.Wild
                     game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, magneticCard.Value, magneticCard.ImageUrl, loopingPlayer.User.Name, true);
                     loopingPlayer.Cards.Remove(magneticCard);
                     game.DiscardedPile.Add(magneticCard);
-                    messageToLog += ($"{loopingPlayer.User.Name} activated magnetic polarity. He/she was the target instead of {moveParams.PlayerTargeted.User.Name}. ");
+                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity.");
                     moveParams.PlayerTargeted = loopingPlayer;
                     break;
                 }

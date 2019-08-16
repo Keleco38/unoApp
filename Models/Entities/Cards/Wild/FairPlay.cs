@@ -24,7 +24,7 @@ namespace Uno.Models.Entities.Cards.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name}  targeted {moveParams.PlayerTargeted.User.Name} with card Fair Play. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with card Fair Play. ";
 
             Player loopingPlayer = moveParams.PlayerPlayed;
             var playerExcludingPlayerPlaying = game.Players.Where(p => p != moveParams.PlayerPlayed).ToList();
@@ -37,7 +37,7 @@ namespace Uno.Models.Entities.Cards.Wild
                     game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, magneticCard.Value, magneticCard.ImageUrl, loopingPlayer.User.Name, true);
                     loopingPlayer.Cards.Remove(magneticCard);
                     game.DiscardedPile.Add(magneticCard);
-                    messageToLog += ($"{loopingPlayer.User.Name} activated magnetic polarity. He/she was the target instead of {moveParams.PlayerTargeted.User.Name}. ");
+                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity.");
                     moveParams.PlayerTargeted = loopingPlayer;
                     break;
                 }
@@ -53,14 +53,14 @@ namespace Uno.Models.Entities.Cards.Wild
             {
                 //targeted Player discards
                 moveParams.PlayerTargeted.Cards.RemoveRange(0, cardDifference);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} discarded {cardDifference} cards. He/she had more cards.";
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} discarded {cardDifference} cards. They had more cards.";
             }
             else
             {
                 //targeted Player draws
                 var numberInPositiveValue = cardDifference * -1;
                 game.DrawCard(moveParams.PlayerTargeted, numberInPositiveValue, false);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} must draw {numberInPositiveValue} cards. He/she had less cards.";
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} must draw {numberInPositiveValue} cards. They had less cards.";
             }
             messagesToLog.Add(messageToLog);
            return new MoveResult(messagesToLog);

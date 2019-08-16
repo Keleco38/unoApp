@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Uno.Contants;
 using Uno.Enums;
 using Uno.Models.Entities.Cards.Abstraction;
 using Uno.Models.Helpers;
@@ -39,7 +40,7 @@ namespace Uno.Models.Entities.Cards.Wild
                     game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, magneticCard.Value, magneticCard.ImageUrl, loopingPlayer.User.Name, true);
                     loopingPlayer.Cards.Remove(magneticCard);
                     game.DiscardedPile.Add(magneticCard);
-                    messageToLog += ($"{loopingPlayer.User.Name} activated magnetic polarity. He/she was the target instead of {moveParams.PlayerTargeted.User.Name}. ");
+                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity.");
                     moveParams.PlayerTargeted = loopingPlayer;
                     break;
                 }
@@ -47,7 +48,7 @@ namespace Uno.Models.Entities.Cards.Wild
 
             if (game.PlayerToPlay.Cards.Any())
             {
-                var moveResultCallbackParam = new MoveResultCallbackParam("ShowInspectedHand", moveParams.PlayerPlayed.User.ConnectionId, moveParams.PlayerTargeted.Cards);
+                var moveResultCallbackParam = new MoveResultCallbackParam(Constants.SHOW_CARDS_CALLBACK_COMMAND, moveParams.PlayerPlayed.User.ConnectionId, moveParams.PlayerTargeted.Cards);
                 moveResultCallbackParams.Add(moveResultCallbackParam);
             }
 

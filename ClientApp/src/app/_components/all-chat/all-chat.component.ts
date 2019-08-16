@@ -33,7 +33,7 @@ export class AllChatComponent implements OnInit,OnDestroy {
     if (!this.newMessage) {
       return;
     }
-    this._hubService.sendMessageToAllChat(this.newMessage);
+    this._hubService.sendMessageToAllChat(this.newMessage, false);
     this.newMessage = '';
   }
 

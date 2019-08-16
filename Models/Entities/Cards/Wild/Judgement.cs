@@ -24,7 +24,7 @@ namespace Uno.Models.Entities.Cards.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name}  targeted {moveParams.PlayerTargeted.User.Name} with the judgement card. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with the judgement card. ";
 
             Player loopingPlayer = moveParams.PlayerPlayed;
             var playerExcludingPlayerPlaying = game.Players.Where(p => p != moveParams.PlayerPlayed).ToList();
@@ -37,7 +37,7 @@ namespace Uno.Models.Entities.Cards.Wild
                     game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, magneticCard.Value, magneticCard.ImageUrl, loopingPlayer.User.Name, true);
                     loopingPlayer.Cards.Remove(magneticCard);
                     game.DiscardedPile.Add(magneticCard);
-                    messageToLog += ($"{loopingPlayer.User.Name} activated magnetic polarity. He/she was the target instead of {moveParams.PlayerTargeted.User.Name}. ");
+                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity.");
                     moveParams.PlayerTargeted = loopingPlayer;
                     break;
                 }
@@ -48,7 +48,7 @@ namespace Uno.Models.Entities.Cards.Wild
                 var deflectCard = moveParams.PlayerTargeted.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);
                 if (deflectCard == null)
                 {
-                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} drew 3 cards. He/she had a wild card.";
+                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} drew 3 cards. They had a wild card.";
                     game.DrawCard(moveParams.PlayerTargeted, 3, false);
                 }
                 else
@@ -62,7 +62,7 @@ namespace Uno.Models.Entities.Cards.Wild
             }
             else
             {
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't draw any cards, He/she didn't have any wild cards.";
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't draw any cards, They didn't have any wild cards.";
             }
             messagesToLog.Add(messageToLog);
            return new MoveResult(messagesToLog);

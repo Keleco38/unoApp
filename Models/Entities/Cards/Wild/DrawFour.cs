@@ -37,7 +37,7 @@ namespace Uno.Models.Entities.Cards.Wild
                     game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, magneticCard.Value, magneticCard.ImageUrl, loopingPlayer.User.Name, true);
                     loopingPlayer.Cards.Remove(magneticCard);
                     game.DiscardedPile.Add(magneticCard);
-                    messageToLog += ($"{loopingPlayer.User.Name} activated magnetic polarity. He/she was the target instead of {moveParams.PlayerTargeted.User.Name}. ");
+                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity.");
                     moveParams.PlayerTargeted = loopingPlayer;
                     break;
                 }
@@ -58,7 +58,7 @@ namespace Uno.Models.Entities.Cards.Wild
                 messageToLog += $"{moveParams.PlayerTargeted.User.Name} auto deflected +4 card. {moveParams.PlayerPlayed.User.Name} must draw 4 cards.";
             }
             messagesToLog.Add(messageToLog);
-           return new MoveResult(messagesToLog);
+            return new MoveResult(messagesToLog);
         }
     }
 }
