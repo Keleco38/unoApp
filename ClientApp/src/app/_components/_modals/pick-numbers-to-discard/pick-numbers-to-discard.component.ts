@@ -19,7 +19,7 @@ export class PickNumbersToDiscardComponent implements OnInit {
   selectOrUnselect(number: number) {
     var index = this.numbersToDiscard.indexOf(number);
     if (index === -1) {
-      if (this.numbersToDiscard.length == 3) {
+      if (this.numbersToDiscard.length == 2) {
         return;
       }
       this.numbersToDiscard.push(number);

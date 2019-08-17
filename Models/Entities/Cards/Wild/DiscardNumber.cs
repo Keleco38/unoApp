@@ -30,6 +30,7 @@ namespace Uno.Models.Entities.Cards.Wild
                 var cardsToDiscard = p.Cards.Where(c => moveParams.NumbersToDiscard.Contains((int)c.Value)).ToList();
                 cardsToDiscard.ForEach(x => p.Cards.Remove(x));
             });
+            game.DrawCard(moveParams.PlayerPlayed,1,false);
             messagesToLog.Add(messageToLog);
            return new MoveResult(messagesToLog);
         }

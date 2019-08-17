@@ -24,20 +24,24 @@ namespace Uno.Models.Entities.Cards.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with double edge card. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with double edge. ";
 
-            Player loopingPlayer = moveParams.PlayerPlayed;
+            Player loopingPlayer = game.GetNextPlayer(moveParams.PlayerPlayed, game.Players);
             var playerExcludingPlayerPlaying = game.Players.Where(p => p != moveParams.PlayerPlayed).ToList();
             for (int i = 0; i < playerExcludingPlayerPlaying.Count; i++)
             {
-                loopingPlayer = game.GetNextPlayer(loopingPlayer, playerExcludingPlayerPlaying);
+                if (i != 0)
+                {
+                    loopingPlayer = game.GetNextPlayer(loopingPlayer, playerExcludingPlayerPlaying);
+                }
+
                 var magneticCard = loopingPlayer.Cards.FirstOrDefault(c => c.Value == CardValue.MagneticPolarity);
                 if (magneticCard != null)
                 {
                     game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, magneticCard.Value, magneticCard.ImageUrl, loopingPlayer.User.Name, true);
                     loopingPlayer.Cards.Remove(magneticCard);
                     game.DiscardedPile.Add(magneticCard);
-                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity.");
+                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity. ");
                     moveParams.PlayerTargeted = loopingPlayer;
                     break;
                 }
@@ -61,7 +65,7 @@ namespace Uno.Models.Entities.Cards.Wild
                 messageToLog += $"{moveParams.PlayerTargeted.User.Name} deflected double edge card. They will draw 2 cards and {moveParams.PlayerPlayed.User.Name}  must draw 5 cards.";
             }
             messagesToLog.Add(messageToLog);
-           return new MoveResult(messagesToLog);
+            return new MoveResult(messagesToLog);
         }
     }
 }

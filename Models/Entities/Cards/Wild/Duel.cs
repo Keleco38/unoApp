@@ -26,22 +26,25 @@ namespace Uno.Models.Entities.Cards.Wild
             var messagesToLog = new List<string>();
             Random random = new Random();
             var numberRolled = random.Next(1, 7);
-            var maxNumberCalledPicked = moveParams.DuelNumbers.Max();
             var callerWon = moveParams.DuelNumbers.Contains(numberRolled);
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name}  targeted {moveParams.PlayerTargeted.User.Name} with card Duel. Numbers they picked: {String.Join(' ', moveParams.DuelNumbers)}. Number rolled: {numberRolled}. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with Duel. Numbers they picked: {String.Join(' ', moveParams.DuelNumbers)}. Number rolled: {numberRolled}. ";
 
-            Player loopingPlayer = moveParams.PlayerPlayed;
+            Player loopingPlayer = game.GetNextPlayer(moveParams.PlayerPlayed, game.Players);
             var playerExcludingPlayerPlaying = game.Players.Where(p => p != moveParams.PlayerPlayed).ToList();
             for (int i = 0; i < playerExcludingPlayerPlaying.Count; i++)
             {
-                loopingPlayer = game.GetNextPlayer(loopingPlayer, playerExcludingPlayerPlaying);
+                if (i != 0)
+                {
+                    loopingPlayer = game.GetNextPlayer(loopingPlayer, playerExcludingPlayerPlaying);
+                }
+
                 var magneticCard = loopingPlayer.Cards.FirstOrDefault(c => c.Value == CardValue.MagneticPolarity);
                 if (magneticCard != null)
                 {
                     game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, magneticCard.Value, magneticCard.ImageUrl, loopingPlayer.User.Name, true);
                     loopingPlayer.Cards.Remove(magneticCard);
                     game.DiscardedPile.Add(magneticCard);
-                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity.");
+                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity. ");
                     moveParams.PlayerTargeted = loopingPlayer;
                     break;
                 }
@@ -49,13 +52,13 @@ namespace Uno.Models.Entities.Cards.Wild
 
             if (callerWon)
             {
-                game.DrawCard(moveParams.PlayerTargeted, maxNumberCalledPicked, false);
-                messageToLog += $"{moveParams.PlayerPlayed.User.Name} won! {moveParams.PlayerTargeted.User.Name} will draw {maxNumberCalledPicked} cards (max number player selected).";
+                game.DrawCard(moveParams.PlayerTargeted, 3, false);
+                messageToLog += $"{moveParams.PlayerPlayed.User.Name} won! {moveParams.PlayerTargeted.User.Name} will draw 3 cards";
             }
             else
             {
-                game.DrawCard(moveParams.PlayerPlayed, maxNumberCalledPicked, false);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} won! {moveParams.PlayerPlayed.User.Name} will draw {maxNumberCalledPicked} (max number player selected) cards.";
+                game.DrawCard(moveParams.PlayerPlayed, 3, false);
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} won! {moveParams.PlayerPlayed.User.Name} will draw 3 cards";
             }
             messagesToLog.Add(messageToLog);
 

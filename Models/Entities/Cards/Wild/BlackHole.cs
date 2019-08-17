@@ -24,7 +24,7 @@ namespace Uno.Models.Entities.Cards.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name}  played black hole card. Every player drew new hand. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played black hole. Every player drew new hand. ";
             game.Players.ForEach(p =>
             {
                 var keepMyHandCard = p.Cards.FirstOrDefault(y => y.Value == CardValue.KeepMyHand);

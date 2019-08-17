@@ -25,20 +25,24 @@ namespace Uno.Models.Entities.Cards.Wild
         {
             var messagesToLog = new List<string>();
             Random random = new Random();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name}  targeted {moveParams.PlayerTargeted.User.Name} with card Tricks of the trade. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with Tricks of the trade. ";
 
-            Player loopingPlayer = moveParams.PlayerPlayed;
+            Player loopingPlayer = game.GetNextPlayer(moveParams.PlayerPlayed, game.Players);
             var playerExcludingPlayerPlaying = game.Players.Where(p => p != moveParams.PlayerPlayed).ToList();
             for (int i = 0; i < playerExcludingPlayerPlaying.Count; i++)
             {
-                loopingPlayer = game.GetNextPlayer(loopingPlayer, playerExcludingPlayerPlaying);
+                if (i != 0)
+                {
+                    loopingPlayer = game.GetNextPlayer(loopingPlayer, playerExcludingPlayerPlaying);
+                }
+
                 var magneticCard = loopingPlayer.Cards.FirstOrDefault(c => c.Value == CardValue.MagneticPolarity);
                 if (magneticCard != null)
                 {
                     game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, magneticCard.Value, magneticCard.ImageUrl, loopingPlayer.User.Name, true);
                     loopingPlayer.Cards.Remove(magneticCard);
                     game.DiscardedPile.Add(magneticCard);
-                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity.");
+                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity. ");
                     moveParams.PlayerTargeted = loopingPlayer;
                     break;
                 }
@@ -50,7 +54,7 @@ namespace Uno.Models.Entities.Cards.Wild
 
             if (callerNumberToTrade == 0)
             {
-                messageToLog += $"{moveParams.PlayerPlayed.User.Name}  didn't give any cards. ";
+                messageToLog += $"{moveParams.PlayerPlayed.User.Name} didn't give any cards. ";
             }
             else
             {
@@ -64,7 +68,7 @@ namespace Uno.Models.Entities.Cards.Wild
 
             if (targetNumberToTrade == 0)
             {
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name}  didn't give any cards. ";
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't give any cards. ";
             }
             else
             {

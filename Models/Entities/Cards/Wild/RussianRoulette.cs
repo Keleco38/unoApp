@@ -23,7 +23,7 @@ namespace Uno.Models.Entities.Cards.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name}  played Russian Roulette. Every player rolled a dice.";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played Russian Roulette. Every player rolled a dice.";
             var playerRolling = moveParams.PlayerTargeted;
             Random random = new Random();
 
@@ -33,8 +33,8 @@ namespace Uno.Models.Entities.Cards.Wild
                 messageToLog += $" [{playerRolling.User.Name}: {rolledNumber}] ";
                 if (rolledNumber == 1)
                 {
-                    messageToLog += $" {playerRolling.User.Name} drew 6 cards.";
-                    game.DrawCard(playerRolling, 6, false);
+                    messageToLog += $" {playerRolling.User.Name} drew 3 cards.";
+                    game.DrawCard(playerRolling, 3, false);
                     break;
                 }
                 playerRolling = game.GetNextPlayer(playerRolling, game.Players);

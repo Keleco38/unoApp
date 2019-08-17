@@ -25,19 +25,24 @@ namespace Uno.Models.Entities.Cards.Wild
         {
             var messagesToLog = new List<string>();
 
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with card Charity. ";
-            Player loopingPlayer = moveParams.PlayerPlayed;
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with Charity. ";
+
+            Player loopingPlayer = game.GetNextPlayer(moveParams.PlayerPlayed, game.Players);
             var playerExcludingPlayerPlaying = game.Players.Where(p => p != moveParams.PlayerPlayed).ToList();
             for (int i = 0; i < playerExcludingPlayerPlaying.Count; i++)
             {
-                loopingPlayer = game.GetNextPlayer(loopingPlayer, playerExcludingPlayerPlaying);
+                if (i != 0)
+                {
+                    loopingPlayer = game.GetNextPlayer(loopingPlayer, playerExcludingPlayerPlaying);
+                }
+
                 var magneticCard = loopingPlayer.Cards.FirstOrDefault(c => c.Value == CardValue.MagneticPolarity);
                 if (magneticCard != null)
                 {
                     game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, magneticCard.Value, magneticCard.ImageUrl, loopingPlayer.User.Name, true);
                     loopingPlayer.Cards.Remove(magneticCard);
                     game.DiscardedPile.Add(magneticCard);
-                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity.");
+                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity. ");
                     moveParams.PlayerTargeted = loopingPlayer;
                     break;
                 }
@@ -51,6 +56,8 @@ namespace Uno.Models.Entities.Cards.Wild
                 moveParams.PlayerTargeted.Cards.Add(x);
             });
             messageToLog += $" Player gave him two cards: {charityCardsString}";
+
+            game.DrawCard(moveParams.PlayerPlayed, 1, false);
 
             messagesToLog.Add(messageToLog);
            return new MoveResult(messagesToLog);

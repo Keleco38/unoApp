@@ -23,7 +23,7 @@ namespace Uno.Models.Entities.Cards.Colored
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} played card {Color.ToString()} {Value.ToString()}.");
+            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} played {Color.ToString()} {Value.ToString()}.");
            return new MoveResult(messagesToLog);
         }
     }

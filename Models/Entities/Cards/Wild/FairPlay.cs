@@ -24,20 +24,24 @@ namespace Uno.Models.Entities.Cards.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with card Fair Play. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with Fair Play. ";
 
-            Player loopingPlayer = moveParams.PlayerPlayed;
+            Player loopingPlayer = game.GetNextPlayer(moveParams.PlayerPlayed, game.Players);
             var playerExcludingPlayerPlaying = game.Players.Where(p => p != moveParams.PlayerPlayed).ToList();
             for (int i = 0; i < playerExcludingPlayerPlaying.Count; i++)
             {
-                loopingPlayer = game.GetNextPlayer(loopingPlayer, playerExcludingPlayerPlaying);
+                if (i != 0)
+                {
+                    loopingPlayer = game.GetNextPlayer(loopingPlayer, playerExcludingPlayerPlaying);
+                }
+
                 var magneticCard = loopingPlayer.Cards.FirstOrDefault(c => c.Value == CardValue.MagneticPolarity);
                 if (magneticCard != null)
                 {
                     game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, magneticCard.Value, magneticCard.ImageUrl, loopingPlayer.User.Name, true);
                     loopingPlayer.Cards.Remove(magneticCard);
                     game.DiscardedPile.Add(magneticCard);
-                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity.");
+                    messageToLog += ($"{loopingPlayer.User.Name} intercepted attack with magnetic polarity. ");
                     moveParams.PlayerTargeted = loopingPlayer;
                     break;
                 }
@@ -47,7 +51,7 @@ namespace Uno.Models.Entities.Cards.Wild
 
             if (cardDifference == 0)
             {
-                messageToLog += "No effect. They had the same numer of cards.";
+                messageToLog += "No effect. They had the same number of cards.";
             }
             else if (cardDifference > 0)
             {

@@ -24,7 +24,7 @@ namespace Uno.Models.Entities.Cards.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name}  played paradigm shift card. Every player exchanged their hand with the next player. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played paradigm shift. Every player exchanged their hand with the next player. ";
             List<ICard> firstCardsBackup = null;
 
             var playersWithKeepMyHandCard = game.Players.Where(x => x.Cards.FirstOrDefault(y => y.Value == CardValue.KeepMyHand) != null).ToList();

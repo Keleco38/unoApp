@@ -1,3 +1,4 @@
+import { ChangeLogComponent } from './_components/change-log/change-log.component';
 import { SidebarSettingsComponent } from './_components/sidebar-settings/sidebar-settings.component';
 import { UtilityService } from './_services/utility.service';
 import { PickBannedCardsComponent } from './_components/_modals/pick-banned-cards/pick-banned-cards.component';
@@ -56,6 +57,7 @@ import { ShowCardsComponent } from './_components/_modals/show-cards/show-cards.
     DigCardComponent,
     HelpComponent,
     GameInfoComponent,
+    ChangeLogComponent,
     BlackjackComponent,
     PickCharityCardsComponent,
     PickNumbersToDiscardComponent,
@@ -82,6 +84,7 @@ import { ShowCardsComponent } from './_components/_modals/show-cards/show-cards.
       },
       { path: 'game', component: GameComponent, canActivate: [GameGuard], canDeactivate: [GameDeactivateGuard] },
       { path: 'help', component: HelpComponent },
+      { path: 'change-log', component: ChangeLogComponent },
       { path: '**', redirectTo: '/' }
     ])
   ],

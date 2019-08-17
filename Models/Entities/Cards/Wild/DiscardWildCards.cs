@@ -32,6 +32,7 @@ namespace Uno.Models.Entities.Cards.Wild
                 wildCards.ForEach(y => x.Cards.Remove(y));
             });
             messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name}  played discard all wildcards.");
+            game.DrawCard(moveParams.PlayerPlayed, 1, false);
 
             return new MoveResult(messagesToLog);
         }

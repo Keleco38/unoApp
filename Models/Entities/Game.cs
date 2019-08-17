@@ -123,6 +123,10 @@ namespace Uno.Models.Entities
         public Player GetNextPlayer(Player player, List<Player> ListOfPlayers)
         {
             var indexOfCurrentPlayer = ListOfPlayers.IndexOf(player);
+            if (indexOfCurrentPlayer == -1)
+            {
+                indexOfCurrentPlayer = 0;
+            }
             if (Direction == Direction.Right)
             {
                 if (indexOfCurrentPlayer == ListOfPlayers.Count - 1)

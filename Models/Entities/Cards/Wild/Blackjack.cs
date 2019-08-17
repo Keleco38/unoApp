@@ -26,14 +26,14 @@ namespace Uno.Models.Entities.Cards.Wild
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played blackjack. They hit {moveParams.BlackjackNumber}. ";
             if (moveParams.BlackjackNumber > 21)
             {
-                game.DrawCard(moveParams.PlayerPlayed, 7, false);
-                messageToLog += $"They went over 21. They will draw 7 cards.";
+                game.DrawCard(moveParams.PlayerPlayed, 6, false);
+                messageToLog += $"They went over 21. They will draw 6 cards.";
             }
             else if (moveParams.BlackjackNumber == 21)
             {
-                var numberToDiscard = moveParams.PlayerPlayed.Cards.Count < 5 ? moveParams.PlayerPlayed.Cards.Count : 5;
+                var numberToDiscard = moveParams.PlayerPlayed.Cards.Count < 4 ? moveParams.PlayerPlayed.Cards.Count : 4;
                 moveParams.PlayerPlayed.Cards.RemoveRange(0, numberToDiscard);
-                messageToLog += $"They hit the blackjack. They will discard 5 cards.";
+                messageToLog += $"They hit the blackjack. They will discard 4 cards.";
 
             }
             else if (moveParams.BlackjackNumber < 21 && moveParams.BlackjackNumber > 17)

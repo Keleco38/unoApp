@@ -1,120 +1,297 @@
 <div class="row">
-  <div class="col-12 text-center">
-    <br />
-    <button class="btn btn-primary" [routerLink]="['/']"><--BACK</button>
-    <br />
-  </div>
   <div class="col-12">
-    <img src="/images/cards/small/5/15.png" />
-    BlackHole = all cards in all hands are shuffled into a pile and then dealt to each person with the same number they had before.
+    <h2 class="text-primary">Rules</h2>
+    There is some difference between this version of the game and the original. Here are the basics.
+    <ul>
+      <li>
+        The first player that runs out of card is a round winner. Host can change the nuber of rounds required to win the game.
+      </li>
+      <li>
+        Player can only play a card if it's his turn to play (excluding steal turn card).
+      </li>
+      <li>
+        Player can play colored card only if the color or the value on the card corresponds to the color or the value of the previously
+        played card.
+      </li>
+      <li>
+        Player can play steal turn card anytime if the color of the steal turn card corresponds to the previously played card.
+      </li>
+      <li>
+        Player can play positive, neutral and gambling wildcards regardless of the previously played card. Wildcards allow player to pick
+        desired color.
+      </li>
+      <li>
+        Player can play negative wildcards only under certain condition (read card section below). If the condition is fulfilled then the
+        player can pick desired color.
+      </li>
+      <li>Cards that are automatically played do not require action from the player (read card section below)</li>
+      <li>+4 and +2 wild cards do not skip next player's turn.</li>
+    </ul>
   </div>
+</div>
+<div class="row">
   <div class="col-12">
-    <img src="/images/cards/small/5/16.png" />
-    DiscardWildCards =discard all wildcards from all player's hands from the game
+    <h2 class="text-primary">Features</h2>
+    Basics features are explained below:
+    <ul>
+      <li>Player can rename anytime by pressing the "Rename" button from the home page.</li>
+      <li>
+        Player can buzz another player by selecting the option from the dropdown next to other player's name (under online players section).
+      </li>
+      <li>Host can kick players from the game.</li>
+      <li>Host can set password to the game room.</li>
+      <li>Host can ban up to 3 cards from the game. Other player should give consent on the cards banned.</li>
+      <li>In game, players can chat by opening chat window by pressing the "Chat" button on top.</li>
+      <li>In game, players can see current game status by pressing "Game info" button on top.</li>
+      <li>Once the game is started player can exit the game and reconnect back to it.</li>
+      <li>
+        In game, names on top of the screen show the players in the game. Blue colored name shows the player currently playing. If the
+        border around the player's name is red, that means the player has exited the game.
+      </li>
+      <li>In game, number in the parentheses corresponds to the number of cards player has.</li>
+      <li>In game, arrows next to the player's name corresponds to the current direction of the game.</li>
+      <li>Player can mute spectator's and server's chat by selecting those checkboxed under the Misc. tab</li>
+      <li>Player can keep sidebar open and change sidebar's size by selecting those options under the Misc. tab</li>
+    </ul>
   </div>
+</div>
+<div class="row">
   <div class="col-12">
-    <img src="/images/cards/small/1/17.png" />
-    <img src="/images/cards/small/2/17.png" />
-    <img src="/images/cards/small/3/17.png" />
-    <img src="/images/cards/small/4/17.png" />
-    StealTurn =can be played anytime; steal someone's turn and rotation continues from the user.
-  </div>
-  <div class="col-12"><img src="/images/cards/small/5/18.png" /> SwapHands = swap hands with the targeted user</div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/19.png" />
-    DoubleEdge = target a person. He/she draws 5 cards while the user draws 2 cards
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/20.png" />
-    DiscardColor = user names a color. The chosen color should be discarded from all player's current hand.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/21.png" />
-    HandOfGod = if used when cards on hand are more than 8. (counted after use) Immediately discard 4 cards from hand. Acts as
-    normal wildcard otherwise.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/22.png" />
-    Judgement = target a person. If they have a wildcard on their hand, they draw 3 cards, if not, nothing.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/23.png" />
-    UnitedWeFall = Everyone draws 2 cards
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/24.png" />
-    ParadigmShift = each person swaps hands to the person next to them according to the current direction of the game.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/25.png" />
-    Deflect = automatically reflects draw effects of wildcards back to the person that played it. This card is played automatically if you
-    are targeted by the draw wildcard. Discards upon use. If used on draw +4 , draw +2, judgement or double edge, the person that played the
-    attacking card receives the effect. Acts as normal wildcard otherwise.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/26.png" /> InspectHand = select a person. That person must show their hand to you
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/27.png" />
-    GraveDigger = Take one card from the discarded pile.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/28.png" />
-    RussianRoulette = Based on the direction of the game, players roll a dice. The first player that rolls 1 must draw 6 cards. Cannot be
-    deflected.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/29.png" />
-    Roulette = Randomly chosen player will either draw or discard X number of cards, or his hand will remain intact. Maximum number of cards to draw is 4, while the maximum
-    number of cards to discard is 2. Cannot be deflected.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/30.png" />
-    Duel = Player picks 3 numbers (from 1-6) and picks another player to duel. Dice is rolled afterwards. If the player guessed correctly
-    the number that was rolled, he is a winner and the opponent must draw the biggest number he selected (from 3 numbers), otherwise he lost
-    and he must draw the biggest number he selected. Cannot be deflected.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/31.png" />
-    KeepMyHand = this card is automatically played from your hand in case of "black hole", "swap hands" or "paradigm shift". Your cards
-    remains intact.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/32.png" />
-    Charity = Target a player and select two cards from your hand. The targeted player will receive this two cards as a gift. Cannot be
-    deflected. Cannot give other charity cards. Cannot be played if the number of the cards in your hand is less than 2 (excluding other charity cards).
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/33.png" />
-    Blackjack = Player can hit the hitme button to get a random number from 1 to 10. If the player goes over 21, he draws 7 cards. If the
-    player hits 21, he will discard 5 cards. If the player hits number bigger than 17 but less than 21 he will discard 2 cards. If the
-    player hits the number smaller than 17, he will draw the difference between 17 and the number he hit.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/34.png" />
-    FairPlay = Target another player. If they have more cards than you, they discard until they have the same number as you. If they have
-    less cards than you, they draw until the same number as you.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/35.png" />
-    TricksOfTheTrade = Target a player. Exchange the random cards (random number, range: 0-3) from your hand with the targeted player.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/36.png" />
-    DiscardNumber - Player selects 3 numbers (from 0-9) every player will discard these numbers from their hand, regardless the color.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/37.png" />
-    TheLastStand = if someone places their last card when a person has this card in their hand, this card will be automatically played and
-    that person's win will be negated by drawing 2 new cards.. Acts as normal wildcard otherwise
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/38.png" />
-    MagneticPolarity = Player can play this card only if the last card played was a wildcard. If someone activates a wild card that requires
-    another player as a target, this player will intercept the attack and become the targeted player.
-  </div>
-  <div class="col-12">
-    <img src="/images/cards/small/5/39.png" />
-    FortuneTeller = Peek at the deck's top 5 cards.
+    <h2 class="text-primary">Cards</h2>
+    <p>
+      Deck is composed of 4 normal UNO decks (numbers + wild cards), 16 instances of "Keep my hand", "Deflect" and "Magnetic polarity", and
+      8 instance of every other special wild card
+    </p>
+    <p>There are many new cards added to this game. They mostly fall into 4 groups:</p>
+    <ul>
+      <li>Positive cards - Cards that have positive effect on the holder. Can be played anytime.</li>
+      <li>Negative cards - Cards that have negative effect on the holder. Can be played only under special condition.</li>
+      <li>Neutral cards - Cards that can have both positive or negative effect, depending on the setup of the game and the cards.</li>
+      <li>Gambling cards - Cards that relay on the luck, mostly based on rolling a dice.</li>
+    </ul>
+    <div class="card">
+      <div class="card-header">Positive cards</div>
+      <div class="card-body">
+        <ul class="list-unstyled">
+          <li class="media my-2">
+            <img src="/images/cards/small/5/16.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Discard Wild Cards</h5>
+              At the cost of drawing one card every player will discard all wildcards from their hand.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/17.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Steal Turn</h5>
+              Can be played anytime. Steal someone's turn and rotation continues from the user.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/19.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Double Edge</h5>
+              Target a person. He/she draws 5 cards while the user draws 2 cards. Can be deflected.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/20.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Discard Color</h5>
+              At the cost of drawing one card user picks a color. The chosen color should be discarded from all player's current hand.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/21.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Hand Of God</h5>
+              If used when cards on hand are more than 8 (counted after use), immediately discard 4 cards from hand. Acts as normal wildcard
+              otherwise.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/22.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Judgement</h5>
+              Target a person. If they have a wildcard on their hand, they draw 3 cards, if not, nothing. Can be deflected.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/25.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Deflect</h5>
+              This card is automatically played from your hand when another player targets you with the card that has a draw effects (double
+              edge, +4, +2, judgement). As the result they must draw cards. Acts as normal wildcard otherwise.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/26.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Inspect Hand</h5>
+              Select a person. That person must show their hand to you.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/27.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Grave Digger</h5>
+              Dig one card from the discarded pile.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/31.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Keep My Hand</h5>
+              This card is automatically played from your hand in case of "black hole", "swap hands" or "paradigm shift". Your cards remains
+              intact.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/32.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Charity</h5>
+              At the cost of drawing one card target a player and select two cards from your hand. The targeted player will receive this two
+              cards as a gift. Cannot be deflected. Cannot give other charity cards. Cannot be played if the number of the cards in your
+              hand is less than 2 (excluding other charity cards).
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/36.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Discard Number</h5>
+              At the cost of drawing one card player selects 2 numbers (from 0-9) every player will discard these numbers from their hand,
+              regardless the color.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/37.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">The Last Stand</h5>
+              If someone places their last card when a person has this card in their hand, this card will be automatically played and that
+              person's win will be negated by drawing 2 new cards. Acts as normal wildcard otherwise.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/39.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Fortune Teller</h5>
+              Peek at the deck's top 5 cards.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        Negative cards
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled">
+          <li class="media my-2">
+            <img src="/images/cards/small/5/38.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Magnetic Polarity</h5>
+              Player can play this card only if the last card played was a wildcard. If someone activates a wild card that requires another
+              player as a target, this card is played automatically and the player will intercept the attack and become the targeted player.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        Neutral cards
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled">
+          <li class="media my-2">
+            <img src="/images/cards/small/5/15.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Black Hole</h5>
+              All cards in all hands are shuffled into a pile and then dealt to each person with the same number they had before.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/18.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Swap Hands</h5>
+              Swap hands with the targeted user. Can be blocked by "keep my hand" card.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/23.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">United We Fall</h5>
+              Everyone draws 2 cards.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/24.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Paradigm Shift</h5>
+              Each person swaps hands to the person next to them according to the current direction of the game. Can be blocked by "keep by
+              hand" card.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/34.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Fair Play</h5>
+              Target another player. If they have more cards than you, they discard until they have the same number as you. If they have
+              less cards than you, they draw until the same number as you.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        Gambling cards
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled">
+          <li class="media my-2">
+            <img src="/images/cards/small/5/28.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Russian Roulette</h5>
+              Based on the direction of the game, players roll a dice. The first player that rolls 1 must draw 3 cards. Cannot be deflected.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/29.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Roulette</h5>
+              Randomly selected player will either draw or discard X number of cards, or his hand will remain intact. Maximum number of
+              cards to draw is 4, while the maximum number of cards to discard is 2. Cannot be deflected.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/30.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Duel</h5>
+              Player picks 3 numbers (from 1-6) and picks another player to duel. Dice is rolled afterwards. If the player guessed correctly
+              the number that was rolled, he is a winner and the opponent must draw 3 cards otherwise he lost and he must draw 3 cards.
+              Cannot be deflected.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/33.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Blackjack</h5>
+              Player can hit the hitme button to get a random number from 1 to 10. If the player goes over 21, he draws 6 cards. If the
+              player hits 21, he will discard 4 cards. If the player hits number bigger than 17 but less than 21 he will discard 2 cards. If
+              the player hits the number lower than 17, he will draw the difference between 17 and the number he hit.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/35.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Tricks Of The Trade</h5>
+              Target a player. Both players will exchange random number of cards (range: 0-3) from their hands with the opposite player.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>

@@ -24,7 +24,7 @@ namespace Uno.Models.Entities.Cards.Wild
         {
             var messagesToLog = new List<string>();
             game.Players.ForEach(x => game.DrawCard(x, 2, false));
-            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name}  played united we fall card. Every player drew 2 cards.");
+            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name}  played united we fall. Every player drew 2 cards.");
             return new MoveResult(messagesToLog);
         }
     }

@@ -23,7 +23,7 @@ namespace Uno.Models.Entities.Cards.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name}  changed color to {moveParams.TargetedCardColor} (magneticpolarity).");
+            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} changed color to {moveParams.TargetedCardColor} (magnetic polarity).");
            return new MoveResult(messagesToLog);
         }
     }

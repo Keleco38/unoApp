@@ -7,23 +7,6 @@ import { Subscription } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
-  private _subscription: Subscription;
-  userReconnected: boolean;
-
-  constructor(private _hubService: HubService) {}
-
-  ngOnInit(): void {
-    this._subscription = this._hubService.onReconnect.subscribe(() => {
-      this.userReconnected = true;
-    });
-  }
-
-  remoteAlert() {
-    this.userReconnected=false;
-  }
-
-  ngOnDestroy(): void {
-    this._subscription.unsubscribe();
-  }
+export class AppComponent {
+  constructor() {}
 }

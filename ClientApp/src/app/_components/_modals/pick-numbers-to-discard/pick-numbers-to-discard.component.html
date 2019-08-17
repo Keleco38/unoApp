@@ -24,7 +24,7 @@
     <div class="col-4"><button class="btn-block  btn-lg" [ngClass]="getBtnClass(9)" (click)="selectOrUnselect(9)">9</button></div>
     <div class="col-12">
       <hr />
-      <button class="btn btn-info btn-block btn-lg" *ngIf="numbersToDiscard.length == 3" (click)="confirm()">Confirm</button>
+      <button class="btn btn-info btn-block btn-lg" *ngIf="numbersToDiscard.length == 2" (click)="confirm()">Confirm</button>
     </div>
   </div>
 </div>
