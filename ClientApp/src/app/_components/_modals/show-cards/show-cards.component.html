@@ -8,7 +8,8 @@
         *ngFor="let card of cards;"
         [src]="card.imageUrl"
       />
+      <hr>
+      <button (click)="closeModal()" class="btn btn-primary btn-lg btn-block">Close</button>
     </div>
-    <button (click)="closeModal" class="btn btn-primary btn-block">Close</button>
   </div>
 </div>

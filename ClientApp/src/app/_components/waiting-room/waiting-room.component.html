@@ -52,7 +52,7 @@
                 <button class="btn btn-sm btn-warning" (click)="openBanCardsDialog()">
                   Ban Cards
                 </button>
-                <button [disabled]="activeGame.players.length < 2" class="btn btn-sm btn-success" (click)="startGame()">
+                <button [style.opacity]="activeGame.players.length < 2 ? 0.5 : 1" class="btn btn-sm btn-success" (click)="startGame()">
                   Start Game
                 </button>
               </div>
@@ -64,7 +64,12 @@
         <div class="col-12">
           <div class="btn-group special">
             <button class="btn btn-sm btn-danger" (click)="leaveWaitingRoom()">Leave room</button>
-            <button class="btn btn-sm btn-primary" [disabled]="!userIsSpectator() || activeGame.players.length > 9" (click)="joinGame()">
+            <button
+              class="btn btn-sm btn-primary"
+              [ngStyle]="getStyleJoinGameButton()"
+              [disabled]="!userIsSpectator()"
+              (click)="joinGame()"
+            >
               Join Game
             </button>
           </div>

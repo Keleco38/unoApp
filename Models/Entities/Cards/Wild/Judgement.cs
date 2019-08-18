@@ -47,21 +47,38 @@ namespace Uno.Models.Entities.Cards.Wild
                 }
             }
 
+
             if (moveParams.PlayerTargeted.Cards.Any(x => x.Color == CardColor.Wild))
             {
+                var numberOfCardsToDraw = 3;
+
+                var doubleDrawCard = moveParams.PlayerTargeted.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+                if (doubleDrawCard != null)
+                {
+
+                    game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, moveParams.PlayerTargeted.User.Name, true);
+                    moveParams.PlayerTargeted.Cards.Remove(doubleDrawCard);
+                    game.DiscardedPile.Add(doubleDrawCard);
+
+                    numberOfCardsToDraw = numberOfCardsToDraw * 2;
+
+                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} doubled the draw effect. ";
+                }
+
+
                 var deflectCard = moveParams.PlayerTargeted.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);
                 if (deflectCard == null)
                 {
-                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} drew 3 cards. They had a wild card.";
-                    game.DrawCard(moveParams.PlayerTargeted, 3, false);
+                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} drew {numberOfCardsToDraw} cards. They had a wild card.";
+                    game.DrawCard(moveParams.PlayerTargeted, numberOfCardsToDraw, false);
                 }
                 else
                 {
                     game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, deflectCard.Value, deflectCard.ImageUrl, moveParams.PlayerTargeted.User.Name, true);
                     moveParams.PlayerTargeted.Cards.Remove(deflectCard);
                     game.DiscardedPile.Add(deflectCard);
-                    game.DrawCard(moveParams.PlayerPlayed, 3, false);
-                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} deflected judgement card. {moveParams.PlayerPlayed.User.Name} must draw 3 cards.";
+                    game.DrawCard(moveParams.PlayerPlayed, numberOfCardsToDraw, false);
+                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} deflected judgement card. {moveParams.PlayerPlayed.User.Name} must draw {numberOfCardsToDraw} cards.";
                 }
             }
             else
@@ -69,7 +86,7 @@ namespace Uno.Models.Entities.Cards.Wild
                 messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't draw any cards, They didn't have any wild cards.";
             }
             messagesToLog.Add(messageToLog);
-           return new MoveResult(messagesToLog);
+            return new MoveResult(messagesToLog);
         }
     }
 }

@@ -26,24 +26,25 @@ export class UtilityService {
   }
 
   get sidebarSettings(): SidebarSettings {
-    this._sidebarSettings = JSON.parse(localStorage.getItem('sidebar-settings'));
-    if (this._sidebarSettings == null) {
-      let keepSidebarOpen = true;
-      let sidebarSize = 30;
-      if (window.innerWidth < 768) {
-        keepSidebarOpen = false;
-        sidebarSize = 50;
+    if (this._sidebarSettings === null) {
+      this._sidebarSettings = JSON.parse(localStorage.getItem('sidebar-settings'));
+      if (this._sidebarSettings === null) {
+        let keepSidebarOpen = false;
+        let sidebarSize = 50;
+        this._sidebarSettings = { sidebarSize: sidebarSize, muteServer: false, muteSpectators: false, keepSidebarOpen: keepSidebarOpen };
+        this.saveSidebarSettings();
       }
-      this._sidebarSettings = { sidebarSize: sidebarSize, muteServer: false, muteSpectators: false, keepSidebarOpen: keepSidebarOpen };
     }
-
     return this._sidebarSettings;
   }
 
   get userSettings(): UserSettings {
-    this._userSettings = JSON.parse(localStorage.getItem('user-settings'));
-    if (this._userSettings == null) {
-      this._userSettings = { notifyUserWhenHisTurnToPlay: false, blockedBuzzCommands: [] };
+    if (this._userSettings === null) {
+      this._userSettings = JSON.parse(localStorage.getItem('user-settings'));
+      if (this._userSettings === null) {
+        this._userSettings = { notifyUserWhenHisTurnToPlay: false, blockedBuzzCommands: [] };
+        this.saveUserSettings();
+      }
     }
     return this._userSettings;
   }

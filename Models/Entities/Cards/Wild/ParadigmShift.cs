@@ -36,7 +36,7 @@ namespace Uno.Models.Entities.Cards.Wild
                 game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, keepMyHandCard.Value, keepMyHandCard.ImageUrl, p.User.Name, true);
                 p.Cards.Remove(keepMyHandCard);
                 game.DiscardedPile.Add(keepMyHandCard);
-                messageToLog += $"{p.User.Name} kept his hand safe. ";
+                messageToLog += $"{p.User.Name} kept their hand safe. ";
             });
 
             Player loopingPlayer = null;

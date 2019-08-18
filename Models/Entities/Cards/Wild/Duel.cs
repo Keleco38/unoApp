@@ -49,16 +49,37 @@ namespace Uno.Models.Entities.Cards.Wild
                     break;
                 }
             }
+            var numberOfCardsToDraw = 3;
 
             if (callerWon)
             {
-                game.DrawCard(moveParams.PlayerTargeted, 3, false);
-                messageToLog += $"{moveParams.PlayerPlayed.User.Name} won! {moveParams.PlayerTargeted.User.Name} will draw 3 cards";
+                var doubleDrawCard = moveParams.PlayerTargeted.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+                if (doubleDrawCard != null)
+                {
+                    game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, moveParams.PlayerTargeted.User.Name, true);
+                    moveParams.PlayerTargeted.Cards.Remove(doubleDrawCard);
+                    game.DiscardedPile.Add(doubleDrawCard);
+                    numberOfCardsToDraw = numberOfCardsToDraw * 2;
+                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} doubled the draw effect. ";
+                }
+
+                game.DrawCard(moveParams.PlayerTargeted, numberOfCardsToDraw, false);
+                messageToLog += $"{moveParams.PlayerPlayed.User.Name} won! {moveParams.PlayerTargeted.User.Name} will draw {numberOfCardsToDraw} cards";
             }
             else
             {
-                game.DrawCard(moveParams.PlayerPlayed, 3, false);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} won! {moveParams.PlayerPlayed.User.Name} will draw 3 cards";
+                var doubleDrawCard = moveParams.PlayerPlayed.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+                if (doubleDrawCard != null)
+                {
+                    game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, moveParams.PlayerPlayed.User.Name, true);
+                    moveParams.PlayerPlayed.Cards.Remove(doubleDrawCard);
+                    game.DiscardedPile.Add(doubleDrawCard);
+                    numberOfCardsToDraw = numberOfCardsToDraw * 2;
+                    messageToLog += $"{moveParams.PlayerPlayed.User.Name} doubled the draw effect. ";
+                }
+
+                game.DrawCard(moveParams.PlayerPlayed, numberOfCardsToDraw, false);
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} won! {moveParams.PlayerPlayed.User.Name} will draw {numberOfCardsToDraw} cards";
             }
             messagesToLog.Add(messageToLog);
 

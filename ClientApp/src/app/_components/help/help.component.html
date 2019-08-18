@@ -60,7 +60,7 @@
   <div class="col-12">
     <h2 class="text-primary">Cards</h2>
     <p>
-      Deck is composed of 4 normal UNO decks (numbers + wild cards), 16 instances of "Keep my hand", "Deflect" and "Magnetic polarity", and
+      Deck is composed of 4 normal UNO decks (numbers + wild cards), 16 instances of "Keep my hand" annd "Deflect" cards, and
       8 instance of every other special wild card
     </p>
     <p>There are many new cards added to this game. They mostly fall into 4 groups:</p>
@@ -92,7 +92,7 @@
             <img src="/images/cards/small/5/19.png" class="mr-3" />
             <div class="media-body">
               <h5 class="mt-0 mb-1">Double Edge</h5>
-              Target a person. He/she draws 5 cards while the user draws 2 cards. Can be deflected.
+              Target a person. They draw 5 cards while the user draws 2 cards. Can be deflected.
             </div>
           </li>
           <li class="media my-2">
@@ -194,6 +194,18 @@
               <h5 class="mt-0 mb-1">Magnetic Polarity</h5>
               Player can play this card only if the last card played was a wildcard. If someone activates a wild card that requires another
               player as a target, this card is played automatically and the player will intercept the attack and become the targeted player.
+              This card's effect is activated before deflect card. That means if the player has magnetic polarity and deflect card, they will
+              first intercept the attack, and then deflect it back to the caller.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/40.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Double draw</h5>
+              Player can play this card only if the last card played was a wildcard. If someone targets you with a wild card that has a draw
+              effect, this card is played automatically and the player will double the draw effect. This card's effect is activated after
+              magnetic polarity but before deflect. That means that if the player has magnetic polarity, double draw and deflect, they will
+              first intercept the attack with the magnetic polarity, then double the draw effect, and then deflect it to the caller.
             </div>
           </li>
         </ul>
@@ -271,7 +283,7 @@
             <div class="media-body">
               <h5 class="mt-0 mb-1">Duel</h5>
               Player picks 3 numbers (from 1-6) and picks another player to duel. Dice is rolled afterwards. If the player guessed correctly
-              the number that was rolled, he is a winner and the opponent must draw 3 cards otherwise he lost and he must draw 3 cards.
+              the number that was rolled, they are a winner and the opponent must draw 3 cards otherwise they lost and they must draw 3 cards.
               Cannot be deflected.
             </div>
           </li>
@@ -279,9 +291,9 @@
             <img src="/images/cards/small/5/33.png" class="mr-3" />
             <div class="media-body">
               <h5 class="mt-0 mb-1">Blackjack</h5>
-              Player can hit the hitme button to get a random number from 1 to 10. If the player goes over 21, he draws 6 cards. If the
-              player hits 21, he will discard 4 cards. If the player hits number bigger than 17 but less than 21 he will discard 2 cards. If
-              the player hits the number lower than 17, he will draw the difference between 17 and the number he hit.
+              Player can hit the hitme button to get a random number from 1 to 10. If the player goes over 21, they draw 6 cards. If the
+              player hits 21, they will discard 4 cards. If the player hits number bigger than 17 but less than 21 they will discard 2 cards. If
+              the player hits the number lower than 17, they will draw the difference between 17 and the number they hit.
             </div>
           </li>
           <li class="media my-2">

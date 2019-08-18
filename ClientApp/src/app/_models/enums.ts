@@ -52,7 +52,8 @@ export enum CardValue {
   discardNumber = 36,
   theLastStand = 37,
   magneticPolarity = 38,
-  fortuneTeller=39
+  fortuneTeller=39,
+  doubleDraw=40
 }
 
 export enum Direction {

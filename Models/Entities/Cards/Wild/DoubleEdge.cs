@@ -47,22 +47,35 @@ namespace Uno.Models.Entities.Cards.Wild
                 }
             }
 
+            var numberOfCardsToDrawTarget = 5;
+            var numberOfCardsToDrawCaller = 2;
+            var doubleDrawCard = moveParams.PlayerTargeted.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+            if (doubleDrawCard != null)
+            {
+                game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, moveParams.PlayerTargeted.User.Name, true);
+                moveParams.PlayerTargeted.Cards.Remove(doubleDrawCard);
+                game.DiscardedPile.Add(doubleDrawCard);
+                numberOfCardsToDrawTarget = numberOfCardsToDrawTarget * 2;
+                numberOfCardsToDrawCaller = numberOfCardsToDrawCaller * 2;
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} doubled the draw effect. ";
+            }
+
             var deflectCard = moveParams.PlayerTargeted.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);
             if (deflectCard == null)
             {
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} drew 5 cards. ";
-                messageToLog += $"{moveParams.PlayerPlayed.User.Name}  drew 2 cards. ";
-                game.DrawCard(moveParams.PlayerTargeted, 5, false);
-                game.DrawCard(moveParams.PlayerPlayed, 2, false);
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} drew {numberOfCardsToDrawTarget} cards. ";
+                messageToLog += $"{moveParams.PlayerPlayed.User.Name}  drew {numberOfCardsToDrawCaller} cards. ";
+                game.DrawCard(moveParams.PlayerTargeted, numberOfCardsToDrawTarget, false);
+                game.DrawCard(moveParams.PlayerPlayed, numberOfCardsToDrawCaller, false);
             }
             else
             {
                 game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, deflectCard.Value, deflectCard.ImageUrl, moveParams.PlayerPlayed.User.Name, true);
                 moveParams.PlayerTargeted.Cards.Remove(deflectCard);
                 game.DiscardedPile.Add(deflectCard);
-                game.DrawCard(moveParams.PlayerPlayed, 5, false);
-                game.DrawCard(moveParams.PlayerTargeted, 2, false);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} deflected double edge card. They will draw 2 cards and {moveParams.PlayerPlayed.User.Name}  must draw 5 cards.";
+                game.DrawCard(moveParams.PlayerPlayed, numberOfCardsToDrawTarget, false);
+                game.DrawCard(moveParams.PlayerTargeted, numberOfCardsToDrawCaller, false);
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} deflected double edge card. They will draw {numberOfCardsToDrawCaller} cards and {moveParams.PlayerPlayed.User.Name}  must draw {numberOfCardsToDrawTarget} cards.";
             }
             messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);

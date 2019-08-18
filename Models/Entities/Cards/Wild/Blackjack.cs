@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Uno.Enums;
 using Uno.Models.Entities.Cards.Abstraction;
 using Uno.Models.Helpers;
@@ -26,8 +27,19 @@ namespace Uno.Models.Entities.Cards.Wild
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played blackjack. They hit {moveParams.BlackjackNumber}. ";
             if (moveParams.BlackjackNumber > 21)
             {
-                game.DrawCard(moveParams.PlayerPlayed, 6, false);
-                messageToLog += $"They went over 21. They will draw 6 cards.";
+                var numberOfCardsToDraw = 6;
+                var doubleDrawCard = moveParams.PlayerPlayed.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+                if (doubleDrawCard != null)
+                {
+                    game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, moveParams.PlayerPlayed.User.Name, true);
+                    moveParams.PlayerPlayed.Cards.Remove(doubleDrawCard);
+                    game.DiscardedPile.Add(doubleDrawCard);
+                    numberOfCardsToDraw = numberOfCardsToDraw * 2;
+                    messageToLog += $"{moveParams.PlayerPlayed.User.Name} doubled the draw effect. ";
+                }
+
+                game.DrawCard(moveParams.PlayerPlayed, numberOfCardsToDraw, false);
+                messageToLog += $"They went over 21. They will draw {numberOfCardsToDraw} cards.";
             }
             else if (moveParams.BlackjackNumber == 21)
             {
@@ -49,12 +61,22 @@ namespace Uno.Models.Entities.Cards.Wild
             }
             else
             {
-                var difference = 17 - moveParams.BlackjackNumber;
-                game.DrawCard(moveParams.PlayerPlayed, difference, false);
-                messageToLog += $"They pulled out. They will draw {difference} cards.";
+                var numberOfCardsToDraw = 17 - moveParams.BlackjackNumber;
+                var doubleDrawCard = moveParams.PlayerPlayed.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+                if (doubleDrawCard != null)
+                {
+                    game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, moveParams.PlayerPlayed.User.Name, true);
+                    moveParams.PlayerPlayed.Cards.Remove(doubleDrawCard);
+                    game.DiscardedPile.Add(doubleDrawCard);
+                    numberOfCardsToDraw = numberOfCardsToDraw * 2;
+                    messageToLog += $"{moveParams.PlayerPlayed.User.Name} doubled the draw effect. ";
+                }
+
+                game.DrawCard(moveParams.PlayerPlayed, numberOfCardsToDraw, false);
+                messageToLog += $"They pulled out. They will draw {numberOfCardsToDraw} cards.";
             }
             messagesToLog.Add(messageToLog);
-           return new MoveResult(messagesToLog);
+            return new MoveResult(messagesToLog);
         }
     }
 }

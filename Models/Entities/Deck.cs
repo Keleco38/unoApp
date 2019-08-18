@@ -89,10 +89,10 @@ namespace Uno.Models.Entities
                 Cards.Add(new TricksOfTheTrade());
                 Cards.Add(new Blackjack());
                 Cards.Add(new DiscardNumber());
+                Cards.Add(new MagneticPolarity());
                 Cards.Add(new FortuneTeller());
+                Cards.Add(new DoubleDraw());
                 //cads added 2 times
-                Cards.Add(new MagneticPolarity());
-                Cards.Add(new MagneticPolarity());
                 Cards.Add(new KeepMyHand());
                 Cards.Add(new KeepMyHand());
                 Cards.Add(new Deflect());

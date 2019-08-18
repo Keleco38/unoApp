@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Uno.Enums;
 using Uno.Models.Entities.Cards.Abstraction;
 using Uno.Models.Helpers;
@@ -35,24 +36,38 @@ namespace Uno.Models.Entities.Cards.Wild
                 var numberOfCardsToDiscard = random.Next(0, maxNumberToDiscard);
                 if (numberOfCardsToDiscard == 0)
                 {
-                    messageToLog += $"{playerAffected.User.Name} was selected, but They won't discard nor draw any cards.";
+                    messageToLog += $"{playerAffected.User.Name} was selected, but They won't discard nor draw any cards. ";
                 }
                 else
                 {
                     playerAffected.Cards.RemoveRange(0, numberOfCardsToDiscard);
-                    messageToLog += $"{playerAffected.User.Name} is a lucky winner! They will discard {numberOfCardsToDiscard} cards.";
+                    messageToLog += $"{playerAffected.User.Name} is a lucky winner! They will discard {numberOfCardsToDiscard} cards. ";
                 }
             }
             else
             {
                 //draw
                 var numberOfCardsToDraw = random.Next(1, 5);
-                messageToLog += $"{playerAffected.User.Name} didn't have any luck! They will draw {numberOfCardsToDraw} cards.";
-                game.DrawCard(playerAffected, numberOfCardsToDraw, false);
+
+                var doubleDrawCard = playerAffected.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+                if (doubleDrawCard != null)
+                {
+                    game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, playerAffected.User.Name, true);
+                    playerAffected.Cards.Remove(doubleDrawCard);
+                    game.DiscardedPile.Add(doubleDrawCard);
+                    numberOfCardsToDraw = numberOfCardsToDraw * 2;
+                    messageToLog += $"{playerAffected.User.Name} didn't have any luck! They had double draw. They will draw {numberOfCardsToDraw} cards. ";
+                }
+                else
+                {
+                    messageToLog += $"{playerAffected.User.Name} didn't have any luck! They will draw {numberOfCardsToDraw} cards. ";
+                    game.DrawCard(playerAffected, numberOfCardsToDraw, false);
+                }
+
             }
 
             messagesToLog.Add(messageToLog);
-           return new MoveResult(messagesToLog);
+            return new MoveResult(messagesToLog);
         }
     }
 }

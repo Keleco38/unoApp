@@ -110,7 +110,10 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this._mustCallUno) {
       return;
     }
-    if (card.value === CardValue.stealTurn && card.color == this.game.lastCardPlayed.color) {
+    if (
+      card.value === CardValue.stealTurn &&
+      (card.color == this.game.lastCardPlayed.color || this.game.lastCardPlayed.value == card.value)
+    ) {
       this._hubService.playCard(card.id, card.color);
       return;
     }
@@ -118,8 +121,11 @@ export class GameComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (card.value === CardValue.magneticPolarity && this.game.lastCardPlayed.wasWildCard === false) {
-      this._toastrService.info('Magnetic polarity can be played only if last card played was a wildcard.', '', { timeOut: 3000 });
+    if (
+      (card.value === CardValue.magneticPolarity || card.value === CardValue.doubleDraw) &&
+      this.game.lastCardPlayed.wasWildCard === false
+    ) {
+      this._toastrService.info('This card only can be played if last card played is a wildcard.', '', { timeOut: 3000 });
       return;
     }
 

@@ -50,7 +50,8 @@ namespace Uno.Enums
         DiscardNumber=36,
         TheLastStand=37,
         MagneticPolarity=38,
-        FortuneTeller=39
+        FortuneTeller=39,
+        DoubleDraw=40
 
     }
 

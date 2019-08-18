@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
     var isFirstTimeLunched = this._utilityService.isFirstTimeLunched;
     if (isFirstTimeLunched === true) {
       var navigateToHelpPage = confirm(
-        "This is the first time you have lunched this game. We suggest that you first read 'Help' page. Do you want us to take you there?"
+        "This is the first time you have launched this game. We suggest that you first read 'Help' page. Do you want us to take you there?"
       );
       if (navigateToHelpPage === true) {
         this._router.navigateByUrl('/help');

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Uno.Enums;
 using Uno.Models.Entities.Cards.Abstraction;
 using Uno.Models.Helpers;
@@ -23,8 +24,27 @@ namespace Uno.Models.Entities.Cards.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            game.Players.ForEach(x => game.DrawCard(x, 2, false));
-            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name}  played united we fall. Every player drew 2 cards.");
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name}  played united we fall. Every player drew 2 cards. ";
+
+            game.Players.ForEach(x =>
+            {
+                var doubleDrawCard = x.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+                if (doubleDrawCard != null)
+                {
+                    game.DrawCard(x, 4, false);
+
+                    game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, x.User.Name, true);
+                    x.Cards.Remove(doubleDrawCard);
+                    game.DiscardedPile.Add(doubleDrawCard);
+
+                    messageToLog += $"{x.User.Name}  drew double.";
+                }
+                else
+                {
+                    game.DrawCard(x, 2, false);
+                }
+            });
+            messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);
         }
     }

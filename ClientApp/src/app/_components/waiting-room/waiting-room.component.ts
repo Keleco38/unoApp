@@ -10,6 +10,7 @@ import { Player } from 'src/app/_models/player';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { KeyValue } from '@angular/common';
 import { takeWhile } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-waiting-room',
@@ -25,7 +26,12 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   password: string;
   currentUser: User;
 
-  constructor(private _hubService: HubService, private _modalService: NgbModal, private _utilityService: UtilityService) {}
+  constructor(
+    private _hubService: HubService,
+    private _modalService: NgbModal,
+    private _utilityService: UtilityService,
+    private _toastrService: ToastrService
+  ) {}
 
   ngOnInit() {
     this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
@@ -45,6 +51,10 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   joinGame() {
+    if (this.activeGame.players.length > 9) {
+      this._toastrService.info('Maximum number of players reached (10).');
+      return;
+    }
     this._hubService.joinGame(this.activeGame.id, '');
   }
 
@@ -53,6 +63,19 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
       return spectator.user.name === this.currentUser.name;
     });
     return exists != null;
+  }
+
+  getStyleJoinGameButton() {
+    var obj: any = {};
+    if (this.activeGame.players.length > 9) {
+      obj.opacity = '0.5';
+    } else {
+      obj.opacity = '1';
+    }
+    if (!this.userIsSpectator()) {
+      obj.opacity = '0.5';
+    }
+    return obj;
   }
 
   openBanCardsDialog() {
@@ -65,6 +88,10 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   startGame() {
+    if (this.activeGame.players.length < 2 || this.activeGame.players.length > 9) {
+      this._toastrService.info('Minimum 2 players to start the game.');
+      return;
+    }
     this._hubService.startGame();
   }
 
