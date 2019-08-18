@@ -8,7 +8,6 @@ import { SidebarSettings } from 'src/app/_models/sidebarSettings';
   styleUrls: ['./sidebar-settings.component.css']
 })
 export class SidebarSettingsComponent implements OnInit {
-
   sidebarSettings: SidebarSettings;
 
   constructor(private _utilityService: UtilityService) {}
@@ -17,4 +16,7 @@ export class SidebarSettingsComponent implements OnInit {
     this.sidebarSettings = this._utilityService.sidebarSettings;
   }
 
+  saveSidebarSettings() {
+    this._utilityService.saveSidebarSettings();
+  }
 }

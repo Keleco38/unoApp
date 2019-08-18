@@ -53,7 +53,7 @@ namespace Uno.Models.Entities.Cards.Wild
                 game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, keepMyHandCard.Value, keepMyHandCard.ImageUrl, moveParams.PlayerTargeted.User.Name, true);
                 moveParams.PlayerTargeted.Cards.Remove(keepMyHandCard);
                 game.DiscardedPile.Add(keepMyHandCard);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} kept his hand safe. ";
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} kept their hand safe. ";
             }
             else
             {

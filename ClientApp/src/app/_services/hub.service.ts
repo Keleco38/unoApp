@@ -1,3 +1,4 @@
+import { UtilityService } from './utility.service';
 import { DigCardComponent } from './../_components/_modals/dig-card/dig-card.component';
 import { ShowCardsComponent } from './../_components/_modals/show-cards/show-cards.component';
 import { CardColor, CardValue } from './../_models/enums';
@@ -35,23 +36,27 @@ export class HubService {
   private _mustCallUnoObservable = new Subject();
   private _reconnectObservable = new Subject();
 
-  private async startConnection(isReconnect:Boolean) {
+  private async startConnection(isReconnect: Boolean) {
     try {
       await this._hubConnection.start().then(() => {
         this.addOrRenameUser(false);
-        if(isReconnect){
+        if (isReconnect) {
           this._router.navigateByUrl('/');
           this._activeGameObservable.next(null);
           this._reconnectObservable.next();
         }
-
       });
     } catch (err) {
       setTimeout(() => this.startConnection(true), 5000);
     }
   }
 
-  constructor(private _router: Router, private _toastrService: ToastrService, private _modalService: NgbModal) {
+  constructor(
+    private _router: Router,
+    private _toastrService: ToastrService,
+    private _modalService: NgbModal,
+    private _utilityService: UtilityService
+  ) {
     this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
     this.startConnection(false);
 
@@ -104,9 +109,7 @@ export class HubService {
     });
 
     this._hubConnection.on('BuzzPlayer', (buzzType: string) => {
-      const alert = new Audio(`/sounds/${buzzType}.mp3`);
-      alert.load();
-      alert.play();
+      this.buzzPlayer(buzzType, false);
     });
 
     this._hubConnection.on('KickPlayerFromGame', () => {
@@ -124,7 +127,7 @@ export class HubService {
 
     this._hubConnection.on('ShowCards', (cards: Card[]) => {
       setTimeout(() => {
-        const modalRef = this._modalService.open(ShowCardsComponent);
+        const modalRef = this._modalService.open(ShowCardsComponent, { backdrop: 'static' });
         modalRef.componentInstance.cards = cards;
       }, 2000);
     });
@@ -138,6 +141,12 @@ export class HubService {
       } else {
         if (this._router.url !== '/waitingRoom') {
           this._router.navigateByUrl('/waitingRoom');
+        }
+      }
+
+      if (this._utilityService.userSettings.notifyUserWhenHisTurnToPlay) {
+        if (game.playerToPlay.user.name == this._currentUserObservable.getValue().name) {
+          this.buzzPlayer('ding', true);
         }
       }
     });
@@ -163,9 +172,9 @@ export class HubService {
     if (environment.production) {
       do {
         if (forceRename) {
-          name = prompt('Input your name');
+          name = prompt("Your name is already taken or it's empty. Please input new name:");
         } else {
-          name = localStorage.getItem('name') || prompt('Input your name');
+          name = localStorage.getItem('name') || prompt("Your name is already taken or it's empty. Please input new name:");
         }
       } while (!name);
     } else {
@@ -242,6 +251,18 @@ export class HubService {
 
   setGamePassword(id: string, roomPassword: string): any {
     this._hubConnection.invoke('SetGamePassword', id, roomPassword);
+  }
+
+  buzzPlayer(buzzType: string, forceBuzz: boolean) {
+    var index = this._utilityService.userSettings.blockedBuzzCommands.indexOf(buzzType);
+    if (forceBuzz) {
+      index = -1;
+    }
+    if (index == -1) {
+      const alert = new Audio(`/sounds/${buzzType}.mp3`);
+      alert.load();
+      alert.play();
+    }
   }
 
   get onlineUsers() {

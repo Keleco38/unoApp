@@ -22,10 +22,6 @@ export class HomeComponent implements OnInit {
   removeAlert() {
     this.userReconnected=false;
   }
-  
-  rename() {
-    this._hubService.addOrRenameUser(true);
-  }
 
   createGame() {
     this._hubService.createGame();

@@ -38,6 +38,8 @@ import { DigCardComponent } from './_components/_modals/dig-card/dig-card.compon
 import { BlackjackComponent } from './_components/_modals/blackjack/blackjack.component';
 import { DividePerCapitalPipe } from './_pipes/divide-per-capital.pipe';
 import { ShowCardsComponent } from './_components/_modals/show-cards/show-cards.component';
+import { NavbarComponent } from './_components/navbar/navbar.component';
+import { UserSettingsComponent } from './_components/_modals/user-settings/user-settings.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +66,8 @@ import { ShowCardsComponent } from './_components/_modals/show-cards/show-cards.
     PickBannedCardsComponent,
     PickDuelNumbersComponent,
     SidebarSettingsComponent,
+    NavbarComponent,
+    UserSettingsComponent,
     DividePerCapitalPipe
   ],
   imports: [
@@ -100,7 +104,8 @@ import { ShowCardsComponent } from './_components/_modals/show-cards/show-cards.
     PickDuelNumbersComponent,
     PickNumbersToDiscardComponent,
     PickCharityCardsComponent,
-    BlackjackComponent
+    BlackjackComponent,
+    UserSettingsComponent
   ]
 })
 export class AppModule {}

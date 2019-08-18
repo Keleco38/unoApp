@@ -35,7 +35,7 @@ namespace Uno.Models.Entities.Cards.Wild
                 var numberOfCardsToDiscard = random.Next(0, maxNumberToDiscard);
                 if (numberOfCardsToDiscard == 0)
                 {
-                    messageToLog += $"{playerAffected.User.Name} was selected, but They won't discard not draw any cards.";
+                    messageToLog += $"{playerAffected.User.Name} was selected, but They won't discard nor draw any cards.";
                 }
                 else
                 {

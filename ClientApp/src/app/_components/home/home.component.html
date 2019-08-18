@@ -1,15 +1,20 @@
-<div *ngIf="userReconnected" (click)="removeAlert()" class="alert alert-danger p-4 cursor-pointer"><h1>You have been automatically reconnected. Click here to remove this notification.</h1></div>
+<div *ngIf="userReconnected" (click)="removeAlert()" class="alert alert-danger p-4 cursor-pointer">
+  <h1>You have been automatically reconnected. Click here to remove this notification.</h1>
+</div>
+<app-navbar></app-navbar>
 <div class="row">
   <div class="col-sm-8 col-6  fill-viewport-max-100 scrollable-div-y">
-    <h3 class="text-center text-primary">Uno - Card Game</h3>
-    <div class="text-center">
-      <button class="btn btn-primary my-3" (click)="createGame()">New Game</button>
+    <div class="row my-3">
+      <div class="col-12">
+        <div class="text-center">
+          <h4 class="text-primary d-none d-sm-block">Uno - Card Game</h4>
+          <button class="btn btn-primary" id="new-game" (click)="createGame()">New Game</button>
+        </div>
+      </div>
     </div>
     <app-all-chat></app-all-chat>
   </div>
-  <div class="col-sm-4 col-6 fill-viewport-max-100 scrollable-div-y">
-    <button class="btn btn-outline-info btn-sm btn-block my-2" [routerLink]="['/help']">Help</button>
-    <button class="btn btn-outline-dark btn-sm btn-block my-2" (click)="rename()">Rename</button>
+  <div class="col-sm-4 col-6 my-3 my-sm-0 fill-viewport-max-100 scrollable-div-y">
     <app-online-players></app-online-players>
     <app-available-games></app-available-games>
   </div>

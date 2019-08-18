@@ -1,0 +1,159 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">User Settings</h4>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group row">
+        <label for="name" class="col-4">Name:</label>
+        <div class="col-4 ">
+          <p>
+            <b>{{ currentUser.name }}</b>
+          </p>
+        </div>
+        <div class="col-4 ">
+          <button (click)="rename()" class="btn btn-sm btn-outline-primary">Rename</button>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="inputPassword" class="col-4 col-form-label">Block Buzz Commands:</label>
+        <div class="col-8">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="shouldBeCheckedBuzzComand('alert')"
+              (change)="updateBlockedBuzzComands($event, 'alert')"
+              id="Alert"
+            />
+            <label class="form-check-label" for="Alert">
+              Alert
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="shouldBeCheckedBuzzComand('ding')"
+              (change)="updateBlockedBuzzComands($event, 'ding')"
+              id="Ding"
+            />
+            <label class="form-check-label" for="Ding">
+              Ding
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="shouldBeCheckedBuzzComand('lick')"
+              (change)="updateBlockedBuzzComands($event, 'lick')"
+              id="Lick"
+            />
+            <label class="form-check-label" for="Lick">
+              Lick
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="shouldBeCheckedBuzzComand('poke')"
+              (change)="updateBlockedBuzzComands($event, 'poke')"
+              id="Poke"
+            />
+            <label class="form-check-label" for="Poke">
+              Poke
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="shouldBeCheckedBuzzComand('punch')"
+              (change)="updateBlockedBuzzComands($event, 'punch')"
+              id="Punch"
+            />
+            <label class="form-check-label" for="Punch">
+              Punch
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="shouldBeCheckedBuzzComand('slap')"
+              (change)="updateBlockedBuzzComands($event, 'slap')"
+              id="Slap"
+            />
+            <label class="form-check-label" for="Slap">
+              Slap
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="shouldBeCheckedBuzzComand('shoot')"
+              (change)="updateBlockedBuzzComands($event, 'shoot')"
+              id="Shoot"
+            />
+            <label class="form-check-label" for="Shoot">
+              Shoot
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="shouldBeCheckedBuzzComand('laugh')"
+              (change)="updateBlockedBuzzComands($event, 'laugh')"
+              id="Laugh"
+            />
+            <label class="form-check-label" for="Laugh">
+              Laugh
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="shouldBeCheckedBuzzComand('scream')"
+              (change)="updateBlockedBuzzComands($event, 'scream')"
+              id="Scream"
+            />
+            <label class="form-check-label" for="Scream">
+              Scream
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="shouldBeCheckedBuzzComand('kiss')"
+              (change)="updateBlockedBuzzComands($event, 'kiss')"
+              id="Kiss"
+            />
+            <label class="form-check-label" for="Kiss">
+              Kiss
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="name" class="col-8">Notify me when it's my turn to play:</label>
+        <div class="col-4 ">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            [checked]="shouldBeCheckedNotifyWhenTurnToPlay()"
+            (change)="updateNotifyWhenTurnToPlay($event)"
+            id="Kiss"
+          />
+        </div>
+      </div>
+      <hr />
+      <button class="btn btn-info btn-block btn-lg" (click)="closeModal()">Close</button>
+    </div>
+  </div>
+</div>

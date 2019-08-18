@@ -387,6 +387,7 @@ namespace Uno.Hubs
             var chatMessageIntentionResult = GetChatMessageIntention(message);
             ChatMessageDto msgDto;
             var allUsersInGame = new List<string>();
+            bool buzzFailed = false;
             if (!string.IsNullOrWhiteSpace(gameId))
             {
                 var game = _games.Find(x => x.Id == gameId);
@@ -408,14 +409,26 @@ namespace Uno.Hubs
                     else
                     {
                         msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {chatMessageIntentionResult.TargetedUsername} was not {chatMessageIntentionResult.BuzzTypeStringForChat}! Wait {Constants.MINIMUM_TIME_SECONDS_BETWEEN_BUZZ} seconds.", TypeOfMessage.Server));
+                        buzzFailed = true;
                     }
                 }
                 else
                 {
                     msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"User {chatMessageIntentionResult.TargetedUsername} not found", TypeOfMessage.Server));
+                    buzzFailed = true;
                 }
-                await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
-                await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
+
+                if (buzzFailed)
+                {
+                    await Clients.Caller.SendAsync("PostNewMessageInGameChat", msgDto);
+                    await Clients.Caller.SendAsync("PostNewMessageInAllChat", msgDto);
+                }
+                else
+                {
+                    await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
+                    await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
+                }
+
             }
             else if (chatMessageIntentionResult.ChatMessageIntention == ChatMessageIntention.Normal)
             {
