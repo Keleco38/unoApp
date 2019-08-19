@@ -19,6 +19,7 @@ import { PickNumbersToDiscardComponent } from '../_modals/pick-numbers-to-discar
 import { ToastrService } from 'ngx-toastr';
 import { SidebarSettings } from 'src/app/_models/sidebarSettings';
 import { takeWhile } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -43,7 +44,8 @@ export class GameComponent implements OnInit, OnDestroy {
     private _hubService: HubService,
     private _modalService: NgbModal,
     private _toastrService: ToastrService,
-    private _utilityService: UtilityService
+    private _utilityService: UtilityService,
+    private _router:Router
   ) {}
 
   ngOnInit() {
@@ -98,7 +100,9 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   callUno(playerCalled: boolean) {
-    if (!this._mustCallUno) return;
+    if (!this._mustCallUno){
+      return;
+    }
     this._mustCallUno = false;
     window.clearTimeout(this._timer);
     if (playerCalled) {
@@ -192,6 +196,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
   exitGame() {
     this._hubService.exitGame();
+    this._router.navigateByUrl('/');
+
   }
 
   getSidebarClass() {

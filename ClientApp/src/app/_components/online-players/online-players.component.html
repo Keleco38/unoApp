@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-12">
     <div class="alert alert-primary">
-      <span>Online players ({{ onlineUsers.length }})</span>
+      <span>Online players ({{ onlineUsers.length }}):</span>
     </div>
     <div *ngFor="let user of onlineUsers" container="body" ngbDropdown>
       <p>{{ user.name }} <span ngbDropdownToggle class="cursor-pointer">&#x260A;</span></p>

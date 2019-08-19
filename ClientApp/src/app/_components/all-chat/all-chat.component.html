@@ -6,21 +6,13 @@
           Hello, <strong>{{ currentUser.name }}</strong>
         </h5>
         <form novalidate name="newMessageForm" (ngSubmit)="sendMessageAllChat()">
-          <input
-            type="text"
-            name="newMessage"
-            autofocus
-            autocomplete="off"
-            class="form-control"
-            placeholder="New Message"
-            [(ngModel)]="newMessage"
-          />
+          <input type="text" name="newMessage" autocomplete="off" class="form-control" placeholder="New Message" [(ngModel)]="newMessage" />
         </form>
       </h5>
       <div class="card-body">
         <p class="card-text" [hidden]="messages.length > 0">No messages</p>
         <p class="card-text" [ngClass]="getChatMessageClass(message)" *ngFor="let message of messages">
-          <strong> [{{ message.createdUtc | date: 'shortTime' }} | {{ message.username }}]: </strong> {{ message.text }}
+          <strong>[{{ message.createdUtc | date: 'shortTime' }} | {{ message.username }}]:</strong> {{ message.text }}
         </p>
       </div>
     </div>

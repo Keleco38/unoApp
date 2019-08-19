@@ -37,19 +37,14 @@ namespace Uno.Models.Entities
             AddNormalGameNormalCards();
             AddNormalGameNormalCards();
             AddNormalGameNormalCards();
-            AddNormalGameNormalCards();
 
             AddNormalGameWildCards();
             AddNormalGameWildCards();
             AddNormalGameWildCards();
-            AddNormalGameWildCards();
 
-
-            AddSpecialWildCards();
             AddSpecialWildCards();
 
             FilterBannedCards(bannedCards);
-
         }
 
         private void FilterBannedCards(List<CardValue> bannedCards)

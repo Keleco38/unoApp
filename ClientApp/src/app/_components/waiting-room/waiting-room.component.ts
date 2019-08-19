@@ -1,3 +1,4 @@
+import { SidebarSettings } from 'src/app/_models/sidebarSettings';
 import { UtilityService } from './../../_services/utility.service';
 import { CardValue } from './../../_models/enums';
 import { PickBannedCardsComponent } from './../_modals/pick-banned-cards/pick-banned-cards.component';
@@ -18,6 +19,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./waiting-room.component.css']
 })
 export class WaitingRoomComponent implements OnInit, OnDestroy {
+  sidebarSettings:SidebarSettings;
   ngOnDestroy(): void {
     this._isAlive = false;
   }
@@ -30,10 +32,12 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     private _hubService: HubService,
     private _modalService: NgbModal,
     private _utilityService: UtilityService,
-    private _toastrService: ToastrService
+    private _toastrService: ToastrService,
+    private _router :Router
   ) {}
 
   ngOnInit() {
+    this.sidebarSettings=this._utilityService.sidebarSettings;
     this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.activeGame = game;
     });
@@ -48,6 +52,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
   leaveWaitingRoom() {
     this._hubService.exitGame();
+    this._router.navigateByUrl('/');
   }
 
   joinGame() {
@@ -97,6 +102,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
   setRoomPassword() {
     this._hubService.setGamePassword(this.activeGame.id, this.password);
+    this._toastrService.info("Password changed");
     this.password = '';
   }
 

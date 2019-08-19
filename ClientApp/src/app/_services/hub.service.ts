@@ -69,7 +69,6 @@ export class HubService {
       this._gameLog = [];
       this._gameLogObservable.next(this._gameLog);
       this._gameChatMessagesObservable.next(this._gameChatMessages);
-      this._router.navigateByUrl('/');
       this._activeGameObservable.next(null);
     });
     this._hubConnection.on('RefreshOnlineUsersList', (onlineUsers: User[]) => {
@@ -115,6 +114,7 @@ export class HubService {
     this._hubConnection.on('KickPlayerFromGame', () => {
       this._toastrService.info('You have been kicked from the game');
       this.exitGame();
+      this._router.navigateByUrl('/');
     });
 
     this._hubConnection.on('DisplayToastMessage', (message: string) => {
@@ -172,9 +172,9 @@ export class HubService {
     if (environment.production) {
       do {
         if (forceRename) {
-          name = prompt("Your name is already taken or it's empty. Please input new name:");
+          name = prompt("Your name is already taken or it's not set. Please input a new name (only letters and numbers allowed):");
         } else {
-          name = localStorage.getItem('name') || prompt("Your name is already taken or it's empty. Please input new name:");
+          name = localStorage.getItem('name') || prompt("Your name is already taken or it's not set. Please input a new name (only letters and numbers allowed):");
         }
       } while (!name);
     } else {

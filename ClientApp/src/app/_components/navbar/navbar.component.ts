@@ -37,12 +37,12 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {}
 
   toggleNavbar() {
-    this.navbarOpen = !this.navbarOpen;
+    if (window.innerWidth < 992) {
+      this.navbarOpen = !this.navbarOpen;
+    }
   }
 
   openSettings() {
     this._modalService.open(UserSettingsComponent);
   }
-
- 
 }

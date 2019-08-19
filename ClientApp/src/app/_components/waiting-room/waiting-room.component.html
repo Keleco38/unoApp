@@ -1,3 +1,4 @@
+<app-navbar *ngIf="sidebarSettings.showNavbar"></app-navbar>
 <div class="row mb-3">
   <div class="col-12">
     <div class="alert alert-primary">
@@ -26,9 +27,10 @@
               <label for="password" class="col-4 col-form-label">Password</label>
               <div class="col-5">
                 <input
-                  type="password"
+                  type="text"
                   [(ngModel)]="password"
                   class="form-control"
+                  autocomplete="off"
                   name="password"
                   id="password"
                   placeholder="{{ getPasswordPlaceholder() }}"
@@ -82,11 +84,12 @@
   <div class="col-6">
     <h5 class="text-success">Players joined</h5>
     <ul>
-      <li *ngFor="let player of activeGame.players">
+      <li *ngFor="let player of activeGame.players; let first = first">
+        <span *ngIf="first">&#9734;</span>
         {{ player.user.name }}
         <strong
           *ngIf="
-            currentUser.connectionId == activeGame.players[0].user.connectionId && currentUser.connectionId != player.user.connectionId
+            currentUser.connectionId == activeGame.players[0].user.connectionId && !first
           "
           class="ml-2 text-danger cursor-pointer"
           (click)="kickPlayerFromGame(player)"

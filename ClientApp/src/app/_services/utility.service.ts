@@ -29,9 +29,7 @@ export class UtilityService {
     if (this._sidebarSettings === null) {
       this._sidebarSettings = JSON.parse(localStorage.getItem('sidebar-settings'));
       if (this._sidebarSettings === null) {
-        let keepSidebarOpen = false;
-        let sidebarSize = 50;
-        this._sidebarSettings = { sidebarSize: sidebarSize, muteServer: false, muteSpectators: false, keepSidebarOpen: keepSidebarOpen };
+        this._sidebarSettings = { sidebarSize: 50, muteServer: false, muteSpectators: false, keepSidebarOpen: false, showNavbar: false };
         this.saveSidebarSettings();
       }
     }

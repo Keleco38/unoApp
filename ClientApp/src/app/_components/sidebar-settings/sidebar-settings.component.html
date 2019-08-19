@@ -14,13 +14,13 @@
       <div class="form-check">
         <input type="checkbox" [(ngModel)]="sidebarSettings.keepSidebarOpen" (change)="saveSidebarSettings()" class="form-check-input" id="sidebarOpenCheckbox" />
         <label class="form-check-label" for="sidebarOpenCheckbox">
-          Keep sidebar open
+          Keep chat sidebar open
         </label>
       </div>
       <div class="form-check">
         <input type="checkbox" [(ngModel)]="sidebarSettings.muteSpectators" (change)="saveSidebarSettings()" class="form-check-input" id="hideSpectatorChatCheckbox" />
         <label class="form-check-label" for="hideSpectatorChatCheckbox">
-          Mute specs
+          Mute spectators
         </label>
       </div>
       <div class="form-check">
@@ -29,5 +29,11 @@
           Mute server
         </label>
       </div>
+      <div class="form-check">
+          <input type="checkbox" [(ngModel)]="sidebarSettings.showNavbar" (change)="saveSidebarSettings()" class="form-check-input" id="showNavbarCheckbox" />
+          <label class="form-check-label" for="showNavbarCheckbox">
+            Show navigation bar on top
+          </label>
+        </div>
   </div>
 </div>

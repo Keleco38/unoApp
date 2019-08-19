@@ -1,14 +1,20 @@
 <app-navbar></app-navbar>
 <div class="row">
   <div class="col-12">
-    <h2 class="text-primary">Rules</h2>
+    <hr />
+    This help page consists of three sections:
+    <a class="mr-1" [routerLink]="['/help']" fragment="rules">Rules</a>
+    <a class="mr-1" [routerLink]="['/help']" fragment="features">Features</a>
+    <a class="mr-1" [routerLink]="['/help']" fragment="cards">Cards</a>
+    <hr />
+    <h2 class="text-primary" id="rules">Rules</h2>
     There is some difference between this version of the game and the original. Here are the basics.
     <ul>
       <li>
         The first player that runs out of card is a round winner. Host can change the nuber of rounds required to win the game.
       </li>
       <li>
-        Player can only play a card if it's his turn to play (excluding steal turn card).
+        Player can only play a card if it's their turn to play (excluding steal turn card).
       </li>
       <li>
         Player can play colored card only if the color or the value on the card corresponds to the color or the value of the previously
@@ -32,10 +38,10 @@
 </div>
 <div class="row">
   <div class="col-12">
-    <h2 class="text-primary">Features</h2>
+    <h2 class="text-primary" id="features">Features</h2>
     Basics features are explained below:
     <ul>
-      <li>Player can change his settings and name any time by clicking "User Settings" button in the navbar.</li>
+      <li>Player can change their settings and name any time by clicking "User Settings" button in the navbar.</li>
       <li>
         Player can buzz another player by selecting the option from the dropdown next to other player's name (under online players section).
       </li>
@@ -58,10 +64,10 @@
 </div>
 <div class="row">
   <div class="col-12">
-    <h2 class="text-primary">Cards</h2>
+    <h2 class="text-primary" id="cards">Cards</h2>
     <p>
-      Deck is composed of 4 normal UNO decks (numbers + wild cards), 16 instances of "Keep my hand" annd "Deflect" cards, and
-      8 instance of every other special wild card
+      Deck is composed of 3 normal UNO decks (numbers + wild cards), 8 instances of "Keep my hand" annd "Deflect" cards, and 4 instance of
+      every other special wild card
     </p>
     <p>There are many new cards added to this game. They mostly fall into 4 groups:</p>
     <ul>
@@ -194,8 +200,8 @@
               <h5 class="mt-0 mb-1">Magnetic Polarity</h5>
               Player can play this card only if the last card played was a wildcard. If someone activates a wild card that requires another
               player as a target, this card is played automatically and the player will intercept the attack and become the targeted player.
-              This card's effect is activated before deflect card. That means if the player has magnetic polarity and deflect card, they will
-              first intercept the attack, and then deflect it back to the caller.
+              This card's effect is activated before deflect card. That means if the player has magnetic polarity and deflect card, they
+              will first intercept the attack, and then deflect it back to the caller.
             </div>
           </li>
           <li class="media my-2">
@@ -274,7 +280,7 @@
             <img src="/images/cards/small/5/29.png" class="mr-3" />
             <div class="media-body">
               <h5 class="mt-0 mb-1">Roulette</h5>
-              Randomly selected player will either draw or discard X number of cards, or his hand will remain intact. Maximum number of
+              Randomly selected player will either draw or discard X number of cards, or their hand will remain intact. Maximum number of
               cards to draw is 4, while the maximum number of cards to discard is 2. Cannot be deflected.
             </div>
           </li>
@@ -283,8 +289,8 @@
             <div class="media-body">
               <h5 class="mt-0 mb-1">Duel</h5>
               Player picks 3 numbers (from 1-6) and picks another player to duel. Dice is rolled afterwards. If the player guessed correctly
-              the number that was rolled, they are a winner and the opponent must draw 3 cards otherwise they lost and they must draw 3 cards.
-              Cannot be deflected.
+              the number that was rolled, they are a winner and the opponent must draw 3 cards otherwise they lost and they must draw 3
+              cards. Cannot be deflected.
             </div>
           </li>
           <li class="media my-2">
@@ -292,8 +298,8 @@
             <div class="media-body">
               <h5 class="mt-0 mb-1">Blackjack</h5>
               Player can hit the hitme button to get a random number from 1 to 10. If the player goes over 21, they draw 6 cards. If the
-              player hits 21, they will discard 4 cards. If the player hits number bigger than 17 but less than 21 they will discard 2 cards. If
-              the player hits the number lower than 17, they will draw the difference between 17 and the number they hit.
+              player hits 21, they will discard 4 cards. If the player hits number bigger than 17 but less than 21 they will discard 2
+              cards. If the player hits the number lower than 17, they will draw the difference between 17 and the number they hit.
             </div>
           </li>
           <li class="media my-2">
