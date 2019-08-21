@@ -44,17 +44,17 @@ namespace Uno.Models.Entities
             AddNormalGameWildCards();
             AddNormalGameWildCards();
 
+            AddStealTurnCards();
+            AddStealTurnCards();
+            AddStealTurnCards();
+            AddStealTurnCards();
+
             AddSpecialWildCards();
 
             FilterBannedCards(bannedCards);
         }
 
-        private void FilterBannedCards(List<CardValue> bannedCards)
-        {
-            Cards.RemoveAll(x => bannedCards.Contains(x.Value));
-        }
-
-        private void AddSpecialWildCards()
+        private void AddStealTurnCards()
         {
             foreach (CardColor color in Enum.GetValues(typeof(CardColor)))
             {
@@ -64,6 +64,15 @@ namespace Uno.Models.Entities
                     Cards.Add(new StealTurn(color));
                 }
             }
+        }
+
+        private void FilterBannedCards(List<CardValue> bannedCards)
+        {
+            Cards.RemoveAll(x => bannedCards.Contains(x.Value));
+        }
+
+        private void AddSpecialWildCards()
+        {
             for (int i = 1; i <= 4; i++)
             {
                 Cards.Add(new BlackHole());

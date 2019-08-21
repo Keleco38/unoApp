@@ -71,7 +71,7 @@ namespace Uno.Models.Entities.Cards.Wild
                     messageToLog += $"{moveParams.PlayerPlayed.User.Name} doubled the draw effect. ";
                 }
 
-                messageToLog += $"Player guessed wrongly. {moveParams.PlayerPlayed.User.Name} had {moveParams.OddOrEvenGuess} number of cards. They will draw {numberOfCardsToDraw} cards";
+                messageToLog += $"Player guessed wrongly. {moveParams.PlayerTargeted.User.Name} had {moveParams.OddOrEvenGuess} number of cards. They will draw {numberOfCardsToDraw} cards";
                 game.DrawCard(moveParams.PlayerPlayed, numberOfCardsToDraw, false);
                 //double draw
             }
