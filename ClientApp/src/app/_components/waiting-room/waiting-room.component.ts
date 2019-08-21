@@ -51,7 +51,6 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   leaveWaitingRoom() {
-    this._hubService.exitGame();
     this._router.navigateByUrl('/');
   }
 

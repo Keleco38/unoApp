@@ -4,7 +4,8 @@
 
 ##### HELP: http://unoapp.tonymarkoc.com/help
 
-##Rules
+## Rules
+
 - There is some difference between this version of the game and the original. Here are the basics.
 - The first player that runs out of card is a round winner. Host can change the nuber of rounds required to win the game.
 - Player can only play a card if it's their turn to play (excluding steal turn card).
@@ -15,7 +16,8 @@
 - Cards that are automatically played do not require action from the player (read card section below)
 - +4 and +2 wild cards do not skip next player's turn.
 
-##Features
+## Features
+
 - Player can change their settings and name any time by clicking "User Settings" button in the navbar.
 - Player can buzz another player by selecting the option from the dropdown next to other player's name (under online players section).
 - Host can kick players from the game.
@@ -30,7 +32,8 @@
 - Player can mute spectator's and server's chat by selecting checkbox under the Misc. tab
 - Player can keep sidebar open and change sidebar's size by selecting those options under the Misc. tab
 
-##Cards
+## Cards
+
 Deck is composed of 3 normal UNO decks (numbers + wild cards), 8 instances of "Keep my hand" and "Deflect" cards, and 4 instance of every other special wild card
 - There are many new cards added to this game. They mostly fall into 4 groups:
 - Positive cards - Cards that have positive effect on the holder. Can be played anytime.

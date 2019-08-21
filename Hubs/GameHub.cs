@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore.Internal;
 using Uno.Contants;
 using Uno.Enums;
 using Uno.Models;
@@ -32,7 +33,7 @@ namespace Uno.Hubs
 
         public override async Task OnDisconnectedAsync(System.Exception exception)
         {
-            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
+            var user = GetUserByConnectionId();
             await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server);
             await CleanupUserFromGames();
             await CleanupUserFromOnlineUsersList();
@@ -43,7 +44,7 @@ namespace Uno.Hubs
         {
             if (!string.IsNullOrWhiteSpace(gameId))
             {
-                var game = _games.Find(x => x.Id == gameId);
+                var game = GetGameByGameId(gameId);
                 var isPlayer = GetPlayersFromGame(game).FirstOrDefault(x => x == Context.ConnectionId) != null;
                 await SendMessage(message, isPlayer ? TypeOfMessage.Chat : TypeOfMessage.Spectators, gameId);
             }
@@ -53,9 +54,9 @@ namespace Uno.Hubs
             }
         }
 
-        public async Task SetGamePassword(string id, string password)
+        public async Task SetGamePassword(string gameId, string password)
         {
-            var game = _games.First(x => x.Id == id);
+            var game = GetGameByGameId(gameId);
             game.GameSetup.Password = password;
             await GetAllGames();
             await UpdateGame(game);
@@ -75,7 +76,7 @@ namespace Uno.Hubs
 
         public async Task CreateGame()
         {
-            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
+            var user = GetUserByConnectionId();
             var game = new Game();
             game.Players.Add(new Player(user));
             _games.Add(game);
@@ -86,13 +87,8 @@ namespace Uno.Hubs
 
         public async Task ExitGame(string gameId)
         {
-            var game = _games.FirstOrDefault(x => x.Id == gameId);
-            if (game == null)
-            {
-                return;
-            }
-
-            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
+            var game = GetGameByGameId(gameId);
+            var user = GetUserByConnectionId();
             var allPlayersFromGame = GetPlayersFromGame(game);
             if (allPlayersFromGame.Contains(Context.ConnectionId))
             {
@@ -123,7 +119,7 @@ namespace Uno.Hubs
 
         public async Task KickPlayerFromGame(string name, string gameId)
         {
-            var game = _games.Find(x => x.Id == gameId);
+            var game = GetGameByGameId(gameId);
             var playerToKick = game.Players.Find(y => y.User.Name == name);
             game.Players.Remove(playerToKick);
             await UpdateGame(game);
@@ -133,7 +129,7 @@ namespace Uno.Hubs
 
         public async Task UpdateGameSetup(string gameId, List<CardValue> bannedCards, int roundsToWin)
         {
-            var game = _games.Find(x => x.Id == gameId);
+            var game = GetGameByGameId(gameId);
             game.GameSetup.BannedCards = bannedCards;
             game.GameSetup.RoundsToWin = roundsToWin;
             await UpdateGame(game);
@@ -142,7 +138,7 @@ namespace Uno.Hubs
 
         public async Task StartGame(string gameId)
         {
-            var game = _games.Find(x => x.Id == gameId);
+            var game = GetGameByGameId(gameId);
             game.StartNewGame();
             await UpdateGame(game);
             await UpdateHands(game);
@@ -155,13 +151,13 @@ namespace Uno.Hubs
         public async Task JoinGame(string gameId, string password)
         {
             await CleanupUserFromGamesExceptThisGame(gameId);
-            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-            var game = _games.Find(x => x.Id == gameId);
+            var user = GetUserByConnectionId();
+            var game = GetGameByGameId(gameId);
             var spectator = game.Spectators.FirstOrDefault(x => x.User == user);
             if (game.GameSetup.IsPasswordProtected && spectator == null)
                 if (game.GameSetup.Password != password)
                 {
-                    await DisplayToastMessageToUser(user.Name, "Incorrect password.");
+                    await DisplayToastMessageToUser(user.ConnectionId, "Incorrect password.");
                     return;
                 }
             if (!game.GameStarted)
@@ -196,7 +192,6 @@ namespace Uno.Hubs
                     await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, gameId);
                 }
             }
-
             await UpdateGame(game);
             await GetAllGames();
         }
@@ -208,7 +203,6 @@ namespace Uno.Hubs
             {
                 await Clients.Caller.SendAsync("RenamePlayer");
             }
-
             if (name.Length > 10)
             {
                 name = name.Substring(0, 10);
@@ -217,7 +211,7 @@ namespace Uno.Hubs
             if (!nameExists && name != "server")
             {
                 string message = string.Empty;
-                var existingUser = _users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
+                var existingUser = GetUserByConnectionId();
                 if (existingUser != null)
                 {
                     message = $"{existingUser.Name} has renamed to {name}";
@@ -242,8 +236,8 @@ namespace Uno.Hubs
 
         public async Task DrawCard(string gameId, int count, bool normalDraw)
         {
-            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
-            var game = _games.Find(x => x.Id == gameId);
+            var user = GetUserByConnectionId();
+            var game = GetGameByGameId(gameId);
             if (game.GameEnded)
             {
                 return;
@@ -267,10 +261,10 @@ namespace Uno.Hubs
 
         public async Task PlayCard(string gameId, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard)
         {
-            var game = _games.Find(x => x.Id == gameId);
+            var game = GetGameByGameId(gameId);
             if (game.GameEnded || !game.GameStarted)
                 return;
-            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
+            var user = GetUserByConnectionId();
             var player = game.Players.Find(x => x.User.Name == user.Name);
             var moveResult = game.PlayCard(player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard);
             if (moveResult == null)
@@ -292,9 +286,9 @@ namespace Uno.Hubs
 
         #region private
 
-        private async Task AddToGameLog(string gameid, string message)
+        private async Task AddToGameLog(string gameId, string message)
         {
-            var game = _games.Find(x => x.Id == gameid);
+            var game = GetGameByGameId(gameId);
             var allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
             await Clients.Clients(allUsersInGame).SendAsync("AddToGameLog", message);
         }
@@ -306,10 +300,9 @@ namespace Uno.Hubs
             await Clients.Clients(allUsersInGame).SendAsync("DisplayToastMessage", message);
         }
 
-        private async Task DisplayToastMessageToUser(string username, string message)
+        private async Task DisplayToastMessageToUser(string connectionId, string message)
         {
-            var user = _users.Find(x => x.Name == username);
-            await Clients.Client(user.ConnectionId).SendAsync("DisplayToastMessage", message);
+            await Clients.Client(connectionId).SendAsync("DisplayToastMessage", message);
         }
 
         private async Task UpdateGame(Game game)
@@ -362,14 +355,14 @@ namespace Uno.Hubs
 
         private async Task CleanupUserFromOnlineUsersList()
         {
-            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
+            var user = GetUserByConnectionId();
             _users.Remove(user);
             await GetAllOnlineUsers();
         }
 
         private async Task SendMessage(string message, TypeOfMessage typeOfMessage, string gameId = "")
         {
-            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
+            var user = GetUserByConnectionId();
             var username = typeOfMessage == TypeOfMessage.Server ? "Server" : user.Name;
             var chatMessageIntentionResult = GetChatMessageIntention(message);
             ChatMessageDto msgDto;
@@ -377,7 +370,7 @@ namespace Uno.Hubs
             bool buzzFailed = false;
             if (!string.IsNullOrWhiteSpace(gameId))
             {
-                var game = _games.Find(x => x.Id == gameId);
+                var game = GetGameByGameId(gameId);
                 allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
             }
             if (chatMessageIntentionResult.ChatMessageIntention == ChatMessageIntention.Buzz)
@@ -478,6 +471,19 @@ namespace Uno.Hubs
             {
                 return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Normal };
             }
+        }
+
+        private User GetUserByConnectionId()
+        {
+            var user = _users.Find(x => x.ConnectionId == Context.ConnectionId);
+            return user;
+        }
+
+        private Game GetGameByGameId(string gameId)
+        {
+            var game = _games.Find(x => x.Id == gameId);
+            return game;
+
         }
 
         #endregion

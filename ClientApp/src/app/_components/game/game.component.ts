@@ -195,7 +195,6 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   exitGame() {
-    this._hubService.exitGame();
     this._router.navigateByUrl('/');
 
   }

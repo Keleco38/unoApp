@@ -113,7 +113,6 @@ export class HubService {
 
     this._hubConnection.on('KickPlayerFromGame', () => {
       this._toastrService.info('You have been kicked from the game');
-      this.exitGame();
       this._router.navigateByUrl('/');
     });
 
@@ -243,6 +242,11 @@ export class HubService {
       return;
     }
     this._hubConnection.invoke('ExitGame', this._activeGameObservable.getValue().id);
+    this._gameChatMessages = [];
+    this._gameLog = [];
+    this._gameLogObservable.next(this._gameLog);
+    this._gameChatMessagesObservable.next(this._gameChatMessages);
+    this._activeGameObservable.next(null);
   }
 
   startGame(): any {

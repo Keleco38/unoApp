@@ -87,6 +87,7 @@ namespace Uno.Models.Entities
                 Cards.Add(new MagneticPolarity());
                 Cards.Add(new FortuneTeller());
                 Cards.Add(new DoubleDraw());
+                Cards.Add(new Poison());
                 //cads added 2 times
                 Cards.Add(new KeepMyHand());
                 Cards.Add(new KeepMyHand());

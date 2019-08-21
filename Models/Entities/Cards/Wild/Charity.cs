@@ -55,7 +55,7 @@ namespace Uno.Models.Entities.Cards.Wild
                 moveParams.PlayerPlayed.Cards.Remove(moveParams.PlayerPlayed.Cards.First(c => c.Value == x.Value && c.Color == x.Color));
                 moveParams.PlayerTargeted.Cards.Add(x);
             });
-            messageToLog += $" Player gave him two cards: {charityCardsString}";
+            messageToLog += $" Player gave them two cards: {charityCardsString}";
 
             game.DrawCard(moveParams.PlayerPlayed, 1, false);
 

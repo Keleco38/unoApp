@@ -53,7 +53,8 @@ export enum CardValue {
   theLastStand = 37,
   magneticPolarity = 38,
   fortuneTeller=39,
-  doubleDraw=40
+  doubleDraw=40,
+  poison=41
 }
 
 export enum Direction {

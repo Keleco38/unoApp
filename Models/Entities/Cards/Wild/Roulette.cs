@@ -57,6 +57,7 @@ namespace Uno.Models.Entities.Cards.Wild
                     game.DiscardedPile.Add(doubleDrawCard);
                     numberOfCardsToDraw = numberOfCardsToDraw * 2;
                     messageToLog += $"{playerAffected.User.Name} didn't have any luck! They had double draw. They will draw {numberOfCardsToDraw} cards. ";
+                    game.DrawCard(playerAffected,numberOfCardsToDraw,false);
                 }
                 else
                 {

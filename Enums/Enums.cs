@@ -51,7 +51,8 @@ namespace Uno.Enums
         TheLastStand=37,
         MagneticPolarity=38,
         FortuneTeller=39,
-        DoubleDraw=40
+        DoubleDraw=40,
+        Poison=41
 
     }
 
