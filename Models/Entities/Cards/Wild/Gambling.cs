@@ -47,11 +47,11 @@ namespace Uno.Models.Entities.Cards.Wild
                 }
             }
 
-            var isEven = moveParams.PlayerTargeted.Cards.Count(x => ((int)x.Value < 10)) % 2 == 0;
+            var correctGuess = moveParams.PlayerTargeted.Cards.Count(x => ((int)x.Value < 10)) % 2 == 0 ? "even" : "odd";
 
-            if ((isEven && moveParams.OddOrEvenGuess == "even") || (!isEven && moveParams.OddOrEvenGuess == "odd"))
+            if (correctGuess == moveParams.OddOrEvenGuess)
             {
-                messageToLog += $"Player guessed correctly. {moveParams.PlayerPlayed.User.Name} had {moveParams.OddOrEvenGuess} number of cards. They will discard 1 card";
+                messageToLog += $"Player guessed correctly. {moveParams.PlayerTargeted.User.Name} had {correctGuess} number of cards. They will discard 1 card";
                 if (moveParams.PlayerPlayed.Cards.Count > 1)
                 {
                     moveParams.PlayerPlayed.Cards.RemoveRange(0, 1);
@@ -71,7 +71,7 @@ namespace Uno.Models.Entities.Cards.Wild
                     messageToLog += $"{moveParams.PlayerPlayed.User.Name} doubled the draw effect. ";
                 }
 
-                messageToLog += $"Player guessed wrongly. {moveParams.PlayerTargeted.User.Name} had {moveParams.OddOrEvenGuess} number of cards. They will draw {numberOfCardsToDraw} cards";
+                messageToLog += $"Player guessed wrongly. {moveParams.PlayerTargeted.User.Name} had {correctGuess} number of cards. They will draw {numberOfCardsToDraw} cards";
                 game.DrawCard(moveParams.PlayerPlayed, numberOfCardsToDraw, false);
                 //double draw
             }
