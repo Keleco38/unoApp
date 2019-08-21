@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" [routerLink]="['/']" routerLinkActive="router-link-active">UNO!</a>
+  <a class="navbar-brand" [routerLink]="['/']" routerLinkActive="router-link-active"><img id="brandingImage" src="images/branding.ico"/>UNO!</a>
   <button class="navbar-toggler" (click)="toggleNavbar()" type="button">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -16,8 +16,8 @@
         </a>
         <div ngbDropdownMenu aria-labelledby="navbarDropdown">
           <a ngbDropdownItem (click)="toggleNavbar()" [routerLink]="['/change-log']" routerLinkActive="router-link-active">Changelog</a>
-          <a ngbDropdownItem  href="mailto:tonymarkoc@gmail.com">Report a bug</a>
-          <a ngbDropdownItem  target="_blank" href="https://github.com/tonymarkoc/unoApp">Github</a>
+          <a ngbDropdownItem href="mailto:tonymarkoc@gmail.com">Report a bug</a>
+          <a ngbDropdownItem target="_blank" href="https://github.com/tonymarkoc/unoApp">Github</a>
         </div>
       </li>
       <li ngbDropdown class="nav-item dropdown">
@@ -25,7 +25,7 @@
           Community
         </a>
         <div ngbDropdownMenu aria-labelledby="navbarDropdown">
-          <a ngbDropdownItem target="_blank"  href="https://discord.gg/BbXQqRk">Discord</a>
+          <a ngbDropdownItem target="_blank" href="https://discord.gg/BbXQqRk">Discord</a>
         </div>
       </li>
       <li class="nav-item">
@@ -34,7 +34,7 @@
     </ul>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link cursor-pointer"  (click)="openSettings();toggleNavbar();">User Settings &#9733;</a>
+        <a class="nav-link cursor-pointer" (click)="openSettings(); toggleNavbar()">User Settings &#9733;</a>
       </li>
     </ul>
   </div>

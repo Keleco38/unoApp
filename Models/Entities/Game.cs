@@ -99,7 +99,7 @@ namespace Uno.Models.Entities
 
         public void StartNewGame()
         {
-            Players.ForEach(x=>x.CardPromisedToDiscard=null);
+            Players.ForEach(x => x.CardPromisedToDiscard = null);
             Random random = new Random();
             ICard lastCardDrew;
             DiscardedPile = new List<ICard>();

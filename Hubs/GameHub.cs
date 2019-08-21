@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Internal;
 using Uno.Contants;
 using Uno.Enums;
+using Uno.Helpers;
 using Uno.Models;
 using Uno.Models.Dtos;
 using Uno.Models.Entities;
@@ -17,6 +18,8 @@ namespace Uno.Hubs
 {
     public class GameHub : Hub
     {
+        private static readonly SemaphoreLocker _gameLocker = new SemaphoreLocker();
+        private static readonly SemaphoreLocker _userLocker = new SemaphoreLocker();
         private readonly IMapper _mapper;
         private static List<User> _users { get; set; } = new List<User>();
         private static List<Game> _games { get; set; } = new List<Game>();
@@ -198,40 +201,43 @@ namespace Uno.Hubs
 
         public async Task AddOrRenameUser(string name)
         {
-            name = Regex.Replace(name, @"[^a-zA-Z0-9]", "").ToLower();
-            if (!name.Any())
+            await _userLocker.LockAsync(async () =>
             {
-                await Clients.Caller.SendAsync("RenamePlayer");
-            }
-            if (name.Length > 10)
-            {
-                name = name.Substring(0, 10);
-            }
-            var nameExists = _users.Any(x => x.Name == name);
-            if (!nameExists && name != "server")
-            {
-                string message = string.Empty;
-                var existingUser = GetUserByConnectionId();
-                if (existingUser != null)
+                name = Regex.Replace(name, @"[^a-zA-Z0-9]", "").ToLower();
+                if (!name.Any())
                 {
-                    message = $"{existingUser.Name} has renamed to {name}";
-                    _users.Remove(existingUser);
+                    await Clients.Caller.SendAsync("RenamePlayer");
+                }
+                if (name.Length > 10)
+                {
+                    name = name.Substring(0, 10);
+                }
+                var nameExists = _users.Any(x => x.Name == name);
+                if (!nameExists && name != "server")
+                {
+                    string message = string.Empty;
+                    var existingUser = GetUserByConnectionId();
+                    if (existingUser != null)
+                    {
+                        message = $"{existingUser.Name} has renamed to {name}";
+                        _users.Remove(existingUser);
+                    }
+                    else
+                    {
+                        message = $"{name} has connected to the server.";
+                    }
+                    var user = new User(Context.ConnectionId, name);
+                    _users.Add(user);
+                    await SendMessage(message, TypeOfMessage.Server);
+                    var userDto = _mapper.Map<UserDto>(user);
+                    await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
+                    await GetAllOnlineUsers();
                 }
                 else
                 {
-                    message = $"{name} has connected to the server.";
+                    await Clients.Caller.SendAsync("RenamePlayer");
                 }
-                var user = new User(Context.ConnectionId, name);
-                _users.Add(user);
-                await SendMessage(message, TypeOfMessage.Server);
-                var userDto = _mapper.Map<UserDto>(user);
-                await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
-                await GetAllOnlineUsers();
-            }
-            else
-            {
-                await Clients.Caller.SendAsync("RenamePlayer");
-            }
+            });
         }
 
         public async Task DrawCard(string gameId, int count, bool normalDraw)
@@ -268,27 +274,32 @@ namespace Uno.Hubs
 
         public async Task PlayCard(string gameId, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess)
         {
-            var game = GetGameByGameId(gameId);
-            if (game.GameEnded || !game.GameStarted)
-                return;
-            var user = GetUserByConnectionId();
-            var player = game.Players.Find(x => x.User.Name == user.Name);
-            var moveResult = game.PlayCard(player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard, cardPromisedToDiscardId, oddOrEvenGuess);
-            if (moveResult == null)
+
+            await _gameLocker.LockAsync(async () =>
             {
-                return;
-            }
-            moveResult.MoveResultCallbackParams.ForEach(async callbackParam =>
-            {
-                await Clients.Client(callbackParam.ConnectionId).SendAsync(callbackParam.Command, callbackParam.Object);
+                var game = GetGameByGameId(gameId);
+                if (game.GameEnded || !game.GameStarted)
+                    return;
+                var user = GetUserByConnectionId();
+                var player = game.Players.Find(x => x.User.Name == user.Name);
+                var moveResult = game.PlayCard(player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard, cardPromisedToDiscardId, oddOrEvenGuess);
+                if (moveResult == null)
+                {
+                    return;
+                }
+                moveResult.MoveResultCallbackParams.ForEach(async callbackParam =>
+                {
+                    await Clients.Client(callbackParam.ConnectionId).SendAsync(callbackParam.Command, callbackParam.Object);
+                });
+                moveResult.MessagesToLog.ForEach(async x => await AddToGameLog(game.Id, x));
+                await UpdateGame(game);
+                await UpdateHands(game);
+                if (player.Cards.Count == 1)
+                {
+                    await Clients.Caller.SendAsync("MustCallUno");
+                }
             });
-            moveResult.MessagesToLog.ForEach(async x => await AddToGameLog(game.Id, x));
-            await UpdateGame(game);
-            await UpdateHands(game);
-            if (player.Cards.Count == 1)
-            {
-                await Clients.Caller.SendAsync("MustCallUno");
-            }
+
         }
 
         #region private

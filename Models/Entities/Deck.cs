@@ -37,17 +37,13 @@ namespace Uno.Models.Entities
             AddNormalGameNormalCards();
             AddNormalGameNormalCards();
             AddNormalGameNormalCards();
-            AddNormalGameNormalCards();
-
-            AddNormalGameWildCards();
-            AddNormalGameWildCards();
-            AddNormalGameWildCards();
-            AddNormalGameWildCards();
 
             AddStealTurnCards();
             AddStealTurnCards();
             AddStealTurnCards();
             AddStealTurnCards();
+
+            AddNormalGameWildCards();
 
             AddSpecialWildCards();
 

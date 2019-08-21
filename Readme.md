@@ -34,8 +34,8 @@
 
 ## Cards
 
-Deck is composed of 4 normal UNO decks (numbers + wild cards), 8 instances of "Keep my hand" and "Deflect" cards, and 4 instance of every other special wild card
-- There are many new cards added to this game. They mostly fall into 4 groups:
+Deck is composed of 3 colored UNO decks (numbers, skip, draw two, reverse, ), 4 instances of +4 and pick color, 24 instances of steal turn, 8 instances of "Keep my hand" annd "Deflect" cards, and 4 instance of every other special wild card.
+There are many new cards added to this game. They mostly fall into 4 groups:
 - Positive cards - Cards that have positive effect on the holder. Can be played anytime.
 - Negative cards - Cards that have negative effect on the holder. Can be played only under special condition.
 - Neutral cards - Cards that can have both positive or negative effect, depending on the setup of the game and the cards.
