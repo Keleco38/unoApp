@@ -20,7 +20,7 @@ export class PickCharityCardsComponent implements OnInit {
   selectOrUnselect(card: Card) {
     var index = this.selectedCards.indexOf(card);
     if (index === -1) {
-      if (this.selectedCards.length == 3) {
+      if (this.selectedCards.length == 2) {
         return;
       }
       this.selectedCards.push(card);
@@ -36,9 +36,6 @@ export class PickCharityCardsComponent implements OnInit {
     } else {
       return '1';
     }
-  }
-  isCharityCard(card: Card) {
-    return card.value == CardValue.charity;
   }
 
   closeModal() {

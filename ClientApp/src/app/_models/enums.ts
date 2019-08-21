@@ -54,7 +54,10 @@ export enum CardValue {
   magneticPolarity = 38,
   fortuneTeller=39,
   doubleDraw=40,
-  poison=41
+  poison=41,
+  randomColor=42,
+  promiseKeeper=43,
+  gambling = 44,
 }
 
 export enum Direction {

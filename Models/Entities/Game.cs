@@ -30,9 +30,9 @@ namespace Uno.Models.Entities
             Spectators = new List<Spectator>();
         }
 
-        public MoveResult PlayCard(Player playerPlayed, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard)
+        public MoveResult PlayCard(Player playerPlayed, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers,
+            List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess)
         {
-
             var cardPlayed = playerPlayed.Cards.Find(x => x.Id == cardPlayedId);
 
             if (PlayerToPlay != playerPlayed && cardPlayed.Value != CardValue.StealTurn)
@@ -40,9 +40,28 @@ namespace Uno.Models.Entities
             if (cardPlayed.Color != CardColor.Wild && cardPlayed.Color != LastCardPlayed.Color && cardPlayed.Value != LastCardPlayed.Value)
                 return null;
 
-
             playerPlayed.Cards.Remove(cardPlayed);
             DiscardedPile.Add(cardPlayed);
+
+            var extraMessageToLog = string.Empty;
+
+            if (playerPlayed.CardPromisedToDiscard != null)
+            {
+                if (cardPlayed.Color == playerPlayed.CardPromisedToDiscard.Color && cardPlayed.Value == playerPlayed.CardPromisedToDiscard.Value)
+                {
+                    extraMessageToLog = $"Player fulfilled his promise, he will discard one card. ";
+                    if (playerPlayed.Cards.Count > 1)
+                    {
+                        playerPlayed.Cards.RemoveRange(0, 1);
+                    }
+                }
+                else
+                {
+                    extraMessageToLog = $"Player didn't fulfill his promise, he will draw 2 cards. ";
+                    DrawCard(playerPlayed, 2, false);
+                }
+                playerPlayed.CardPromisedToDiscard = null;
+            }
 
             var playerTargeted = string.IsNullOrEmpty(playerTargetedId) ? GetNextPlayer(playerPlayed, Players) : Players.Find(x => x.Id == playerTargetedId);
             var colorForLastCard = targetedCardColor == 0 ? cardPlayed.Color : targetedCardColor;
@@ -50,12 +69,16 @@ namespace Uno.Models.Entities
             LastCardPlayed = new LastCardPlayed(colorForLastCard, cardPlayed.Value, cardPlayed.ImageUrl, playerPlayed.User.Name, cardPlayed.Color == CardColor.Wild);
 
             var cardToDig = string.IsNullOrEmpty(cardToDigId) ? null : DiscardedPile.Find(x => x.Id == cardToDigId);
+            var cardPromisedToDiscard = string.IsNullOrEmpty(cardPromisedToDiscardId) ? null : playerPlayed.Cards.Find(x => x.Id == cardPromisedToDiscardId);
             var charityCards = charityCardsIds != null ? playerPlayed.Cards.Where(x => charityCardsIds.Contains(x.Id)).ToList() : null;
 
-            var moveParams = new MoveParams(playerPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard);
+            var moveParams = new MoveParams(playerPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess);
 
             var moveResult = cardPlayed.ProcessCardEffect(this, moveParams);
-
+            if (!string.IsNullOrEmpty(extraMessageToLog))
+            {
+                moveResult.MessagesToLog.Add(extraMessageToLog);
+            }
 
             UpdateGameAndRoundStatus(moveResult);
             if (GameEnded)
@@ -76,6 +99,7 @@ namespace Uno.Models.Entities
 
         public void StartNewGame()
         {
+            Players.ForEach(x=>x.CardPromisedToDiscard=null);
             Random random = new Random();
             ICard lastCardDrew;
             DiscardedPile = new List<ICard>();

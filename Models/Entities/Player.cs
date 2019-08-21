@@ -18,6 +18,7 @@ namespace Uno.Models.Entities
         public List<ICard> Cards { get; set; }
         public bool LeftGame { get; set; }
         public int RoundsWonCount { get; set; }
+        public ICard CardPromisedToDiscard { get; set; }
 
     }
 }

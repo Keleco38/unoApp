@@ -1,3 +1,4 @@
+import { PickPromiseCardComponent } from './_components/_modals/pick-promise-card/pick-promise-card.component';
 import { ChangeLogComponent } from './_components/change-log/change-log.component';
 import { SidebarSettingsComponent } from './_components/sidebar-settings/sidebar-settings.component';
 import { UtilityService } from './_services/utility.service';
@@ -40,6 +41,7 @@ import { DividePerCapitalPipe } from './_pipes/divide-per-capital.pipe';
 import { ShowCardsComponent } from './_components/_modals/show-cards/show-cards.component';
 import { NavbarComponent } from './_components/navbar/navbar.component';
 import { UserSettingsComponent } from './_components/_modals/user-settings/user-settings.component';
+import { GuessOddEvenNumberComponent } from './_components/_modals/guess-odd-even-number/guess-odd-even-number.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +70,9 @@ import { UserSettingsComponent } from './_components/_modals/user-settings/user-
     SidebarSettingsComponent,
     NavbarComponent,
     UserSettingsComponent,
-    DividePerCapitalPipe
+    PickPromiseCardComponent,
+    DividePerCapitalPipe,
+    GuessOddEvenNumberComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -105,7 +109,9 @@ import { UserSettingsComponent } from './_components/_modals/user-settings/user-
     PickNumbersToDiscardComponent,
     PickCharityCardsComponent,
     BlackjackComponent,
-    UserSettingsComponent
+    UserSettingsComponent,
+    PickPromiseCardComponent,
+    GuessOddEvenNumberComponent
   ]
 })
 export class AppModule {}

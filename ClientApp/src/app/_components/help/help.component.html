@@ -67,7 +67,7 @@
   <div class="col-12">
     <h2 class="text-primary" id="cards">Cards</h2>
     <p>
-      Deck is composed of 3 normal UNO decks (numbers + wild cards), 8 instances of "Keep my hand" annd "Deflect" cards, and 4 instance of
+      Deck is composed of 4 normal UNO decks (numbers + wild cards), 8 instances of "Keep my hand" annd "Deflect" cards, and 4 instance of
       every other special wild card
     </p>
     <p>There are many new cards added to this game. They mostly fall into 4 groups:</p>
@@ -159,8 +159,7 @@
             <div class="media-body">
               <h5 class="mt-0 mb-1">Charity</h5>
               At the cost of drawing one card target a player and select two cards from your hand. The targeted player will receive this two
-              cards as a gift. Cannot be deflected. Cannot give other charity cards. Cannot be played if the number of the cards in your
-              hand is less than 2 (excluding other charity cards).
+              cards as a gift. Cannot be deflected. Cannot be played if the number of the cards in your hand is less than 3 .
             </div>
           </li>
           <li class="media my-2">
@@ -184,6 +183,14 @@
             <div class="media-body">
               <h5 class="mt-0 mb-1">Fortune Teller</h5>
               Peek at the deck's top 5 cards.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/43.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Promise keeper</h5>
+              Player picks a colored card (can't pick wild) and they promise to play it next turn. If the player plays this card on the next
+              turn, they will discard one card, otherwise they didn't fulfill their promise and they must draw 2 cards.
             </div>
           </li>
         </ul>
@@ -213,6 +220,13 @@
               effect, this card is played automatically and the player will double the draw effect. This card's effect is activated after
               magnetic polarity but before deflect. That means that if the player has magnetic polarity, double draw and deflect, they will
               first intercept the attack with the magnetic polarity, then double the draw effect, and then deflect it to the caller.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/41.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Poison</h5>
+              Pick a color. When this card is played the player immediately must draw 2 cards. Can be affected by double draw.
             </div>
           </li>
         </ul>
@@ -261,6 +275,13 @@
               less cards than you, they draw until the same number as you.
             </div>
           </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/42.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Random Color</h5>
+              Random color is assigned.
+            </div>
+          </li>
         </ul>
       </div>
     </div>
@@ -307,7 +328,15 @@
             <img src="/images/cards/small/5/35.png" class="mr-3" />
             <div class="media-body">
               <h5 class="mt-0 mb-1">Tricks Of The Trade</h5>
-              Target a player. Both players will exchange random number of cards (range: 0-3) from their hands with the opposite player.
+              Target a player. Both players will exchange random number of cards (range: 0-2) from their hands with the opposite player.
+            </div>
+          </li>
+          <li class="media my-2">
+            <img src="/images/cards/small/5/44.png" class="mr-3" />
+            <div class="media-body">
+              <h5 class="mt-0 mb-1">Gambling</h5>
+              Target a player. Player tries to guess if the targeted player has odd or even number of numbered cards (0-9). If he is
+              correct, he can discard one card, otherwise draw 3.
             </div>
           </li>
         </ul>

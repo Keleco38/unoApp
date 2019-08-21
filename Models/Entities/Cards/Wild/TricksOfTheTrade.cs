@@ -48,8 +48,8 @@ namespace Uno.Models.Entities.Cards.Wild
                 }
             }
 
-            var callerNumberToTrade = random.Next(0, moveParams.PlayerPlayed.Cards.Count < 4 ? moveParams.PlayerPlayed.Cards.Count + 1 : 4);
-            var targetNumberToTrade = random.Next(0, moveParams.PlayerTargeted.Cards.Count < 4 ? moveParams.PlayerTargeted.Cards.Count + 1 : 4);
+            var callerNumberToTrade = random.Next(0, moveParams.PlayerPlayed.Cards.Count < 3 ? moveParams.PlayerPlayed.Cards.Count + 1 : 3);
+            var targetNumberToTrade = random.Next(0, moveParams.PlayerTargeted.Cards.Count < 3 ? moveParams.PlayerTargeted.Cards.Count + 1 : 3);
 
 
             if (callerNumberToTrade == 0)
@@ -81,7 +81,7 @@ namespace Uno.Models.Entities.Cards.Wild
             }
 
             messagesToLog.Add(messageToLog);
-           return new MoveResult(messagesToLog);
+            return new MoveResult(messagesToLog);
         }
     }
 }

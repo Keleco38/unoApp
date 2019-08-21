@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title" id="modal-basic-title">Pick two cards</h4>
+  <h4 class="modal-title" id="modal-basic-title">Pick one card</h4>
   <button type="button" class="close" aria-describedby="modal-title" (click)="closeModal()">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -18,7 +18,7 @@
     </div>
     <div class="col-12">
       <hr />
-      <button class="btn btn-info btn-block btn-lg" *ngIf="selectedCards.length == 2" (click)="confirm()">Confirm</button>
+      <button class="btn btn-info btn-block btn-lg" *ngIf="promisedCard != null" (click)="confirm()">Confirm</button>
     </div>
   </div>
 </div>

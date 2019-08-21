@@ -37,7 +37,9 @@ namespace Uno.Models.Entities
             AddNormalGameNormalCards();
             AddNormalGameNormalCards();
             AddNormalGameNormalCards();
+            AddNormalGameNormalCards();
 
+            AddNormalGameWildCards();
             AddNormalGameWildCards();
             AddNormalGameWildCards();
             AddNormalGameWildCards();
@@ -88,6 +90,9 @@ namespace Uno.Models.Entities
                 Cards.Add(new FortuneTeller());
                 Cards.Add(new DoubleDraw());
                 Cards.Add(new Poison());
+                Cards.Add(new RandomColor());
+                Cards.Add(new PromiseKeeper());
+                Cards.Add(new Gambling());
                 //cads added 2 times
                 Cards.Add(new KeepMyHand());
                 Cards.Add(new KeepMyHand());

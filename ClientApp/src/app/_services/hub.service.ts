@@ -173,7 +173,9 @@ export class HubService {
         if (forceRename) {
           name = prompt("Your name is already taken or it's not set. Please input a new name (only letters and numbers allowed):");
         } else {
-          name = localStorage.getItem('name') || prompt("Your name is already taken or it's not set. Please input a new name (only letters and numbers allowed):");
+          name =
+            localStorage.getItem('name') ||
+            prompt("Your name is already taken or it's not set. Please input a new name (only letters and numbers allowed):");
         }
       } while (!name);
     } else {
@@ -202,7 +204,9 @@ export class HubService {
     duelNumbers: number[] = null,
     charityCardsIds: string[] = null,
     blackjackNumber: number = 0,
-    numbersToDiscard: number[] = null
+    numbersToDiscard: number[] = null,
+    cardPromisedToDiscardId: string = '',
+    oddOrEvenGuess: string = ''
   ) {
     this._hubConnection.invoke(
       'PlayCard',
@@ -214,7 +218,9 @@ export class HubService {
       duelNumbers,
       charityCardsIds,
       blackjackNumber,
-      numbersToDiscard
+      numbersToDiscard,
+      cardPromisedToDiscardId,
+      oddOrEvenGuess
     );
   }
 

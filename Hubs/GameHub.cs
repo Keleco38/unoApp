@@ -246,27 +246,34 @@ namespace Uno.Hubs
             {
                 if (game.PlayerToPlay.User.Name == user.Name)
                 {
-                    game.DrawCard(game.PlayerToPlay, count, normalDraw);
+                    if (game.PlayerToPlay.CardPromisedToDiscard != null)
+                    {
+                        game.DrawCard(game.PlayerToPlay, 2, false);
+                        game.PlayerToPlay.CardPromisedToDiscard = null;
+                        await AddToGameLog(gameId, $"Player didn't fulfill his promise, he will draw 2 cards. ");
+                    }
+
+                    game.DrawCard(game.PlayerToPlay, count, true);
                     await AddToGameLog(gameId, $"{user.Name} drew a card (normal draw)");
                 }
             }
             else
             {
                 var player = game.Players.Find(x => x.User.Name == user.Name);
-                game.DrawCard(player, count, normalDraw);
+                game.DrawCard(player, count, false);
             }
             await UpdateGame(game);
             await UpdateHands(game);
         }
 
-        public async Task PlayCard(string gameId, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard)
+        public async Task PlayCard(string gameId, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess)
         {
             var game = GetGameByGameId(gameId);
             if (game.GameEnded || !game.GameStarted)
                 return;
             var user = GetUserByConnectionId();
             var player = game.Players.Find(x => x.User.Name == user.Name);
-            var moveResult = game.PlayCard(player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard);
+            var moveResult = game.PlayCard(player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard, cardPromisedToDiscardId, oddOrEvenGuess);
             if (moveResult == null)
             {
                 return;

@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Guess odd or even</h4>
+  <button type="button" class="close" aria-describedby="modal-title" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-6">
+      <button class="btn btn-block btn-lg btn-primary"(click)="guessOddOrEven('odd')">ODD</button>
+    </div>
+    <div class="col-6">
+      <button class="btn btn-block btn-lg btn-primary"(click)="guessOddOrEven('even')">EVEN</button>
+    </div>
+  </div>
+</div>

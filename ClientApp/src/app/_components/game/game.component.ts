@@ -1,3 +1,4 @@
+import { PickPromiseCardComponent } from './../_modals/pick-promise-card/pick-promise-card.component';
 import { ChatMessage } from './../../_models/chatMessage';
 import { UtilityService } from './../../_services/utility.service';
 import { BlackjackComponent } from './../_modals/blackjack/blackjack.component';
@@ -20,6 +21,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SidebarSettings } from 'src/app/_models/sidebarSettings';
 import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { GuessOddEvenNumberComponent } from '../_modals/guess-odd-even-number/guess-odd-even-number.component';
 
 @Component({
   selector: 'app-game',
@@ -45,7 +47,7 @@ export class GameComponent implements OnInit, OnDestroy {
     private _modalService: NgbModal,
     private _toastrService: ToastrService,
     private _utilityService: UtilityService,
-    private _router:Router
+    private _router: Router
   ) {}
 
   ngOnInit() {
@@ -100,7 +102,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   callUno(playerCalled: boolean) {
-    if (!this._mustCallUno){
+    if (!this._mustCallUno) {
       return;
     }
     this._mustCallUno = false;
@@ -110,15 +112,15 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
-  playCard(card: Card) {
+  playCard(cardPlayed: Card) {
     if (this._mustCallUno) {
       return;
     }
     if (
-      card.value === CardValue.stealTurn &&
-      (card.color == this.game.lastCardPlayed.color || this.game.lastCardPlayed.value == card.value)
+      cardPlayed.value === CardValue.stealTurn &&
+      (cardPlayed.color == this.game.lastCardPlayed.color || this.game.lastCardPlayed.value == cardPlayed.value)
     ) {
-      this._hubService.playCard(card.id, card.color);
+      this._hubService.playCard(cardPlayed.id, cardPlayed.color);
       return;
     }
     if (this.game.playerToPlay.user.name !== this.currentUser.name) {
@@ -126,77 +128,114 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     if (
-      (card.value === CardValue.magneticPolarity || card.value === CardValue.doubleDraw) &&
+      (cardPlayed.value === CardValue.magneticPolarity || cardPlayed.value === CardValue.doubleDraw) &&
       this.game.lastCardPlayed.wasWildCard === false
     ) {
       this._toastrService.info('This card only can be played if last card played is a wildcard.', '', { timeOut: 3000 });
       return;
     }
 
-    if (card.color === CardColor.wild) {
+    if (cardPlayed.value == CardValue.charity) {
+      if (this.myCards.length < 3) {
+        this._toastrService.info('This card can only be played if the number of cards on hand is 3 and more.', '', { timeOut: 3000 });
+        return;
+      }
+    }
+
+    if (cardPlayed.value == CardValue.promiseKeeper) {
+      var numberOfCardsWithoutWild = this.myCards.filter((card: Card) => card.color != CardColor.wild).length;
+      if (numberOfCardsWithoutWild == 0) {
+        this._toastrService.info(
+          'This card can only be played if the number of colored cards (excluding wild) on hand is 1 and more.',
+          '',
+          { timeOut: 3000 }
+        );
+        return;
+      }
+    }
+
+    if (cardPlayed.value == CardValue.randomColor) {
+      this._hubService.playCard(cardPlayed.id);
+      return;
+    }
+
+    if (cardPlayed.color === CardColor.wild) {
       this._modalService.open(PickColorComponent).result.then(pickedColor => {
         if (
-          card.value === CardValue.swapHands ||
-          card.value === CardValue.doubleEdge ||
-          card.value === CardValue.judgement ||
-          card.value === CardValue.duel ||
-          card.value === CardValue.inspectHand ||
-          card.value === CardValue.charity ||
-          card.value === CardValue.tricksOfTheTrade ||
-          card.value === CardValue.fairPlay
+          cardPlayed.value === CardValue.swapHands ||
+          cardPlayed.value === CardValue.doubleEdge ||
+          cardPlayed.value === CardValue.judgement ||
+          cardPlayed.value === CardValue.duel ||
+          cardPlayed.value === CardValue.inspectHand ||
+          cardPlayed.value === CardValue.charity ||
+          cardPlayed.value === CardValue.tricksOfTheTrade ||
+          cardPlayed.value === CardValue.fairPlay ||
+          cardPlayed.value === CardValue.gambling
         ) {
           const playerModal = this._modalService.open(PickPlayerComponent);
           playerModal.componentInstance.players = this.game.players;
           playerModal.componentInstance.currentUser = this.currentUser;
           playerModal.result.then((playerId: string) => {
-            if (card.value == CardValue.duel) {
+            if (cardPlayed.value == CardValue.duel) {
               this._modalService.open(PickDuelNumbersComponent).result.then((duelNumbers: number[]) => {
-                this._hubService.playCard(card.id, pickedColor, playerId, null, duelNumbers);
+                this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, duelNumbers);
                 return;
               });
-            } else if (card.value == CardValue.charity) {
+            } else if (cardPlayed.value == CardValue.charity) {
               const modalRef = this._modalService.open(PickCharityCardsComponent);
-              modalRef.componentInstance.cards = this.myCards;
+              modalRef.componentInstance.cards = this.myCards.filter((card: Card) => card.id != cardPlayed.id);
               modalRef.result.then((charityCardsIds: string[]) => {
-                this._hubService.playCard(card.id, pickedColor, playerId, null, null, charityCardsIds);
+                this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null, charityCardsIds);
+                return;
+              });
+            } else if (cardPlayed.value == CardValue.gambling) {
+              const modalRef = this._modalService.open(GuessOddEvenNumberComponent);
+              modalRef.result.then((guessOddOrEven: string) => {
+                this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null, null, 0, null, null, guessOddOrEven);
                 return;
               });
             } else {
-              this._hubService.playCard(card.id, pickedColor, playerId);
+              this._hubService.playCard(cardPlayed.id, pickedColor, playerId);
               return;
             }
           });
-        } else if (card.value === CardValue.graveDigger) {
+        } else if (cardPlayed.value === CardValue.graveDigger) {
           const digModal = this._modalService.open(DigCardComponent);
           digModal.componentInstance.discardedPile = this.game.discardedPile;
           digModal.result.then((cardToDigId: string) => {
-            this._hubService.playCard(card.id, pickedColor, null, cardToDigId);
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, cardToDigId);
             return;
           });
-        } else if (card.value === CardValue.blackjack) {
+        } else if (cardPlayed.value === CardValue.blackjack) {
           this._modalService.open(BlackjackComponent, { backdrop: 'static' }).result.then(blackjackNumber => {
-            this._hubService.playCard(card.id, pickedColor, null, null, null, null, blackjackNumber);
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, blackjackNumber);
             return;
           });
-        } else if (card.value === CardValue.discardNumber) {
-          this._modalService.open(PickNumbersToDiscardComponent).result.then(numbersToDiscard => {
-            this._hubService.playCard(card.id, pickedColor, null, null, null, null, 0, numbersToDiscard);
+        } else if (cardPlayed.value === CardValue.discardNumber) {
+          this._modalService.open(PickNumbersToDiscardComponent).result.then((numbersToDiscard: number[]) => {
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, numbersToDiscard);
+            return;
+          });
+        } else if (cardPlayed.value === CardValue.promiseKeeper) {
+          var modalRef = this._modalService.open(PickPromiseCardComponent);
+          modalRef.componentInstance.cards = this.myCards.filter((card: Card) => card.color != CardColor.wild);
+          modalRef.result.then((promisedCardId: string) => {
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, promisedCardId);
             return;
           });
         } else {
-          this._hubService.playCard(card.id, pickedColor);
+          this._hubService.playCard(cardPlayed.id, pickedColor);
           return;
         }
       });
-    } else if (card.color == this.game.lastCardPlayed.color || card.value == this.game.lastCardPlayed.value) {
-      this._hubService.playCard(card.id);
+    } else if (cardPlayed.color == this.game.lastCardPlayed.color || cardPlayed.value == this.game.lastCardPlayed.value) {
+      this._hubService.playCard(cardPlayed.id);
       return;
     }
   }
 
   exitGame() {
     this._router.navigateByUrl('/');
-
   }
 
   getSidebarClass() {
