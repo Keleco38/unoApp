@@ -47,20 +47,33 @@ namespace Uno.Models.Entities.Cards.Colored
                 }
             }
 
+            var numberOfCardsToDraw = 2;
+
+            var doubleDrawCard = moveParams.PlayerTargeted.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+            if (doubleDrawCard != null)
+            {
+
+                game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, moveParams.PlayerTargeted.User.Name, true);
+                moveParams.PlayerTargeted.Cards.Remove(doubleDrawCard);
+                game.DiscardedPile.Add(doubleDrawCard);
+                numberOfCardsToDraw = numberOfCardsToDraw * 2;
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} doubled the draw effect. ";
+            }
+
 
             var deflectCard = moveParams.PlayerTargeted.Cards.FirstOrDefault(x => x.Value == CardValue.Deflect);
             if (deflectCard == null)
             {
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} drew 2 cards.";
-                game.DrawCard(moveParams.PlayerTargeted, 2, false);
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} drew {numberOfCardsToDraw} cards.";
+                game.DrawCard(moveParams.PlayerTargeted, numberOfCardsToDraw, false);
             }
             else
             {
                 game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, deflectCard.Value, deflectCard.ImageUrl, moveParams.PlayerTargeted.User.Name, true);
                 moveParams.PlayerTargeted.Cards.Remove(deflectCard);
                 game.DiscardedPile.Add(deflectCard);
-                game.DrawCard(moveParams.PlayerPlayed, 2, false);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} deflected +2 card. {moveParams.PlayerPlayed.User.Name} must draw 2 cards.";
+                game.DrawCard(moveParams.PlayerPlayed, numberOfCardsToDraw, false);
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} deflected +2 card. {moveParams.PlayerPlayed.User.Name} must draw {numberOfCardsToDraw} cards.";
 
             }
             messagesToLog.Add(messageToLog);

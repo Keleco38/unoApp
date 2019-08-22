@@ -49,7 +49,7 @@ namespace Uno.Models.Entities
             {
                 if (cardPlayed.Color == playerPlayed.CardPromisedToDiscard.Color && cardPlayed.Value == playerPlayed.CardPromisedToDiscard.Value)
                 {
-                    extraMessageToLog = $"Player fulfilled his promise, he will discard one card. ";
+                    extraMessageToLog = $"{playerPlayed.User.Name} fulfilled their promise, they will discard one card. ";
                     if (playerPlayed.Cards.Count > 1)
                     {
                         playerPlayed.Cards.RemoveRange(0, 1);
@@ -57,7 +57,7 @@ namespace Uno.Models.Entities
                 }
                 else
                 {
-                    extraMessageToLog = $"Player didn't fulfill his promise, he will draw 2 cards. ";
+                    extraMessageToLog = $"{playerPlayed.User.Name} didn't fulfill their promise, they will draw 2 cards. ";
                     DrawCard(playerPlayed, 2, false);
                 }
                 playerPlayed.CardPromisedToDiscard = null;

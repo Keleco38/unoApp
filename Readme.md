@@ -7,6 +7,7 @@
 ## Rules
 
 - There is some difference between this version of the game and the original. Here are the basics.
+- If the player has played a card, and as a result of that they are left with 1 card in his hand, they must call "uno", by pressing the blue button in the middle of the screen. If the player doesn't call uno, they are punished by drawing 2 cards.
 - The first player that runs out of card is a round winner. Host can change the nuber of rounds required to win the game.
 - Player can only play a card if it's their turn to play (excluding steal turn card).
 - Player can play colored card only if the color or the value on the card corresponds to the color or the value of the previously played card.

@@ -41,7 +41,6 @@ namespace Uno.Models.Entities
             AddStealTurnCards();
             AddStealTurnCards();
             AddStealTurnCards();
-            AddStealTurnCards();
 
             AddNormalGameWildCards();
 
