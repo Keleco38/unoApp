@@ -39,7 +39,6 @@ namespace Uno.Models.Entities.Cards.Wild
             {
                 game.DrawCard(moveParams.PlayerPlayed, 2, false);
                 messageToLog += $" {moveParams.PlayerPlayed.User.Name} drew 2 cards. ";
-                game.DrawCard(moveParams.PlayerPlayed, 3, false);
             }
             messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);

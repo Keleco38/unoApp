@@ -2,7 +2,7 @@
 <app-navbar *ngIf="sidebarSettings.showNavbar"></app-navbar>
 <ng-sidebar-container style="height:100vh">
   <!-- A sidebar -->
-  <ng-sidebar  [(opened)]="isSidebarOpen" [position]="'bottom'" [closeOnClickOutside]="!sidebarSettings.keepSidebarOpen">
+  <ng-sidebar [(opened)]="isSidebarOpen" [position]="'bottom'" [closeOnClickOutside]="!sidebarSettings.keepSidebarOpen">
     <div class="row">
       <div class="col-12  bg-white" [ngClass]="getSidebarClass()">
         <app-game-tabs></app-game-tabs>
@@ -56,14 +56,19 @@
     </div>
     <div class="row">
       <div class="col-12 text-center">
-        <img class="last-card-played float-left float-sm-none" [style.borderColor]="getBorderColor()" [src]="game.lastCardPlayed.imageUrl" alt="" />
+        <img
+          class="last-card-played float-left float-sm-none"
+          [style.borderColor]="getBorderColor()"
+          [src]="game.lastCardPlayed.imageUrl"
+          alt=""
+        />
         <button class="btn uno btn-primary" (click)="callUno(true)">Uno!</button>
         <img (click)="drawCard(1, true)" class="deck-card float-right float-sm-none" src="/images/cards/small/card_back_alt.png" />
       </div>
     </div>
-    <hr />
     <div class="row">
       <div class="col-12 p5 text-center">
+        <hr />
         <img
           *ngFor="let card of myCards; let firstItem = first"
           (click)="playCard(card)"

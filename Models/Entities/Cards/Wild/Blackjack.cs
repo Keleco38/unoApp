@@ -27,7 +27,7 @@ namespace Uno.Models.Entities.Cards.Wild
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played blackjack. They hit {moveParams.BlackjackNumber}. ";
             if (moveParams.BlackjackNumber > 21)
             {
-                var numberOfCardsToDraw = 6;
+                var numberOfCardsToDraw = 5;
                 var doubleDrawCard = moveParams.PlayerPlayed.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
                 if (doubleDrawCard != null)
                 {
@@ -43,17 +43,17 @@ namespace Uno.Models.Entities.Cards.Wild
             }
             else if (moveParams.BlackjackNumber == 21)
             {
-                var numberToDiscard = moveParams.PlayerPlayed.Cards.Count < 4 ? moveParams.PlayerPlayed.Cards.Count : 4;
+                var numberToDiscard = moveParams.PlayerPlayed.Cards.Count < 3 ? moveParams.PlayerPlayed.Cards.Count : 3;
                 moveParams.PlayerPlayed.Cards.RemoveRange(0, numberToDiscard);
-                messageToLog += $"They hit the blackjack. They will discard 4 cards.";
+                messageToLog += $"They hit the blackjack. They will discard 3 cards.";
 
             }
             else if (moveParams.BlackjackNumber < 21 && moveParams.BlackjackNumber > 17)
             {
 
-                var numberToDiscard = moveParams.PlayerPlayed.Cards.Count < 2 ? moveParams.PlayerPlayed.Cards.Count : 2;
+                var numberToDiscard = moveParams.PlayerPlayed.Cards.Count < 1 ? moveParams.PlayerPlayed.Cards.Count : 1;
                 moveParams.PlayerPlayed.Cards.RemoveRange(0, numberToDiscard);
-                messageToLog += $"They beat the dealer. They will discard 2 cards.";
+                messageToLog += $"They beat the dealer. They will discard 1 card.";
             }
             else if (moveParams.BlackjackNumber == 17)
             {
