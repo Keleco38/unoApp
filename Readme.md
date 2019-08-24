@@ -32,6 +32,7 @@
 - In game, arrows next to the player's name corresponds to the current direction of the game.
 - Player can mute spectator's and server's chat by selecting checkbox under the Misc. tab
 - Player can keep sidebar open and change sidebar's size by selecting those options under the Misc. tab
+- Player can mention another player by sending @name in chat where name is the name of the player
 
 ## Cards
 
