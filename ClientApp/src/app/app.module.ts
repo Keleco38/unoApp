@@ -27,7 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
 import { SidebarModule } from 'ng-sidebar';
-
+import { MentionModule } from 'angular-mentions';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './_components/home/home.component';
 import { OnlinePlayersComponent } from './_components/online-players/online-players.component';
@@ -77,11 +77,15 @@ import { GuessOddEvenNumberComponent } from './_components/_modals/guess-odd-eve
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     BrowserAnimationsModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      preventDuplicates: true,
+      timeOut: 3000
+    }),
     HttpClientModule,
     FormsModule,
     SidebarModule.forRoot(),
     NgbModule,
+    MentionModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       {

@@ -131,13 +131,13 @@ export class GameComponent implements OnInit, OnDestroy {
       (cardPlayed.value === CardValue.magneticPolarity || cardPlayed.value === CardValue.doubleDraw) &&
       this.game.lastCardPlayed.wasWildCard === false
     ) {
-      this._toastrService.info('This card only can be played if last card played is a wildcard.', '', { timeOut: 3000 });
+      this._toastrService.info('This card only can be played if last card played is a wildcard.');
       return;
     }
 
     if (cardPlayed.value == CardValue.charity) {
       if (this.myCards.length < 3) {
-        this._toastrService.info('This card can only be played if the number of cards on hand is 3 and more.', '', { timeOut: 3000 });
+        this._toastrService.info('This card can only be played if the number of cards on hand is 3 and more.');
         return;
       }
     }
@@ -145,11 +145,7 @@ export class GameComponent implements OnInit, OnDestroy {
     if (cardPlayed.value == CardValue.promiseKeeper) {
       var numberOfCardsWithoutWild = this.myCards.filter((card: Card) => card.color != CardColor.wild).length;
       if (numberOfCardsWithoutWild == 0) {
-        this._toastrService.info(
-          'This card can only be played if the number of colored cards (excluding wild) on hand is 1 and more.',
-          '',
-          { timeOut: 3000 }
-        );
+        this._toastrService.info('This card can only be played if the number of colored cards (excluding wild) on hand is 1 and more.');
         return;
       }
     }

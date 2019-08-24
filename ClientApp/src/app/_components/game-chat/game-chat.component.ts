@@ -6,7 +6,7 @@ import { User } from 'src/app/_models/user';
 import { HubService } from 'src/app/_services/hub.service';
 import { TypeOfMessage } from 'src/app/_models/enums';
 import { Game } from 'src/app/_models/game';
-import { takeWhile } from 'rxjs/operators';
+import { takeWhile, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-game-chat',
@@ -14,10 +14,8 @@ import { takeWhile } from 'rxjs/operators';
   styleUrls: ['./game-chat.component.css']
 })
 export class GameChatComponent implements OnInit, OnDestroy {
-  ngOnDestroy(): void {
-    this._isAlive = false;
-  }
   private _isAlive: boolean = true;
+  onlineUsers: string[];
   messages: ChatMessage[];
   currentUser: User;
   newMessage = '';
@@ -35,6 +33,15 @@ export class GameChatComponent implements OnInit, OnDestroy {
     });
     this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.activeGame = game;
+    });
+    this._hubService.onlineUsers.pipe(takeWhile(() => this._isAlive)).pipe(
+      map(users => {
+        return users.map(user => {
+          return user.name;
+        });
+      })
+    ).subscribe((userNames:string[])=>{
+      this.onlineUsers=userNames;
     });
     this.sidebarSettings = this._utilityService.sidebarSettings;
   }
@@ -59,5 +66,9 @@ export class GameChatComponent implements OnInit, OnDestroy {
       return true;
     }
     return false;
+  }
+
+  ngOnDestroy(): void {
+    this._isAlive = false;
   }
 }

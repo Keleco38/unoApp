@@ -88,9 +88,7 @@
         <span *ngIf="first">&#9734;</span>
         {{ player.user.name }}
         <strong
-          *ngIf="
-            currentUser.connectionId == activeGame.players[0].user.connectionId && !first
-          "
+          *ngIf="currentUser.connectionId == activeGame.players[0].user.connectionId && !first"
           class="ml-2 text-danger cursor-pointer"
           (click)="kickPlayerFromGame(player)"
           >[X]</strong
@@ -113,7 +111,7 @@
 </div>
 
 <div class="row">
-  <div class="col-12  fill-viewport-max-100  scrollable-div-y bg-white">
+  <div class="col-12  fill-viewport-40  scrollable-div-y bg-white">
     <app-game-tabs></app-game-tabs>
   </div>
 </div>

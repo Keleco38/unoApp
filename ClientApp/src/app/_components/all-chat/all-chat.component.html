@@ -6,7 +6,7 @@
           Hello, <strong>{{ currentUser.name }}</strong>
         </h5>
         <form novalidate name="newMessageForm" (ngSubmit)="sendMessageAllChat()">
-          <input type="text" name="newMessage" autocomplete="off" class="form-control" placeholder="New Message" [(ngModel)]="newMessage" />
+          <input type="text" name="newMessage" [mention]="onlineUsers" autocomplete="off" class="form-control" placeholder="New Message" [(ngModel)]="newMessage" />
         </form>
       </h5>
       <div class="card-body">

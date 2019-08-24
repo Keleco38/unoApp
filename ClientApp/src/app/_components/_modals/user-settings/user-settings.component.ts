@@ -46,6 +46,17 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     this._utilityService.saveUserSettings();
   }
 
+  updateTextNotifyOnMentions(event) {
+    var value = event.target.checked;
+    this.userSettings.notifyWhenMentionedToast = value;
+    this._utilityService.saveUserSettings();
+  }
+  updateSoundNotifyOnMentions(event) {
+    var value = event.target.checked;
+    this.userSettings.notifyWhenMentionedBuzz = value;
+    this._utilityService.saveUserSettings();
+  }
+
   shouldBeCheckedBuzzComand(buzzType) {
     return this.userSettings.blockedBuzzCommands.indexOf(buzzType) != -1;
   }
@@ -53,6 +64,16 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   shouldBeCheckedNotifyWhenTurnToPlay() {
     return this.userSettings.notifyUserWhenHisTurnToPlay;
   }
+
+  shouldBeCheckedTextNotifyOnMentions() {
+    return this.userSettings.notifyWhenMentionedToast;
+  }
+
+  shouldBeCheckedSoundNotifyOnMentions() {
+    return this.userSettings.notifyWhenMentionedBuzz;
+  }
+
+  
 
   closeModal() {
     this._activeModal.close();

@@ -40,8 +40,18 @@ export class UtilityService {
     if (this._userSettings === null) {
       this._userSettings = JSON.parse(localStorage.getItem('user-settings'));
       if (this._userSettings === null) {
-        this._userSettings = { notifyUserWhenHisTurnToPlay: false, blockedBuzzCommands: [] };
+        this._userSettings = {
+          notifyUserWhenHisTurnToPlay: false,
+          blockedBuzzCommands: [],
+          notifyWhenMentionedBuzz: false,
+          notifyWhenMentionedToast: true
+        };
         this.saveUserSettings();
+      } else {
+        if (this._userSettings.notifyWhenMentionedToast == null) {
+          this._userSettings.notifyWhenMentionedToast = true;
+          this.saveUserSettings();
+        }
       }
     }
     return this._userSettings;

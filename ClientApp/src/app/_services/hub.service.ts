@@ -71,6 +71,18 @@ export class HubService {
       this._gameChatMessagesObservable.next(this._gameChatMessages);
       this._activeGameObservable.next(null);
     });
+    this._hubConnection.on('UserMentioned', () => {
+      var notifyWhenMentionedToast = this._utilityService.userSettings.notifyWhenMentionedToast;
+      var notifyWhenMentionedBuzz = this._utilityService.userSettings.notifyWhenMentionedBuzz;
+
+      if (notifyWhenMentionedToast) {
+        this._toastrService.success('You were mentioned in chat');
+      }
+      if (notifyWhenMentionedBuzz) {
+        this.buzzPlayer('ding', true);
+      }
+    });
+
     this._hubConnection.on('RefreshOnlineUsersList', (onlineUsers: User[]) => {
       this._onlineUsersObservable.next(onlineUsers);
     });
@@ -117,7 +129,7 @@ export class HubService {
     });
 
     this._hubConnection.on('DisplayToastMessage', (message: string) => {
-      this._toastrService.info(message, '', { timeOut: 3000 });
+      this._toastrService.info(message);
     });
 
     this._hubConnection.on('UpdateMyHand', (myCards: Card[]) => {

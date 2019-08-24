@@ -11,7 +11,7 @@
          
         </div>
         <form novalidate name="newMessageForm" (ngSubmit)="sendMessageToGameChat()">
-          <input type="text" name="newMessage"  autocomplete="off" class="form-control" placeholder="New Message" [(ngModel)]="newMessage" />
+          <input type="text" name="newMessage" [mention]="onlineUsers" autocomplete="off" class="form-control" placeholder="New Message" [(ngModel)]="newMessage" />
         </form>
       </div>
       <div class="card-body">

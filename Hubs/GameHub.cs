@@ -438,12 +438,22 @@ namespace Uno.Hubs
                 {
                     await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
                 }
+
+                chatMessageIntentionResult.MentionedUsers.ForEach(async targetedUser =>
+                {
+                    var canBeBuzzedAfter = targetedUser.LastBuzzedUtc.AddSeconds(Constants.MINIMUM_TIME_SECONDS_BETWEEN_BUZZ);
+                    if (DateTime.Now > canBeBuzzedAfter)
+                    {
+                        targetedUser.LastBuzzedUtc = DateTime.Now;
+                        await Clients.Client(targetedUser.ConnectionId).SendAsync("UserMentioned");
+                    }
+                });
             }
         }
 
         private ChatMessageIntentionResult GetChatMessageIntention(string message)
         {
-            Regex regex = new Regex(@"^/(slap|ding|alert|lick|poke|punch|shoot|scream|laugh|kiss) ([A-Za-z0-9\s]*)$");
+            Regex regex = new Regex(@"^/(slap|ding|alert|lick|poke|punch|shoot|scream|laugh|kiss) @?([A-Za-z0-9\s]*)$");
             Match match = regex.Match(message);
             if (match.Success)
             {
@@ -487,7 +497,21 @@ namespace Uno.Hubs
             }
             else
             {
-                return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Normal };
+                var mentionedUsers = new List<User>();
+
+                List<Match> matches = Regex.Matches(message, @"@([A-Za-z0-9]*)").ToList();
+                matches.ForEach(x =>
+                {
+                    var username = x.Groups[1].Value;
+
+                    var user = _users.FirstOrDefault(y => y.Name == username);
+                    if (user != null && !mentionedUsers.Contains(user))
+                    {
+                        mentionedUsers.Add(user);
+                    }
+                });
+
+                return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Normal, MentionedUsers = mentionedUsers };
             }
         }
 
