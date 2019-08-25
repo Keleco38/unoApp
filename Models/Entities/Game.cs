@@ -50,7 +50,7 @@ namespace Uno.Models.Entities
                 if (cardPlayed.Color == playerPlayed.CardPromisedToDiscard.Color && cardPlayed.Value == playerPlayed.CardPromisedToDiscard.Value)
                 {
                     extraMessageToLog = $"{playerPlayed.User.Name} fulfilled their promise, they will discard one card. ";
-                    if (playerPlayed.Cards.Count > 1)
+                    if (playerPlayed.Cards.Count > 0)
                     {
                         playerPlayed.Cards.RemoveRange(0, 1);
                     }

@@ -52,7 +52,7 @@ namespace Uno.Models.Entities.Cards.Wild
             if (correctGuess == moveParams.OddOrEvenGuess)
             {
                 messageToLog += $"Player guessed correctly. {moveParams.PlayerTargeted.User.Name} had {correctGuess} number of cards. They will discard 1 card";
-                if (moveParams.PlayerPlayed.Cards.Count > 1)
+                if (moveParams.PlayerPlayed.Cards.Count > 0)
                 {
                     moveParams.PlayerPlayed.Cards.RemoveRange(0, 1);
                 }
