@@ -51,7 +51,7 @@ namespace Uno.Models.Entities.Cards.Wild
 
             if (correctGuess == moveParams.OddOrEvenGuess)
             {
-                messageToLog += $"Player guessed correctly. {moveParams.PlayerTargeted.User.Name} had {correctGuess} number of cards. They will discard 1 card";
+                messageToLog += $"Player guessed correctly. {moveParams.PlayerTargeted.User.Name} had {correctGuess} number of numbered (0-9) cards. They will discard 1 card";
                 if (moveParams.PlayerPlayed.Cards.Count > 0)
                 {
                     moveParams.PlayerPlayed.Cards.RemoveRange(0, 1);
@@ -71,7 +71,7 @@ namespace Uno.Models.Entities.Cards.Wild
                     messageToLog += $"{moveParams.PlayerPlayed.User.Name} doubled the draw effect. ";
                 }
 
-                messageToLog += $"Player guessed wrongly. {moveParams.PlayerTargeted.User.Name} had {correctGuess} number of cards. They will draw {numberOfCardsToDraw} cards";
+                messageToLog += $"Player guessed wrongly. {moveParams.PlayerTargeted.User.Name} had {correctGuess} number of numbered (0-9) cards. They will draw {numberOfCardsToDraw} cards";
                 game.DrawCard(moveParams.PlayerPlayed, numberOfCardsToDraw, false);
                 //double draw
             }
