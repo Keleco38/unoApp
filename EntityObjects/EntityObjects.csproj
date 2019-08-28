@@ -7,7 +7,6 @@
   <ItemGroup>
     <Folder Include="Cards\Abstraction\" />
     <Folder Include="Cards\Colored\" />
-    <Folder Include="Cards\Wild\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using EntityObjects;
-using GameProcessingService.GameManager;
+using GameProcessingService.CoreManagers.GameManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Colored

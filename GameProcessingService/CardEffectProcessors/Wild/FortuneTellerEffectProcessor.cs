@@ -2,7 +2,7 @@
 using System.Linq;
 using Common.Contants;
 using EntityObjects;
-using GameProcessingService.GameManager;
+using GameProcessingService.CoreManagers.GameManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild

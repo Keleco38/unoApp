@@ -4,10 +4,9 @@ using System.Linq;
 using Common.Enums;
 using EntityObjects;
 using EntityObjects.Cards.Abstraction;
-using GameProcessingService.CardEffectProcessors;
 using GameProcessingService.Models;
 
-namespace GameProcessingService.GameManager
+namespace GameProcessingService.CoreManagers.GameManagers
 {
     public class GameManager : IGameManager
     {

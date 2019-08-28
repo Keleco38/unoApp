@@ -1,8 +1,8 @@
 using AutoMapper;
 using Common.Extensions;
 using GameProcessingService.CardEffectProcessors;
-using GameProcessingService.GameManager;
-using GameProcessingService.PlayCardManager;
+using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers.PlayCardManagers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

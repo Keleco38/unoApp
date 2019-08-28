@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using EntityObjects;
-using GameProcessingService.GameManager;
+using GameProcessingService.CoreManagers.GameManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild

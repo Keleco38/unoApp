@@ -3,7 +3,7 @@ using System.Linq;
 using Common.Enums;
 using EntityObjects;
 using EntityObjects.Cards.Abstraction;
-using GameProcessingService.GameManager;
+using GameProcessingService.CoreManagers.GameManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild

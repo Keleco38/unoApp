@@ -3,10 +3,10 @@ using System.Linq;
 using Common.Enums;
 using EntityObjects;
 using GameProcessingService.CardEffectProcessors;
-using GameProcessingService.GameManager;
+using GameProcessingService.CoreManagers.GameManagers;
 using GameProcessingService.Models;
 
-namespace GameProcessingService.PlayCardManager
+namespace GameProcessingService.CoreManagers.PlayCardManagers
 {
     public class PlayCardManager : IPlayCardManager
     {
