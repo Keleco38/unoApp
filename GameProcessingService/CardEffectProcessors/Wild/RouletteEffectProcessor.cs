@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
 {
-    public class RouletteEffectProcessor:ICardEffectProcessor
+    public class RouletteEffectProcessor : ICardEffectProcessor
     {
 
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.Roulette;
 
         public RouletteEffectProcessor(IGameManager gameManager)
         {
@@ -55,12 +57,12 @@ namespace GameProcessingService.CardEffectProcessors.Wild
                     game.DiscardedPile.Add(doubleDrawCard);
                     numberOfCardsToDraw = numberOfCardsToDraw * 2;
                     messageToLog += $"{playerAffected.User.Name} didn't have any luck! They had double draw. They will draw {numberOfCardsToDraw} cards. ";
-                    _gameManager.DrawCard(game,playerAffected, numberOfCardsToDraw, false);
+                    _gameManager.DrawCard(game, playerAffected, numberOfCardsToDraw, false);
                 }
                 else
                 {
                     messageToLog += $"{playerAffected.User.Name} didn't have any luck! They will draw {numberOfCardsToDraw} cards. ";
-                    _gameManager.DrawCard(game,playerAffected, numberOfCardsToDraw, false);
+                    _gameManager.DrawCard(game, playerAffected, numberOfCardsToDraw, false);
                 }
 
             }

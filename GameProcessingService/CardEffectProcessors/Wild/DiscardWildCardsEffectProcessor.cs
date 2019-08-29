@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
 {
-    public class DiscardWildCardsEffectProcessor:ICardEffectProcessor
+    public class DiscardWildCardsEffectProcessor : ICardEffectProcessor
     {
 
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.DiscardWildCards;
 
         public DiscardWildCardsEffectProcessor(IGameManager gameManager)
         {
@@ -29,7 +31,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
                 wildCards.ForEach(y => x.Cards.Remove(y));
             });
             messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name}  played discard all wildcards.");
-            _gameManager.DrawCard(game,moveParams.PlayerPlayed, 1, false);
+            _gameManager.DrawCard(game, moveParams.PlayerPlayed, 1, false);
 
             return new MoveResult(messagesToLog);
         }

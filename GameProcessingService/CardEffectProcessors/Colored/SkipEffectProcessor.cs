@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Colored
 {
-    public class SkipEffectProcessor:ICardEffectProcessor
+    public class SkipEffectProcessor : ICardEffectProcessor
     {
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.Skip;
 
         public SkipEffectProcessor(IGameManager gameManager)
         {

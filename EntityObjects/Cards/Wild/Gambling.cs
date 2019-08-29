@@ -11,14 +11,12 @@ namespace EntityObjects.Cards.Wild
         public Gambling()
         {
             Id = Guid.NewGuid().ToString();
-            Color = CardColor.Wild;
-            Value = CardValue.Gambling;
-            ImageUrl = $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         }
-        public string Id { get; set; }
-        public CardColor Color { get; set; }
-        public CardValue Value { get; set; }
-        public string ImageUrl { get; set; }
-
+        public string Id { get; }
+        public CardColor Color => CardColor.Wild;
+        public CardValue Value => CardValue.Gambling;
+        public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
+        public bool RequirePickColor => true;
+        public bool RequireTargetPlayer => true;
     }
 }

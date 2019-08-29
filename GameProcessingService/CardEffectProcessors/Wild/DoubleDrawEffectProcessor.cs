@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
 {
-    public class DoubleDrawEffectProcessor:ICardEffectProcessor
+    public class DoubleDrawEffectProcessor : ICardEffectProcessor
     {
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.DoubleDraw;
 
         public DoubleDrawEffectProcessor(IGameManager gameManager)
         {

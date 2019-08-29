@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Colored
@@ -10,6 +11,7 @@ namespace GameProcessingService.CardEffectProcessors.Colored
     public class DrawTwoEffectProcessor : ICardEffectProcessor
     {
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.DrawTwo;
 
         public DrawTwoEffectProcessor(IGameManager gameManager)
         {
@@ -21,13 +23,13 @@ namespace GameProcessingService.CardEffectProcessors.Colored
             var messagesToLog = new List<string>();
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with +2. ";
 
-            Player loopingPlayer = _gameManager.GetNextPlayer(game,moveParams.PlayerPlayed, game.Players);
+            Player loopingPlayer = _gameManager.GetNextPlayer(game, moveParams.PlayerPlayed, game.Players);
             var playerExcludingPlayerPlaying = game.Players.Where(p => p != moveParams.PlayerPlayed).ToList();
             for (int i = 0; i < playerExcludingPlayerPlaying.Count; i++)
             {
                 if (i != 0)
                 {
-                    loopingPlayer = _gameManager.GetNextPlayer(game,loopingPlayer, playerExcludingPlayerPlaying);
+                    loopingPlayer = _gameManager.GetNextPlayer(game, loopingPlayer, playerExcludingPlayerPlaying);
                 }
 
                 var magneticCard = loopingPlayer.Cards.FirstOrDefault(c => c.Value == CardValue.MagneticPolarity);
@@ -60,14 +62,14 @@ namespace GameProcessingService.CardEffectProcessors.Colored
             if (deflectCard == null)
             {
                 messageToLog += $"{moveParams.PlayerTargeted.User.Name} drew {numberOfCardsToDraw} cards.";
-                _gameManager.DrawCard(game,moveParams.PlayerTargeted, numberOfCardsToDraw, false);
+                _gameManager.DrawCard(game, moveParams.PlayerTargeted, numberOfCardsToDraw, false);
             }
             else
             {
                 game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, deflectCard.Value, deflectCard.ImageUrl, moveParams.PlayerTargeted.User.Name, true);
                 moveParams.PlayerTargeted.Cards.Remove(deflectCard);
                 game.DiscardedPile.Add(deflectCard);
-                _gameManager.DrawCard(game,moveParams.PlayerPlayed, numberOfCardsToDraw, false);
+                _gameManager.DrawCard(game, moveParams.PlayerPlayed, numberOfCardsToDraw, false);
                 messageToLog += $"{moveParams.PlayerTargeted.User.Name} deflected +2 card. {moveParams.PlayerPlayed.User.Name} must draw {numberOfCardsToDraw} cards.";
 
             }

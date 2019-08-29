@@ -11,14 +11,12 @@ namespace EntityObjects.Cards.Wild
         public ParadigmShift()
         {
             Id = Guid.NewGuid().ToString();
-            Color = CardColor.Wild;
-            Value = CardValue.ParadigmShift;
-            ImageUrl = $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         }
-        public string Id { get; set; }
-        public CardColor Color { get; set; }
-        public CardValue Value { get; set; }
-        public string ImageUrl { get; set; }
-
+        public string Id { get; }
+        public CardColor Color => CardColor.Wild;
+        public CardValue Value => CardValue.ParadigmShift;
+        public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
+        public bool RequirePickColor => true;
+        public bool RequireTargetPlayer => false;
     }
 }

@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
 {
-    public class DiscardColorEffectProcessor:ICardEffectProcessor
+    public class DiscardColorEffectProcessor : ICardEffectProcessor
     {
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.DiscardColor;
 
         public DiscardColorEffectProcessor(IGameManager gameManager)
         {
@@ -31,7 +33,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
             var colorIds = new int[] { 1, 2, 3, 4 };
             int randomColor = colorIds[(random.Next(4))];
             game.LastCardPlayed.Color = (CardColor)randomColor;
-            _gameManager.DrawCard(game,moveParams.PlayerPlayed, 1, false);
+            _gameManager.DrawCard(game, moveParams.PlayerPlayed, 1, false);
             messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} played discard color. All players discarded {moveParams.TargetedCardColor} and a random color has been assigned.");
             return new MoveResult(messagesToLog);
         }

@@ -18,17 +18,12 @@ namespace EntityObjects
 
         public List<ICard> Cards { get; set; }
 
-
         public List<ICard> Draw(int count)
         {
             var cardsDrew = Cards.Take(count).ToList();
-
-            //Remove the drawn Deck from the draw pile
             Cards.RemoveAll(x => cardsDrew.Contains(x));
-
             return cardsDrew;
         }
-
 
         private void InitializeCards(List<CardValue> bannedCards)
         {
@@ -113,51 +108,39 @@ namespace EntityObjects
                 Cards.Add(new ChangeColor());
                 Cards.Add(new DrawFour());
             }
-
         }
 
         private void AddNormalGameNormalCards()
         {
             foreach (CardColor color in Enum.GetValues(typeof(CardColor)))
             {
-                //For every color we have defined
                 if (color != CardColor.Wild)
                 {
-                    //Wild Cards don't have a color
-                    foreach (CardValue val in Enum.GetValues(typeof(CardValue)))
-                    {
-                        switch (val)
-                        {
-                            case CardValue.One:
-                            case CardValue.Two:
-                            case CardValue.Three:
-                            case CardValue.Four:
-                            case CardValue.Five:
-                            case CardValue.Six:
-                            case CardValue.Seven:
-                            case CardValue.Eight:
-                            case CardValue.Nine:
-                                Cards.Add(new Number(color, val));
-                                Cards.Add(new Number(color, val));
-                                break;
-                            case CardValue.Skip:
-                                Cards.Add(new Skip(color));
-                                Cards.Add(new Skip(color));
-                                break;
-                            case CardValue.Reverse:
-                                Cards.Add(new Reverse(color));
-                                Cards.Add(new Reverse(color));
-                                break;
-                            case CardValue.DrawTwo:
-                                Cards.Add(new DrawTwo(color));
-                                Cards.Add(new DrawTwo(color));
-                                break;
-                            case CardValue.Zero:
-                                //Add one copy per color for 0
-                                Cards.Add(new Number(color, val));
-                                break;
-                        }
-                    }
+                    Cards.Add(new Zero(color));
+                    Cards.Add(new One(color));
+                    Cards.Add(new One(color));
+                    Cards.Add(new Two(color));
+                    Cards.Add(new Two(color));
+                    Cards.Add(new Three(color));
+                    Cards.Add(new Three(color));
+                    Cards.Add(new Four(color));
+                    Cards.Add(new Four(color));
+                    Cards.Add(new Five(color));
+                    Cards.Add(new Five(color));
+                    Cards.Add(new Six(color));
+                    Cards.Add(new Six(color));
+                    Cards.Add(new Seven(color));
+                    Cards.Add(new Seven(color));
+                    Cards.Add(new Eight(color));
+                    Cards.Add(new Eight(color));
+                    Cards.Add(new Nine(color));
+                    Cards.Add(new Nine(color));
+                    Cards.Add(new Skip(color));
+                    Cards.Add(new Skip(color));
+                    Cards.Add(new Reverse(color));
+                    Cards.Add(new Reverse(color));
+                    Cards.Add(new DrawTwo(color));
+                    Cards.Add(new DrawTwo(color));
                 }
             }
         }

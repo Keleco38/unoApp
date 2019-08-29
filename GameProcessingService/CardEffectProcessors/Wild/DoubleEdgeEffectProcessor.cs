@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
 {
-    public class DoubleEdgeEffectProcessor:ICardEffectProcessor
+    public class DoubleEdgeEffectProcessor : ICardEffectProcessor
     {
 
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.DoubleEdge;
 
         public DoubleEdgeEffectProcessor(IGameManager gameManager)
         {
@@ -22,13 +24,13 @@ namespace GameProcessingService.CardEffectProcessors.Wild
             var messagesToLog = new List<string>();
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with double edge. ";
 
-            Player loopingPlayer = _gameManager.GetNextPlayer(game,moveParams.PlayerPlayed, game.Players);
+            Player loopingPlayer = _gameManager.GetNextPlayer(game, moveParams.PlayerPlayed, game.Players);
             var playerExcludingPlayerPlaying = game.Players.Where(p => p != moveParams.PlayerPlayed).ToList();
             for (int i = 0; i < playerExcludingPlayerPlaying.Count; i++)
             {
                 if (i != 0)
                 {
-                    loopingPlayer = _gameManager.GetNextPlayer(game,loopingPlayer, playerExcludingPlayerPlaying);
+                    loopingPlayer = _gameManager.GetNextPlayer(game, loopingPlayer, playerExcludingPlayerPlaying);
                 }
 
                 var magneticCard = loopingPlayer.Cards.FirstOrDefault(c => c.Value == CardValue.MagneticPolarity);
@@ -61,16 +63,16 @@ namespace GameProcessingService.CardEffectProcessors.Wild
             {
                 messageToLog += $"{moveParams.PlayerTargeted.User.Name} drew {numberOfCardsToDrawTarget} cards. ";
                 messageToLog += $"{moveParams.PlayerPlayed.User.Name}  drew {numberOfCardsToDrawCaller} cards. ";
-                _gameManager.DrawCard(game,moveParams.PlayerTargeted, numberOfCardsToDrawTarget, false);
-                _gameManager.DrawCard(game,moveParams.PlayerPlayed, numberOfCardsToDrawCaller, false);
+                _gameManager.DrawCard(game, moveParams.PlayerTargeted, numberOfCardsToDrawTarget, false);
+                _gameManager.DrawCard(game, moveParams.PlayerPlayed, numberOfCardsToDrawCaller, false);
             }
             else
             {
                 game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, deflectCard.Value, deflectCard.ImageUrl, moveParams.PlayerPlayed.User.Name, true);
                 moveParams.PlayerTargeted.Cards.Remove(deflectCard);
                 game.DiscardedPile.Add(deflectCard);
-                _gameManager.DrawCard(game,moveParams.PlayerPlayed, numberOfCardsToDrawTarget, false);
-                _gameManager.DrawCard(game,moveParams.PlayerTargeted, numberOfCardsToDrawCaller, false);
+                _gameManager.DrawCard(game, moveParams.PlayerPlayed, numberOfCardsToDrawTarget, false);
+                _gameManager.DrawCard(game, moveParams.PlayerTargeted, numberOfCardsToDrawCaller, false);
                 messageToLog += $"{moveParams.PlayerTargeted.User.Name} deflected double edge card. They will draw {numberOfCardsToDrawCaller} cards and {moveParams.PlayerPlayed.User.Name}  must draw {numberOfCardsToDrawTarget} cards.";
             }
             messagesToLog.Add(messageToLog);

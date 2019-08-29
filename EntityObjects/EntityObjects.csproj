@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Cards\Abstraction\" />
-    <Folder Include="Cards\Colored\" />
   </ItemGroup>
 
   <ItemGroup>

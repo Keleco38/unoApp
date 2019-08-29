@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
 {
-    public class FairPlayEffectProcessor:ICardEffectProcessor
+    public class FairPlayEffectProcessor : ICardEffectProcessor
     {
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.FairPlay;
 
         public FairPlayEffectProcessor(IGameManager gameManager)
         {
@@ -21,13 +23,13 @@ namespace GameProcessingService.CardEffectProcessors.Wild
             var messagesToLog = new List<string>();
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with Fair Play. ";
 
-            Player loopingPlayer = _gameManager.GetNextPlayer(game,moveParams.PlayerPlayed, game.Players);
+            Player loopingPlayer = _gameManager.GetNextPlayer(game, moveParams.PlayerPlayed, game.Players);
             var playerExcludingPlayerPlaying = game.Players.Where(p => p != moveParams.PlayerPlayed).ToList();
             for (int i = 0; i < playerExcludingPlayerPlaying.Count; i++)
             {
                 if (i != 0)
                 {
-                    loopingPlayer = _gameManager.GetNextPlayer(game,loopingPlayer, playerExcludingPlayerPlaying);
+                    loopingPlayer = _gameManager.GetNextPlayer(game, loopingPlayer, playerExcludingPlayerPlaying);
                 }
 
                 var magneticCard = loopingPlayer.Cards.FirstOrDefault(c => c.Value == CardValue.MagneticPolarity);
@@ -58,7 +60,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
             {
                 //targeted Player draws
                 var numberInPositiveValue = cardDifference * -1;
-                _gameManager.DrawCard(game,moveParams.PlayerTargeted, numberInPositiveValue, false);
+                _gameManager.DrawCard(game, moveParams.PlayerTargeted, numberInPositiveValue, false);
                 messageToLog += $"{moveParams.PlayerTargeted.User.Name} must draw {numberInPositiveValue} cards. They had less cards.";
             }
             messagesToLog.Add(messageToLog);

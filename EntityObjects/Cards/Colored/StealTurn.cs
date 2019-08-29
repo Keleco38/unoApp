@@ -11,14 +11,14 @@ namespace EntityObjects.Cards.Colored
         {
             Id = Guid.NewGuid().ToString();
             Color = cardColor;
-            Value = CardValue.StealTurn;
-            ImageUrl = $"/images/cards/small/{(int)cardColor}/{(int)Value}.png";
         }
-        public string Id { get; set; }
-        public CardColor Color { get; set; }
-        public CardValue Value { get; set; }
-        public string ImageUrl { get; set; }
+        public string Id { get; }
+        public CardColor Color { get; }
+        public CardValue Value => CardValue.StealTurn;
+        public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
+        public bool RequirePickColor => false;
+        public bool RequireTargetPlayer => false;
 
-   
+
     }
 }

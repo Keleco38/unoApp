@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
 {
-    public class DiscardNumberEffectProcessor:ICardEffectProcessor
+    public class DiscardNumberEffectProcessor : ICardEffectProcessor
     {
 
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.DiscardNumber;
 
         public DiscardNumberEffectProcessor(IGameManager gameManager)
         {
@@ -25,7 +27,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
                 var cardsToDiscard = p.Cards.Where(c => moveParams.NumbersToDiscard.Contains((int)c.Value)).ToList();
                 cardsToDiscard.ForEach(x => p.Cards.Remove(x));
             });
-            _gameManager.DrawCard(game,moveParams.PlayerPlayed, 1, false);
+            _gameManager.DrawCard(game, moveParams.PlayerPlayed, 1, false);
             messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);
         }

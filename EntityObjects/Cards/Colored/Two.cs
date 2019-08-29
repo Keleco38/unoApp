@@ -5,20 +5,18 @@ using EntityObjects.Cards.Abstraction;
 
 namespace EntityObjects.Cards.Colored
 {
-    public class Number : ICard
+    public class Two: ICard
     {
-        public Number(CardColor cardColor, CardValue cardValue)
+        public Two(CardColor cardColor)
         {
             Id = Guid.NewGuid().ToString();
             Color = cardColor;
-            Value = cardValue;
-            ImageUrl = $"/images/cards/small/{(int)cardColor}/{(int)cardValue}.png";
         }
         public string Id { get; set; }
         public CardColor Color { get; set; }
-        public CardValue Value { get; set; }
-        public string ImageUrl { get; set; }
-
-     
+        public CardValue Value => CardValue.Two;
+        public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
+        public bool RequirePickColor => false;
+        public bool RequireTargetPlayer => false;
     }
 }

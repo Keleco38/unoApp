@@ -6,7 +6,7 @@ using EntityObjects;
 using EntityObjects.Cards.Abstraction;
 using GameProcessingService.Models;
 
-namespace GameProcessingService.CoreManagers.GameManagers
+namespace GameProcessingService.CoreManagers
 {
     public class GameManager : IGameManager
     {

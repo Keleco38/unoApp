@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
@@ -11,6 +12,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
     {
 
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.Poison;
 
         public PoisonEffectProcessor(IGameManager gameManager)
         {
@@ -26,7 +28,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
             var doubleDrawCard = moveParams.PlayerPlayed.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
             if (doubleDrawCard != null)
             {
-                _gameManager.DrawCard(game,moveParams.PlayerPlayed, 4, false);
+                _gameManager.DrawCard(game, moveParams.PlayerPlayed, 4, false);
                 game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, moveParams.PlayerPlayed.User.Name, true);
                 moveParams.PlayerPlayed.Cards.Remove(doubleDrawCard);
                 game.DiscardedPile.Add(doubleDrawCard);
@@ -34,7 +36,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
             }
             else
             {
-                _gameManager.DrawCard(game,moveParams.PlayerPlayed, 2, false);
+                _gameManager.DrawCard(game, moveParams.PlayerPlayed, 2, false);
                 messageToLog += $" {moveParams.PlayerPlayed.User.Name} drew 2 cards. ";
             }
             messagesToLog.Add(messageToLog);

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
@@ -10,6 +11,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
     public class BlackjackEffectProcessor : ICardEffectProcessor
     {
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.Blackjack;
 
         public BlackjackEffectProcessor(IGameManager gameManager)
         {
@@ -67,7 +69,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
                     messageToLog += $"{moveParams.PlayerPlayed.User.Name} doubled the draw effect. ";
                 }
 
-                _gameManager.DrawCard(game,moveParams.PlayerPlayed, numberOfCardsToDraw, false);
+                _gameManager.DrawCard(game, moveParams.PlayerPlayed, numberOfCardsToDraw, false);
                 messageToLog += $"They pulled out. They will draw {numberOfCardsToDraw} cards.";
             }
             messagesToLog.Add(messageToLog);

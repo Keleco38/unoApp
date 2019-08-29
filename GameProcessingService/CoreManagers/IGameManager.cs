@@ -2,7 +2,7 @@
 using EntityObjects;
 using GameProcessingService.Models;
 
-namespace GameProcessingService.CoreManagers.GameManagers
+namespace GameProcessingService.CoreManagers
 {
     public interface IGameManager
     {

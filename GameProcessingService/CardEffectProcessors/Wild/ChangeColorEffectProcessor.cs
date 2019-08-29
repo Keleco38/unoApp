@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Generic; 
+ using Common.Enums; 
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
@@ -8,7 +9,8 @@ namespace GameProcessingService.CardEffectProcessors.Wild
     public class ChangeColorEffectProcessor:ICardEffectProcessor
     {
 
-        private readonly IGameManager _gameManager;
+        private readonly IGameManager _gameManager; 
+ public CardValue CardAffected => CardValue.ChangeColor;
 
         public ChangeColorEffectProcessor(IGameManager gameManager)
         {

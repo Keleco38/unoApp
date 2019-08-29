@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
 {
-    public class DuelEffectProcessor:ICardEffectProcessor
+    public class DuelEffectProcessor : ICardEffectProcessor
     {
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.Duel;
 
         public DuelEffectProcessor(IGameManager gameManager)
         {
@@ -25,13 +27,13 @@ namespace GameProcessingService.CardEffectProcessors.Wild
             var callerWon = moveParams.DuelNumbers.Contains(numberRolled);
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with Duel. Numbers they picked: {String.Join(' ', moveParams.DuelNumbers)}. Number rolled: {numberRolled}. ";
 
-            Player loopingPlayer = _gameManager.GetNextPlayer(game,moveParams.PlayerPlayed, game.Players);
+            Player loopingPlayer = _gameManager.GetNextPlayer(game, moveParams.PlayerPlayed, game.Players);
             var playerExcludingPlayerPlaying = game.Players.Where(p => p != moveParams.PlayerPlayed).ToList();
             for (int i = 0; i < playerExcludingPlayerPlaying.Count; i++)
             {
                 if (i != 0)
                 {
-                    loopingPlayer = _gameManager.GetNextPlayer(game,loopingPlayer, playerExcludingPlayerPlaying);
+                    loopingPlayer = _gameManager.GetNextPlayer(game, loopingPlayer, playerExcludingPlayerPlaying);
                 }
 
                 var magneticCard = loopingPlayer.Cards.FirstOrDefault(c => c.Value == CardValue.MagneticPolarity);
@@ -59,7 +61,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
                     messageToLog += $"{moveParams.PlayerTargeted.User.Name} doubled the draw effect. ";
                 }
 
-                _gameManager.DrawCard(game,moveParams.PlayerTargeted, numberOfCardsToDraw, false);
+                _gameManager.DrawCard(game, moveParams.PlayerTargeted, numberOfCardsToDraw, false);
                 messageToLog += $"{moveParams.PlayerPlayed.User.Name} won! {moveParams.PlayerTargeted.User.Name} will draw {numberOfCardsToDraw} cards";
             }
             else
@@ -74,7 +76,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
                     messageToLog += $"{moveParams.PlayerPlayed.User.Name} doubled the draw effect. ";
                 }
 
-                _gameManager.DrawCard(game,moveParams.PlayerPlayed, numberOfCardsToDraw, false);
+                _gameManager.DrawCard(game, moveParams.PlayerPlayed, numberOfCardsToDraw, false);
                 messageToLog += $"{moveParams.PlayerTargeted.User.Name} won! {moveParams.PlayerPlayed.User.Name} will draw {numberOfCardsToDraw} cards";
             }
             messagesToLog.Add(messageToLog);

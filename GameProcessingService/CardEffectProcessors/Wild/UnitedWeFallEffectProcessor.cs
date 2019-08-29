@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
 {
-    public class UnitedWeFallEffectProcessor:ICardEffectProcessor
+    public class UnitedWeFallEffectProcessor : ICardEffectProcessor
     {
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.UnitedWeFall;
 
         public UnitedWeFallEffectProcessor(IGameManager gameManager)
         {
@@ -26,7 +28,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
                 var doubleDrawCard = x.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
                 if (doubleDrawCard != null)
                 {
-                    _gameManager.DrawCard(game,x, 4, false);
+                    _gameManager.DrawCard(game, x, 4, false);
 
                     game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, x.User.Name, true);
                     x.Cards.Remove(doubleDrawCard);
@@ -36,7 +38,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
                 }
                 else
                 {
-                    _gameManager.DrawCard(game,x, 2, false);
+                    _gameManager.DrawCard(game, x, 2, false);
                 }
             });
             messagesToLog.Add(messageToLog);

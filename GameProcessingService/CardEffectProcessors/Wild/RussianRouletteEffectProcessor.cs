@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
 {
-    public class RussianRouletteEffectProcessor:ICardEffectProcessor
+    public class RussianRouletteEffectProcessor : ICardEffectProcessor
     {
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.RussianRoulette;
 
         public RussianRouletteEffectProcessor(IGameManager gameManager)
         {
@@ -34,7 +36,7 @@ namespace GameProcessingService.CardEffectProcessors.Wild
                     var doubleDrawCard = playerRolling.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
                     if (doubleDrawCard != null)
                     {
-                        _gameManager.DrawCard(game,playerRolling, 6, false);
+                        _gameManager.DrawCard(game, playerRolling, 6, false);
 
                         game.LastCardPlayed = new LastCardPlayed(moveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, playerRolling.User.Name, true);
                         playerRolling.Cards.Remove(doubleDrawCard);
@@ -45,12 +47,12 @@ namespace GameProcessingService.CardEffectProcessors.Wild
                     else
                     {
                         messageToLog += $" {playerRolling.User.Name} drew 3 cards. ";
-                        _gameManager.DrawCard(game,playerRolling, 3, false);
+                        _gameManager.DrawCard(game, playerRolling, 3, false);
                     }
 
                     break;
                 }
-                playerRolling = _gameManager.GetNextPlayer(game,playerRolling, game.Players);
+                playerRolling = _gameManager.GetNextPlayer(game, playerRolling, game.Players);
             }
             messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);

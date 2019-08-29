@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
+using Common.Enums;
 using System.Linq;
 using Common.Contants;
 using EntityObjects;
-using GameProcessingService.CoreManagers.GameManagers;
+using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.Wild
 {
-    public class FortuneTellerEffectProcessor:ICardEffectProcessor
+    public class FortuneTellerEffectProcessor : ICardEffectProcessor
     {
         private readonly IGameManager _gameManager;
+        public CardValue CardAffected => CardValue.FortuneTeller;
 
         public FortuneTellerEffectProcessor(IGameManager gameManager)
         {

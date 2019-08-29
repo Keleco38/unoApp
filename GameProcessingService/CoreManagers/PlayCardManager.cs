@@ -3,10 +3,9 @@ using System.Linq;
 using Common.Enums;
 using EntityObjects;
 using GameProcessingService.CardEffectProcessors;
-using GameProcessingService.CoreManagers.GameManagers;
 using GameProcessingService.Models;
 
-namespace GameProcessingService.CoreManagers.PlayCardManagers
+namespace GameProcessingService.CoreManagers
 {
     public class PlayCardManager : IPlayCardManager
     {
@@ -63,11 +62,9 @@ namespace GameProcessingService.CoreManagers.PlayCardManagers
 
             var moveParams = new MoveParams(playerPlayed,cardPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess);
 
-            var targetedCardEffectProcessor = cardPlayed.GetType().Name.ToLower() + "effectprocessor";
-
-            var cardEffectProcessor = _cardEffectProcessors.First(x => x.GetType().Name.ToLower().Equals(targetedCardEffectProcessor));
-
+            var cardEffectProcessor = _cardEffectProcessors.First(x=>x.CardAffected==cardPlayed.Value);
             var moveResult = cardEffectProcessor.ProcessCardEffect(game, moveParams);
+
             if (!string.IsNullOrEmpty(extraMessageToLog))
             {
                 moveResult.MessagesToLog.Add(extraMessageToLog);

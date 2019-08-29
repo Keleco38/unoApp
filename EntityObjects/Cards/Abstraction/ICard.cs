@@ -4,9 +4,11 @@ namespace EntityObjects.Cards.Abstraction
 {
     public interface ICard
     {
-        string Id { get; set; }
-        CardColor Color { get; set; }
-        CardValue Value { get; set; }
-        string ImageUrl { get; set; }
+        string Id { get; }
+        CardColor Color { get; }
+        CardValue Value { get; }
+        string ImageUrl { get; }
+        bool RequirePickColor { get; }
+        bool RequireTargetPlayer { get; }
     }
 }
