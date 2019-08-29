@@ -64,6 +64,10 @@ namespace Web.Hubs
         public async Task SetGamePassword(string gameId, string password)
         {
             var game = GetGameByGameId(gameId);
+            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId) || game.GameStarted)
+            {
+                return;
+            }
             game.GameSetup.Password = password;
             await GetAllGames();
             await UpdateGame(game);
@@ -127,6 +131,11 @@ namespace Web.Hubs
         public async Task KickPlayerFromGame(string name, string gameId)
         {
             var game = GetGameByGameId(gameId);
+            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId))
+            {
+                return;
+            }
+
             var playerToKick = game.Players.Find(y => y.User.Name == name);
             game.Players.Remove(playerToKick);
             await UpdateGame(game);
@@ -137,6 +146,10 @@ namespace Web.Hubs
         public async Task UpdateGameSetup(string gameId, List<CardValue> bannedCards, int roundsToWin)
         {
             var game = GetGameByGameId(gameId);
+            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId))
+            {
+                return;
+            }
             game.GameSetup.BannedCards = bannedCards;
             game.GameSetup.RoundsToWin = roundsToWin;
             await UpdateGame(game);
@@ -146,6 +159,10 @@ namespace Web.Hubs
         public async Task StartGame(string gameId)
         {
             var game = GetGameByGameId(gameId);
+            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId))
+            {
+                return;
+            }
             _gameManager.StartNewGame(game);
             await UpdateGame(game);
             await UpdateHands(game);
@@ -246,6 +263,7 @@ namespace Web.Hubs
 
         public async Task DrawCard(string gameId, int count, bool normalDraw)
         {
+            //todo missing security
             var user = GetUserByConnectionId();
             var game = GetGameByGameId(gameId);
             if (game.GameEnded)
