@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Repository;
 using Web.Hubs;
 
 namespace Web
@@ -27,8 +28,9 @@ namespace Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSingleton<IGameManager, GameManager>();
-            services.AddTransient<IPlayCardManager, PlayCardManager>();
-            services.RegisterAllTypes<ICardEffectProcessor>(new[] { typeof(ICardEffectProcessor).Assembly });
+            services.AddSingleton<IPlayCardManager, PlayCardManager>();
+            services.AddSingleton<IUnoRepository, UnoRepository>();
+            services.RegisterAllTypes<ICardEffectProcessor>(new[] { typeof(ICardEffectProcessor).Assembly }, ServiceLifetime.Singleton);
 
 
             services.AddSignalR();

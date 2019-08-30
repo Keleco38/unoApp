@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Common.Enums;
 using System.Linq;
-using Common.Enums;
 using EntityObjects;
 using EntityObjects.Cards.Abstraction;
 using GameProcessingService.CoreManagers;
