@@ -10,6 +10,7 @@ using EntityObjects.Cards.Colored;
 using EntityObjects.Cards.Wild;
 using FakeItEasy;
 using GameProcessingService.CardEffectProcessors;
+using GameProcessingService.CardEffectProcessors.Played;
 using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 using NUnit.Framework;
@@ -42,12 +43,12 @@ namespace GameProcessingService.UnitTests
         [Test]
         public void EnsureAllCardEffectProcessorsCanBeInstantiatedAndPlayed()
         {
-            var cardEffectProcessorsTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).Where(p => typeof(ICardEffectProcessor).IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
+            var cardEffectProcessorsTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).Where(p => typeof(IPlayedCardEffectProcessor).IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
 
             var constructor = new object[] { _gameManager };
             foreach (var cardEffectProcessorType in cardEffectProcessorsTypes)
             {
-                var instance = (ICardEffectProcessor)Activator.CreateInstance(cardEffectProcessorType, constructor, null);
+                var instance = (IPlayedCardEffectProcessor)Activator.CreateInstance(cardEffectProcessorType, constructor, null);
                 instance.ProcessCardEffect(_game, _moveParams);
             }
         }
@@ -56,13 +57,13 @@ namespace GameProcessingService.UnitTests
         [Test]
         public void EnsureAllCardsAreHaveAccordingEffectProcessor()
         {
-            List<Type> cardEffectProcessorsTypes = typeof(ICardEffectProcessor).Assembly.GetTypes().Where(p => typeof(ICardEffectProcessor).IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
-            List<ICardEffectProcessor> allCardEffectProcessors = new List<ICardEffectProcessor>();
+            List<Type> cardEffectProcessorsTypes = typeof(IPlayedCardEffectProcessor).Assembly.GetTypes().Where(p => typeof(IPlayedCardEffectProcessor).IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
+            List<IPlayedCardEffectProcessor> allCardEffectProcessors = new List<IPlayedCardEffectProcessor>();
 
             var constructor = new object[] { _gameManager };
             foreach (var cardEffectProcessor in cardEffectProcessorsTypes)
             {
-                allCardEffectProcessors.Add((ICardEffectProcessor)Activator.CreateInstance(cardEffectProcessor, constructor, null));
+                allCardEffectProcessors.Add((IPlayedCardEffectProcessor)Activator.CreateInstance(cardEffectProcessor, constructor, null));
             }
 
             var allCards = Enum.GetValues(typeof(CardValue));

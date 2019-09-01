@@ -85,43 +85,5 @@ namespace GameProcessingService.CoreManagers
             throw new Exception("Error, can't access that direction");
 
         }
-
-        // -------------------------------------private------------
-
-        public void UpdateGameAndRoundStatus(Game game, MoveResult moveResult)
-        {
-            var playersWithoutCards = game.Players.Where(x => !x.Cards.Any());
-            if (playersWithoutCards.Any())
-            {
-                var firstPlayerWithTheLastStand = game.Players.Where(x => x.Cards.Any()).FirstOrDefault(x => x.Cards.FirstOrDefault(y => y.Value == CardValue.TheLastStand) != null);
-
-                if (firstPlayerWithTheLastStand != null)
-                {
-                    var theLastStandCard = firstPlayerWithTheLastStand.Cards.First(x => x.Value == CardValue.TheLastStand);
-                    game.LastCardPlayed = new LastCardPlayed(game.LastCardPlayed.Color, theLastStandCard.Value, theLastStandCard.ImageUrl, game.PlayerToPlay.User.Name, true);
-                    firstPlayerWithTheLastStand.Cards.Remove(theLastStandCard);
-                    game.DiscardedPile.Add(theLastStandCard);
-                    moveResult.MessagesToLog.Add($"{firstPlayerWithTheLastStand.User.Name} saved the day! They played The Last Stand. Every player that had 0 cards will draw 2 cards.");
-                    foreach (var player in playersWithoutCards)
-                    {
-                        DrawCard(game, player, 2, false);
-                    }
-                    return;
-                }
-
-                foreach (var player in playersWithoutCards)
-                {
-                    player.RoundsWonCount++;
-                }
-                game.RoundEnded = true;
-                moveResult.MessagesToLog.Add($"Round ended! Players that won that round: {string.Join(',', playersWithoutCards.Select(x => x.User.Name))}");
-            }
-            var playersThatMatchWinCriteria = game.Players.Where(x => x.RoundsWonCount == game.GameSetup.RoundsToWin).ToList();
-            if (playersThatMatchWinCriteria.Any())
-            {
-                game.GameEnded = true;
-                moveResult.MessagesToLog.Add($"Game ended! Players that won the game: {string.Join(',', playersThatMatchWinCriteria.Select(x => x.User.Name))}");
-            }
-        }
     }
 }

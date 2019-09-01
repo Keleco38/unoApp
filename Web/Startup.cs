@@ -1,6 +1,8 @@
 using AutoMapper;
 using Common.Extensions;
 using GameProcessingService.CardEffectProcessors;
+using GameProcessingService.CardEffectProcessors.AutomaticallyTriggered;
+using GameProcessingService.CardEffectProcessors.Played;
 using GameProcessingService.CoreManagers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +32,8 @@ namespace Web
             services.AddSingleton<IGameManager, GameManager>();
             services.AddSingleton<IPlayCardManager, PlayCardManager>();
             services.AddSingleton<IUnoRepository, UnoRepository>();
-            services.RegisterAllTypes<ICardEffectProcessor>(new[] { typeof(ICardEffectProcessor).Assembly }, ServiceLifetime.Singleton);
+            services.RegisterAllTypes<IPlayedCardEffectProcessor>(new[] { typeof(IPlayedCardEffectProcessor).Assembly }, ServiceLifetime.Singleton);
+            services.RegisterAllTypes<IAutomaticallyTriggeredCardEffectProcessor>(new[] { typeof(IAutomaticallyTriggeredCardEffectProcessor).Assembly }, ServiceLifetime.Singleton);
 
 
             services.AddSignalR();

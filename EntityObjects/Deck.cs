@@ -30,14 +30,14 @@ namespace EntityObjects
             Cards = new List<ICard>();
 
             AddNormalGameNormalCards();
-            AddNormalGameNormalCards();
-            AddNormalGameNormalCards();
+            //AddNormalGameNormalCards();
+            //AddNormalGameNormalCards();
 
-            AddStealTurnCards();
-            AddStealTurnCards();
-            AddStealTurnCards();
+            //AddStealTurnCards();
+            //AddStealTurnCards();
+            //AddStealTurnCards();
 
-            AddNormalGameWildCards();
+            //AddNormalGameWildCards();
 
             AddSpecialWildCards();
 
