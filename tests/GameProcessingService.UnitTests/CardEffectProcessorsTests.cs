@@ -10,6 +10,7 @@ using EntityObjects.Cards.Colored;
 using EntityObjects.Cards.Wild;
 using FakeItEasy;
 using GameProcessingService.CardEffectProcessors;
+using GameProcessingService.CardEffectProcessors.AutomaticallyTriggered;
 using GameProcessingService.CardEffectProcessors.Played;
 using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
@@ -28,50 +29,88 @@ namespace GameProcessingService.UnitTests
         public void Setup()
         {
             _gameManager = new GameManager();
-            _gameSetup=new GameSetup();
+            _gameSetup = new GameSetup() { BannedCards = new List<CardValue>() };
             _game = new Game(_gameSetup);
             _game.Direction = Direction.Left;
             _game.Deck = new Deck(_gameSetup);
             _game.DiscardedPile = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack() };
-            _game.LastCardPlayed = new LastCardPlayed(CardColor.Blue, CardValue.BlackHole, "", "", true);
+            _game.LastCardPlayed = new LastCardPlayed(CardColor.Blue, CardValue.Five, "", "", false);
             var player = new Player(new User("123", "john"));
-            player.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack() };
-            _game.Players = new List<Player>() { player };
-            _game.Deck = A.Fake<Deck>();
-            _moveParams = new MoveParams(player, player.Cards.First(), player, CardColor.Blue, _game.DiscardedPile.First(), new List<int>() { 1, 2, 3 }, new List<ICard>() { new Charity() }, 10, new List<int>() { 0, 1, 2 }, new BlackHole(), "odd");
+            var player2 = new Player(new User("456", "andrew"));
+            player.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack(), new Charity(), new BlackHole(), new Blackjack() };
+            player2.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack() , new Charity(), new BlackHole(), new Blackjack() };
+            _game.Players = new List<Player>() { player, player2 };
+            _game.PlayerToPlay = player;
+            _moveParams = new MoveParams(player, player.Cards.First(), player, CardColor.Blue, _game.DiscardedPile.First(), new List<int>() { 1, 2, 3 }, new List<ICard>() { new Charity() }, 10, new List<int>() { 0, 1 }, new BlackHole(), "odd");
 
         }
 
         [Test]
         public void EnsureAllCardEffectProcessorsCanBeInstantiatedAndPlayed()
         {
-            var cardEffectProcessorsTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).Where(p => typeof(IPlayedCardEffectProcessor).IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
 
-            var constructor = new object[] { _gameManager };
-            foreach (var cardEffectProcessorType in cardEffectProcessorsTypes)
+            List<Type> playedCardEffectProcessorsTypes = typeof(IPlayedCardEffectProcessor).Assembly.GetTypes().Where(p => typeof(IPlayedCardEffectProcessor).IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
+            List<Type> automaticallyTriggeredEffectProcessorsTypes = typeof(IAutomaticallyTriggeredCardEffectProcessor).Assembly.GetTypes().Where(p => typeof(IAutomaticallyTriggeredCardEffectProcessor).IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
+
+            List<IAutomaticallyTriggeredCardEffectProcessor> allAutomaticallyTriggeredCardEffectProcessors = new List<IAutomaticallyTriggeredCardEffectProcessor>();
+
+            var constructorSimple = new object[] { _gameManager };
+
+            foreach (var automaticallyPlayedCardEffectProcessor in automaticallyTriggeredEffectProcessorsTypes)
             {
-                var instance = (IPlayedCardEffectProcessor)Activator.CreateInstance(cardEffectProcessorType, constructor, null);
-                instance.ProcessCardEffect(_game, _moveParams);
+                allAutomaticallyTriggeredCardEffectProcessors.Add((IAutomaticallyTriggeredCardEffectProcessor)Activator.CreateInstance(automaticallyPlayedCardEffectProcessor, constructorSimple, null));
             }
+
+            var constructorComplex = new object[] { _gameManager, allAutomaticallyTriggeredCardEffectProcessors };
+
+
+            foreach (var cardEffeccardEffectProcessorType in playedCardEffectProcessorsTypes)
+            {
+
+                var ctor = cardEffeccardEffectProcessorType.GetConstructors().First();
+                var isComplex = ctor.GetParameters().Length > 1;
+
+                var instance = (IPlayedCardEffectProcessor)Activator.CreateInstance(cardEffeccardEffectProcessorType, isComplex ? constructorComplex : constructorSimple, null);
+
+                instance.ProcessCardEffect(_game, _moveParams);
+                Setup();
+            }
+
+
+
         }
 
 
         [Test]
         public void EnsureAllCardsAreHaveAccordingEffectProcessor()
         {
-            List<Type> cardEffectProcessorsTypes = typeof(IPlayedCardEffectProcessor).Assembly.GetTypes().Where(p => typeof(IPlayedCardEffectProcessor).IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
-            List<IPlayedCardEffectProcessor> allCardEffectProcessors = new List<IPlayedCardEffectProcessor>();
+            List<Type> playedCardEffectProcessorsTypes = typeof(IPlayedCardEffectProcessor).Assembly.GetTypes().Where(p => typeof(IPlayedCardEffectProcessor).IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
+            List<Type> automaticallyTriggeredEffectProcessorsTypes = typeof(IAutomaticallyTriggeredCardEffectProcessor).Assembly.GetTypes().Where(p => typeof(IAutomaticallyTriggeredCardEffectProcessor).IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
 
-            var constructor = new object[] { _gameManager };
-            foreach (var cardEffectProcessor in cardEffectProcessorsTypes)
+            List<IPlayedCardEffectProcessor> allPlayedCardEffectProcessors = new List<IPlayedCardEffectProcessor>();
+            List<IAutomaticallyTriggeredCardEffectProcessor> allAutomaticallyTriggeredCardEffectProcessors = new List<IAutomaticallyTriggeredCardEffectProcessor>();
+
+            var constructorSimple = new object[] { _gameManager };
+
+            foreach (var automaticallyPlayedCardEffectProcessor in automaticallyTriggeredEffectProcessorsTypes)
             {
-                allCardEffectProcessors.Add((IPlayedCardEffectProcessor)Activator.CreateInstance(cardEffectProcessor, constructor, null));
+                allAutomaticallyTriggeredCardEffectProcessors.Add((IAutomaticallyTriggeredCardEffectProcessor)Activator.CreateInstance(automaticallyPlayedCardEffectProcessor, constructorSimple, null));
+            }
+
+            var constructorComplex = new object[] { _gameManager, allAutomaticallyTriggeredCardEffectProcessors };
+
+            foreach (var cardEffectProcessor in playedCardEffectProcessorsTypes)
+            {
+                var ctor = cardEffectProcessor.GetConstructors().First();
+                var isComplex = ctor.GetParameters().Length > 1;
+
+                allPlayedCardEffectProcessors.Add((IPlayedCardEffectProcessor)Activator.CreateInstance(cardEffectProcessor, isComplex ? constructorComplex : constructorSimple, null));
             }
 
             var allCards = Enum.GetValues(typeof(CardValue));
             foreach (CardValue card in allCards)
             {
-                Assert.IsNotNull(allCardEffectProcessors.FirstOrDefault(x => x.CardAffected == card));
+                Assert.IsNotNull(allPlayedCardEffectProcessors.FirstOrDefault(x => x.CardAffected == card));
             }
         }
     }
