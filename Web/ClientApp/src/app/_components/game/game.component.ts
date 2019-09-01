@@ -128,6 +128,13 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     if (
+      cardPlayed.color != CardColor.wild &&
+      (cardPlayed.color != this.game.lastCardPlayed.color && cardPlayed.value != this.game.lastCardPlayed.value)
+    ) {
+      return;
+    }
+
+    if (
       (cardPlayed.value === CardValue.magneticPolarity || cardPlayed.value === CardValue.doubleDraw) &&
       this.game.lastCardPlayed.wasWildCard === false
     ) {
@@ -209,7 +216,7 @@ export class GameComponent implements OnInit, OnDestroy {
           return;
         }
       });
-    } else if (cardPlayed.color == this.game.lastCardPlayed.color || cardPlayed.value == this.game.lastCardPlayed.value) {
+    } else {
       this._hubService.playCard(cardPlayed.id);
       return;
     }
