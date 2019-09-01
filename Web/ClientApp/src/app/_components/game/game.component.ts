@@ -150,24 +150,9 @@ export class GameComponent implements OnInit, OnDestroy {
       }
     }
 
-    if (cardPlayed.value == CardValue.randomColor) {
-      this._hubService.playCard(cardPlayed.id);
-      return;
-    }
-
-    if (cardPlayed.color === CardColor.wild) {
+    if (cardPlayed.requirePickColor) {
       this._modalService.open(PickColorComponent).result.then(pickedColor => {
-        if (
-          cardPlayed.value === CardValue.swapHands ||
-          cardPlayed.value === CardValue.doubleEdge ||
-          cardPlayed.value === CardValue.judgement ||
-          cardPlayed.value === CardValue.duel ||
-          cardPlayed.value === CardValue.inspectHand ||
-          cardPlayed.value === CardValue.charity ||
-          cardPlayed.value === CardValue.tricksOfTheTrade ||
-          cardPlayed.value === CardValue.fairPlay ||
-          cardPlayed.value === CardValue.gambling
-        ) {
+        if (cardPlayed.requireTargetPlayer) {
           const playerModal = this._modalService.open(PickPlayerComponent);
           playerModal.componentInstance.players = this.game.players;
           playerModal.componentInstance.currentUser = this.currentUser;
