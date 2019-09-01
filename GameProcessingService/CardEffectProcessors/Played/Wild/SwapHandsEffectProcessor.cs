@@ -29,7 +29,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, null, 0));
             messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
 
-            var automaticallyTriggeredResultKeepMyHand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KeepMyHand).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, game.Players, 0));
+            var automaticallyTriggeredResultKeepMyHand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KeepMyHand).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>(){moveParams.PlayerPlayed, moveParams.PlayerTargeted}, 0));
             messageToLog = automaticallyTriggeredResultKeepMyHand.MessageToLog;
 
             Player loopingPlayer = null;
