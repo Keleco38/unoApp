@@ -25,6 +25,9 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             var messagesToLog = new List<string>();
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with +4.";
 
+            var originallyTargetedPlayer = moveParams.PlayerTargeted;
+
+
             var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, null, 0));
             messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
 
@@ -38,7 +41,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             if (game.GameSetup.DrawFourDrawTwoShouldSkipTurn)
             {
-                game.PlayerToPlay = moveParams.PlayerTargeted;
+                game.PlayerToPlay = originallyTargetedPlayer;
             }
 
             return new MoveResult(messagesToLog);

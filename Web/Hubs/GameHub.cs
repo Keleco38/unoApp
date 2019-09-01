@@ -226,43 +226,40 @@ namespace Web.Hubs
 
         public async Task AddOrRenameUser(string name)
         {
-            await _userLocker.LockAsync(async () =>
+            name = Regex.Replace(name, @"[^a-zA-Z0-9]", "").ToLower();
+            if (!name.Any())
             {
-                name = Regex.Replace(name, @"[^a-zA-Z0-9]", "").ToLower();
-                if (!name.Any())
+                await Clients.Caller.SendAsync("RenamePlayer");
+            }
+            if (name.Length > 10)
+            {
+                name = name.Substring(0, 10);
+            }
+            var nameExists = _unoRepository.GetUserByName(name) != null;
+            if (!nameExists && name != "server")
+            {
+                string message = string.Empty;
+                var existingUser = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+                if (existingUser != null)
                 {
-                    await Clients.Caller.SendAsync("RenamePlayer");
-                }
-                if (name.Length > 10)
-                {
-                    name = name.Substring(0, 10);
-                }
-                var nameExists = _unoRepository.GetUserByName(name) != null;
-                if (!nameExists && name != "server")
-                {
-                    string message = string.Empty;
-                    var existingUser = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
-                    if (existingUser != null)
-                    {
-                        message = $"{existingUser.Name} has renamed to {name}";
-                        _unoRepository.RemoveUser(existingUser);
-                    }
-                    else
-                    {
-                        message = $"{name} has connected to the server.";
-                    }
-                    var user = new User(Context.ConnectionId, name);
-                    _unoRepository.AddUser(user);
-                    await SendMessage(message, TypeOfMessage.Server);
-                    var userDto = _mapper.Map<UserDto>(user);
-                    await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
-                    await GetAllOnlineUsers();
+                    message = $"{existingUser.Name} has renamed to {name}";
+                    _unoRepository.RemoveUser(existingUser);
                 }
                 else
                 {
-                    await Clients.Caller.SendAsync("RenamePlayer");
+                    message = $"{name} has connected to the server.";
                 }
-            });
+                var user = new User(Context.ConnectionId, name);
+                _unoRepository.AddUser(user);
+                await SendMessage(message, TypeOfMessage.Server);
+                var userDto = _mapper.Map<UserDto>(user);
+                await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
+                await GetAllOnlineUsers();
+            }
+            else
+            {
+                await Clients.Caller.SendAsync("RenamePlayer");
+            }
         }
 
         public async Task DrawCard(string gameId, int count, bool normalDraw)
