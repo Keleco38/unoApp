@@ -24,13 +24,13 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                 if (doubleDrawCard != null)
                 {
                     automaticallyTriggeredParams.NumberOfCardsToDraw = automaticallyTriggeredParams.NumberOfCardsToDraw * 2;
-                    automaticallyTriggeredParams.Game.LastCardPlayed = new LastCardPlayed(automaticallyTriggeredParams.MoveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, x.User.Name, true);
+                    game.LastCardPlayed = new LastCardPlayed(automaticallyTriggeredParams.MoveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, x.User.Name, true);
                     x.Cards.Remove(doubleDrawCard);
-                    automaticallyTriggeredParams.Game.DiscardedPile.Add(doubleDrawCard);
+                    game.DiscardedPile.Add(doubleDrawCard);
                     automaticallyTriggeredParams.MessageToLog += $"{x.User.Name} doubled the draw effect. ";
                 }
             });
-            return new AutomaticallyTriggeredResult(automaticallyTriggeredParams.MessageToLog);
+            return new AutomaticallyTriggeredResult(automaticallyTriggeredParams.MessageToLog, automaticallyTriggeredParams.NumberOfCardsToDraw);
         }
     }
 }

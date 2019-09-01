@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Common.Enums;
 using EntityObjects;
 using GameProcessingService.CoreManagers;
@@ -6,7 +7,7 @@ using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
 {
-    public class KeepMyHandEffectProcessor: IAutomaticallyTriggeredCardEffectProcessor
+    public class KeepMyHandEffectProcessor : IAutomaticallyTriggeredCardEffectProcessor
     {
         private readonly IGameManager _gameManager;
         public CardValue CardAffected => CardValue.KeepMyHand;
@@ -18,6 +19,8 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
 
         public AutomaticallyTriggeredResult ProcessCardEffect(Game game, AutomaticallyTriggeredParams automaticallyTriggeredParams)
         {
+            var playersWithoutKeepMyHand = new List<Player>();
+
             automaticallyTriggeredParams.PlayersAffected.ForEach(p =>
             {
                 var keepMyHandCard = p.Cards.FirstOrDefault(y => y.Value == CardValue.KeepMyHand);
@@ -27,11 +30,16 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                     p.Cards.Remove(keepMyHandCard);
                     game.DiscardedPile.Add(keepMyHandCard);
                     automaticallyTriggeredParams.MessageToLog += $"{p.User.Name} kept their hand safe. ";
-                    automaticallyTriggeredParams.PlayersAffected.Remove(p);
+                }
+                else
+                {
+                    playersWithoutKeepMyHand.Add(p);
                 }
             });
 
-            return new AutomaticallyTriggeredResult(automaticallyTriggeredParams.MessageToLog,0,automaticallyTriggeredParams.PlayersAffected);
+
+
+            return new AutomaticallyTriggeredResult(automaticallyTriggeredParams.MessageToLog, 0, playersWithoutKeepMyHand);
         }
     }
 }

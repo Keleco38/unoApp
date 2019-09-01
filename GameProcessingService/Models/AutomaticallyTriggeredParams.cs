@@ -12,7 +12,6 @@ namespace GameProcessingService.Models
             PlayersAffected = playersAffected;
             NumberOfCardsToDraw = numberOfCardsToDraw;
         }
-        public Game Game { get; set; }
         public MoveParams MoveParams { get; set; }
         public string MessageToLog { get; set; }
         public List<Player> PlayersAffected { get; set; }

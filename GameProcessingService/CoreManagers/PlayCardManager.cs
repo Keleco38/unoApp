@@ -87,6 +87,7 @@ namespace GameProcessingService.CoreManagers
                 {
                     return;
                 }
+                moveResult.MessagesToLog.Add(automaticallyTriggeredResultTheLastStand.MessageToLog);
 
                 foreach (var player in playersWithoutCards)
                 {

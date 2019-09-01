@@ -28,9 +28,9 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             game.Players.ForEach(p =>
             {
-                var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game,new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>() { p }, 2));
+                var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>() { p }, 2));
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
-                _gameManager.DrawCard(game,p,automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw,false);
+                _gameManager.DrawCard(game, p, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
             });
 
 

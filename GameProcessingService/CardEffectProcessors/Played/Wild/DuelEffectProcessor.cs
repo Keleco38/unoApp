@@ -39,6 +39,10 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 
             messageToLog += $"{playerWon.User.Name} won! ";
+            if (playerLost == moveParams.PlayerPlayed)
+            {
+                moveParams.PlayerTargeted = moveParams.PlayerPlayed;
+            }
 
             var automaticallyTriggeredResultDeflect = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.Deflect).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, null, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw));
             messageToLog = automaticallyTriggeredResultDeflect.MessageToLog;
