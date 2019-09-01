@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Game } from 'src/app/_models/game';
 import { HubService } from 'src/app/_services/hub.service';
 import { takeWhile } from 'rxjs/operators';
+import { GameList } from 'src/app/_models/gameList';
 
 @Component({
   selector: 'app-available-games',
@@ -13,20 +14,20 @@ export class AvailableGamesComponent implements OnInit, OnDestroy {
     this._isAlive = false;
   }
   private _isAlive: boolean = true;
-  availableGames: Game[] = new Array<Game>();
+  availableGames: GameList[] = new Array<GameList>();
 
   constructor(private _hubService: HubService) {}
 
   ngOnInit(): void {
-    this._hubService.availableGames.pipe(takeWhile(() => this._isAlive)).subscribe((availableGames: Game[]) => {
+    this._hubService.availableGames.pipe(takeWhile(() => this._isAlive)).subscribe((availableGames: GameList[]) => {
       this.availableGames = availableGames;
     });
   }
 
-  joinGame(game: Game) {
+  joinGame(game: GameList) {
     let password = '';
 
-    if (game.gameSetup.isPasswordProtected) {
+    if (game.isPasswordProtected) {
       password = prompt('Input password for this game');
       if (password == null) {
         return;

@@ -13,9 +13,6 @@ namespace EntityObjects
         public string Password { get; set; }
         public List<CardValue> BannedCards { get; set; }
         public int RoundsToWin { get; set; }
-        public bool IsPasswordProtected
-        {
-            get => !string.IsNullOrEmpty(Password);
-        }
+        public bool IsPasswordProtected => !string.IsNullOrEmpty(Password);
     }
 }

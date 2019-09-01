@@ -82,7 +82,7 @@ namespace Web.Hubs
 
         public async Task GetAllGames()
         {
-            var gamesDto = _mapper.Map<List<GameDto>>(_unoRepository.GetAllGames());
+            var gamesDto = _mapper.Map<List<GameListDto>>(_unoRepository.GetAllGames());
             await Clients.All.SendAsync("RefreshAllGamesList", gamesDto);
         }
 

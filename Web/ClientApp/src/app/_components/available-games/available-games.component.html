@@ -1,19 +1,16 @@
 <div class="row">
   <div class="col-12">
-    <div class="alert alert-primary">
-        Available games ({{ availableGames.length }}):
-    </div>
+    <div class="alert alert-primary">Available games ({{ availableGames.length }}):</div>
     <button
       [class.btn-danger]="availableGame.gameStarted"
       class="btn btn-primary btn-block"
       *ngFor="let availableGame of availableGames"
       (click)="joinGame(availableGame)"
     >
-      <span class="mx-2" *ngIf="availableGame.gameSetup.isPasswordProtected">&#9919;</span>
-      <span *ngIf="availableGame.players.length > 0"> {{ availableGame.players[0]?.user.name }} </span>
-      <span *ngIf="availableGame.players.length == 0"> No Players Currently </span>
+      <span class="mx-2" *ngIf="availableGame.isPasswordProtected">&#9919;</span>
+      <span> {{ availableGame.host }} </span>
       <span> - </span>
-      <span>({{ availableGame.players.length }})</span>
+      <span>({{ availableGame.numberOfPlayers }})</span>
     </button>
   </div>
 </div>

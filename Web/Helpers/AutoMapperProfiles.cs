@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using DomainObjects;
 using EntityObjects;
@@ -14,15 +15,26 @@ namespace Web.Helpers
             CreateMap<Spectator, SpectatorDto>();
             CreateMap<LastCardPlayed, LastCardPlayedDto>();
             CreateMap<ICard, CardDto>();
-
             CreateMap<Game, GameDto>();
+            CreateMap<GameSetup, GameSetupDto>();
 
-            CreateMap<GameSetup, GameSetupDto>()
-                .ForMember(dest => dest.IsPasswordProtected, opt =>
+            CreateMap<Game, GameListDto>()
+                .ForMember(dest => dest.GameStarted, opt =>
+               {
+                   opt.MapFrom(src => src.GameStarted);
+               })
+                .ForMember(dest => dest.Host, opt =>
                 {
-                    opt.MapFrom(src => src.IsPasswordProtected);
-                });
-
+                    opt.MapFrom(src => src.Players.Any()? src.Players[0].User.Name:"No players.");
+                })
+                .ForMember(dest => dest.IsPasswordProtected, opt =>
+               {
+                   opt.MapFrom(src => src.GameSetup.IsPasswordProtected);
+               })
+                .ForMember(dest => dest.NumberOfPlayers, opt =>
+               {
+                   opt.MapFrom(src => src.Players.Count);
+               });
 
 
             CreateMap<Player, PlayerDto>()

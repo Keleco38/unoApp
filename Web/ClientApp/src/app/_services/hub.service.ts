@@ -14,6 +14,7 @@ import { Game } from '../_models/game';
 import { ToastrService } from 'ngx-toastr';
 import { Card } from '../_models/card';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { GameList } from '../_models/gameList';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class HubService {
 
   private _currentUserObservable = new BehaviorSubject<User>({} as User);
   private _onlineUsersObservable = new BehaviorSubject<User[]>([]);
-  private _availableGamesObservable = new BehaviorSubject<Game[]>([]);
+  private _availableGamesObservable = new BehaviorSubject<GameList[]>([]);
   private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>([]);
   private _gameChatNumberOfMessagesObservable = new Subject<ChatMessage>();
   private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>([]);
@@ -117,7 +118,7 @@ export class HubService {
       this._mustCallUnoObservable.next();
     });
 
-    this._hubConnection.on('RefreshAllGamesList', (games: Game[]) => {
+    this._hubConnection.on('RefreshAllGamesList', (games: GameList[]) => {
       this._availableGamesObservable.next(games);
     });
 

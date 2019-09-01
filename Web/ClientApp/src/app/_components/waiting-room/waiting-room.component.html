@@ -28,12 +28,12 @@
               <div class="col-5">
                 <input
                   type="text"
-                  [(ngModel)]="password"
+                  [(ngModel)]="activeGame.gameSetup.password"
                   class="form-control"
                   autocomplete="off"
                   name="password"
                   id="password"
-                  placeholder="{{ getPasswordPlaceholder() }}"
+                  placeholder="(optional)"
                 />
               </div>
               <div class="col-3">

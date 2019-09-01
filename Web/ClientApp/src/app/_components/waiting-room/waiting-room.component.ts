@@ -25,7 +25,6 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   }
   private _isAlive: boolean = true;
   activeGame: Game;
-  password: string;
   currentUser: User;
 
   constructor(
@@ -100,9 +99,8 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   setRoomPassword() {
-    this._hubService.setGamePassword(this.activeGame.id, this.password);
+    this._hubService.setGamePassword(this.activeGame.id, this.activeGame.gameSetup.password);
     this._toastrService.info("Password changed");
-    this.password = '';
   }
 
   kickPlayerFromGame(player: Player) {
