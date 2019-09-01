@@ -85,9 +85,9 @@ namespace GameProcessingService.CoreManagers
 
                 if (!string.IsNullOrEmpty(automaticallyTriggeredResultTheLastStand.MessageToLog))
                 {
+                    moveResult.MessagesToLog.Add(automaticallyTriggeredResultTheLastStand.MessageToLog);
                     return;
                 }
-                moveResult.MessagesToLog.Add(automaticallyTriggeredResultTheLastStand.MessageToLog);
 
                 foreach (var player in playersWithoutCards)
                 {
@@ -104,7 +104,7 @@ namespace GameProcessingService.CoreManagers
                     moveResult.MessagesToLog.Add($"Game ended! Players that won the game: {string.Join(',', playersThatMatchWinCriteria.Select(x => x.User.Name))}");
                 }
             }
- 
+
         }
     }
 }
