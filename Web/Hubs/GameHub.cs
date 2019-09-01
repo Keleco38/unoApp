@@ -164,6 +164,7 @@ namespace Web.Hubs
             {
                 return;
             }
+
             _gameManager.StartNewGame(game);
             await UpdateGame(game);
             await UpdateHands(game);

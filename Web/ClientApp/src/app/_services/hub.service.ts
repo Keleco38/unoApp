@@ -47,7 +47,9 @@ export class HubService {
         }
       });
     } catch (err) {
+    if (environment.production) {
       setTimeout(() => this.startConnection(true), 5000);
+    }
     }
   }
 
