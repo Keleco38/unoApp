@@ -5,14 +5,12 @@ namespace EntityObjects
 {
     public class GameSetup
     {
-        public GameSetup()
-        {
-            BannedCards=new List<CardValue>();
-            RoundsToWin = 2;
-        }
         public string Password { get; set; }
         public List<CardValue> BannedCards { get; set; }
         public int RoundsToWin { get; set; }
-        public bool IsPasswordProtected => !string.IsNullOrEmpty(Password);
+        public GameType GameType { get; set; }
+        public bool DrawFourDrawTwoShouldSkipTurn { get; set; }
+        public bool ReverseShouldSkipTurnInTwoPlayers { get; set; }
+        public int MaxNumberOfPlayers { get; set; }
     }
 }

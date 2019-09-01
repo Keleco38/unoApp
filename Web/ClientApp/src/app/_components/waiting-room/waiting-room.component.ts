@@ -1,6 +1,7 @@
+import { GameSetup } from './../../_models/gameSetup';
 import { SidebarSettings } from 'src/app/_models/sidebarSettings';
 import { UtilityService } from './../../_services/utility.service';
-import { CardValue } from './../../_models/enums';
+import { CardValue, GameType } from './../../_models/enums';
 import { PickBannedCardsComponent } from './../_modals/pick-banned-cards/pick-banned-cards.component';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Game } from 'src/app/_models/game';
@@ -12,6 +13,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { KeyValue } from '@angular/common';
 import { takeWhile } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
+import { GameSetupComponent } from '../_modals/game-setup/game-setup.component';
 
 @Component({
   selector: 'app-waiting-room',
@@ -19,7 +21,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./waiting-room.component.css']
 })
 export class WaitingRoomComponent implements OnInit, OnDestroy {
-  sidebarSettings:SidebarSettings;
+  sidebarSettings: SidebarSettings;
   ngOnDestroy(): void {
     this._isAlive = false;
   }
@@ -32,11 +34,11 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     private _modalService: NgbModal,
     private _utilityService: UtilityService,
     private _toastrService: ToastrService,
-    private _router :Router
+    private _router: Router
   ) {}
 
   ngOnInit() {
-    this.sidebarSettings=this._utilityService.sidebarSettings;
+    this.sidebarSettings = this._utilityService.sidebarSettings;
     this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.activeGame = game;
     });
@@ -54,8 +56,8 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   joinGame() {
-    if (this.activeGame.players.length > 9) {
-      this._toastrService.info('Maximum number of players reached (10).');
+    if (this.activeGame.players.length >= this.activeGame.gameSetup.maxNumberOfPlayers) {
+      this._toastrService.info(`Maximum number of players reached (${this.activeGame.gameSetup.maxNumberOfPlayers}).`);
       return;
     }
     this._hubService.joinGame(this.activeGame.id, '');
@@ -70,7 +72,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
   getStyleJoinGameButton() {
     var obj: any = {};
-    if (this.activeGame.players.length > 9) {
+    if (this.activeGame.players.length >= this.activeGame.gameSetup.maxNumberOfPlayers) {
       obj.opacity = '0.5';
     } else {
       obj.opacity = '1';
@@ -90,19 +92,20 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     });
   }
 
+  getGameTypePlaceholder() {
+    return this.activeGame.gameSetup.gameType == GameType.normal ? 'Normal' : 'Special Wild Cards';
+  }
+
+  openGameSetupDialog() {
+    this._modalService.open(GameSetupComponent);
+  }
   startGame() {
-    if (this.activeGame.players.length < 2 || this.activeGame.players.length > 9) {
+    if (this.activeGame.players.length < 2) {
       this._toastrService.info('Minimum 2 players to start the game.');
       return;
     }
     this._hubService.startGame();
   }
-
-  setRoomPassword() {
-    this._hubService.setGamePassword(this.activeGame.id, this.activeGame.gameSetup.password);
-    this._toastrService.info("Password changed");
-  }
-
   kickPlayerFromGame(player: Player) {
     const cfrm = confirm('Really kick this player? ' + player.user.name);
     if (cfrm) {
@@ -110,10 +113,6 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     }
   }
   updateGameSetup() {
-    this._hubService.updateGameSetup(this.activeGame.id, this.activeGame.gameSetup.bannedCards, this.activeGame.gameSetup.roundsToWin);
-  }
-
-  getPasswordPlaceholder() {
-    return this.activeGame.gameSetup.isPasswordProtected ? 'Already Set' : '(Optional)';
+    this._hubService.updateGameSetup(this.activeGame.id, this.activeGame.gameSetup);
   }
 }

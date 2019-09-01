@@ -16,7 +16,7 @@ namespace GameProcessingService.CoreManagers
             Random random = new Random();
             ICard lastCardDrew;
             game.DiscardedPile = new List<ICard>();
-            game.Deck = new Deck(game.GameSetup.BannedCards);
+            game.Deck = new Deck(game.GameSetup);
             do
             {
                 lastCardDrew = game.Deck.Draw(1).First();

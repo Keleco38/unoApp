@@ -64,4 +64,8 @@ export enum Direction {
   right = 1,
   left = 2
 }
+export enum GameType {
+  normal = 1,
+  specialWildCards = 2
+}
 

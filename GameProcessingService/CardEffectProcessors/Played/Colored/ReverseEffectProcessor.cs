@@ -21,6 +21,12 @@ namespace GameProcessingService.CardEffectProcessors.Played.Colored
             var messagesToLog = new List<string>();
             messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} changed direction");
             game.Direction = game.Direction == Direction.Right ? Direction.Left : Direction.Right;
+
+            if (game.GameSetup.ReverseShouldSkipTurnInTwoPlayers && game.Players.Count == 2)
+            {
+                game.PlayerToPlay = moveParams.PlayerTargeted;
+            }
+
             return new MoveResult(messagesToLog);
         }
     }

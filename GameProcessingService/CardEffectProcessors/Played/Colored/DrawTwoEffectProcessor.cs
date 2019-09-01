@@ -25,7 +25,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Colored
             var messagesToLog = new List<string>();
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with +2. ";
 
-            var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>(), 0));
+            var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, null, 0));
             messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
 
             var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>() { moveParams.PlayerTargeted }, 2));
@@ -35,6 +35,11 @@ namespace GameProcessingService.CardEffectProcessors.Played.Colored
             messageToLog = automaticallyTriggeredResultDeflect.MessageToLog;
 
             messagesToLog.Add(messageToLog);
+
+            if (game.GameSetup.DrawFourDrawTwoShouldSkipTurn)
+            {
+                game.PlayerToPlay = moveParams.PlayerTargeted;
+            }
 
             return new MoveResult(messagesToLog);
         }

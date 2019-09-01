@@ -86,10 +86,11 @@ namespace Web.Hubs
             await Clients.All.SendAsync("RefreshAllGamesList", gamesDto);
         }
 
-        public async Task CreateGame()
+        public async Task CreateGame(GameSetupDto gameSetupDto)
         {
             var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
-            var game = new Game();
+            var gameSetup = _mapper.Map<GameSetup>(gameSetupDto);
+            var game = new Game(gameSetup);
             game.Players.Add(new Player(user));
             _unoRepository.AddGame(game);
             await UpdateGame(game);
@@ -144,15 +145,16 @@ namespace Web.Hubs
             await Clients.Client(playerToKick.User.ConnectionId).SendAsync("KickPlayerFromGame");
         }
 
-        public async Task UpdateGameSetup(string gameId, List<CardValue> bannedCards, int roundsToWin)
+        public async Task UpdateGameSetup(string gameId, GameSetupDto gameSetupDto)
         {
             var game = _unoRepository.GetGameByGameId(gameId);
             if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId))
             {
                 return;
             }
-            game.GameSetup.BannedCards = bannedCards;
-            game.GameSetup.RoundsToWin = roundsToWin;
+
+            var gameSetup = _mapper.Map<GameSetup>(gameSetupDto);
+            game.GameSetup = gameSetup;
             await UpdateGame(game);
             await GetAllGames();
         }
@@ -180,7 +182,7 @@ namespace Web.Hubs
             var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
             var game = _unoRepository.GetGameByGameId(gameId);
             var spectator = game.Spectators.FirstOrDefault(x => x.User == user);
-            if (game.GameSetup.IsPasswordProtected && spectator == null)
+            if (!string.IsNullOrEmpty(game.GameSetup.Password) && spectator == null)
                 if (game.GameSetup.Password != password)
                 {
                     await DisplayToastMessageToUser(user.ConnectionId, "Incorrect password.");

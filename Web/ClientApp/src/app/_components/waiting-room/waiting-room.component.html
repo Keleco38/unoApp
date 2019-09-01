@@ -1,65 +1,19 @@
 <app-navbar *ngIf="sidebarSettings.showNavbar"></app-navbar>
-<div class="row mb-3">
+<div class="row">
   <div class="col-12">
     <div class="alert alert-primary">
       <div class="row" *ngIf="activeGame.players[0]?.user.name == currentUser.name">
-        <div class="col-sm-6">
-          <form name="gameSetupForm" id="gameSetupForm">
-            <div class="form-group row">
-              <label for="playuntil" class="col-4 col-form-label">Play until</label>
-              <div class="col-8">
-                <select
-                  [(ngModel)]="activeGame.gameSetup.roundsToWin"
-                  (change)="updateGameSetup()"
-                  class="form-control form-control-sm"
-                  name="playuntil"
-                  id="playuntil"
-                >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="5">5</option>
-                  <option value="7">7</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="password" class="col-4 col-form-label">Password</label>
-              <div class="col-5">
-                <input
-                  type="text"
-                  [(ngModel)]="activeGame.gameSetup.password"
-                  class="form-control"
-                  autocomplete="off"
-                  name="password"
-                  id="password"
-                  placeholder="(optional)"
-                />
-              </div>
-              <div class="col-3">
-                <button class="btn btn-primary btn-block" (click)="setRoomPassword()">&#10003;</button>
-              </div>
-            </div>
-          </form>
+        <div class="col-6">
+          <button class="btn btn-sm btn-block btn-primary" (click)="openGameSetupDialog()">Game Setup</button>
+          <button class="btn btn-sm btn-block btn-primary" (click)="openBanCardsDialog()">
+            Ban Cards
+          </button>
         </div>
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-12">
-              <button class="btn btn-sm btn-danger btn-block" (click)="leaveWaitingRoom()">Leave Room</button>
-            </div>
-          </div>
-          <div class="row my-1" *ngIf="activeGame.players[0]?.user?.connectionId == currentUser.connectionId">
-            <div class="col-12">
-              <div class="btn-group special">
-                <button class="btn btn-sm btn-warning" (click)="openBanCardsDialog()">
-                  Ban Cards
-                </button>
-                <button [style.opacity]="activeGame.players.length < 2 ? 0.5 : 1" class="btn btn-sm btn-success" (click)="startGame()">
-                  Start Game
-                </button>
-              </div>
-            </div>
-          </div>
+        <div class="col-6">
+          <button class="btn btn-sm btn-danger btn-block" (click)="leaveWaitingRoom()">Leave Room</button>
+          <button [style.opacity]="activeGame.players.length < 2 ? 0.5 : 1" class="btn btn-block btn-sm btn-success" (click)="startGame()">
+            Start Game
+          </button>
         </div>
       </div>
       <div class="row" *ngIf="activeGame.players[0]?.user.name != currentUser.name">
@@ -105,8 +59,12 @@
       </ul>
     </div>
     <p *ngIf="activeGame.gameSetup.bannedCards.length == 0"><strong>Banned cards: </strong> No cards banned</p>
+    <p><strong>Game type: </strong> {{ getGameTypePlaceholder() }}</p>
     <p><strong>Play until: </strong> {{ activeGame.gameSetup.roundsToWin }}</p>
-    <p><strong>Password set:</strong> {{ activeGame.gameSetup.isPasswordProtected }}</p>
+    <p><strong>Max number of players: </strong> {{ activeGame.gameSetup.maxNumberOfPlayers }}</p>
+    <p><strong>Draw two/four should skip turn: </strong> {{ activeGame.gameSetup.drawFourDrawTwoShouldSkipTurn }}</p>
+    <p><strong>Reverse should skip turn in 2p: </strong> {{ activeGame.gameSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
+    <p><strong>Password set:</strong> {{ activeGame.gameSetup.password.length > 0 }}</p>
   </div>
 </div>
 

@@ -1,6 +1,8 @@
-#gameSetupForm .form-group{
-    margin-bottom:0.5rem;
+#gameSetupInfo p {
+  margin-bottom: 0.2rem;
 }
-#gameSetupInfo p{
-    margin-bottom:0.5rem;
+@media (max-width: 768px) {
+  #gameSetupInfo {
+    font-size: 12px;
+  }
 }

@@ -1,3 +1,4 @@
+import { GameSetup } from './../_models/gameSetup';
 import { UtilityService } from './utility.service';
 import { DigCardComponent } from './../_components/_modals/dig-card/dig-card.component';
 import { ShowCardsComponent } from './../_components/_modals/show-cards/show-cards.component';
@@ -48,9 +49,9 @@ export class HubService {
         }
       });
     } catch (err) {
-    if (environment.production) {
-      setTimeout(() => this.startConnection(true), 5000);
-    }
+      if (environment.production) {
+        setTimeout(() => this.startConnection(true), 5000);
+      }
     }
   }
 
@@ -243,19 +244,19 @@ export class HubService {
     this._hubConnection.invoke('DigCardFromDiscardedPile', this._activeGameObservable.getValue().id, card);
   }
 
-  createGame() {
+  createGame(gameSetup: GameSetup) {
     this._gameChatMessages = [];
     this._gameLog = [];
     this._myHandObservable.next(null);
-    this._hubConnection.invoke('CreateGame');
+    this._hubConnection.invoke('CreateGame', gameSetup);
   }
 
   kickPlayerFromGame(user: User): any {
     this._hubConnection.invoke('KickPlayerFromGame', user.name, this._activeGameObservable.getValue().id);
   }
 
-  updateGameSetup(id: string, bannedCards: CardValue[], roundsToWin: number) {
-    this._hubConnection.invoke('UpdateGameSetup', id, bannedCards, roundsToWin);
+  updateGameSetup(gameId: string, gameSetup: GameSetup) {
+    this._hubConnection.invoke('UpdateGameSetup', gameId, gameSetup);
   }
 
   exitGame(): any {

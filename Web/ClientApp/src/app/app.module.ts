@@ -42,6 +42,7 @@ import { ShowCardsComponent } from './_components/_modals/show-cards/show-cards.
 import { NavbarComponent } from './_components/navbar/navbar.component';
 import { UserSettingsComponent } from './_components/_modals/user-settings/user-settings.component';
 import { GuessOddEvenNumberComponent } from './_components/_modals/guess-odd-even-number/guess-odd-even-number.component';
+import { GameSetupComponent } from './_components/_modals/game-setup/game-setup.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { GuessOddEvenNumberComponent } from './_components/_modals/guess-odd-eve
     UserSettingsComponent,
     PickPromiseCardComponent,
     DividePerCapitalPipe,
-    GuessOddEvenNumberComponent
+    GuessOddEvenNumberComponent,
+    GameSetupComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -115,7 +117,8 @@ import { GuessOddEvenNumberComponent } from './_components/_modals/guess-odd-eve
     BlackjackComponent,
     UserSettingsComponent,
     PickPromiseCardComponent,
-    GuessOddEvenNumberComponent
+    GuessOddEvenNumberComponent,
+    GameSetupComponent
   ]
 })
 export class AppModule {}

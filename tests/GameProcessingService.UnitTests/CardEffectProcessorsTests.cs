@@ -22,14 +22,16 @@ namespace GameProcessingService.UnitTests
         private IGameManager _gameManager;
         private Game _game;
         private MoveParams _moveParams;
+        private GameSetup _gameSetup;
 
         [SetUp]
         public void Setup()
         {
             _gameManager = new GameManager();
-            _game = new Game();
+            _gameSetup=new GameSetup();
+            _game = new Game(_gameSetup);
             _game.Direction = Direction.Left;
-            _game.Deck = new Deck(new List<CardValue>());
+            _game.Deck = new Deck(_gameSetup);
             _game.DiscardedPile = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack() };
             _game.LastCardPlayed = new LastCardPlayed(CardColor.Blue, CardValue.BlackHole, "", "", true);
             var player = new Player(new User("123", "john"));

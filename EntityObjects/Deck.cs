@@ -10,9 +10,9 @@ namespace EntityObjects
 {
     public class Deck
     {
-        public Deck(List<CardValue> bannedCards)
+        public Deck(GameSetup gameSetup)
         {
-            InitializeCards(bannedCards);
+            InitializeCards(gameSetup);
             Shuffle();
         }
 
@@ -25,23 +25,27 @@ namespace EntityObjects
             return cardsDrew;
         }
 
-        private void InitializeCards(List<CardValue> bannedCards)
+        private void InitializeCards(GameSetup gameSetup)
         {
             Cards = new List<ICard>();
 
             AddNormalGameNormalCards();
-            AddNormalGameNormalCards();
-            AddNormalGameNormalCards();
-
-            AddStealTurnCards();
-            AddStealTurnCards();
-            AddStealTurnCards();
-
             AddNormalGameWildCards();
 
-            AddSpecialWildCards();
+            if (gameSetup.GameType == GameType.SpecialWildCards)
+            {
+                AddNormalGameNormalCards();
+                AddNormalGameNormalCards();
 
-            FilterBannedCards(bannedCards);
+                AddStealTurnCards();
+                AddStealTurnCards();
+                AddStealTurnCards();
+
+                AddSpecialWildCards();
+            }
+
+
+            FilterBannedCards(gameSetup.BannedCards);
         }
 
         private void AddStealTurnCards()

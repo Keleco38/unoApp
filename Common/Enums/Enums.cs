@@ -64,6 +64,11 @@ namespace Common.Enums
         Right = 1,
         Left = 2
     }
+    public enum GameType
+    {
+        Normal = 1,
+        SpecialWildCards = 2
+    }
 
     public enum TypeOfMessage
     {

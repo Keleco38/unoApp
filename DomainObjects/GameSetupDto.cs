@@ -6,8 +6,11 @@ namespace DomainObjects
     public class GameSetupDto
     {
         public string Password { get; set; }
-        public bool IsPasswordProtected { get; set; }
         public List<CardValue> BannedCards { get; set; }
         public int RoundsToWin { get; set; }
+        public GameType GameType { get; set; }
+        public bool DrawFourDrawTwoShouldSkipTurn { get; set; }
+        public bool ReverseShouldSkipTurnInTwoPlayers { get; set; }
+        public int MaxNumberOfPlayers { get; set; }
     }
 }

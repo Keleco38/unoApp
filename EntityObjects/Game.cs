@@ -21,10 +21,10 @@ namespace EntityObjects
         public bool RoundEnded { get; set; }
         public bool GameEnded { get; set; }
 
-        public Game()
+        public Game(GameSetup gameSetup)
         {
             Id = Guid.NewGuid().ToString();
-            GameSetup = new GameSetup();
+            GameSetup = gameSetup;
             Players = new List<Player>();
             Spectators = new List<Spectator>();
         }

@@ -29,7 +29,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             var callerWon = moveParams.DuelNumbers.Contains(numberRolled);
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with Duel. Numbers they picked: {String.Join(' ', moveParams.DuelNumbers)}. Number rolled: {numberRolled}. ";
 
-            var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>(), 0));
+            var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, null, 0));
             messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
 
             var playerLost = callerWon ? moveParams.PlayerTargeted : moveParams.PlayerPlayed;
