@@ -68,16 +68,10 @@ export class GameComponent implements OnInit, OnDestroy {
     });
 
     this._hubService.mustCallUno.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
-      this._mustCallUno = true;
+      this._mustCallUno=true;
       window.clearTimeout(this._timer);
       this._timer = window.setTimeout(() => {
-        if (this._mustCallUno) {
-          if (!this.game.gameEnded) {
-            this.drawCard(2, false);
-            this.callUno(false);
-            this._hubService.sendMessageToGameChat('<--- This person forgot to call uno! Drawing 2 cards.');
-          }
-        }
+        this.callUno(false);
       }, 2000);
     });
 
@@ -101,15 +95,10 @@ export class GameComponent implements OnInit, OnDestroy {
     });
   }
 
-  callUno(playerCalled: boolean) {
-    if (!this._mustCallUno) {
-      return;
-    }
-    this._mustCallUno = false;
+  callUno(unoCalled:boolean) {
+    this._mustCallUno=false;
     window.clearTimeout(this._timer);
-    if (playerCalled) {
-      this._hubService.sendMessageToGameChat('UNO');
-    }
+    this._hubService.checkUnoCall(unoCalled);
   }
 
   playCard(cardPlayed: Card) {
@@ -230,11 +219,11 @@ export class GameComponent implements OnInit, OnDestroy {
     return `fill-viewport-${this.sidebarSettings.sidebarSize}`;
   }
 
-  drawCard(count: number, changeTurn: boolean) {
-    if (changeTurn && this.game.playerToPlay.user.name != this.currentUser.name) {
+  drawCard() {
+    if (this.game.playerToPlay.user.name != this.currentUser.name) {
       return;
     }
-    this._hubService.drawCard(count, changeTurn);
+    this._hubService.drawCard();
   }
 
   openGameInfoModal() {

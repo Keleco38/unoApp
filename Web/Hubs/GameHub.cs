@@ -262,37 +262,51 @@ namespace Web.Hubs
             }
         }
 
-        public async Task DrawCard(string gameId, int count, bool normalDraw)
+        public async Task DrawCard(string gameId)
         {
-            //todo missing security
             var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
             var game = _unoRepository.GetGameByGameId(gameId);
-            if (game.GameEnded)
+            if (game.GameEnded || game.PlayerToPlay.User.Name != user.Name)
             {
                 return;
             }
-            if (normalDraw)
-            {
-                if (game.PlayerToPlay.User.Name == user.Name)
-                {
-                    if (game.PlayerToPlay.CardPromisedToDiscard != null)
-                    {
-                        _gameManager.DrawCard(game, game.PlayerToPlay, 2, false);
-                        game.PlayerToPlay.CardPromisedToDiscard = null;
-                        await AddToGameLog(gameId, $"Player didn't fulfill his promise, he will draw 2 cards. ");
-                    }
 
-                    _gameManager.DrawCard(game, game.PlayerToPlay, count, true);
-                    await AddToGameLog(gameId, $"{user.Name} drew a card (normal draw)");
-                }
+            if (game.PlayerToPlay.CardPromisedToDiscard != null)
+            {
+                _gameManager.DrawCard(game, game.PlayerToPlay, 2, false);
+                game.PlayerToPlay.CardPromisedToDiscard = null;
+                await AddToGameLog(gameId, $"Player didn't fulfill their promise, they will draw 2 cards. ");
+            }
+
+            _gameManager.DrawCard(game, game.PlayerToPlay, 1, true);
+            await AddToGameLog(gameId, $"{user.Name} drew a card (normal draw)");
+            await UpdateGame(game);
+            await UpdateHands(game);
+        }
+
+        public async Task CheckUnoCall(string gameId, bool unoCalled)
+        {
+            var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+            var game = _unoRepository.GetGameByGameId(gameId);
+            var player = game.Players.Find(x => x.User == user);
+
+            if (!player.MustCallUno)
+            {
+                return;
+            }
+
+            if (unoCalled)
+            {
+                await SendMessage("UNO!", gameId);
             }
             else
             {
-                var player = game.Players.Find(x => x.User.Name == user.Name);
-                _gameManager.DrawCard(game, player, count, false);
+                _gameManager.DrawCard(game, player, 2, false);
+                await SendMessage($"Player [{player.User.Name}] forgot to call uno! He will draw 2 cards.", TypeOfMessage.Server, gameId);
+                await UpdateGame(game);
+                await UpdateHands(game);
             }
-            await UpdateGame(game);
-            await UpdateHands(game);
+            player.MustCallUno = false;
         }
 
         public async Task PlayCard(string gameId, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess)
@@ -317,6 +331,7 @@ namespace Web.Hubs
             await UpdateHands(game);
             if (player.Cards.Count == 1)
             {
+                player.MustCallUno = true;
                 await Clients.Caller.SendAsync("MustCallUno");
             }
         }

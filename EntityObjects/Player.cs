@@ -14,10 +14,12 @@ namespace EntityObjects
             RoundsWonCount = 0;
         }
         public string Id { get; set; }
+
         public User User { get; set; }
         public List<ICard> Cards { get; set; }
         public bool LeftGame { get; set; }
         public int RoundsWonCount { get; set; }
+        public bool MustCallUno { get; set; }
         public ICard CardPromisedToDiscard { get; set; }
 
     }

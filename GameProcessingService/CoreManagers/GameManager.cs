@@ -13,6 +13,7 @@ namespace GameProcessingService.CoreManagers
         public void StartNewGame(Game game)
         {
             game.Players.ForEach(x => x.CardPromisedToDiscard = null);
+            game.Players.ForEach(x => x.MustCallUno = false);
             Random random = new Random();
             ICard lastCardDrew;
             game.DiscardedPile = new List<ICard>();

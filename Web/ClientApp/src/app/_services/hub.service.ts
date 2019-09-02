@@ -208,8 +208,12 @@ export class HubService {
     this._hubConnection.invoke('JoinGame', id, password);
   }
 
-  drawCard(count: number, changeTurn: boolean) {
-    this._hubConnection.invoke('DrawCard', this._activeGameObservable.getValue().id, count, changeTurn);
+  drawCard() {
+    this._hubConnection.invoke('DrawCard', this._activeGameObservable.getValue().id);
+  }
+
+  checkUnoCall(unoCalled:boolean) {
+    this._hubConnection.invoke('CheckUnoCall', this._activeGameObservable.getValue().id,unoCalled);
   }
 
   playCard(
