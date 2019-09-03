@@ -184,7 +184,7 @@ export class HubService {
 
   addOrRenameUser(forceRename: boolean) {
     let name;
-    if (!environment.production) {
+    if (environment.production) {
       do {
         if (forceRename) {
           name = prompt("Your name is already taken or it's not set. Please input a new name (only letters and numbers allowed):");
