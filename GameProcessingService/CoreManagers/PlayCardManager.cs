@@ -26,7 +26,7 @@ namespace GameProcessingService.CoreManagers
         public MoveResult PlayCard(Game game, Player playerPlayed, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers,
            List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess)
         {
-            var cardPlayed = playerPlayed.Cards.Find(x => x.Id == cardPlayedId);
+            var cardPlayed = playerPlayed.Cards.First(x => x.Id == cardPlayedId);
 
             if (game.PlayerToPlay != playerPlayed && cardPlayed.Value != CardValue.StealTurn)
                 return null;
@@ -38,13 +38,13 @@ namespace GameProcessingService.CoreManagers
 
 
 
-            var playerTargeted = string.IsNullOrEmpty(playerTargetedId) ? _gameManager.GetNextPlayer(game, playerPlayed, game.Players) : game.Players.Find(x => x.Id == playerTargetedId);
+            var playerTargeted = string.IsNullOrEmpty(playerTargetedId) ? _gameManager.GetNextPlayer(game, playerPlayed, game.Players) : game.Players.First(x => x.Id == playerTargetedId);
             var colorForLastCard = targetedCardColor == 0 ? cardPlayed.Color : targetedCardColor;
 
             game.LastCardPlayed = new LastCardPlayed(colorForLastCard, cardPlayed.Value, cardPlayed.ImageUrl, playerPlayed.User.Name, cardPlayed.Color == CardColor.Wild);
 
-            var cardToDig = string.IsNullOrEmpty(cardToDigId) ? null : game.DiscardedPile.Find(x => x.Id == cardToDigId);
-            var cardPromisedToDiscard = string.IsNullOrEmpty(cardPromisedToDiscardId) ? null : playerPlayed.Cards.Find(x => x.Id == cardPromisedToDiscardId);
+            var cardToDig = string.IsNullOrEmpty(cardToDigId) ? null : game.DiscardedPile.First(x => x.Id == cardToDigId);
+            var cardPromisedToDiscard = string.IsNullOrEmpty(cardPromisedToDiscardId) ? null : playerPlayed.Cards.First(x => x.Id == cardPromisedToDiscardId);
             var charityCards = charityCardsIds != null ? playerPlayed.Cards.Where(x => charityCardsIds.Contains(x.Id)).ToList() : null;
 
             var moveParams = new MoveParams(playerPlayed, cardPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess);

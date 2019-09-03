@@ -7,6 +7,8 @@ namespace Repository
     {
         User GetUserByConnectionId(string connectionId);
         User GetUserByName(string name);
+        bool UserExistsByName(string name);
+        bool UserExistsByConnectionId(string connectionId);
         Game GetGameByGameId(string gameId);
         void RemoveGame(Game game);
         void RemoveUser(User user);

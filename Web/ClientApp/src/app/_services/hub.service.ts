@@ -184,7 +184,7 @@ export class HubService {
 
   addOrRenameUser(forceRename: boolean) {
     let name;
-    if (environment.production) {
+    if (!environment.production) {
       do {
         if (forceRename) {
           name = prompt("Your name is already taken or it's not set. Please input a new name (only letters and numbers allowed):");
@@ -279,9 +279,6 @@ export class HubService {
     this._hubConnection.invoke('StartGame', this._activeGameObservable.getValue().id);
   }
 
-  setGamePassword(id: string, roomPassword: string): any {
-    this._hubConnection.invoke('SetGamePassword', id, roomPassword);
-  }
 
   buzzPlayer(buzzType: string, forceBuzz: boolean) {
     var index = this._utilityService.userSettings.blockedBuzzCommands.indexOf(buzzType);

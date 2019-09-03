@@ -23,11 +23,9 @@ namespace Web.Hubs
         private readonly IGameManager _gameManager;
         private readonly IPlayCardManager _playCardManager;
         private readonly IUnoRepository _unoRepository;
-        private readonly SemaphoreLocker _userLocker;
 
         public GameHub(IMapper mapper, IGameManager gameManager, IPlayCardManager playCardManager, IUnoRepository unoRepository)
         {
-            _userLocker = new SemaphoreLocker();
             _gameManager = gameManager;
             _playCardManager = playCardManager;
             _unoRepository = unoRepository;
@@ -41,10 +39,14 @@ namespace Web.Hubs
 
         public override async Task OnDisconnectedAsync(System.Exception exception)
         {
-            var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
-            await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server);
-            await CleanupUserFromGames();
-            await CleanupUserFromOnlineUsersList();
+            if (_unoRepository.UserExistsByConnectionId(Context.ConnectionId))
+            {
+                var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+                await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server);
+                await CleanupUserFromGames();
+                await CleanupUserFromOnlineUsersList();
+            }
+
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -62,17 +64,6 @@ namespace Web.Hubs
             }
         }
 
-        public async Task SetGamePassword(string gameId, string password)
-        {
-            var game = _unoRepository.GetGameByGameId(gameId);
-            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId) || game.GameStarted)
-            {
-                return;
-            }
-            game.GameSetup.Password = password;
-            await GetAllGames();
-            await UpdateGame(game);
-        }
 
         public async Task GetAllOnlineUsers()
         {
@@ -105,7 +96,7 @@ namespace Web.Hubs
             var allPlayersFromGame = GetPlayersFromGame(game);
             if (allPlayersFromGame.Contains(Context.ConnectionId))
             {
-                var player = game.Players.Find(y => y.User.ConnectionId == Context.ConnectionId);
+                var player = game.Players.First(y => y.User.ConnectionId == Context.ConnectionId);
                 if (game.GameStarted)
                 {
                     player.LeftGame = true;
@@ -118,7 +109,7 @@ namespace Web.Hubs
             }
             else
             {
-                game.Spectators.Remove(game.Spectators.Find(x => x.User.ConnectionId == Context.ConnectionId));
+                game.Spectators.Remove(game.Spectators.First(x => x.User.ConnectionId == Context.ConnectionId));
             }
             await UpdateGame(game);
             await SendMessage($"{user.Name} has left the game.", TypeOfMessage.Server, gameId);
@@ -138,7 +129,7 @@ namespace Web.Hubs
                 return;
             }
 
-            var playerToKick = game.Players.Find(y => y.User.Name == name);
+            var playerToKick = game.Players.First(y => y.User.Name == name);
             game.Players.Remove(playerToKick);
             await UpdateGame(game);
             await GetAllGames();
@@ -227,39 +218,42 @@ namespace Web.Hubs
         public async Task AddOrRenameUser(string name)
         {
             name = Regex.Replace(name, @"[^a-zA-Z0-9]", "").ToLower();
-            if (!name.Any())
-            {
-                await Clients.Caller.SendAsync("RenamePlayer");
-            }
+
             if (name.Length > 10)
             {
                 name = name.Substring(0, 10);
             }
-            var nameExists = _unoRepository.GetUserByName(name) != null;
-            if (!nameExists && name != "server")
-            {
-                string message = string.Empty;
-                var existingUser = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
-                if (existingUser != null)
-                {
-                    message = $"{existingUser.Name} has renamed to {name}";
-                    _unoRepository.RemoveUser(existingUser);
-                }
-                else
-                {
-                    message = $"{name} has connected to the server.";
-                }
-                var user = new User(Context.ConnectionId, name);
-                _unoRepository.AddUser(user);
-                await SendMessage(message, TypeOfMessage.Server);
-                var userDto = _mapper.Map<UserDto>(user);
-                await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
-                await GetAllOnlineUsers();
-            }
-            else
+
+            var nameExists = _unoRepository.UserExistsByName(name);
+
+            if (name == "server" || nameExists || string.IsNullOrEmpty(name))
             {
                 await Clients.Caller.SendAsync("RenamePlayer");
             }
+
+            string message;
+            User user;
+
+            var userExists = _unoRepository.UserExistsByConnectionId(Context.ConnectionId);
+            if (userExists)
+            {
+                user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+                message = $"{user.Name} has renamed to {name}";
+                user.Name = name;
+            }
+            else
+            {
+                message = $"{name} has connected to the server.";
+                user = new User(Context.ConnectionId, name);
+                _unoRepository.AddUser(user);
+            }
+
+            await SendMessage(message, TypeOfMessage.Server);
+            var userDto = _mapper.Map<UserDto>(user);
+            await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
+            await GetAllOnlineUsers();
+
+
         }
 
         public async Task DrawCard(string gameId)
@@ -288,7 +282,7 @@ namespace Web.Hubs
         {
             var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
             var game = _unoRepository.GetGameByGameId(gameId);
-            var player = game.Players.Find(x => x.User == user);
+            var player = game.Players.First(x => x.User == user);
 
             if (!player.MustCallUno)
             {
@@ -316,7 +310,7 @@ namespace Web.Hubs
             if (game.GameEnded || !game.GameStarted)
                 return;
             var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
-            var player = game.Players.Find(x => x.User.Name == user.Name);
+            var player = game.Players.First(x => x.User.Name == user.Name);
             var moveResult = _playCardManager.PlayCard(game, player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard, cardPromisedToDiscardId, oddOrEvenGuess);
             if (moveResult == null)
             {
@@ -371,7 +365,7 @@ namespace Web.Hubs
                 var allPlayersInTheGame = GetPlayersFromGame(game);
                 foreach (var connectionId in allPlayersInTheGame)
                 {
-                    var myCards = game.Players.Find(x => x.User.ConnectionId == connectionId).Cards;
+                    var myCards = game.Players.First(x => x.User.ConnectionId == connectionId).Cards;
                     var myCardsDto = _mapper.Map<List<CardDto>>(myCards).OrderBy(x => x.Color).ThenBy(x => x.Value);
                     await Clients.Client(connectionId).SendAsync("UpdateMyHand", myCardsDto);
                 }
@@ -547,6 +541,11 @@ namespace Web.Hubs
 
                 return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Normal, MentionedUsers = mentionedUsers };
             }
+        }
+
+        User GetCurrentUser()
+        {
+            return _unoRepository.GetUserByConnectionId(Context.ConnectionId);
         }
 
 

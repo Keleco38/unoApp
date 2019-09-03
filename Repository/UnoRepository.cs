@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EntityObjects;
 
 namespace Repository
@@ -18,19 +19,29 @@ namespace Repository
 
         public User GetUserByConnectionId(string connectionId)
         {
-            var user = _users.Find(x => x.ConnectionId == connectionId);
+            var user = _users.First(x => x.ConnectionId == connectionId);
             return user;
+        }
+
+        public bool UserExistsByName(string name)
+        {
+            return _users.Exists(x => x.Name == name);
+        }
+
+        public bool UserExistsByConnectionId(string connectionId)
+        {
+            return _users.Exists(x => x.ConnectionId == connectionId);
         }
 
         public User GetUserByName(string name)
         {
-            var user = _users.Find(x => x.Name == name);
+            var user = _users.First(x => x.Name == name);
             return user;
         }
 
         public Game GetGameByGameId(string gameId)
         {
-            var game = _games.Find(x => x.Id == gameId);
+            var game = _games.First(x => x.Id == gameId);
             return game;
 
         }
