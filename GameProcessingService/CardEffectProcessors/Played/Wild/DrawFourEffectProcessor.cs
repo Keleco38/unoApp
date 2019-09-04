@@ -37,12 +37,13 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             var automaticallyTriggeredResultDeflect = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.Deflect).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, null, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw));
             messageToLog = automaticallyTriggeredResultDeflect.MessageToLog;
 
-            messagesToLog.Add(messageToLog);
 
             if (game.GameSetup.DrawFourDrawTwoShouldSkipTurn)
             {
+                messageToLog += $"{originallyTargetedPlayer.User.Name} was skipped.";
                 game.PlayerToPlay = originallyTargetedPlayer;
             }
+            messagesToLog.Add(messageToLog);
 
             return new MoveResult(messagesToLog);
         }

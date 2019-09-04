@@ -1,6 +1,6 @@
 <!-- Container for sidebar(s) + page content -->
 <app-navbar *ngIf="sidebarSettings.showNavbar"></app-navbar>
-<ng-sidebar-container style="height:100vh">
+<ng-sidebar-container class="fill-viewport-100">
   <!-- A sidebar -->
   <ng-sidebar [(opened)]="isSidebarOpen" [position]="'bottom'" [closeOnClickOutside]="!sidebarSettings.keepSidebarOpen">
     <div class="row">
