@@ -23,18 +23,30 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
+
             var messagesToLog = new List<string>();
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with double edge. ";
 
+            //checking targeted player
             var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, null, 0));
             messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
-
-            var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>() { moveParams.PlayerTargeted }, 3));
+            var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>() { moveParams.PlayerTargeted }, 4));
             messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
+            var automaticallyTriggeredResultDeflect = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.Deflect).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, null, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw));
+            messageToLog = automaticallyTriggeredResultDeflect.MessageToLog;
 
-            messageToLog += $"Both players drew {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} cards. ";
-            _gameManager.DrawCard(game, moveParams.PlayerTargeted, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
-            _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
+            //switch check
+            var originallyTargetedPlayer = moveParams.PlayerTargeted;
+            moveParams.PlayerTargeted = moveParams.PlayerPlayed;
+            moveParams.PlayerPlayed = originallyTargetedPlayer;
+
+            //checking player playing
+            automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, null, 0));
+            messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
+            automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>() { moveParams.PlayerTargeted }, 2));
+            messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
+            automaticallyTriggeredResultDeflect = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.Deflect).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, null, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw));
+            messageToLog = automaticallyTriggeredResultDeflect.MessageToLog;
 
             messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);

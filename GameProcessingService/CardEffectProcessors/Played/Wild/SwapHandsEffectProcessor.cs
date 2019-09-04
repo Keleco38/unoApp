@@ -29,30 +29,38 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, null, 0));
             messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
 
-            var automaticallyTriggeredResultKeepMyHand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KeepMyHand).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>(){moveParams.PlayerPlayed, moveParams.PlayerTargeted}, 0));
+            var automaticallyTriggeredResultKeepMyHand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KeepMyHand).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>() { moveParams.PlayerPlayed, moveParams.PlayerTargeted }, 0));
             messageToLog = automaticallyTriggeredResultKeepMyHand.MessageToLog;
 
-            Player loopingPlayer = null;
-            List<ICard> firstCardsBackup = null;
-
-            for (int i = 0; i < automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand.Count; i++)
+            if (automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand.Count < 2)
             {
-                if (i == 0)
-                {
-                    loopingPlayer = automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand[0];
-                    firstCardsBackup = loopingPlayer.Cards.ToList();
-                }
-
-                if (i != automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand.Count - 1)
-                {
-                    loopingPlayer.Cards = _gameManager.GetNextPlayer(game, loopingPlayer, automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand).Cards;
-                }
-                else
-                {
-                    loopingPlayer.Cards = firstCardsBackup;
-                }
-                loopingPlayer = _gameManager.GetNextPlayer(game, loopingPlayer, automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand);
+                messageToLog += "Players exchanged hands.";
             }
+            else
+            {
+                Player loopingPlayer = null;
+                List<ICard> firstCardsBackup = null;
+
+                for (int i = 0; i < automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        loopingPlayer = automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand[0];
+                        firstCardsBackup = loopingPlayer.Cards.ToList();
+                    }
+
+                    if (i != automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand.Count - 1)
+                    {
+                        loopingPlayer.Cards = _gameManager.GetNextPlayer(game, loopingPlayer, automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand).Cards;
+                    }
+                    else
+                    {
+                        loopingPlayer.Cards = firstCardsBackup;
+                    }
+                    loopingPlayer = _gameManager.GetNextPlayer(game, loopingPlayer, automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand);
+                }
+            }
+
 
             messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);

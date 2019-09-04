@@ -41,7 +41,7 @@ namespace Web.Hubs
         {
             if (_unoRepository.UserExistsByConnectionId(Context.ConnectionId))
             {
-                var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+                var user = GetCurrentUser();
                 await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server);
                 await CleanupUserFromGames();
                 await CleanupUserFromOnlineUsersList();
@@ -79,7 +79,7 @@ namespace Web.Hubs
 
         public async Task CreateGame(GameSetupDto gameSetupDto)
         {
-            var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+            var user = GetCurrentUser();
             var gameSetup = _mapper.Map<GameSetup>(gameSetupDto);
             var game = new Game(gameSetup);
             game.Players.Add(new Player(user));
@@ -92,7 +92,7 @@ namespace Web.Hubs
         public async Task ExitGame(string gameId)
         {
             var game = _unoRepository.GetGameByGameId(gameId);
-            var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+            var user = GetCurrentUser();
             var allPlayersFromGame = GetPlayersFromGame(game);
             if (allPlayersFromGame.Contains(Context.ConnectionId))
             {
@@ -170,7 +170,7 @@ namespace Web.Hubs
         public async Task JoinGame(string gameId, string password)
         {
             await CleanupUserFromGamesExceptThisGame(gameId);
-            var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+            var user = GetCurrentUser();
             var game = _unoRepository.GetGameByGameId(gameId);
             var spectator = game.Spectators.FirstOrDefault(x => x.User == user);
             if (!string.IsNullOrEmpty(game.GameSetup.Password) && spectator == null)
@@ -224,11 +224,23 @@ namespace Web.Hubs
                 name = name.Substring(0, 10);
             }
 
-            var nameExists = _unoRepository.UserExistsByName(name);
 
-            if (name == "server" || nameExists || string.IsNullOrEmpty(name))
+            if (name == "server" || string.IsNullOrEmpty(name))
             {
                 await Clients.Caller.SendAsync("RenamePlayer");
+                return;
+            }
+
+            var nameExists = _unoRepository.UserExistsByName(name);
+            if (nameExists)
+            {
+                var connId = _unoRepository.GetUserByName(name).ConnectionId;
+                if (connId != Context.ConnectionId)
+                {
+                    await Clients.Caller.SendAsync("RenamePlayer");
+                }
+                return;
+
             }
 
             string message;
@@ -237,7 +249,7 @@ namespace Web.Hubs
             var userExists = _unoRepository.UserExistsByConnectionId(Context.ConnectionId);
             if (userExists)
             {
-                user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+                user = GetCurrentUser();
                 message = $"{user.Name} has renamed to {name}";
                 user.Name = name;
             }
@@ -258,7 +270,7 @@ namespace Web.Hubs
 
         public async Task DrawCard(string gameId)
         {
-            var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+            var user = GetCurrentUser();
             var game = _unoRepository.GetGameByGameId(gameId);
             if (game.GameEnded || game.PlayerToPlay.User.Name != user.Name)
             {
@@ -280,7 +292,11 @@ namespace Web.Hubs
 
         public async Task CheckUnoCall(string gameId, bool unoCalled)
         {
-            var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+            if (!_unoRepository.UserExistsByConnectionId(Context.ConnectionId))
+            {
+                return;
+            }
+            var user = GetCurrentUser();
             var game = _unoRepository.GetGameByGameId(gameId);
             var player = game.Players.First(x => x.User == user);
 
@@ -291,12 +307,12 @@ namespace Web.Hubs
 
             if (unoCalled)
             {
-                await SendMessage("UNO!", gameId);
+                await SendMessage("*UNO!", gameId);
             }
             else
             {
                 _gameManager.DrawCard(game, player, 2, false);
-                await SendMessage($"Player [{player.User.Name}] forgot to call uno! He will draw 2 cards.", TypeOfMessage.Server, gameId);
+                await SendMessage($"Player [{player.User.Name}] forgot to call uno! They will draw 2 cards.", TypeOfMessage.Server, gameId);
                 await UpdateGame(game);
                 await UpdateHands(game);
             }
@@ -309,7 +325,7 @@ namespace Web.Hubs
             var game = _unoRepository.GetGameByGameId(gameId);
             if (game.GameEnded || !game.GameStarted)
                 return;
-            var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+            var user = GetCurrentUser();
             var player = game.Players.First(x => x.User.Name == user.Name);
             var moveResult = _playCardManager.PlayCard(game, player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard, cardPromisedToDiscardId, oddOrEvenGuess);
             if (moveResult == null)
@@ -401,14 +417,14 @@ namespace Web.Hubs
 
         private async Task CleanupUserFromOnlineUsersList()
         {
-            var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+            var user = GetCurrentUser();
             _unoRepository.RemoveUser(user);
             await GetAllOnlineUsers();
         }
 
         private async Task SendMessage(string message, TypeOfMessage typeOfMessage, string gameId = "")
         {
-            var user = _unoRepository.GetUserByConnectionId(Context.ConnectionId);
+            var user = GetCurrentUser();
             var username = typeOfMessage == TypeOfMessage.Server ? "Server" : user.Name;
             var chatMessageIntentionResult = GetChatMessageIntention(message);
             ChatMessageDto msgDto;
