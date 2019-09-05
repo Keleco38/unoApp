@@ -17,19 +17,19 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
             _gameManager = gameManager;
         }
 
-        public AutomaticallyTriggeredResult ProcessCardEffect(Game game, AutomaticallyTriggeredParams automaticallyTriggeredParams)
+        public AutomaticallyTriggeredResult ProcessCardEffect(Game game, string messageToLog, AutomaticallyTriggeredParams autoParams)
         {
             var playersWithoutKeepMyHand = new List<Player>();
 
-            automaticallyTriggeredParams.PlayersAffected.ForEach(p =>
+            autoParams.KeepMyHandParams.PlayersAffected.ForEach(p =>
             {
                 var keepMyHandCard = p.Cards.FirstOrDefault(y => y.Value == CardValue.KeepMyHand);
                 if (keepMyHandCard != null)
                 {
-                    game.LastCardPlayed = new LastCardPlayed(automaticallyTriggeredParams.MoveParams.TargetedCardColor, keepMyHandCard.Value, keepMyHandCard.ImageUrl, p.User.Name, true);
+                    game.LastCardPlayed = new LastCardPlayed(autoParams.KeepMyHandParams.TargetedCardColor, keepMyHandCard.Value, keepMyHandCard.ImageUrl, p.User.Name, true);
                     p.Cards.Remove(keepMyHandCard);
                     game.DiscardedPile.Add(keepMyHandCard);
-                    automaticallyTriggeredParams.MessageToLog += $"{p.User.Name} kept their hand safe. ";
+                    messageToLog += $"{p.User.Name} kept their hand safe. ";
                 }
                 else
                 {
@@ -39,7 +39,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
 
 
 
-            return new AutomaticallyTriggeredResult(automaticallyTriggeredParams.MessageToLog, 0, playersWithoutKeepMyHand);
+            return new AutomaticallyTriggeredResult() { MessageToLog = messageToLog, PlayersWithoutKeepMyHand = playersWithoutKeepMyHand };
         }
     }
 }

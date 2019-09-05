@@ -5,7 +5,7 @@ using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
 {
-    public class PromiseKeeperEffectProcessor:IAutomaticallyTriggeredCardEffectProcessor
+    public class PromiseKeeperEffectProcessor : IAutomaticallyTriggeredCardEffectProcessor
     {
         private readonly IGameManager _gameManager;
         public CardValue CardAffected => CardValue.PromiseKeeper;
@@ -15,28 +15,28 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
             _gameManager = gameManager;
         }
 
-        public AutomaticallyTriggeredResult ProcessCardEffect(Game game, AutomaticallyTriggeredParams automaticallyTriggeredParams)
+        public AutomaticallyTriggeredResult ProcessCardEffect(Game game, string messageToLog, AutomaticallyTriggeredParams autoParams)
         {
 
-            if (automaticallyTriggeredParams.MoveParams.PlayerPlayed.CardPromisedToDiscard != null)
+            if (autoParams.PromiseKeeperParams.PlayerPlayed.CardPromisedToDiscard != null)
             {
-                if (automaticallyTriggeredParams.MoveParams.CardPlayed.Color == automaticallyTriggeredParams.MoveParams.PlayerPlayed.CardPromisedToDiscard.Color && automaticallyTriggeredParams.MoveParams.CardPlayed.Value == automaticallyTriggeredParams.MoveParams.PlayerPlayed.CardPromisedToDiscard.Value)
+                if (autoParams.PromiseKeeperParams.CardPlayed.Color == autoParams.PromiseKeeperParams.PlayerPlayed.CardPromisedToDiscard.Color && autoParams.PromiseKeeperParams.CardPlayed.Value == autoParams.PromiseKeeperParams.PlayerPlayed.CardPromisedToDiscard.Value)
                 {
-                    automaticallyTriggeredParams.MessageToLog = $"{automaticallyTriggeredParams.MoveParams.PlayerPlayed.User.Name} fulfilled their promise, they will discard one card. ";
-                    if (automaticallyTriggeredParams.MoveParams.PlayerPlayed.Cards.Count > 0)
+                    messageToLog = $"{autoParams.PromiseKeeperParams.PlayerPlayed.User.Name} fulfilled their promise, they will discard one card. ";
+                    if (autoParams.PromiseKeeperParams.PlayerPlayed.Cards.Count > 0)
                     {
-                        automaticallyTriggeredParams.MoveParams.PlayerPlayed.Cards.RemoveRange(0, 1);
+                        autoParams.PromiseKeeperParams.PlayerPlayed.Cards.RemoveRange(0, 1);
                     }
                 }
                 else
                 {
-                    automaticallyTriggeredParams.MessageToLog = $"{automaticallyTriggeredParams.MoveParams.PlayerPlayed.User.Name} didn't fulfill their promise, they will draw 2 cards. ";
-                    _gameManager.DrawCard(game, automaticallyTriggeredParams.MoveParams.PlayerPlayed, 2, false);
+                    messageToLog = $"{autoParams.PromiseKeeperParams.PlayerPlayed.User.Name} didn't fulfill their promise, they will draw 2 cards. ";
+                    _gameManager.DrawCard(game, autoParams.PromiseKeeperParams.PlayerPlayed, 2, false);
                 }
-                automaticallyTriggeredParams.MoveParams.PlayerPlayed.CardPromisedToDiscard = null;
+                autoParams.PromiseKeeperParams.PlayerPlayed.CardPromisedToDiscard = null;
             }
 
-            return new AutomaticallyTriggeredResult(automaticallyTriggeredParams.MessageToLog);
+            return new AutomaticallyTriggeredResult() { MessageToLog = messageToLog };
         }
     }
 }

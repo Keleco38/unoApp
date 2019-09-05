@@ -49,7 +49,7 @@ namespace GameProcessingService.CoreManagers
 
             var moveParams = new MoveParams(playerPlayed, cardPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess);
 
-            var automaticallyTriggeredResultPromiseKeeper = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.PromiseKeeper).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, String.Empty, null, 0));
+            var automaticallyTriggeredResultPromiseKeeper = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.PromiseKeeper).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { PromiseKeeperParams = new AutomaticallyTriggeredPromiseKeeperParams(playerPlayed, cardPlayed) });
 
             var moveResult = _playableCardEffectProcessors.First(x => x.CardAffected == cardPlayed.Value).ProcessCardEffect(game, moveParams);
 
@@ -81,7 +81,7 @@ namespace GameProcessingService.CoreManagers
             var playersWithoutCards = game.Players.Where(x => !x.Cards.Any()).ToList();
             if (playersWithoutCards.Any())
             {
-                var automaticallyTriggeredResultTheLastStand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.TheLastStand).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, String.Empty, null, 0));
+                var automaticallyTriggeredResultTheLastStand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.TheLastStand).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { TheLastStandParams = new AutomaticallyTriggeredTheLastStandParams() });
 
                 if (!string.IsNullOrEmpty(automaticallyTriggeredResultTheLastStand.MessageToLog))
                 {

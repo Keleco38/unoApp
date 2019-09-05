@@ -16,21 +16,19 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
             _gameManager = gameManager;
         }
 
-        public AutomaticallyTriggeredResult ProcessCardEffect(Game game, AutomaticallyTriggeredParams automaticallyTriggeredParams)
+        public AutomaticallyTriggeredResult ProcessCardEffect(Game game, string messageToLog, AutomaticallyTriggeredParams autoParams)
         {
-            automaticallyTriggeredParams.PlayersAffected.ForEach(x =>
+            var doubleDrawCard = autoParams.DoubleDrawParams.PlayerAffected.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+            if (doubleDrawCard != null)
             {
-                var doubleDrawCard = x.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
-                if (doubleDrawCard != null)
-                {
-                    automaticallyTriggeredParams.NumberOfCardsToDraw = automaticallyTriggeredParams.NumberOfCardsToDraw * 2;
-                    game.LastCardPlayed = new LastCardPlayed(automaticallyTriggeredParams.MoveParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, x.User.Name, true);
-                    x.Cards.Remove(doubleDrawCard);
-                    game.DiscardedPile.Add(doubleDrawCard);
-                    automaticallyTriggeredParams.MessageToLog += $"{x.User.Name} doubled the draw effect. ";
-                }
-            });
-            return new AutomaticallyTriggeredResult(automaticallyTriggeredParams.MessageToLog, automaticallyTriggeredParams.NumberOfCardsToDraw);
+                autoParams.DoubleDrawParams.NumberOfCardsToDraw = autoParams.DoubleDrawParams.NumberOfCardsToDraw * 2;
+                game.LastCardPlayed = new LastCardPlayed(autoParams.DoubleDrawParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, autoParams.DoubleDrawParams.PlayerAffected.User.Name, true);
+                autoParams.DoubleDrawParams.PlayerAffected.Cards.Remove(doubleDrawCard);
+                game.DiscardedPile.Add(doubleDrawCard);
+                messageToLog += $"{autoParams.DoubleDrawParams.PlayerAffected.User.Name} doubled the draw effect. ";
+            }
+
+            return new AutomaticallyTriggeredResult() { MessageToLog = messageToLog, NumberOfCardsToDraw = autoParams.DoubleDrawParams.NumberOfCardsToDraw };
         }
     }
 }

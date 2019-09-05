@@ -33,12 +33,11 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 messageToLog += $" [{moveParams.PlayerTargeted.User.Name}: {rolledNumber}] ";
                 if (rolledNumber == 1)
                 {
-
-                    var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>() { moveParams.PlayerTargeted }, 3));
+                    var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerTargeted, 3, moveParams.TargetedCardColor) });
                     messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 
-                    var automaticallyTriggeredResultDeflect = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.Deflect).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, null, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw));
-                    messageToLog = automaticallyTriggeredResultDeflect.MessageToLog;
+                    _gameManager.DrawCard(game, moveParams.PlayerTargeted, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
+                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} drew {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} cards.";
 
                     break;
                 }

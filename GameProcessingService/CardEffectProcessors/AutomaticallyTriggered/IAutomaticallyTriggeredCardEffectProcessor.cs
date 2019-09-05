@@ -7,6 +7,6 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered
     public interface IAutomaticallyTriggeredCardEffectProcessor
     {
         CardValue CardAffected { get; }
-        AutomaticallyTriggeredResult ProcessCardEffect(Game game, AutomaticallyTriggeredParams automaticallyTriggeredParams);
+        AutomaticallyTriggeredResult ProcessCardEffect(Game game, string messageToLog, AutomaticallyTriggeredParams autoParams);
     }
 }

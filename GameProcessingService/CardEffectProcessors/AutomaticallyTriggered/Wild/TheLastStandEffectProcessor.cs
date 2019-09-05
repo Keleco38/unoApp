@@ -6,7 +6,7 @@ using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
 {
-    public class TheLastStandEffectProcessor: IAutomaticallyTriggeredCardEffectProcessor
+    public class TheLastStandEffectProcessor : IAutomaticallyTriggeredCardEffectProcessor
     {
         private readonly IGameManager _gameManager;
         public CardValue CardAffected => CardValue.TheLastStand;
@@ -16,7 +16,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
             _gameManager = gameManager;
         }
 
-        public AutomaticallyTriggeredResult ProcessCardEffect(Game game, AutomaticallyTriggeredParams automaticallyTriggeredParams)
+        public AutomaticallyTriggeredResult ProcessCardEffect(Game game, string messageToLog, AutomaticallyTriggeredParams autoParams)
         {
             var playersWithoutCards = game.Players.Where(x => !x.Cards.Any()).ToList();
 
@@ -28,14 +28,14 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                 game.LastCardPlayed = new LastCardPlayed(game.LastCardPlayed.Color, theLastStandCard.Value, theLastStandCard.ImageUrl, game.PlayerToPlay.User.Name, true);
                 firstPlayerWithTheLastStand.Cards.Remove(theLastStandCard);
                 game.DiscardedPile.Add(theLastStandCard);
-                automaticallyTriggeredParams.MessageToLog=$"{firstPlayerWithTheLastStand.User.Name} saved the day! They played The Last Stand. Every player that had 0 cards will draw 2 cards.";
+                messageToLog = $"{firstPlayerWithTheLastStand.User.Name} saved the day! They played The Last Stand. Every player that had 0 cards will draw 2 cards.";
                 foreach (var player in playersWithoutCards)
                 {
                     _gameManager.DrawCard(game, player, 2, false);
                 }
             }
 
-            return new AutomaticallyTriggeredResult(automaticallyTriggeredParams.MessageToLog);
+            return new AutomaticallyTriggeredResult() { MessageToLog = messageToLog };
         }
     }
 }

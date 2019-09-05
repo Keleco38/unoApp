@@ -25,7 +25,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             var messagesToLog = new List<string>();
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played black hole. Every player drew new hand. ";
 
-            var automaticallyTriggeredResultKeepMyHand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KeepMyHand).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, game.Players, 0));
+            var automaticallyTriggeredResultKeepMyHand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KeepMyHand).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KeepMyHandParams = new AutomaticallyTriggeredKeepMyHandParams(game.Players, moveParams.TargetedCardColor) });
             messageToLog = automaticallyTriggeredResultKeepMyHand.MessageToLog;
 
             automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand.ForEach(p =>

@@ -26,8 +26,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             var messagesToLog = new List<string>();
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} changed color to {moveParams.TargetedCardColor} (poison card). ";
-
-            var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, new AutomaticallyTriggeredParams(moveParams, messageToLog, new List<Player>() { moveParams.PlayerPlayed }, 2));
+            var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerPlayed, 2, moveParams.TargetedCardColor) });
             messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
             _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
             messageToLog += $" {moveParams.PlayerPlayed.User.Name} drew {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} cards. ";
