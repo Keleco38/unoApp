@@ -20,9 +20,11 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             _automaticallyTriggeredCardEffectProcessors = automaticallyTriggeredCardEffectProcessors;
         }
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
-            messageToLog += $"{moveParams.PlayerPlayed.User.Name} played united we fall. Every player drew 2 cards. ";
+            var messagesToLog = new List<string>();
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played united we fall. Every player drew 2 cards. ";
+
 
             game.Players.ForEach(p =>
             {
@@ -31,7 +33,8 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 _gameManager.DrawCard(game, p, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
             });
 
-            return new MoveResult(messageToLog);
+            messagesToLog.Add(messageToLog);
+            return new MoveResult(messagesToLog);
         }
     }
 }

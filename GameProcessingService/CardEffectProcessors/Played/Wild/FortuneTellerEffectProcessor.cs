@@ -18,17 +18,19 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             _gameManager = gameManager;
         }
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var callbackParams = new List<MoveResultCallbackParam>();
-            messageToLog += $"{moveParams.PlayerPlayed.User.Name} inspected top 5 cards from the deck";
+            var messagesToLog = new List<string>();
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} inspected top 5 cards from the deck";
+            messagesToLog.Add(messageToLog);
 
             if (game.PlayerToPlay.Cards.Any())
             {
                 callbackParams.Add(new MoveResultCallbackParam(Constants.SHOW_CARDS_CALLBACK_COMMAND, moveParams.PlayerPlayed.User.ConnectionId, game.Deck.Cards.Take(5)));
             }
 
-            return new MoveResult(messageToLog, callbackParams);
+            return new MoveResult(messagesToLog, callbackParams);
         }
     }
 }

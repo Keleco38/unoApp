@@ -328,26 +328,17 @@ namespace Web.Hubs
             var user = GetCurrentUser();
             var player = game.Players.First(x => x.User.Name == user.Name);
             var moveResult = _playCardManager.PlayCard(game, player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard, cardPromisedToDiscardId, oddOrEvenGuess);
-
             if (moveResult == null)
+            {
                 return;
-
-            await AddToGameLog(game.Id, moveResult.TurnMessageResult);
-
-            if (!string.IsNullOrEmpty(moveResult.RoundEndedMessageResult))
-                await AddToGameLog(game.Id, moveResult.RoundEndedMessageResult);
-
-            if (!string.IsNullOrEmpty(moveResult.GameEndedMessageResult))
-                await AddToGameLog(game.Id, moveResult.GameEndedMessageResult);
-
+            }
             moveResult.MoveResultCallbackParams.ForEach(async callbackParam =>
             {
                 await Clients.Client(callbackParam.ConnectionId).SendAsync(callbackParam.Command, callbackParam.Object);
             });
-
+            moveResult.MessagesToLog.ForEach(async x => await AddToGameLog(game.Id, x));
             await UpdateGame(game);
             await UpdateHands(game);
-
             if (player.Cards.Count == 1)
             {
                 player.MustCallUno = true;

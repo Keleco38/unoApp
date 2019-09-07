@@ -21,9 +21,11 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
  _automaticallyTriggeredCardEffectProcessors = automaticallyTriggeredCardEffectProcessors;
         }
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
-             messageToLog += $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with Charity. ";
+            var messagesToLog = new List<string>();
+
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with Charity. ";
 
             var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { MagneticPolarityParams = new AutomaticallyTriggeredMagneticPolarityParams(moveParams.TargetedCardColor,moveParams.PlayerPlayed,moveParams.PlayerTargeted) });
             moveParams.PlayerTargeted = automaticallyTriggeredResultMagneticPolarity.MagneticPolaritySelectedPlayer;
@@ -40,7 +42,8 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             _gameManager.DrawCard(game, moveParams.PlayerPlayed, 1, false);
 
-            return new MoveResult(messageToLog);
+            messagesToLog.Add(messageToLog);
+            return new MoveResult(messagesToLog);
         }
     }
 }

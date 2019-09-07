@@ -16,9 +16,10 @@ namespace GameProcessingService.CardEffectProcessors.Played.Colored
             _gameManager = gameManager;
         }
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
-            messageToLog += $"{moveParams.PlayerPlayed.User.Name} changed direction. ";
+            var messagesToLog = new List<string>();
+            var messageToLog=$"{moveParams.PlayerPlayed.User.Name} changed direction. ";
             game.Direction = game.Direction == Direction.Right ? Direction.Left : Direction.Right;
 
             if (game.GameSetup.ReverseShouldSkipTurnInTwoPlayers && game.Players.Count == 2)
@@ -27,7 +28,8 @@ namespace GameProcessingService.CardEffectProcessors.Played.Colored
                 game.PlayerToPlay = moveParams.PlayerTargeted;
             }
 
-            return new MoveResult(messageToLog);
+            messagesToLog.Add(messageToLog);
+            return new MoveResult(messagesToLog);
         }
     }
 }

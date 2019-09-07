@@ -26,10 +26,8 @@ namespace GameProcessingService.CoreManagers
         public MoveResult PlayCard(Game game, Player playerPlayed, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers,
            List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess)
         {
-            var cardPlayed = playerPlayed.Cards.FirstOrDefault(x => x.Id == cardPlayedId);
+            var cardPlayed = playerPlayed.Cards.First(x => x.Id == cardPlayedId);
 
-            if (cardPlayed == null)
-                return null;
             if (game.PlayerToPlay != playerPlayed && cardPlayed.Value != CardValue.StealTurn)
                 return null;
             if (cardPlayed.Color != CardColor.Wild && cardPlayed.Color != game.LastCardPlayed.Color && cardPlayed.Value != game.LastCardPlayed.Value)
@@ -37,6 +35,8 @@ namespace GameProcessingService.CoreManagers
 
             playerPlayed.Cards.Remove(cardPlayed);
             game.DiscardedPile.Add(cardPlayed);
+
+
 
             var playerTargeted = string.IsNullOrEmpty(playerTargetedId) ? _gameManager.GetNextPlayer(game, playerPlayed, game.Players) : game.Players.First(x => x.Id == playerTargetedId);
             var colorForLastCard = targetedCardColor == 0 ? cardPlayed.Color : targetedCardColor;
@@ -47,31 +47,26 @@ namespace GameProcessingService.CoreManagers
             var cardPromisedToDiscard = string.IsNullOrEmpty(cardPromisedToDiscardId) ? null : playerPlayed.Cards.First(x => x.Id == cardPromisedToDiscardId);
             var charityCards = charityCardsIds != null ? playerPlayed.Cards.Where(x => charityCardsIds.Contains(x.Id)).ToList() : null;
 
-
-            var automaticallyTriggeredResultPromiseKeeper = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.PromiseKeeper).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { PromiseKeeperParams = new AutomaticallyTriggeredPromiseKeeperParams(playerPlayed, cardPlayed) });
-            var turnMessageResult = automaticallyTriggeredResultPromiseKeeper.MessageToLog;
-
             var moveParams = new MoveParams(playerPlayed, cardPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess);
 
-            var moveResult = _playableCardEffectProcessors.First(x => x.CardAffected == cardPlayed.Value).ProcessCardEffect(game, moveParams, turnMessageResult);
+            var automaticallyTriggeredResultPromiseKeeper = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.PromiseKeeper).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { PromiseKeeperParams = new AutomaticallyTriggeredPromiseKeeperParams(playerPlayed, cardPlayed) });
 
-            var automaticallyTriggeredTheLastStandResult = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.TheLastStand).ProcessCardEffect(game, moveResult.TurnMessageResult, new AutomaticallyTriggeredParams() { TheLastStandParams = new AutomaticallyTriggeredTheLastStandParams() });
-            moveResult.TurnMessageResult = automaticallyTriggeredTheLastStandResult.MessageToLog;
+            var moveResult = _playableCardEffectProcessors.First(x => x.CardAffected == cardPlayed.Value).ProcessCardEffect(game, moveParams);
 
+            if (!string.IsNullOrEmpty(automaticallyTriggeredResultPromiseKeeper.MessageToLog))
+            {
+                moveResult.MessagesToLog.Add(automaticallyTriggeredResultPromiseKeeper.MessageToLog);
+            }
 
-            _gameManager.UpdateGameAndRoundStatus(game);
-
+            UpdateGameAndRoundStatus(game, moveResult, moveParams);
+            if (game.GameEnded)
+            {
+                return moveResult;
+            }
             if (game.RoundEnded)
             {
-                moveResult.RoundEndedMessageResult = $"Round ended! Players that won that round: {string.Join(',', game.Players.Where(x => !x.Cards.Any()).Select(x => x.User.Name))}";
-                if (game.GameEnded)
-                {
-                    moveResult.GameEndedMessageResult = $"Game ended! Players that won the game: {string.Join(',', game.Players.Where(x => x.RoundsWonCount == game.GameSetup.RoundsToWin).Select(x => x.User.Name))}";
-                }
-                else
-                {
-                    _gameManager.StartNewGame(game);
-                }
+                _gameManager.StartNewGame(game);
+                return moveResult;
             }
 
             game.PlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
@@ -79,5 +74,37 @@ namespace GameProcessingService.CoreManagers
         }
 
 
+        // -------------------------------------private------------
+
+        public void UpdateGameAndRoundStatus(Game game, MoveResult moveResult, MoveParams moveParams)
+        {
+            var playersWithoutCards = game.Players.Where(x => !x.Cards.Any()).ToList();
+            if (playersWithoutCards.Any())
+            {
+                var automaticallyTriggeredResultTheLastStand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.TheLastStand).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { TheLastStandParams = new AutomaticallyTriggeredTheLastStandParams() });
+
+                if (!string.IsNullOrEmpty(automaticallyTriggeredResultTheLastStand.MessageToLog))
+                {
+                    moveResult.MessagesToLog.Add(automaticallyTriggeredResultTheLastStand.MessageToLog);
+                    return;
+                }
+
+                foreach (var player in playersWithoutCards)
+                {
+                    player.RoundsWonCount++;
+                }
+
+                game.RoundEnded = true;
+                moveResult.MessagesToLog.Add($"Round ended! Players that won that round: {string.Join(',', playersWithoutCards.Select(x => x.User.Name))}");
+
+                var playersThatMatchWinCriteria = game.Players.Where(x => x.RoundsWonCount == game.GameSetup.RoundsToWin).ToList();
+                if (playersThatMatchWinCriteria.Any())
+                {
+                    game.GameEnded = true;
+                    moveResult.MessagesToLog.Add($"Game ended! Players that won the game: {string.Join(',', playersThatMatchWinCriteria.Select(x => x.User.Name))}");
+                }
+            }
+
+        }
     }
 }

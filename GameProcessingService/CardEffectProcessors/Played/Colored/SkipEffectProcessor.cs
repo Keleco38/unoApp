@@ -16,11 +16,12 @@ namespace GameProcessingService.CardEffectProcessors.Played.Colored
             _gameManager = gameManager;
         }
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
-            messageToLog += ($"{moveParams.PlayerPlayed.User.Name} played skip turn. {moveParams.PlayerTargeted.User.Name} was skipped");
+            var messagesToLog = new List<string>();
+            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} played skip turn. {moveParams.PlayerTargeted.User.Name} was skipped");
             game.PlayerToPlay = moveParams.PlayerTargeted;
-            return new MoveResult(messageToLog);
+            return new MoveResult(messagesToLog);
         }
     }
 }

@@ -20,9 +20,10 @@ namespace GameProcessingService.CardEffectProcessors.Played.Colored
             _automaticallyTriggeredCardEffectProcessors = automaticallyTriggeredCardEffectProcessors;
         }
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
-             messageToLog += $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with +2. ";
+            var messagesToLog = new List<string>();
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with +2. ";
 
             var originallyTargetedPlayer = moveParams.PlayerTargeted;
 
@@ -42,8 +43,9 @@ namespace GameProcessingService.CardEffectProcessors.Played.Colored
                 messageToLog += $"{originallyTargetedPlayer.User.Name} was skipped.";
                 game.PlayerToPlay = originallyTargetedPlayer;
             }
+            messagesToLog.Add(messageToLog);
 
-            return new MoveResult(messageToLog);
+            return new MoveResult(messagesToLog);
         }
     }
 }

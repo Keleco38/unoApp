@@ -24,7 +24,6 @@ namespace GameProcessingService.UnitTests
         private Game _game;
         private MoveParams _moveParams;
         private GameSetup _gameSetup;
-        private AutomaticallyTriggeredParams _automaticallyTriggeredParams;
 
         [SetUp]
         public void Setup()
@@ -39,11 +38,11 @@ namespace GameProcessingService.UnitTests
             var player = new Player(new User("123", "john"));
             var player2 = new Player(new User("456", "andrew"));
             player.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack(), new Charity(), new BlackHole(), new Blackjack() };
-            player2.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack(), new Charity(), new BlackHole(), new Blackjack() };
+            player2.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack() , new Charity(), new BlackHole(), new Blackjack() };
             _game.Players = new List<Player>() { player, player2 };
             _game.PlayerToPlay = player;
             _moveParams = new MoveParams(player, player.Cards.First(), player, CardColor.Blue, _game.DiscardedPile.First(), new List<int>() { 1, 2, 3 }, new List<ICard>() { new Charity() }, 10, new List<int>() { 0, 1 }, new BlackHole(), "odd");
-            _automaticallyTriggeredParams = new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(player, 1, CardColor.Blue), MagneticPolarityParams = new AutomaticallyTriggeredMagneticPolarityParams(CardColor.Blue, player, player2), PromiseKeeperParams = new AutomaticallyTriggeredPromiseKeeperParams(player, player.Cards.First()), DeflectParams = new AutomaticallyTriggeredDeflectParams(player, player2, 2, player.Cards.First(), CardColor.Blue), TheLastStandParams = new AutomaticallyTriggeredTheLastStandParams(), KeepMyHandParams = new AutomaticallyTriggeredKeepMyHandParams(_game.Players, CardColor.Blue) };
+
         }
 
         [Test]
@@ -73,7 +72,7 @@ namespace GameProcessingService.UnitTests
 
                 var instance = (IPlayedCardEffectProcessor)Activator.CreateInstance(cardEffeccardEffectProcessorType, isComplex ? constructorComplex : constructorSimple, null);
 
-                instance.ProcessCardEffect(_game, _moveParams, string.Empty);
+                instance.ProcessCardEffect(_game, _moveParams);
                 Setup();
             }
 

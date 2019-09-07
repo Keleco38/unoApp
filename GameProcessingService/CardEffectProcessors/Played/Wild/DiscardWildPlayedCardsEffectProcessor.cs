@@ -19,8 +19,9 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         }
 
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
+            var messagesToLog = new List<string>();
 
             game.Players.ForEach(x =>
             {
@@ -28,10 +29,10 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 game.DiscardedPile.AddRange(wildCards);
                 wildCards.ForEach(y => x.Cards.Remove(y));
             });
-            messageToLog +=($"{moveParams.PlayerPlayed.User.Name}  played discard all wildcards.");
+            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name}  played discard all wildcards.");
             _gameManager.DrawCard(game, moveParams.PlayerPlayed, 1, false);
 
-            return new MoveResult(messageToLog);
+            return new MoveResult(messagesToLog);
         }
     }
 }
