@@ -16,13 +16,12 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             _gameManager = gameManager;
         }
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
         {
-            var messagesToLog = new List<string>();
             moveParams.PlayerPlayed.Cards.Add(moveParams.CardToDig);
             game.DiscardedPile.Remove(moveParams.CardToDig);
-            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} dug card {moveParams.CardToDig.Color.ToString()} {moveParams.CardToDig.Value.ToString()} from the discarded pile.");
-            return new MoveResult(messagesToLog);
+            messageToLog += ($"{moveParams.PlayerPlayed.User.Name} dug card {moveParams.CardToDig.Color.ToString()} {moveParams.CardToDig.Value.ToString()} from the discarded pile.");
+            return new MoveResult(messageToLog);
         }
     }
 }

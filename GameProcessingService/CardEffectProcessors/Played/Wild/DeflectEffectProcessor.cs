@@ -16,11 +16,10 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             _gameManager = gameManager;
         }
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
         {
-            var messagesToLog = new List<string>();
-            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} changed color to {moveParams.TargetedCardColor} (deflect card).");
-            return new MoveResult(messagesToLog);
+            messageToLog += ($"{moveParams.PlayerPlayed.User.Name} changed color to {moveParams.TargetedCardColor} (deflect card).");
+            return new MoveResult(messageToLog);
         }
     }
 }

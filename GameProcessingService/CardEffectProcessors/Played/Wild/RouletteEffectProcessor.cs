@@ -23,11 +23,10 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         }
 
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
         {
-            var messagesToLog = new List<string>();
             Random random = new Random();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played Roulette. ";
+             messageToLog += $"{moveParams.PlayerPlayed.User.Name} played Roulette. ";
             var drawOrDiscard = random.Next(2);
             moveParams.PlayerTargeted = game.Players[random.Next(game.Players.Count)];
             if (drawOrDiscard == 0)
@@ -58,8 +57,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             }
 
-            messagesToLog.Add(messageToLog);
-            return new MoveResult(messagesToLog);
+            return new MoveResult(messageToLog);
         }
     }
 }

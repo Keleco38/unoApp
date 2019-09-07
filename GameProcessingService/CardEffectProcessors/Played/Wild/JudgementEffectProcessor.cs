@@ -20,10 +20,9 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             _automaticallyTriggeredCardEffectProcessors = automaticallyTriggeredCardEffectProcessors;
         }
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
         {
-            var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with judgement. ";
+            messageToLog += $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with judgement. ";
 
             var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { MagneticPolarityParams = new AutomaticallyTriggeredMagneticPolarityParams(moveParams.TargetedCardColor, moveParams.PlayerPlayed, moveParams.PlayerTargeted) });
             moveParams.PlayerTargeted = automaticallyTriggeredResultMagneticPolarity.MagneticPolaritySelectedPlayer;
@@ -42,8 +41,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             {
                 messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't draw any cards, They didn't have any wild cards.";
             }
-            messagesToLog.Add(messageToLog);
-            return new MoveResult(messagesToLog);
+            return new MoveResult(messageToLog);
         }
     }
 }

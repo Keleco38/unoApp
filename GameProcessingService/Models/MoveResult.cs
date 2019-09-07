@@ -4,18 +4,15 @@ namespace GameProcessingService.Models
 {
     public class MoveResult
     {
-        public MoveResult(List<string> messagesToLog)
+        public MoveResult(string messageToLog, List<MoveResultCallbackParam> moveResultCallbackParams = null)
         {
-            MessagesToLog = messagesToLog;
-            MoveResultCallbackParams = new List<MoveResultCallbackParam>();
-        }
-        public MoveResult(List<string> messagesToLog, List<MoveResultCallbackParam> moveResultCallbackParams)
-        {
-            MessagesToLog = messagesToLog;
-            MoveResultCallbackParams = moveResultCallbackParams;
+            TurnMessageResult = messageToLog;
+            MoveResultCallbackParams = moveResultCallbackParams ?? new List<MoveResultCallbackParam>();
         }
 
-        public List<string> MessagesToLog { get; set; }
+        public string TurnMessageResult { get; set; }
+        public string RoundEndedMessageResult { get; set; }
+        public string GameEndedMessageResult { get; set; }
         public List<MoveResultCallbackParam> MoveResultCallbackParams { get; set; }
 
     }

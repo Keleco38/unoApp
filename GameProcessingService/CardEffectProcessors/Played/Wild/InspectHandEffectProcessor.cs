@@ -23,12 +23,11 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         }
 
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
         {
-            var messagesToLog = new List<string>();
             var moveResultCallbackParams = new List<MoveResultCallbackParam>();
 
-            var messageToLog = ($"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with inspect hand. ");
+            messageToLog += ($"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with inspect hand. ");
 
             var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { MagneticPolarityParams = new AutomaticallyTriggeredMagneticPolarityParams(moveParams.TargetedCardColor,moveParams.PlayerPlayed,moveParams.PlayerTargeted) });
             moveParams.PlayerTargeted = automaticallyTriggeredResultMagneticPolarity.MagneticPolaritySelectedPlayer;
@@ -41,9 +40,8 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             }
 
             messageToLog += ($"{moveParams.PlayerPlayed.User.Name} inspected {moveParams.PlayerTargeted.User.Name}'s hand.");
-            messagesToLog.Add(messageToLog);
 
-            return new MoveResult(messagesToLog, moveResultCallbackParams);
+            return new MoveResult(messageToLog, moveResultCallbackParams);
         }
     }
 }

@@ -19,15 +19,14 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         }
 
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
         {
-            var messagesToLog = new List<string>();
             Random random = new Random();
             var colorIds = new int[] { 1, 2, 3, 4 };
             int randomColor = colorIds[(random.Next(4))];
             game.LastCardPlayed.Color = (CardColor)randomColor;
-            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} played random color. A random color has been assigned.");
-            return new MoveResult(messagesToLog);
+            messageToLog += ($"{moveParams.PlayerPlayed.User.Name} played random color. A random color has been assigned.");
+            return new MoveResult(messageToLog);
         }
     }
 }

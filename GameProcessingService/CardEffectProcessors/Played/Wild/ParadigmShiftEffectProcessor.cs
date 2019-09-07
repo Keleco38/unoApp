@@ -21,10 +21,9 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             _automaticallyTriggeredCardEffectProcessors = automaticallyTriggeredCardEffectProcessors;
         }
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
         {
-            var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played paradigm shift. Every player exchanged their hand with the next player. ";
+            messageToLog += $"{moveParams.PlayerPlayed.User.Name} played paradigm shift. Every player exchanged their hand with the next player. ";
 
             var automaticallyTriggeredResultKeepMyHand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KeepMyHand).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KeepMyHandParams = new AutomaticallyTriggeredKeepMyHandParams(game.Players, moveParams.TargetedCardColor) });
             messageToLog = automaticallyTriggeredResultKeepMyHand.MessageToLog;
@@ -51,8 +50,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 loopingPlayer = _gameManager.GetNextPlayer(game, loopingPlayer, automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand);
             }
 
-            messagesToLog.Add(messageToLog);
-            return new MoveResult(messagesToLog);
+            return new MoveResult(messageToLog);
         }
     }
 }

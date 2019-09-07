@@ -19,21 +19,20 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         }
 
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
         {
-            var messagesToLog = new List<string>();
             if (moveParams.PlayerPlayed.Cards.Count > 7)
             {
-                messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} discarded 4 cards (hand of god). ");
+                messageToLog+=($"{moveParams.PlayerPlayed.User.Name} discarded 4 cards (hand of god). ");
                 var cards = moveParams.PlayerPlayed.Cards.Take(4).ToList();
                 game.DiscardedPile.AddRange(cards);
                 cards.ForEach(y => moveParams.PlayerPlayed.Cards.Remove(y));
             }
             else
             {
-                messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} didn't discard any cards. They had less than 8 cards. (hand of god)");
+                messageToLog += ($"{moveParams.PlayerPlayed.User.Name} didn't discard any cards. They had less than 8 cards. (hand of god)");
             }
-            return new MoveResult(messagesToLog);
+            return new MoveResult(messageToLog);
         }
     }
 }

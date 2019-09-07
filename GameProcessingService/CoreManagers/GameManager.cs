@@ -86,5 +86,26 @@ namespace GameProcessingService.CoreManagers
             throw new Exception("Error, can't access that direction");
 
         }
+        public void UpdateGameAndRoundStatus(Game game)
+        {
+            var playersWithoutCards = game.Players.Where(x => !x.Cards.Any()).ToList();
+            if (playersWithoutCards.Any())
+            {
+                foreach (var player in playersWithoutCards)
+                {
+                    player.RoundsWonCount++;
+                }
+                game.RoundEnded = true;
+            }
+
+            if (game.RoundEnded)
+            {
+                var playersThatMatchWinCriteria = game.Players.Where(x => x.RoundsWonCount == game.GameSetup.RoundsToWin).ToList();
+                if (playersThatMatchWinCriteria.Any())
+                {
+                    game.GameEnded = true;
+                }
+            }
+        }
     }
 }

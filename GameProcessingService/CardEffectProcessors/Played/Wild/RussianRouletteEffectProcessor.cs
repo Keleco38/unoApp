@@ -21,10 +21,9 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             _automaticallyTriggeredCardEffectProcessors = automaticallyTriggeredCardEffectProcessors;
         }
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
         {
-            var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played Russian Roulette. Every player rolled a dice. ";
+             messageToLog += $"{moveParams.PlayerPlayed.User.Name} played Russian Roulette. Every player rolled a dice. ";
             Random random = new Random();
 
             while (true)
@@ -43,8 +42,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 }
                 moveParams.PlayerTargeted = _gameManager.GetNextPlayer(game, moveParams.PlayerTargeted, game.Players);
             }
-            messagesToLog.Add(messageToLog);
-            return new MoveResult(messagesToLog);
+            return new MoveResult(messageToLog);
         }
     }
 }

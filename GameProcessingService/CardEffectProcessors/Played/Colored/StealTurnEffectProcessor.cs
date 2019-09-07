@@ -16,12 +16,11 @@ namespace GameProcessingService.CardEffectProcessors.Played.Colored
             _gameManager = gameManager;
         }
 
-        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
+        public MoveResult ProcessCardEffect(Game game, MoveParams moveParams, string messageToLog)
         {
-            var messagesToLog = new List<string>();
-            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} played steal turn. Rotation continues from them.");
+            messageToLog += ($"{moveParams.PlayerPlayed.User.Name} played steal turn. Rotation continues from them.");
             game.PlayerToPlay = moveParams.PlayerPlayed;
-            return new MoveResult(messagesToLog);
+            return new MoveResult(messageToLog);
         }
     }
 }
