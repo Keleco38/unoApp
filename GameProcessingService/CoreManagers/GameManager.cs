@@ -84,7 +84,35 @@ namespace GameProcessingService.CoreManagers
                 }
             }
             throw new Exception("Error, can't access that direction");
+        }
 
+        public List<string> UpdateGameAndRoundStatus(Game game)
+        {
+            var messages = new List<string>();
+
+            var playersWithoutCards = game.Players.Where(x => !x.Cards.Any()).ToList();
+            if (playersWithoutCards.Any())
+            {
+                foreach (var player in playersWithoutCards)
+                {
+                    player.RoundsWonCount++;
+                }
+
+                messages.Add($"Round ended! Players that won that round: {string.Join(',', playersWithoutCards.Select(x => x.User.Name))}");
+
+                var playersThatMatchWinCriteria = game.Players.Where(x => x.RoundsWonCount == game.GameSetup.RoundsToWin).ToList();
+                if (playersThatMatchWinCriteria.Any())
+                {
+                    game.GameEnded = true;
+                    messages.Add($"Game ended! Players that won the game: {string.Join(',', playersThatMatchWinCriteria.Select(x => x.User.Name))}");
+                }
+                else
+                {
+                    StartNewGame(game);
+                }
+            }
+
+            return messages;
         }
     }
 }
