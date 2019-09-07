@@ -32,7 +32,8 @@ export class GameSetupComponent implements OnInit, OnDestroy {
         gameType: GameType.specialWildCards,
         drawFourDrawTwoShouldSkipTurn: false,
         bannedCards: [],
-        matchingCardStealsTurn: false
+        matchingCardStealsTurn: false,
+        wildCardCanBePlayedOnlyIfNoOtherOptions:false
       };
     } else {
       this.gameSetup = this._game.gameSetup;

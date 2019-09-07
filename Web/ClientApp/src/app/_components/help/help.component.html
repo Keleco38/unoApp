@@ -19,7 +19,7 @@
         the blue button in the middle of the screen. If the player doesn't call uno, they are punished by drawing 2 cards.
       </li>
       <li>
-        Player can only play a card if it's their turn to play (excluding steal turn card).
+        Player can only play a card if it's their turn to play (excluding steal turn card, or if the game option "matching card steals turn" is on).
       </li>
       <li>
         Player can play colored card only if the color or the value on the card corresponds to the color or the value of the previously
@@ -29,7 +29,7 @@
         Player can play steal turn card anytime if the color of the steal turn card corresponds to the previously played card.
       </li>
       <li>
-        Player can play positive, neutral and gambling wildcards regardless of the previously played card. Wildcards allow player to pick
+        Player can play positive, neutral and gambling wildcards regardless of the previously played card (if not setup differently during the setup menu "Wild card can be played only as the last option"). Wildcards allow player to pick
         desired color.
       </li>
       <li>
@@ -63,7 +63,7 @@
       </li>
       <li>In game, number in the parentheses corresponds to the number of cards player has.</li>
       <li>In game, arrows next to the player's name corresponds to the current direction of the game.</li>
-      <li>Player can mute spectator's and server's chat by selecting those checkboxed under the Misc. tab.</li>
+      <li>Player can mute spectator's and server's chat by selecting the checkbox under the Misc. tab.</li>
       <li>Player can keep sidebar open and change sidebar's size by selecting those options under the Misc. tab.</li>
       <li>Player can top navigation bar when in game by selecting that option under Misc. tab.</li>
       <li>Player can mention another player by sending @name in chat where name is the name of the player.</li>
@@ -327,7 +327,7 @@
             <img src="/images/cards/small/5/33.png" class="mr-3" />
             <div class="media-body">
               <h5 class="mt-0 mb-1">Blackjack</h5>
-              Player can hit the hitme button to get a random number from 1 to 10. If the player goes over 21, they draw 5 cards. If the
+              Player can hit the "HIT ME!" button to get a random number from 1 to 10. If the player goes over 21, they draw 5 cards. If the
               player hits 21, they will discard 3 cards. If the player hits number bigger than 17 but less than 21 they will discard 1
               cards. If the player hits the number lower than 17, they will draw the difference between 17 and the number they hit.
             </div>

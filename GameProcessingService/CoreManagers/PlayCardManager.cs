@@ -90,6 +90,14 @@ namespace GameProcessingService.CoreManagers
                 return false;
             }
 
+            if (cardPlayed.Color == CardColor.Wild && game.GameSetup.WildCardCanBePlayedOnlyIfNoOtherOptions)
+            {
+                if (playerPlayed.Cards.Any(x => x.Color == game.LastCardPlayed.Color) || playerPlayed.Cards.Any(x => x.Value == game.LastCardPlayed.Value))
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
     }

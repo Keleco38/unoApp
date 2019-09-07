@@ -11,6 +11,8 @@ namespace DomainObjects
         public GameType GameType { get; set; }
         public bool DrawFourDrawTwoShouldSkipTurn { get; set; }
         public bool ReverseShouldSkipTurnInTwoPlayers { get; set; }
+        public bool MatchingCardStealsTurn { get; set; }
+        public bool WildCardCanBePlayedOnlyIfNoOtherOptions { get; set; }
         public int MaxNumberOfPlayers { get; set; }
     }
 }

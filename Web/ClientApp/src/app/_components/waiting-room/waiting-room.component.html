@@ -36,7 +36,7 @@
 </div>
 <div class="row">
   <div class="col-6">
-    <h5 class="text-success">Players joined</h5>
+    <h6 class="text-success">Players joined</h6>
     <ul>
       <li *ngFor="let player of activeGame.players; let first = first">
         <span *ngIf="first">&#9734;</span>
@@ -51,20 +51,21 @@
     </ul>
   </div>
   <div class="col-6" id="gameSetupInfo">
-    <h5 class="text-info">Game setup</h5>
+    <h6 class="text-info">Game setup</h6>
     <div *ngIf="activeGame.gameSetup.bannedCards.length > 0">
       <strong>Banned cards: </strong>
       <ul>
         <li *ngFor="let bannedCard of activeGame.gameSetup.bannedCards">{{ getBannedCardName(bannedCard) | dividePerCapital }}</li>
       </ul>
     </div>
-    <p *ngIf="activeGame.gameSetup.bannedCards.length == 0"><strong>Banned cards: </strong> No cards banned</p>
+    <p *ngIf="activeGame.gameSetup.bannedCards.length == 0"><strong>Banned cards: </strong> None</p>
     <p><strong>Game type: </strong> {{ getGameTypePlaceholder() }}</p>
     <p><strong>Play until: </strong> {{ activeGame.gameSetup.roundsToWin }}</p>
     <p><strong>Max number of players: </strong> {{ activeGame.gameSetup.maxNumberOfPlayers }}</p>
-    <p><strong>Draw two/four should skip turn: </strong> {{ activeGame.gameSetup.drawFourDrawTwoShouldSkipTurn }}</p>
+    <p><strong>+2/+4 skipping turn: </strong> {{ activeGame.gameSetup.drawFourDrawTwoShouldSkipTurn }}</p>
     <p><strong>Matching card steals turn: </strong> {{ activeGame.gameSetup.matchingCardStealsTurn }}</p>
-    <p><strong>Reverse should skip turn in 2p: </strong> {{ activeGame.gameSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
+    <p><strong>Wild card playable only as last option: </strong> {{ activeGame.gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}</p>
+    <p><strong>Reverse skipping turn in 2p: </strong> {{ activeGame.gameSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
     <p><strong>Password set:</strong> {{ activeGame.gameSetup.password.length > 0 }}</p>
   </div>
 </div>

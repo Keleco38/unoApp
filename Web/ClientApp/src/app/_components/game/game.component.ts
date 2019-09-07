@@ -122,7 +122,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this._hubService.playCard(cardPlayed.id, cardPlayed.color);
       return;
     }
-    
+
     if (this.game.playerToPlay.user.name !== this.currentUser.name) {
       return;
     }
@@ -132,6 +132,16 @@ export class GameComponent implements OnInit, OnDestroy {
       (cardPlayed.color != this.game.lastCardPlayed.color && cardPlayed.value != this.game.lastCardPlayed.value)
     ) {
       return;
+    }
+
+    if (cardPlayed.color == CardColor.wild && this.game.gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions) {
+      if (
+        this.myCards.some(x => x.color == this.game.lastCardPlayed.color) ||
+        this.myCards.some(x => x.value == this.game.lastCardPlayed.value)
+      ) {
+        this._toastrService.info("You can play a wildcard only as the last option (can't play anything else).");
+        return;
+      }
     }
 
     if (

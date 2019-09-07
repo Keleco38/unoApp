@@ -12,12 +12,14 @@
         <li *ngFor="let bannedCard of game.gameSetup.bannedCards">{{ getBannedCardName(bannedCard) | dividePerCapital }}</li>
       </ul>
     </div>
-    <p *ngIf="game.gameSetup.bannedCards.length == 0"><strong>Banned cards: </strong> No cards banned</p>
+    <p *ngIf="game.gameSetup.bannedCards.length == 0"><strong>Banned cards: </strong> None</p>
     <p><strong>Game type: </strong> {{ getGameTypePlaceholder() }}</p>
     <p><strong>Play until: </strong> {{ game.gameSetup.roundsToWin }}</p>
     <p><strong>Max number of players: </strong> {{ game.gameSetup.maxNumberOfPlayers }}</p>
-    <p><strong>Draw two/four should skip turn: </strong> {{ game.gameSetup.drawFourDrawTwoShouldSkipTurn }}</p>
-    <p><strong>Reverse should skip turn in 2p: </strong> {{ game.gameSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
+    <p><strong>+2/+4 skipping turn: </strong> {{ game.gameSetup.drawFourDrawTwoShouldSkipTurn }}</p>
+    <p><strong>Matching card steals turn: </strong> {{ game.gameSetup.matchingCardStealsTurn }}</p>
+    <p><strong>Wild card playable only as last option: </strong> {{ game.gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}</p>
+    <p><strong>Reverse skipping turn in 2p: </strong> {{ game.gameSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
     <p><strong>Password set:</strong> {{ game.gameSetup.password.length > 0 }}</p>
     <table class="table">
       <thead>
