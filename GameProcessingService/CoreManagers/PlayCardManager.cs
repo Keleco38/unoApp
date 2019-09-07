@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common.Enums;
 using EntityObjects;
+using EntityObjects.Cards.Abstraction;
 using GameProcessingService.CardEffectProcessors;
 using GameProcessingService.CardEffectProcessors.AutomaticallyTriggered;
 using GameProcessingService.CardEffectProcessors.Played;
@@ -26,11 +27,12 @@ namespace GameProcessingService.CoreManagers
         public MoveResult PlayCard(Game game, Player playerPlayed, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers,
            List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess)
         {
-            var cardPlayed = playerPlayed.Cards.First(x => x.Id == cardPlayedId);
-
-            if (game.PlayerToPlay != playerPlayed && cardPlayed.Value != CardValue.StealTurn)
+            var cardPlayed = playerPlayed.Cards.FirstOrDefault(x => x.Id == cardPlayedId);
+            if (cardPlayed == null)
                 return null;
-            if (cardPlayed.Color != CardColor.Wild && cardPlayed.Color != game.LastCardPlayed.Color && cardPlayed.Value != game.LastCardPlayed.Value)
+
+            //check if valid move
+            if (!IsValidMove(game, playerPlayed, cardPlayed))
                 return null;
 
             playerPlayed.Cards.Remove(cardPlayed);
@@ -71,6 +73,24 @@ namespace GameProcessingService.CoreManagers
             return moveResult;
         }
 
+        private bool IsValidMove(Game game, Player playerPlayed, ICard cardPlayed)
+        {
 
+            if (cardPlayed.Color != CardColor.Wild && cardPlayed.Color != game.LastCardPlayed.Color && cardPlayed.Value != game.LastCardPlayed.Value)
+                return false;
+
+            if (cardPlayed.Value == CardValue.StealTurn)
+                return true;
+
+            if (game.GameSetup.MatchingCardStealsTurn && cardPlayed.Color == game.LastCardPlayed.Color && cardPlayed.Value == game.LastCardPlayed.Value)
+                return true;
+
+            if (game.PlayerToPlay != playerPlayed)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

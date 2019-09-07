@@ -28,7 +28,6 @@ namespace GameProcessingService.CoreManagers
             game.PlayerToPlay = game.Players[random.Next(game.Players.Count)];
             game.Players.ForEach(x => x.Cards = game.Deck.Draw(7));
             game.GameStarted = true;
-            game.RoundEnded = false;
         }
 
         public void DrawCard(Game game, Player player, int count, bool normalDraw)

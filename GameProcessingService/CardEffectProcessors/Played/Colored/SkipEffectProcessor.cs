@@ -18,10 +18,18 @@ namespace GameProcessingService.CardEffectProcessors.Played.Colored
 
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
+
             var messagesToLog = new List<string>();
-            messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} played skip turn. {moveParams.PlayerTargeted.User.Name} was skipped");
+            var messageToLog = string.Empty;
+            if (game.GameSetup.MatchingCardStealsTurn && game.PlayerToPlay.User != moveParams.PlayerPlayed.User)
+            {
+                messageToLog += $"{moveParams.PlayerPlayed.User.Name} stole turn (matching color + value). ";
+            }
+            messageToLog += ($"{moveParams.PlayerPlayed.User.Name} played skip turn. {moveParams.PlayerTargeted.User.Name} was skipped");
             game.PlayerToPlay = moveParams.PlayerTargeted;
+            messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);
+
         }
     }
 }

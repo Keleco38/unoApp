@@ -31,7 +31,8 @@ export class GameSetupComponent implements OnInit, OnDestroy {
         password: '',
         gameType: GameType.specialWildCards,
         drawFourDrawTwoShouldSkipTurn: false,
-        bannedCards: []
+        bannedCards: [],
+        matchingCardStealsTurn: false
       };
     } else {
       this.gameSetup = this._game.gameSetup;

@@ -68,7 +68,7 @@ export class GameComponent implements OnInit, OnDestroy {
     });
 
     this._hubService.mustCallUno.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
-      this._mustCallUno=true;
+      this._mustCallUno = true;
       window.clearTimeout(this._timer);
       this._timer = window.setTimeout(() => {
         this.callUno(false);
@@ -95,8 +95,8 @@ export class GameComponent implements OnInit, OnDestroy {
     });
   }
 
-  callUno(unoCalled:boolean) {
-    this._mustCallUno=false;
+  callUno(unoCalled: boolean) {
+    this._mustCallUno = false;
     window.clearTimeout(this._timer);
     this._hubService.checkUnoCall(unoCalled);
   }
@@ -105,6 +105,7 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this._mustCallUno) {
       return;
     }
+
     if (
       cardPlayed.value === CardValue.stealTurn &&
       (cardPlayed.color == this.game.lastCardPlayed.color || this.game.lastCardPlayed.value == cardPlayed.value)
@@ -112,6 +113,16 @@ export class GameComponent implements OnInit, OnDestroy {
       this._hubService.playCard(cardPlayed.id, cardPlayed.color);
       return;
     }
+
+    if (
+      this.game.gameSetup.matchingCardStealsTurn &&
+      cardPlayed.color == this.game.lastCardPlayed.color &&
+      this.game.lastCardPlayed.value == cardPlayed.value
+    ) {
+      this._hubService.playCard(cardPlayed.id, cardPlayed.color);
+      return;
+    }
+    
     if (this.game.playerToPlay.user.name !== this.currentUser.name) {
       return;
     }

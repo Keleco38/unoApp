@@ -7,5 +7,6 @@ export interface GameSetup {
   gameType: GameType;
   drawFourDrawTwoShouldSkipTurn: boolean;
   reverseShouldSkipTurnInTwoPlayers: boolean;
+  matchingCardStealsTurn:boolean;
   maxNumberOfPlayers: number;
 }
