@@ -27,12 +27,12 @@ export class GameSetupComponent implements OnInit, OnDestroy {
       this.gameSetup = {
         roundsToWin: 2,
         maxNumberOfPlayers: 6,
-        reverseShouldSkipTurnInTwoPlayers: false,
+        reverseShouldSkipTurnInTwoPlayers: true,
         password: '',
         gameType: GameType.specialWildCards,
-        drawFourDrawTwoShouldSkipTurn: false,
+        drawFourDrawTwoShouldSkipTurn: true,
         bannedCards: [],
-        matchingCardStealsTurn: false,
+        matchingCardStealsTurn: true,
         wildCardCanBePlayedOnlyIfNoOtherOptions:false
       };
     } else {
