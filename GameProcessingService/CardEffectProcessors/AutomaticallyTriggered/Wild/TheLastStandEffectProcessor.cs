@@ -20,20 +20,25 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
         {
             var playersWithoutCards = game.Players.Where(x => !x.Cards.Any()).ToList();
 
-            var firstPlayerWithTheLastStand = game.Players.Where(x => x.Cards.Any()).FirstOrDefault(x => x.Cards.FirstOrDefault(y => y.Value == CardValue.TheLastStand) != null);
-
-            if (firstPlayerWithTheLastStand != null)
+            if (playersWithoutCards.Any())
             {
-                var theLastStandCard = firstPlayerWithTheLastStand.Cards.First(x => x.Value == CardValue.TheLastStand);
-                game.LastCardPlayed = new LastCardPlayed(game.LastCardPlayed.Color, theLastStandCard.Value, theLastStandCard.ImageUrl, game.PlayerToPlay.User.Name, true);
-                firstPlayerWithTheLastStand.Cards.Remove(theLastStandCard);
-                game.DiscardedPile.Add(theLastStandCard);
-                messageToLog = $"{firstPlayerWithTheLastStand.User.Name} saved the day! They played The Last Stand. Every player that had 0 cards will draw 2 cards.";
-                foreach (var player in playersWithoutCards)
+                var firstPlayerWithTheLastStand = game.Players.Where(x => x.Cards.Any()).FirstOrDefault(x => x.Cards.FirstOrDefault(y => y.Value == CardValue.TheLastStand) != null);
+
+                if (firstPlayerWithTheLastStand != null)
                 {
-                    _gameManager.DrawCard(game, player, 2, false);
+                    var theLastStandCard = firstPlayerWithTheLastStand.Cards.First(x => x.Value == CardValue.TheLastStand);
+                    game.LastCardPlayed = new LastCardPlayed(game.LastCardPlayed.Color, theLastStandCard.Value, theLastStandCard.ImageUrl, game.PlayerToPlay.User.Name, true);
+                    firstPlayerWithTheLastStand.Cards.Remove(theLastStandCard);
+                    game.DiscardedPile.Add(theLastStandCard);
+                    messageToLog = $"{firstPlayerWithTheLastStand.User.Name} saved the day! They played The Last Stand. Every player that had 0 cards will draw 2 cards.";
+                    foreach (var player in playersWithoutCards)
+                    {
+                        _gameManager.DrawCard(game, player, 2, false);
+                    }
                 }
             }
+
+
 
             return new AutomaticallyTriggeredResult() { MessageToLog = messageToLog };
         }
