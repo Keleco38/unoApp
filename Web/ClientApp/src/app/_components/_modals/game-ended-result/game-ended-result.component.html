@@ -26,6 +26,7 @@
           <tr>
             <th scope="col">#</th>
             <th>Name</th>
+            <th>Games won</th>
             <th>Points</th>
           </tr>
         </thead>
@@ -33,6 +34,7 @@
           <tr *ngFor="let hallOfFame of gameEndedResult.hallOfFameStats; let i = index">
             <td>{{ i + 1 }}</td>
             <td>{{ hallOfFame.name }}</td>
+            <td>{{ hallOfFame.gamesWon }}</td>
             <td>{{ hallOfFame.points }}</td>
           </tr>
         </tbody>

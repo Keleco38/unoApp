@@ -1,6 +1,24 @@
 <app-navbar></app-navbar>
 <div class="row">
   <div class="col-12">
-    <h1 class="text-success">Hall of fame</h1>
+    <h2 class="text-primary">Hall of fame</h2>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th>Name</th>
+            <th>Games won</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let hallOfFame of hallOfFameStats; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ hallOfFame.name }}</td>
+            <td>{{ hallOfFame.gamesWon }}</td>
+            <td>{{ hallOfFame.points }}</td>
+          </tr>
+        </tbody>
+      </table>
   </div>
 </div>

@@ -1,3 +1,5 @@
+import { HallOfFame } from './../../_models/hallOfFame';
+import { HttpService } from './../../_services/http.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,10 +8,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./hall-of-fame.component.css']
 })
 export class HallOfFameComponent implements OnInit {
+  hallOfFameStats: HallOfFame[] = [];
 
-  constructor() { }
+  constructor(private _httpService: HttpService) {}
 
   ngOnInit() {
+    this._httpService.getHallOfFameStats().subscribe((hallOfFameStats: HallOfFame[]) => {
+      this.hallOfFameStats = hallOfFameStats;
+    });
   }
-
 }

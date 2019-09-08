@@ -23,6 +23,7 @@ namespace Repository
                 {
                     existingUsernames.Add(record.Name);
                     record.Points += points;
+                    record.GamesWon += 1;
                 }
             }
 
@@ -31,7 +32,7 @@ namespace Repository
                 var usernamesWithoutRecord = usernames.Except(existingUsernames);
                 foreach (var username in usernamesWithoutRecord)
                 {
-                    records.Add(new HallOfFame(username, points));
+                    records.Add(new HallOfFame(username, points, 1));
                 }
             }
 

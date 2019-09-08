@@ -42,7 +42,7 @@ export class HubService {
 
   private async startConnection(isReconnect: Boolean) {
     try {
-      await this._hubConnection.start().then(() => {
+      this._hubConnection.start().then(() => {
         this.addOrRenameUser(false);
         if (isReconnect) {
           this._router.navigateByUrl('/');
@@ -67,12 +67,12 @@ export class HubService {
     this.startConnection(false);
 
     this._hubConnection.onclose(async () => {
-      await this.startConnection(true);
+      this.startConnection(true);
     });
 
     this._hubConnection.on('GameEnded', (gameEndedResult: GameEndedResult) => {
-      var modalRef=this._modalService.open(GameEndedResultComponent, {backdrop:'static'});
-      modalRef.componentInstance.gameEndedResult=gameEndedResult;
+      var modalRef = this._modalService.open(GameEndedResultComponent, { backdrop: 'static' });
+      modalRef.componentInstance.gameEndedResult = gameEndedResult;
     });
 
     this._hubConnection.on('ExitGame', () => {

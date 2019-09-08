@@ -1,3 +1,4 @@
+import { HttpService } from './_services/http.service';
 import { HallOfFameComponent } from './_components/hall-of-fame/hall-of-fame.component';
 import { GameEndedResultComponent } from './_components/_modals/game-ended-result/game-ended-result.component';
 import { GameEndedResult } from './_models/gameEndedResult';
@@ -108,7 +109,7 @@ import { GameSetupComponent } from './_components/_modals/game-setup/game-setup.
       { path: '**', redirectTo: '/' }
     ])
   ],
-  providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard, UtilityService],
+  providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard, UtilityService, HttpService],
   bootstrap: [AppComponent],
   entryComponents: [
     PickColorComponent,
