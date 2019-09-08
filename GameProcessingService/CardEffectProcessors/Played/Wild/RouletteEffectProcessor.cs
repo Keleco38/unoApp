@@ -49,7 +49,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             {
                 //draw   
                 var numberOfCardsToDraw = random.Next(1, 5);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't have any luck! He must draw {numberOfCardsToDraw} cards. ";
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't have any luck! They must draw {numberOfCardsToDraw} cards. ";
 
                 var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerTargeted, numberOfCardsToDraw, moveParams.TargetedCardColor) });
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;

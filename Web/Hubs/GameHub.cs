@@ -548,11 +548,15 @@ namespace Web.Hubs
                 {
                     var username = x.Groups[1].Value;
 
-                    var user = _unoRepository.GetUserByName(username);
-                    if (user != null && !mentionedUsers.Contains(user))
+                    if (_unoRepository.UserExistsByName(username))
                     {
-                        mentionedUsers.Add(user);
+                        var user = _unoRepository.GetUserByName(username);
+                        if (user != null && !mentionedUsers.Contains(user))
+                        {
+                            mentionedUsers.Add(user);
+                        }
                     }
+                   
                 });
 
                 return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Normal, MentionedUsers = mentionedUsers };
