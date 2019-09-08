@@ -1,3 +1,5 @@
+import { GameEndedResultComponent } from './../_components/_modals/game-ended-result/game-ended-result.component';
+import { GameEndedResult } from './../_models/gameEndedResult';
 import { GameSetup } from './../_models/gameSetup';
 import { UtilityService } from './utility.service';
 import { DigCardComponent } from './../_components/_modals/dig-card/dig-card.component';
@@ -68,6 +70,11 @@ export class HubService {
       await this.startConnection(true);
     });
 
+    this._hubConnection.on('GameEnded', (gameEndedResult: GameEndedResult) => {
+      var modalRef=this._modalService.open(GameEndedResultComponent, {backdrop:'static'});
+      modalRef.componentInstance.gameEndedResult=gameEndedResult;
+    });
+
     this._hubConnection.on('ExitGame', () => {
       this._gameChatMessages = [];
       this._gameLog = [];
@@ -75,6 +82,7 @@ export class HubService {
       this._gameChatMessagesObservable.next(this._gameChatMessages);
       this._activeGameObservable.next(null);
     });
+
     this._hubConnection.on('UserMentioned', () => {
       var notifyWhenMentionedToast = this._utilityService.userSettings.notifyWhenMentionedToast;
       var notifyWhenMentionedBuzz = this._utilityService.userSettings.notifyWhenMentionedBuzz;
@@ -212,8 +220,8 @@ export class HubService {
     this._hubConnection.invoke('DrawCard', this._activeGameObservable.getValue().id);
   }
 
-  checkUnoCall(unoCalled:boolean) {
-    this._hubConnection.invoke('CheckUnoCall', this._activeGameObservable.getValue().id,unoCalled);
+  checkUnoCall(unoCalled: boolean) {
+    this._hubConnection.invoke('CheckUnoCall', this._activeGameObservable.getValue().id, unoCalled);
   }
 
   playCard(
@@ -278,7 +286,6 @@ export class HubService {
   startGame(): any {
     this._hubConnection.invoke('StartGame', this._activeGameObservable.getValue().id);
   }
-
 
   buzzPlayer(buzzType: string, forceBuzz: boolean) {
     var index = this._utilityService.userSettings.blockedBuzzCommands.indexOf(buzzType);

@@ -15,6 +15,7 @@ using GameProcessingService.CardEffectProcessors.Played;
 using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 using NUnit.Framework;
+using Repository;
 
 namespace GameProcessingService.UnitTests
 {
@@ -24,11 +25,13 @@ namespace GameProcessingService.UnitTests
         private Game _game;
         private MoveParams _moveParams;
         private GameSetup _gameSetup;
+        private IHallOfFameRepository _hallOfFameRepository;
 
         [SetUp]
         public void Setup()
         {
-            _gameManager = new GameManager();
+            _hallOfFameRepository = A.Fake<IHallOfFameRepository>();
+            _gameManager = new GameManager(_hallOfFameRepository);
             _gameSetup = new GameSetup() { BannedCards = new List<CardValue>() };
             _game = new Game(_gameSetup);
             _game.Direction = Direction.Left;
@@ -38,7 +41,7 @@ namespace GameProcessingService.UnitTests
             var player = new Player(new User("123", "john"));
             var player2 = new Player(new User("456", "andrew"));
             player.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack(), new Charity(), new BlackHole(), new Blackjack() };
-            player2.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack() , new Charity(), new BlackHole(), new Blackjack() };
+            player2.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack(), new Charity(), new BlackHole(), new Blackjack() };
             _game.Players = new List<Player>() { player, player2 };
             _game.PlayerToPlay = player;
             _moveParams = new MoveParams(player, player.Cards.First(), player, CardColor.Blue, _game.DiscardedPile.First(), new List<int>() { 1, 2, 3 }, new List<ICard>() { new Charity() }, 10, new List<int>() { 0, 1 }, new BlackHole(), "odd");

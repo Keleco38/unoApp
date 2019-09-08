@@ -1,3 +1,6 @@
+import { HallOfFameComponent } from './_components/hall-of-fame/hall-of-fame.component';
+import { GameEndedResultComponent } from './_components/_modals/game-ended-result/game-ended-result.component';
+import { GameEndedResult } from './_models/gameEndedResult';
 import { PickPromiseCardComponent } from './_components/_modals/pick-promise-card/pick-promise-card.component';
 import { ChangeLogComponent } from './_components/change-log/change-log.component';
 import { SidebarSettingsComponent } from './_components/sidebar-settings/sidebar-settings.component';
@@ -73,7 +76,9 @@ import { GameSetupComponent } from './_components/_modals/game-setup/game-setup.
     UserSettingsComponent,
     PickPromiseCardComponent,
     DividePerCapitalPipe,
+    HallOfFameComponent,
     GuessOddEvenNumberComponent,
+    GameEndedResultComponent,
     GameSetupComponent
   ],
   imports: [
@@ -99,6 +104,7 @@ import { GameSetupComponent } from './_components/_modals/game-setup/game-setup.
       { path: 'game', component: GameComponent, canActivate: [GameGuard], canDeactivate: [GameDeactivateGuard] },
       { path: 'help', component: HelpComponent },
       { path: 'change-log', component: ChangeLogComponent },
+      { path: 'hall-of-fame', component: HallOfFameComponent },
       { path: '**', redirectTo: '/' }
     ])
   ],
@@ -118,7 +124,8 @@ import { GameSetupComponent } from './_components/_modals/game-setup/game-setup.
     UserSettingsComponent,
     PickPromiseCardComponent,
     GuessOddEvenNumberComponent,
-    GameSetupComponent
+    GameSetupComponent,
+    GameEndedResultComponent
   ]
 })
 export class AppModule {}

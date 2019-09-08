@@ -30,7 +30,6 @@ import { GuessOddEvenNumberComponent } from '../_modals/guess-odd-even-number/gu
 })
 export class GameComponent implements OnInit, OnDestroy {
   private _timer: number;
-  private _gameEnded: boolean = false;
   private _mustCallUno: boolean = false;
   private _isAlive: boolean = true;
 
@@ -57,10 +56,6 @@ export class GameComponent implements OnInit, OnDestroy {
         return;
       }
       this.game = game;
-      if (this.game.gameEnded && !this._gameEnded) {
-        this._gameEnded = true;
-        alert('Game ended');
-      }
     });
 
     this._hubService.gameLog.pipe(takeWhile(() => this._isAlive)).subscribe(gameLog => {

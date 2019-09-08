@@ -1,0 +1,47 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Game Ended!</h4>
+  <button type="button" class="close" aria-describedby="modal-title" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-12">
+      <p>
+        Total points won: <span class="lead my-2"><b>{{ gameEndedResult.pointsWon }}</b></span>
+      </p>
+      <p>Player that won the game:</p>
+      <ul>
+        <li *ngFor="let playerWon of gameEndedResult.playersWon">
+          <b>{{ playerWon }}</b>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <h3 class="text-success">Hall of fame</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th>Name</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let hallOfFame of gameEndedResult.hallOfFameStats; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ hallOfFame.name }}</td>
+            <td>{{ hallOfFame.points }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <button class="btn btn-info btn-lg btn-block" (click)="closeModal()">Close</button>
+    </div>
+  </div>
+</div>

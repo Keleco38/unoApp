@@ -5,11 +5,19 @@ using Common.Enums;
 using EntityObjects;
 using EntityObjects.Cards.Abstraction;
 using GameProcessingService.Models;
+using Repository;
 
 namespace GameProcessingService.CoreManagers
 {
     public class GameManager : IGameManager
     {
+        private readonly IHallOfFameRepository _hallOfFameRepository;
+
+        public GameManager(IHallOfFameRepository hallOfFameRepository)
+        {
+            _hallOfFameRepository = hallOfFameRepository;
+        }
+
         public void StartNewGame(Game game)
         {
             game.Players.ForEach(x => x.CardPromisedToDiscard = null);
@@ -104,6 +112,10 @@ namespace GameProcessingService.CoreManagers
                 {
                     game.GameEnded = true;
                     messages.Add($"Game ended! Players that won the game: {string.Join(',', playersThatMatchWinCriteria.Select(x => x.User.Name))}");
+
+                    var pointsToBeAdded = (int)(game.GameSetup.RoundsToWin * (Math.Pow(game.Players.Count, 2)));
+                    var usernamesAffected = playersThatMatchWinCriteria.Select(x => x.User.Name).ToList();
+                    _hallOfFameRepository.AddPoints(usernamesAffected, pointsToBeAdded);
                 }
                 else
                 {

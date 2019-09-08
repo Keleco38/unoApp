@@ -15,6 +15,7 @@ namespace Web.Helpers
             CreateMap<Spectator, SpectatorDto>();
             CreateMap<LastCardPlayed, LastCardPlayedDto>();
             CreateMap<ICard, CardDto>();
+            CreateMap<HallOfFame, HallOfFameDto>();
             CreateMap<Game, GameDto>();
             CreateMap<GameSetup, GameSetupDto>().ReverseMap();
 

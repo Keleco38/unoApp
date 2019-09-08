@@ -24,13 +24,15 @@ namespace Web.Hubs
         private readonly IPlayCardManager _playCardManager;
         private readonly IUserRepository _userRepository;
         private readonly IGameRepository _gameRepository;
+        private readonly IHallOfFameRepository _hallOfFameRepository;
 
-        public GameHub(IMapper mapper, IGameManager gameManager, IPlayCardManager playCardManager, IUserRepository userRepository, IGameRepository gameRepository)
+        public GameHub(IMapper mapper, IGameManager gameManager, IPlayCardManager playCardManager, IUserRepository userRepository, IGameRepository gameRepository, IHallOfFameRepository hallOfFameRepository)
         {
             _gameManager = gameManager;
             _playCardManager = playCardManager;
             _userRepository = userRepository;
             _gameRepository = gameRepository;
+            _hallOfFameRepository = hallOfFameRepository;
             _mapper = mapper;
         }
 
@@ -346,6 +348,15 @@ namespace Web.Hubs
                 player.MustCallUno = true;
                 await Clients.Caller.SendAsync("MustCallUno");
             }
+            if (game.GameEnded)
+            {
+                var hallOfFameStats = _hallOfFameRepository.GetScoresForUsernames(game.Players.Select(x => x.User.Name).ToList());
+                var hallOfFameStatsDto = _mapper.Map<List<HallOfFameDto>>(hallOfFameStats);
+                var pointsWon = (int)(game.GameSetup.RoundsToWin * (Math.Pow(game.Players.Count, 2)));
+                var playersWon = game.Players.Where(x => x.RoundsWonCount == game.GameSetup.RoundsToWin).Select(x=>x.User.Name).ToList();
+                var gameEndedResultDto=new GameEndedResultDto(playersWon,pointsWon, hallOfFameStatsDto);
+                await Clients.Clients(GetPlayersAndSpectatorsFromGame(game)).SendAsync("GameEnded", gameEndedResultDto);
+            }
         }
 
         #region private
@@ -558,7 +569,7 @@ namespace Web.Hubs
                             mentionedUsers.Add(user);
                         }
                     }
-                   
+
                 });
 
                 return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Normal, MentionedUsers = mentionedUsers };
