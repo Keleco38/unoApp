@@ -5,15 +5,13 @@ using EntityObjects;
 
 namespace Repository
 {
-    public class UnoRepository : IUnoRepository
+    public class UserRepository : IUserRepository
     {
         private readonly List<User> _users;
-        private readonly List<Game> _games;
 
-        public UnoRepository()
+        public UserRepository()
         {
             _users = new List<User>();
-            _games = new List<Game>();
         }
 
 
@@ -39,27 +37,12 @@ namespace Repository
             return user;
         }
 
-        public Game GetGameByGameId(string gameId)
-        {
-            var game = _games.First(x => x.Id == gameId);
-            return game;
-
-        }
-
-        public void RemoveGame(Game game)
-        {
-            _games.Remove(game);
-        }
 
         public void RemoveUser(User user)
         {
             _users.Remove(user);
         }
 
-        public void AddGame(Game game)
-        {
-            _games.Add(game);
-        }
 
         public void AddUser(User user)
         {
@@ -70,10 +53,7 @@ namespace Repository
         {
             return _users.AsReadOnly();
         }
-        public IReadOnlyList<Game> GetAllGames()
-        {
-            return _games.AsReadOnly();
-        }
+
 
     }
 }

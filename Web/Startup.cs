@@ -31,7 +31,8 @@ namespace Web
 
             services.AddSingleton<IGameManager, GameManager>();
             services.AddSingleton<IPlayCardManager, PlayCardManager>();
-            services.AddSingleton<IUnoRepository, UnoRepository>();
+            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IGameRepository, GameRepository>();
             services.RegisterAllTypes<IPlayedCardEffectProcessor>(new[] { typeof(IPlayedCardEffectProcessor).Assembly }, ServiceLifetime.Singleton);
             services.RegisterAllTypes<IAutomaticallyTriggeredCardEffectProcessor>(new[] { typeof(IAutomaticallyTriggeredCardEffectProcessor).Assembly }, ServiceLifetime.Singleton);
 
