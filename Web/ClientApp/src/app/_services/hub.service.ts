@@ -162,8 +162,8 @@ export class HubService {
           this._router.navigateByUrl('/game');
         }
       } else {
-        if (this._router.url !== '/waitingRoom') {
-          this._router.navigateByUrl('/waitingRoom');
+        if (this._router.url !== '/waiting-room') {
+          this._router.navigateByUrl('/waiting-room');
         }
       }
 
@@ -218,6 +218,10 @@ export class HubService {
 
   drawCard() {
     this._hubConnection.invoke('DrawCard', this._activeGameObservable.getValue().id);
+  }
+
+  changeTeam(teamNumber: number) {
+    this._hubConnection.invoke('ChangeTeam', this._activeGameObservable.getValue().id, teamNumber);
   }
 
   checkUnoCall(unoCalled: boolean) {

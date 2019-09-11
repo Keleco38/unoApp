@@ -69,3 +69,8 @@ export enum GameType {
   specialWildCards = 2
 }
 
+export enum PlayersSetup {
+  individual = 1,
+  teams = 2
+}
+

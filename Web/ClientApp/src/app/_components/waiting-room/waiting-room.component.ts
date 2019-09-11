@@ -1,7 +1,7 @@
 import { GameSetup } from './../../_models/gameSetup';
 import { SidebarSettings } from 'src/app/_models/sidebarSettings';
 import { UtilityService } from './../../_services/utility.service';
-import { CardValue, GameType } from './../../_models/enums';
+import { CardValue, GameType, PlayersSetup } from './../../_models/enums';
 import { PickBannedCardsComponent } from './../_modals/pick-banned-cards/pick-banned-cards.component';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Game } from 'src/app/_models/game';
@@ -51,6 +51,13 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     return this._utilityService.getBannedCardName(bannedCard);
   }
 
+  changeTeam(currentTeamNumber: number, isIncrement: boolean) {
+    var teamNumber = isIncrement ? ++currentTeamNumber : --currentTeamNumber;
+    if (teamNumber < 1 || teamNumber > 5) return;
+
+    this._hubService.changeTeam(teamNumber);
+  }
+
   leaveWaitingRoom() {
     this._router.navigateByUrl('/');
   }
@@ -94,6 +101,9 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
   getGameTypePlaceholder() {
     return this.activeGame.gameSetup.gameType == GameType.normal ? 'Normal' : 'Special Wild Cards';
+  }
+  getPlayerSetupPlaceholder() {
+    return this.activeGame.gameSetup.playersSetup == PlayersSetup.individual ? 'Individual' : 'Teams';
   }
 
   openGameSetupDialog() {

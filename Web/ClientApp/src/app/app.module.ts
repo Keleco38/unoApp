@@ -97,7 +97,7 @@ import { GameSetupComponent } from './_components/_modals/game-setup/game-setup.
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       {
-        path: 'waitingRoom',
+        path: 'waiting-room',
         component: WaitingRoomComponent,
         canDeactivate: [WaitingRoomDeactivateGuard],
         canActivate: [WaitingRoomGuard]

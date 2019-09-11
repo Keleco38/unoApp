@@ -17,4 +17,7 @@ export class DigCardComponent implements OnInit {
   digCardFromDiscardedPile(cardToDig: Card) {
     this._activeModal.close(cardToDig.id);
   }
+  closeModal(){
+    this._activeModal.dismiss();
+  }
 }

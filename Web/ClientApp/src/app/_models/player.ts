@@ -6,4 +6,5 @@ export interface Player {
   leftGame: boolean;
   numberOfCards: number;
   roundsWonCount: number;
+  teamNumber: number;
 }

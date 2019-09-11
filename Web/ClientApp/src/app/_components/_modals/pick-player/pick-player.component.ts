@@ -11,11 +11,14 @@ import { User } from 'src/app/_models/user';
 export class PickPlayerComponent implements OnInit {
   @Input() players: Player[];
   @Input() currentUser: User;
-  constructor(public activeModal: NgbActiveModal) {}
+  constructor(private _activeModal: NgbActiveModal) {}
 
   ngOnInit() {
   }
   selectPlayer(player: Player) {
-    this.activeModal.close(player.id);
+    this._activeModal.close(player.id);
+  }
+  closeModal(){
+    this._activeModal.dismiss();
   }
 }

@@ -44,7 +44,9 @@
               'left-game': player.leftGame,
               'animation-text-shine': player.id == game.playerToPlay.id && currentUser.name == player.user.name
             }"
-            >{{ getDirectionStringFromGame() }}{{ player.user.name }}({{ player.numberOfCards }}){{ getDirectionStringFromGame() }}
+            >{{ getDirectionStringFromGame() }} [T{{ player.teamNumber }}] {{ player.user.name }}({{ player.numberOfCards }}){{
+              getDirectionStringFromGame()
+            }}
           </span>
         </p>
       </div>

@@ -29,7 +29,7 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     this._hubService.addOrRenameUser(true);
   }
 
-  updateBlockedBuzzComands(event, buzzType) {
+  updateBlockedBuzzCommands(event, buzzType) {
     var value = event.target.checked;
     if (value === true) {
       this.userSettings.blockedBuzzCommands.push(buzzType);
@@ -57,7 +57,7 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     this._utilityService.saveUserSettings();
   }
 
-  shouldBeCheckedBuzzComand(buzzType) {
+  shouldBeCheckedBuzzCommand(buzzType) {
     return this.userSettings.blockedBuzzCommands.indexOf(buzzType) != -1;
   }
 

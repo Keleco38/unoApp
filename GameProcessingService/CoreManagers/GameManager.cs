@@ -98,6 +98,11 @@ namespace GameProcessingService.CoreManagers
             var messages = new List<string>();
 
             var playersWithoutCards = game.Players.Where(x => !x.Cards.Any()).ToList();
+            if (game.GameSetup.PlayersSetup == PlayersSetup.Teams)
+            {
+                var teamsWon = playersWithoutCards.Select(x => x.TeamNumber).Distinct().ToList();
+                playersWithoutCards = game.Players.Where(x => teamsWon.Contains(x.TeamNumber)).ToList();
+            }
             if (playersWithoutCards.Any())
             {
                 foreach (var player in playersWithoutCards)
@@ -113,7 +118,7 @@ namespace GameProcessingService.CoreManagers
                     game.GameEnded = true;
                     messages.Add($"Game ended! Players that won the game: {string.Join(',', playersThatMatchWinCriteria.Select(x => x.User.Name))}");
 
-                    var pointsToBeAdded = (int)(game.GameSetup.RoundsToWin * (Math.Pow(game.Players.Count, 2)));
+                    var pointsToBeAdded = game.GameSetup.PlayersSetup == PlayersSetup.Individual ? (int)(game.GameSetup.RoundsToWin * (Math.Pow(game.Players.Count, 2))) : (int)(game.GameSetup.RoundsToWin * (Math.Pow(game.Players.Select(x => x.TeamNumber).Distinct().Count(), 2)));
                     var usernamesAffected = playersThatMatchWinCriteria.Select(x => x.User.Name).ToList();
                     _hallOfFameRepository.AddPoints(usernamesAffected, pointsToBeAdded);
                 }

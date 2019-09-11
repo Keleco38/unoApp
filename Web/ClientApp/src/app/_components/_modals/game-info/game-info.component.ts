@@ -1,5 +1,5 @@
 import { UtilityService } from './../../../_services/utility.service';
-import { CardValue, GameType } from './../../../_models/enums';
+import { CardValue, GameType, PlayersSetup } from './../../../_models/enums';
 import { HubService } from 'src/app/_services/hub.service';
 import { Game } from './../../../_models/game';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -36,7 +36,10 @@ export class GameInfoComponent implements OnInit, OnDestroy {
   getGameTypePlaceholder() {
     return this.game.gameSetup.gameType == GameType.normal ? 'Normal' : 'Special Wild Cards';
   }
-
+  
+  getPlayerSetupPlaceholder() {
+    return this.game.gameSetup.playersSetup == PlayersSetup.individual ? 'Individual' : 'Teams';
+  }
   
   getBannedCardName(bannedCard:CardValue){
     return this._utilityService.getBannedCardName(bannedCard);

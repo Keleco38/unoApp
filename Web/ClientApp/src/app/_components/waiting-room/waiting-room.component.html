@@ -1,8 +1,8 @@
-<app-navbar *ngIf="sidebarSettings.showNavbar"></app-navbar>
+<app-navbar [hidden]="!sidebarSettings.showNavbar"></app-navbar>
 <div class="row">
   <div class="col-12">
     <div class="alert alert-primary">
-      <div class="row" *ngIf="activeGame.players[0]?.user.name == currentUser.name">
+      <div class="row" [hidden]="activeGame.players[0]?.user.name != currentUser.name">
         <div class="col-6">
           <button class="btn btn-sm btn-block btn-primary" (click)="openGameSetupDialog()">Game Setup</button>
           <button class="btn btn-sm btn-block btn-primary" (click)="openBanCardsDialog()">
@@ -16,7 +16,7 @@
           </button>
         </div>
       </div>
-      <div class="row" *ngIf="activeGame.players[0]?.user.name != currentUser.name">
+      <div class="row" [hidden]="activeGame.players[0]?.user.name == currentUser.name">
         <div class="col-12">
           <div class="btn-group special">
             <button class="btn btn-sm btn-danger" (click)="leaveWaitingRoom()">Leave room</button>
@@ -37,12 +37,27 @@
 <div class="row">
   <div class="col-6">
     <h6 class="text-success">Players joined</h6>
-    <ul>
+    <ul class="list-unstyled">
       <li *ngFor="let player of activeGame.players; let first = first">
-        <span *ngIf="first">&#9734;</span>
-        {{ player.user.name }}
+        <span [hidden]="!first">&#9734;</span>
+        *{{ player.user.name }}
+        <strong [hidden]="activeGame.gameSetup.playersSetup != 2">
+          <span
+            [hidden]="currentUser.connectionId != player.user.connectionId"
+            class="text-primary  cursor-pointer"
+            (click)="changeTeam(player.teamNumber, false)"
+            >(-)</span
+          >
+          <span>[Team {{ player.teamNumber }}]</span>
+          <span
+            [hidden]="currentUser.connectionId != player.user.connectionId"
+            class="text-primary cursor-pointer"
+            (click)="changeTeam(player.teamNumber, true)"
+            >(+)</span
+          >
+        </strong>
         <strong
-          *ngIf="currentUser.connectionId == activeGame.players[0].user.connectionId && !first"
+          [hidden]="currentUser.connectionId != activeGame.players[0].user.connectionId || first"
           class="ml-2 text-danger cursor-pointer"
           (click)="kickPlayerFromGame(player)"
           >[X]</strong
@@ -52,13 +67,14 @@
   </div>
   <div class="col-6" id="gameSetupInfo">
     <h6 class="text-info">Game setup</h6>
-    <div *ngIf="activeGame.gameSetup.bannedCards.length > 0">
+    <div [hidden]="activeGame.gameSetup.bannedCards.length == 0">
       <strong>Banned cards: </strong>
       <ul>
         <li *ngFor="let bannedCard of activeGame.gameSetup.bannedCards">{{ getBannedCardName(bannedCard) | dividePerCapital }}</li>
       </ul>
     </div>
-    <p *ngIf="activeGame.gameSetup.bannedCards.length == 0"><strong>Banned cards: </strong> None</p>
+    <p [hidden]="activeGame.gameSetup.bannedCards.length > 0"><strong>Banned cards: </strong> None</p>
+    <p><strong>player setup: </strong> {{ getPlayerSetupPlaceholder() }}</p>
     <p><strong>Game type: </strong> {{ getGameTypePlaceholder() }}</p>
     <p><strong>Play until: </strong> {{ activeGame.gameSetup.roundsToWin }}</p>
     <p><strong>Max number of players: </strong> {{ activeGame.gameSetup.maxNumberOfPlayers }}</p>
@@ -72,6 +88,6 @@
 
 <div class="row">
   <div class="col-12 fill-viewport-max-70 scrollable-div-y bg-white">
-    <app-game-tabs></app-game-tabs> 
+    <app-game-tabs></app-game-tabs>
   </div>
 </div>

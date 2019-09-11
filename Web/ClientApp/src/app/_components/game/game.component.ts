@@ -200,7 +200,7 @@ export class GameComponent implements OnInit, OnDestroy {
             return;
           });
         } else if (cardPlayed.value === CardValue.blackjack) {
-          this._modalService.open(BlackjackComponent, { backdrop: 'static' }).result.then(blackjackNumber => {
+          this._modalService.open(BlackjackComponent, { backdrop: 'static', keyboard: false }).result.then(blackjackNumber => {
             this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, blackjackNumber);
             return;
           });

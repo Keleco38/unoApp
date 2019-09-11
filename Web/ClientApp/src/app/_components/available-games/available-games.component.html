@@ -10,7 +10,8 @@
       <span class="mx-2" *ngIf="availableGame.isPasswordProtected">&#9919;</span>
       <span> {{ availableGame.host }} </span>
       <span> - </span>
-      <span>({{ availableGame.numberOfPlayers }}/{{ availableGame.maxNumberOfPlayers }})</span>
+      <span [hidden]="availableGame.gameStarted">({{ availableGame.numberOfPlayers }}/{{ availableGame.maxNumberOfPlayers }})</span>
+      <span [hidden]="!availableGame.gameStarted">(in progress)</span>
     </button>
   </div>
 </div>

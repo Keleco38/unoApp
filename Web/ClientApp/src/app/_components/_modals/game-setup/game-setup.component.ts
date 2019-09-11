@@ -1,5 +1,5 @@
-import { takeWhile } from 'rxjs/operators';
-import { GameType } from './../../../_models/enums';
+import { first } from 'rxjs/operators';
+import { GameType, PlayersSetup } from './../../../_models/enums';
 import { GameSetup } from './../../../_models/gameSetup';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HubService } from './../../../_services/hub.service';
@@ -11,16 +11,15 @@ import { Game } from 'src/app/_models/game';
   templateUrl: './game-setup.component.html',
   styleUrls: ['./game-setup.component.css']
 })
-export class GameSetupComponent implements OnInit, OnDestroy {
-  private _isAlive: boolean = true;
+export class GameSetupComponent implements OnInit {
   private _game: Game;
   gameSetup: GameSetup;
 
   constructor(private _hubService: HubService, private _activeModal: NgbActiveModal) {}
 
   ngOnInit() {
-    this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe((game: Game) => {
-      this._game = game;
+    this._hubService.activeGame.pipe(first()).subscribe((game: Game) => {
+      this._game = JSON.parse(JSON.stringify(game));
     });
 
     if (this._game === null) {
@@ -33,7 +32,8 @@ export class GameSetupComponent implements OnInit, OnDestroy {
         drawFourDrawTwoShouldSkipTurn: true,
         bannedCards: [],
         matchingCardStealsTurn: true,
-        wildCardCanBePlayedOnlyIfNoOtherOptions:false
+        wildCardCanBePlayedOnlyIfNoOtherOptions: false,
+        playersSetup: PlayersSetup.individual
       };
     } else {
       this.gameSetup = this._game.gameSetup;
@@ -51,10 +51,5 @@ export class GameSetupComponent implements OnInit, OnDestroy {
       this._hubService.updateGameSetup(this._game.id, this.gameSetup);
     }
     this._activeModal.close();
-  }
-
-  ngOnDestroy(): void {
-    console.log('destroyed');
-    this._isAlive = false;
   }
 }

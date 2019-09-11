@@ -69,6 +69,11 @@ namespace Common.Enums
         Normal = 1,
         SpecialWildCards = 2
     }
+    public enum PlayersSetup
+    {
+        Individual = 1,
+        Teams = 2
+    }
 
     public enum TypeOfMessage
     {

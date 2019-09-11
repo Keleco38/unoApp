@@ -125,6 +125,20 @@ namespace Web.Hubs
             await Clients.Caller.SendAsync("ExitGame");
         }
 
+        public async Task ChangeTeam(string gameId, int teamNumber)
+        {
+            if (teamNumber < 1 || teamNumber > 5)
+                return;
+
+            var game = _gameRepository.GetGameByGameId(gameId);
+            if (game.GameSetup.PlayersSetup != PlayersSetup.Teams)
+                return;
+            var user = GetCurrentUser();
+            var player = game.Players.First(x => x.User == user);
+            player.TeamNumber = teamNumber;
+            await UpdateGame(game);
+        }
+
         public async Task KickPlayerFromGame(string name, string gameId)
         {
             var game = _gameRepository.GetGameByGameId(gameId);
@@ -134,9 +148,6 @@ namespace Web.Hubs
             }
 
             var playerToKick = game.Players.First(y => y.User.Name == name);
-            game.Players.Remove(playerToKick);
-            await UpdateGame(game);
-            await GetAllGames();
             await Clients.Client(playerToKick.User.ConnectionId).SendAsync("KickPlayerFromGame");
         }
 
@@ -352,9 +363,9 @@ namespace Web.Hubs
             {
                 var hallOfFameStats = _hallOfFameRepository.GetScoresForUsernames(game.Players.Select(x => x.User.Name).ToList());
                 var hallOfFameStatsDto = _mapper.Map<List<HallOfFameDto>>(hallOfFameStats);
-                var pointsWon = (int)(game.GameSetup.RoundsToWin * (Math.Pow(game.Players.Count, 2)));
-                var playersWon = game.Players.Where(x => x.RoundsWonCount == game.GameSetup.RoundsToWin).Select(x=>x.User.Name).ToList();
-                var gameEndedResultDto=new GameEndedResultDto(playersWon,pointsWon, hallOfFameStatsDto);
+                var pointsWon = game.GameSetup.PlayersSetup == PlayersSetup.Individual ? (int)(game.GameSetup.RoundsToWin * (Math.Pow(game.Players.Count, 2))) : (int)(game.GameSetup.RoundsToWin * (Math.Pow(game.Players.Select(x => x.TeamNumber).Distinct().Count(), 2)));
+                var playersWon = game.Players.Where(x => x.RoundsWonCount == game.GameSetup.RoundsToWin).Select(x => x.User.Name).ToList();
+                var gameEndedResultDto = new GameEndedResultDto(playersWon, pointsWon, hallOfFameStatsDto);
                 await Clients.Clients(GetPlayersAndSpectatorsFromGame(game)).SendAsync("GameEnded", gameEndedResultDto);
             }
         }
