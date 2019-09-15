@@ -1,0 +1,87 @@
+<app-navbar [hidden]="!sidebarSettings.showNavbar"></app-navbar>
+<div class="row">
+  <div class="col-12">
+    <div class="alert alert-primary">
+      <div class="row" [hidden]="activeTournament.contestants[0]?.user.name != currentUser.name">
+        <div class="col-6">
+          <button class="btn btn-sm btn-block btn-primary" (click)="openTournamentSetupDialog()">Game Setup</button>
+          <button class="btn btn-sm btn-block btn-primary" (click)="openBanCardsDialog()">
+            Ban Cards
+          </button>
+        </div>
+        <div class="col-6">
+          <button class="btn btn-sm btn-danger btn-block" (click)="exitTournament()">Leave tournament</button>
+          <button
+            [style.opacity]="activeTournament.contestants.length < activeTournament.tournamentSetup.numberOfPlayers ? 0.5 : 1"
+            class="btn btn-block btn-sm btn-success"
+            (click)="startTournament()"
+          >
+            Start Tournament
+          </button>
+        </div>
+      </div>
+      <div class="row" [hidden]="activeTournament.contestants[0]?.user.name == currentUser.name">
+        <div class="col-12">
+          <div class="btn-group special">
+            <button class="btn btn-sm btn-danger" (click)="exitTournament()">Leave tournament</button>
+            <button
+              class="btn btn-sm btn-primary"
+              [ngStyle]="getStyleJoinGameButton()"
+              [disabled]="!userIsSpectator()"
+              (click)="joinTournament()"
+            >
+              Join Tournament
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-6">
+    <h6 class="text-success">Players joined</h6>
+    <ul class="list-unstyled">
+      <li *ngFor="let contestant of activeTournament.contestants; let first = first">
+        <span [hidden]="!first">&#9734;</span>
+        *{{ contestant.user.name }}
+        <strong
+          [hidden]="currentUser.connectionId != activeTournament.contestants[0].user.connectionId || first"
+          class="ml-2 text-danger cursor-pointer"
+          (click)="kickContestantFromTournament(contestant)"
+          >[X]</strong
+        >
+      </li>
+    </ul>
+  </div>
+  <div class="col-6" id="tournamentSetupInfo">
+    <h6 class="text-info">Tournament setup</h6>
+    <div [hidden]="activeTournament.tournamentSetup.bannedCards.length == 0">
+      <strong>Banned cards: </strong>
+      <ul>
+        <li *ngFor="let bannedCard of activeTournament.tournamentSetup.bannedCards">
+          {{ getBannedCardName(bannedCard) | dividePerCapital }}
+        </li>
+      </ul>
+    </div>
+    <p [hidden]="activeTournament.tournamentSetup.bannedCards.length > 0"><strong>Banned cards: </strong> None</p>
+    <p><strong>Player setup: </strong> Individual</p>
+    <p><strong>Game type: </strong> {{ getGameTypePlaceholder() }}</p>
+    <p><strong>Play until: </strong> {{ activeTournament.tournamentSetup.roundsToWin }}</p>
+    <p><strong>Tournament size: </strong> {{ activeTournament.tournamentSetup.numberOfPlayers }}</p>
+    <p><strong>+2/+4 skipping turn: </strong> {{ activeTournament.tournamentSetup.drawFourDrawTwoShouldSkipTurn }}</p>
+    <p><strong>Matching card steals turn: </strong> {{ activeTournament.tournamentSetup.matchingCardStealsTurn }}</p>
+    <p>
+      <strong>Wild card playable only as last option: </strong>
+      {{ activeTournament.tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}
+    </p>
+    <p><strong>Reverse skipping turn in 2p: </strong> {{ activeTournament.tournamentSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
+    <p><strong>Password set:</strong> {{ activeTournament.tournamentSetup.password.length > 0 }}</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12 fill-viewport-max-70 scrollable-div-y bg-white">
+    <app-game-tabs></app-game-tabs>
+  </div>
+</div>

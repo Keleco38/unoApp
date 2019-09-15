@@ -4,6 +4,7 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanDeactivate } fr
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { WaitingRoomComponent } from '../_components/waiting-room/waiting-room.component';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class GameDeactivateGuard implements CanDeactivate<GameComponent> {
@@ -15,6 +16,17 @@ export class GameDeactivateGuard implements CanDeactivate<GameComponent> {
     nextState?: RouterStateSnapshot
   ): boolean | Observable<boolean> | Promise<boolean> {
     this._hubService.exitGame();
-    return true;
+
+    return this._hubService.activeTournament.pipe(
+      map(tournament => {
+        if (tournament !== null) {
+          if (nextState.url != '/tournament') {
+            this._hubService.exitTournament();
+            this._router.navigateByUrl('/');
+          }
+        }
+        return true;
+      })
+    );
   }
 }

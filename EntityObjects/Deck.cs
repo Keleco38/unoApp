@@ -13,7 +13,6 @@ namespace EntityObjects
         public Deck(GameSetup gameSetup)
         {
             InitializeCards(gameSetup);
-            Shuffle();
         }
 
         public List<ICard> Cards { get; set; }
@@ -148,19 +147,5 @@ namespace EntityObjects
                 }
             }
         }
-
-        public void Shuffle()
-        {
-            Random r = new Random();
-
-            for (int n = Cards.Count - 1; n > 0; --n)
-            {
-                int k = r.Next(n + 1);
-                ICard temp = Cards[n];
-                Cards[n] = Cards[k];
-                Cards[k] = temp;
-            }
-        }
-
     }
 }

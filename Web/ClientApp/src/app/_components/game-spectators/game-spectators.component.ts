@@ -9,9 +9,6 @@ import { takeWhile } from 'rxjs/operators';
   styleUrls: ['./game-spectators.component.css']
 })
 export class GameSpectatorsComponent implements OnInit, OnDestroy {
-  ngOnDestroy(): void {
-    this._isAlive = false;
-  }
   private _isAlive: boolean = true;
   game: Game;
 
@@ -21,5 +18,9 @@ export class GameSpectatorsComponent implements OnInit, OnDestroy {
     this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.game = game;
     });
+  }
+
+  ngOnDestroy(): void {
+    this._isAlive = false;
   }
 }

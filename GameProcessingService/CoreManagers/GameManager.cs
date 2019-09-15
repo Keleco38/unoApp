@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Common.Enums;
+using Common.Extensions;
 using EntityObjects;
 using EntityObjects.Cards.Abstraction;
 using GameProcessingService.Models;
@@ -26,6 +27,7 @@ namespace GameProcessingService.CoreManagers
             ICard lastCardDrew;
             game.DiscardedPile = new List<ICard>();
             game.Deck = new Deck(game.GameSetup);
+            game.Deck.Cards.Shuffle();
             do
             {
                 lastCardDrew = game.Deck.Draw(1).First();
@@ -45,7 +47,7 @@ namespace GameProcessingService.CoreManagers
             {
                 player.Cards.AddRange(game.Deck.Draw(deckCount));
                 game.Deck.Cards = game.DiscardedPile.ToList();
-                game.Deck.Shuffle();
+                game.Deck.Cards.Shuffle();
                 game.DiscardedPile.RemoveRange(0, game.DiscardedPile.Count - 1);
                 player.Cards.AddRange(game.Deck.Draw(count - deckCount));
             }

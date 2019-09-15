@@ -22,6 +22,7 @@ import { SidebarSettings } from 'src/app/_models/sidebarSettings';
 import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { GuessOddEvenNumberComponent } from '../_modals/guess-odd-even-number/guess-odd-even-number.component';
+import { Tournament } from 'src/app/_models/tournament';
 
 @Component({
   selector: 'app-game',
@@ -32,6 +33,7 @@ export class GameComponent implements OnInit, OnDestroy {
   private _timer: number;
   private _mustCallUno: boolean = false;
   private _isAlive: boolean = true;
+  private _activeTournament: Tournament;
 
   isSidebarOpen = false;
   currentUser: User;
@@ -60,6 +62,10 @@ export class GameComponent implements OnInit, OnDestroy {
 
     this._hubService.gameLog.pipe(takeWhile(() => this._isAlive)).subscribe(gameLog => {
       this.gameLog = gameLog;
+    });
+
+    this._hubService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
+      this._activeTournament = activeTournament;
     });
 
     this._hubService.mustCallUno.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
@@ -228,7 +234,11 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   exitGame() {
-    this._router.navigateByUrl('/');
+    if (this._activeTournament == null) {
+      this._router.navigateByUrl('/');
+    } else {
+      this._router.navigateByUrl('/tournament');
+    }
   }
 
   getSidebarClass() {

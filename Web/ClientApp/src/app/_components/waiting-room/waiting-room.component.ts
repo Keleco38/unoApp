@@ -22,9 +22,7 @@ import { GameSetupComponent } from '../_modals/game-setup/game-setup.component';
 })
 export class WaitingRoomComponent implements OnInit, OnDestroy {
   sidebarSettings: SidebarSettings;
-  ngOnDestroy(): void {
-    this._isAlive = false;
-  }
+
   private _isAlive: boolean = true;
   activeGame: Game;
   currentUser: User;
@@ -47,6 +45,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
       this.currentUser = user;
     });
   }
+  
   getBannedCardName(bannedCard: CardValue) {
     return this._utilityService.getBannedCardName(bannedCard);
   }
@@ -122,7 +121,12 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
       this._hubService.kickPlayerFromGame(player.user);
     }
   }
+  
   updateGameSetup() {
     this._hubService.updateGameSetup(this.activeGame.id, this.activeGame.gameSetup);
+  }
+
+  ngOnDestroy(): void {
+    this._isAlive = false;
   }
 }

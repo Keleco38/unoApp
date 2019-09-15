@@ -1,8 +1,10 @@
+import { TournamentSetupComponent } from './../_modals/tournament-setup/tournament-setup.component';
 import { GameSetupComponent } from './../_modals/game-setup/game-setup.component';
 import { Component, OnInit } from '@angular/core';
 import { HubService } from 'src/app/_services/hub.service';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { GameType } from 'src/app/_models/enums';
 
 @Component({
   selector: 'app-home',
@@ -27,6 +29,10 @@ export class HomeComponent implements OnInit {
 
   createGame() {
     this._modalService.open(GameSetupComponent);
+  }
+
+  createTournament() {
+    this._modalService.open(TournamentSetupComponent);
   }
 
   ngOnDestroy(): void {

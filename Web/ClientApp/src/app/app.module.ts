@@ -1,3 +1,7 @@
+import { TournamentSetupComponent } from './_components/_modals/tournament-setup/tournament-setup.component';
+import { TournamentChatComponent } from './_components/tournament-chat/tournament-chat.component';
+import { TournamentSpectatorsComponent } from './_components/tournament-spectators/tournament-spectators.component';
+import { Tournament } from 'src/app/_models/tournament';
 import { HttpService } from './_services/http.service';
 import { HallOfFameComponent } from './_components/hall-of-fame/hall-of-fame.component';
 import { GameEndedResultComponent } from './_components/_modals/game-ended-result/game-ended-result.component';
@@ -47,6 +51,13 @@ import { NavbarComponent } from './_components/navbar/navbar.component';
 import { UserSettingsComponent } from './_components/_modals/user-settings/user-settings.component';
 import { GuessOddEvenNumberComponent } from './_components/_modals/guess-odd-even-number/guess-odd-even-number.component';
 import { GameSetupComponent } from './_components/_modals/game-setup/game-setup.component';
+import { AvailableTournamentsComponent } from './_components/available-tournaments/available-tournaments.component';
+import { TournamentWaitingRoomComponent } from './_components/tournament-waiting-room/tournament-waiting-room.component';
+import { TournamentComponent } from './_components/tournament/tournament.component';
+import { TournamentDeactivateGuard } from './_guards/tournament-deactivate.guard';
+import { TournamentGuard } from './_guards/tournament.guard';
+import { TournamentWaitingRoomDeactivateGuard } from './_guards/tournament-waiting-room-deactivate.guard';
+import { TournamentWaitingRoomGuard } from './_guards/tournament-waiting-room.guard';
 
 @NgModule({
   declarations: [
@@ -77,10 +88,16 @@ import { GameSetupComponent } from './_components/_modals/game-setup/game-setup.
     UserSettingsComponent,
     PickPromiseCardComponent,
     DividePerCapitalPipe,
+    TournamentSpectatorsComponent,
+    TournamentChatComponent,
     HallOfFameComponent,
     GuessOddEvenNumberComponent,
     GameEndedResultComponent,
-    GameSetupComponent
+    AvailableTournamentsComponent,
+    GameSetupComponent,
+    TournamentSetupComponent,
+    TournamentWaitingRoomComponent,
+    TournamentComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -106,10 +123,29 @@ import { GameSetupComponent } from './_components/_modals/game-setup/game-setup.
       { path: 'help', component: HelpComponent },
       { path: 'change-log', component: ChangeLogComponent },
       { path: 'hall-of-fame', component: HallOfFameComponent },
+      {
+        path: 'tournament-waiting-room',
+        component: TournamentWaitingRoomComponent,
+        canDeactivate: [TournamentWaitingRoomDeactivateGuard],
+        canActivate: [TournamentWaitingRoomGuard]
+      },
+      { path: 'tournament', component: TournamentComponent, canDeactivate: [TournamentDeactivateGuard], canActivate: [TournamentGuard] },
       { path: '**', redirectTo: '/' }
     ])
   ],
-  providers: [HubService, WaitingRoomGuard, WaitingRoomDeactivateGuard, GameGuard, GameDeactivateGuard, UtilityService, HttpService],
+  providers: [
+    HubService,
+    WaitingRoomGuard,
+    TournamentWaitingRoomGuard,
+    TournamentWaitingRoomDeactivateGuard,
+    WaitingRoomDeactivateGuard,
+    GameGuard,
+    GameDeactivateGuard,
+    TournamentGuard,
+    TournamentDeactivateGuard,
+    UtilityService,
+    HttpService
+  ],
   bootstrap: [AppComponent],
   entryComponents: [
     PickColorComponent,
@@ -126,7 +162,8 @@ import { GameSetupComponent } from './_components/_modals/game-setup/game-setup.
     PickPromiseCardComponent,
     GuessOddEvenNumberComponent,
     GameSetupComponent,
-    GameEndedResultComponent
+    GameEndedResultComponent,
+    TournamentSetupComponent
   ]
 })
 export class AppModule {}

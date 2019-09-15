@@ -1,3 +1,4 @@
+import { TournamentSetup } from './../_models/tournamentSetup';
 import { GameEndedResultComponent } from './../_components/_modals/game-ended-result/game-ended-result.component';
 import { GameEndedResult } from './../_models/gameEndedResult';
 import { GameSetup } from './../_models/gameSetup';
@@ -18,6 +19,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Card } from '../_models/card';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GameList } from '../_models/gameList';
+import { Tournament } from '../_models/tournament';
+import { TournamentList } from '../_models/tournamentList';
 
 @Injectable({
   providedIn: 'root'
@@ -25,17 +28,21 @@ import { GameList } from '../_models/gameList';
 export class HubService {
   private _hubConnection: signalR.HubConnection;
   private _gameChatMessages: ChatMessage[] = [];
+  private _tournamentChatMessages: ChatMessage[] = [];
   private _gameLog: string[] = [];
   private _allChatMessages: ChatMessage[] = [];
 
   private _currentUserObservable = new BehaviorSubject<User>({} as User);
   private _onlineUsersObservable = new BehaviorSubject<User[]>([]);
   private _availableGamesObservable = new BehaviorSubject<GameList[]>([]);
+  private _availableTournamentsObservable = new BehaviorSubject<TournamentList[]>([]);
   private _gameChatMessagesObservable = new BehaviorSubject<ChatMessage[]>([]);
+  private _tournamentChatMessagesObservable = new BehaviorSubject<ChatMessage[]>([]);
   private _gameChatNumberOfMessagesObservable = new Subject<ChatMessage>();
   private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>([]);
   private _gameLogObservable = new BehaviorSubject<string[]>([]);
   private _activeGameObservable = new BehaviorSubject<Game>(null);
+  private _activeTournamentObservable = new BehaviorSubject<Tournament>(null);
   private _myHandObservable = new BehaviorSubject<Card[]>([]);
   private _mustCallUnoObservable = new Subject();
   private _reconnectObservable = new Subject();
@@ -83,6 +90,12 @@ export class HubService {
       this._activeGameObservable.next(null);
     });
 
+    this._hubConnection.on('ExitTournament', () => {
+      this._tournamentChatMessages = [];
+      this._tournamentChatMessagesObservable.next(this._tournamentChatMessages);
+      this._activeTournamentObservable.next(null);
+    });
+
     this._hubConnection.on('UserMentioned', () => {
       var notifyWhenMentionedToast = this._utilityService.userSettings.notifyWhenMentionedToast;
       var notifyWhenMentionedBuzz = this._utilityService.userSettings.notifyWhenMentionedBuzz;
@@ -112,6 +125,11 @@ export class HubService {
       this._allChatMessagesObservable.next(this._allChatMessages);
     });
 
+    this._hubConnection.on('PostNewMessageInTournamentChat', (message: ChatMessage) => {
+      this._tournamentChatMessages.unshift(message);
+      this._tournamentChatMessagesObservable.next(this._tournamentChatMessages);
+    });
+
     this._hubConnection.on('PostNewMessageInGameChat', (message: ChatMessage) => {
       this._gameChatMessages.unshift(message);
       this._gameChatNumberOfMessagesObservable.next(message);
@@ -131,12 +149,21 @@ export class HubService {
       this._availableGamesObservable.next(games);
     });
 
+    this._hubConnection.on('RefreshAllTournamentsList', (tournaments: TournamentList[]) => {
+      this._availableTournamentsObservable.next(tournaments);
+    });
+
     this._hubConnection.on('BuzzPlayer', (buzzType: string) => {
       this.buzzPlayer(buzzType, false);
     });
 
     this._hubConnection.on('KickPlayerFromGame', () => {
       this._toastrService.info('You have been kicked from the game');
+      this._router.navigateByUrl('/');
+    });
+
+    this._hubConnection.on('KickContestantFromTournament', () => {
+      this._toastrService.info('You have been kicked from the tournament');
       this._router.navigateByUrl('/');
     });
 
@@ -153,6 +180,19 @@ export class HubService {
         const modalRef = this._modalService.open(ShowCardsComponent, { backdrop: 'static' });
         modalRef.componentInstance.cards = cards;
       }, 2000);
+    });
+
+    this._hubConnection.on('UpdateTournament', (tournament: Tournament) => {
+      this._activeTournamentObservable.next(tournament);
+      if (tournament.tournamentStarted) {
+        if (this._router.url !== '/tournament' && this._router.url !== '/game') {
+          this._router.navigateByUrl('/tournament');
+        }
+      } else {
+        if (this._router.url !== '/tournament-waiting-room') {
+          this._router.navigateByUrl('/tournament-waiting-room');
+        }
+      }
     });
 
     this._hubConnection.on('UpdateGame', (game: Game) => {
@@ -177,17 +217,16 @@ export class HubService {
 
   sendMessageToAllChat(message: string, isBuzz: boolean) {
     if (message == '') return;
-    if (isBuzz) {
-      if (this._activeGameObservable.getValue() != null) {
-        this._hubConnection.invoke('SendMessage', message, this._activeGameObservable.getValue().id);
-        return;
-      }
-    }
-    this._hubConnection.invoke('SendMessage', message, '');
+    this._hubConnection.invoke('SendMessage', message, '','');
   }
   sendMessageToGameChat(message: string) {
     if (message == '') return;
-    this._hubConnection.invoke('SendMessage', message, this._activeGameObservable.getValue().id);
+    this._hubConnection.invoke('SendMessage', message, this._activeGameObservable.getValue().id, '');
+  }
+
+  sendMessageToTournamentChat(message: string) {
+    if (message == '') return;
+    this._hubConnection.invoke('SendMessage', message, '', this._activeTournamentObservable.getValue().id);
   }
 
   addOrRenameUser(forceRename: boolean) {
@@ -209,11 +248,30 @@ export class HubService {
     localStorage.setItem('name', name);
     this._hubConnection.invoke('AddOrRenameUser', name);
     this._hubConnection.invoke('GetAllGames');
+    this._hubConnection.invoke('GetAllTournaments');
   }
 
   joinGame(id: string, password: string): any {
     this._myHandObservable.next(null);
     this._hubConnection.invoke('JoinGame', id, password);
+  }
+
+  joinTournament(id: string, password: string): any {
+    this._hubConnection.invoke('JoinTournament', id, password);
+  }
+
+  startTournament(): any {
+    if (!this._activeTournamentObservable.getValue()) {
+      return;
+    }
+    this._hubConnection.invoke('StartTournament', this._activeTournamentObservable.getValue().id);
+  }
+
+  exitTournament(): any {
+    if (!this._activeTournamentObservable.getValue()) {
+      return;
+    }
+    this._hubConnection.invoke('ExitTournament', this._activeTournamentObservable.getValue().id);
   }
 
   drawCard() {
@@ -267,12 +325,24 @@ export class HubService {
     this._hubConnection.invoke('CreateGame', gameSetup);
   }
 
+  createTournament(tournamentSetup: TournamentSetup) {
+    this._hubConnection.invoke('CreateTournament', tournamentSetup);
+  }
+
   kickPlayerFromGame(user: User): any {
     this._hubConnection.invoke('KickPlayerFromGame', user.name, this._activeGameObservable.getValue().id);
   }
 
+  kickContestantFromTournament(user: User): any {
+    this._hubConnection.invoke('KickContestantFromTournament', user.name, this._activeTournamentObservable.getValue().id);
+  }
+
   updateGameSetup(gameId: string, gameSetup: GameSetup) {
     this._hubConnection.invoke('UpdateGameSetup', gameId, gameSetup);
+  }
+
+  updateTournamentSetup(tournamentId: string, tournamentSetup: TournamentSetup) {
+    this._hubConnection.invoke('UpdateTournamentSetup', tournamentId, tournamentSetup);
   }
 
   exitGame(): any {
@@ -280,11 +350,6 @@ export class HubService {
       return;
     }
     this._hubConnection.invoke('ExitGame', this._activeGameObservable.getValue().id);
-    this._gameChatMessages = [];
-    this._gameLog = [];
-    this._gameLogObservable.next(this._gameLog);
-    this._gameChatMessagesObservable.next(this._gameChatMessages);
-    this._activeGameObservable.next(null);
   }
 
   startGame(): any {
@@ -319,8 +384,16 @@ export class HubService {
     return this._availableGamesObservable.asObservable();
   }
 
+  get availableTournaments() {
+    return this._availableTournamentsObservable.asObservable();
+  }
+
   get activeGame() {
     return this._activeGameObservable.asObservable();
+  }
+
+  get activeTournament() {
+    return this._activeTournamentObservable.asObservable();
   }
 
   get gameChatMessages() {
@@ -341,5 +414,9 @@ export class HubService {
   }
   get onReconnect() {
     return this._reconnectObservable.asObservable();
+  }
+
+  get tournamentChatMessages() {
+    return this._tournamentChatMessagesObservable.asObservable();
   }
 }

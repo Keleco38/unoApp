@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-sm-12">
+    <h1>{{ activeTournament.tournamentSetup.name }}</h1>
+    <div class="tournament-bracket tournament-bracket--rounded">
+      <div class="tournament-bracket__round tournament-bracket__round" *ngFor="let round of activeTournament.tournamentRounds">
+        <h3 class="tournament-bracket__round-title">Round {{ round.roundNumber }}</h3>
+        <ul class="tournament-bracket__list list-unstyled">
+          <li class="tournament-bracket__item" *ngFor="let roundGame of round.tournamentRoundGames">
+            <div (click)="joinGame(roundGame.game)" class="tournament-bracket__match">
+              <table class="tournament-bracket__table">
+                <caption class="tournament-bracket__caption">
+                  <time [hidden]="roundGame.game.gameEnded || !roundGame.game.gameStarted">In progress</time>
+                  <time [hidden]="roundGame.game.gameEnded || roundGame.game.gameStarted">Waiting on players</time>
+                  <time [hidden]="!roundGame.game.gameEnded">Game ended</time>
+                </caption>
+                <tbody class="tournament-bracket__content">
+                  <tr class="tournament-bracket__team tournament-bracket__team">
+                    <td class="tournament-bracket__country">
+                      <abbr class="tournament-bracket__code">{{ roundGame.game.players[0]?.user.name }}</abbr>
+                    </td>
+                    <td class="tournament-bracket__score">
+                      <span class="tournament-bracket__number">{{roundGame.game.players[0]?.roundsWonCount}}</span>
+                    </td>
+                  </tr>
+                  <tr class="tournament-bracket__team">
+                    <td class="tournament-bracket__country">
+                      <abbr class="tournament-bracket__code">{{ roundGame.game.players[1]?.user.name }}</abbr>
+                    </td>
+                    <td class="tournament-bracket__score">
+                      <span class="tournament-bracket__number">{{roundGame.game.players[1]?.roundsWonCount}}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

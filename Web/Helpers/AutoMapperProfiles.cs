@@ -19,6 +19,14 @@ namespace Web.Helpers
             CreateMap<Game, GameDto>();
             CreateMap<GameSetup, GameSetupDto>().ReverseMap();
 
+            CreateMap<TournamentSetup, TournamentSetupDto>().ReverseMap();
+            CreateMap<Tournament, TournamentDto>();
+            CreateMap<TournamentRound, TournamentRoundDto>();
+            CreateMap<TournamentRoundGame, TournamentRoundGameDto>();
+            CreateMap<TournamentSetup, TournamentSetupDto>();
+            CreateMap<Contestant, ContestantDto>();
+
+
             CreateMap<Game, GameListDto>()
                 .ForMember(dest => dest.GameStarted, opt =>
                {
@@ -38,6 +46,28 @@ namespace Web.Helpers
                }).ForMember(dest => dest.MaxNumberOfPlayers, opt =>
                 {
                     opt.MapFrom(src => src.GameSetup.MaxNumberOfPlayers);
+                });
+
+
+            CreateMap<Tournament, TournamentListDto>()
+                .ForMember(dest => dest.TournamentStarted, opt =>
+               {
+                   opt.MapFrom(src => src.TournamentStarted);
+               })
+                .ForMember(dest => dest.Host, opt =>
+                {
+                    opt.MapFrom(src => src.Contestants.Any() ? src.Contestants[0].User.Name : "No players.");
+                })
+                .ForMember(dest => dest.IsPasswordProtected, opt =>
+               {
+                   opt.MapFrom(src => !string.IsNullOrEmpty(src.TournamentSetup.Password));
+               })
+                .ForMember(dest => dest.NumberOfPlayers, opt =>
+               {
+                   opt.MapFrom(src => src.Contestants.Count);
+               }).ForMember(dest => dest.RequiredNumberOfPlayers, opt =>
+                {
+                    opt.MapFrom(src => src.TournamentSetup.NumberOfPlayers);
                 });
 
 

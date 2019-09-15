@@ -1,0 +1,8 @@
+#tournamentSetupInfo p {
+  margin-bottom: 0.2rem;
+}
+@media (max-width: 768px) {
+  #tournamentSetupInfo {
+    font-size: 12px;
+  }
+}
