@@ -38,7 +38,7 @@ namespace GameProcessingService.CoreManagers
                         BannedCards = tournament.TournamentSetup.BannedCards,
                         DrawFourDrawTwoShouldSkipTurn = tournament.TournamentSetup.DrawFourDrawTwoShouldSkipTurn,
                         MatchingCardStealsTurn = tournament.TournamentSetup.MatchingCardStealsTurn,
-                        MaxNumberOfPlayers = tournament.TournamentSetup.NumberOfPlayers,
+                        MaxNumberOfPlayers = 2,
                         Password = tournament.TournamentSetup.Password,
                         ReverseShouldSkipTurnInTwoPlayers = tournament.TournamentSetup.ReverseShouldSkipTurnInTwoPlayers,
                         WildCardCanBePlayedOnlyIfNoOtherOptions = tournament.TournamentSetup.WildCardCanBePlayedOnlyIfNoOtherOptions
