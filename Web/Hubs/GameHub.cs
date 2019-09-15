@@ -123,7 +123,7 @@ namespace Web.Hubs
                 {
                     //spectate game that hasn't started
                     tournament.Spectators.Add(user);
-                    //await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, tournamentId);
+                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, "", tournamentId);
                 }
             }
             else
@@ -133,14 +133,12 @@ namespace Web.Hubs
                 {
                     contestant.User = user;
                     contestant.LeftTournament = false;
-                    //await DisplayToastMessageToGame(gameId, $"Player {user.Name} has reconnected to the game.");
-                    //await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, gameId);
-                    //await UpdateHands(tournament);
+                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, "", tournamentId);
                 }
                 else
                 {
                     tournament.Spectators.Add((user));
-                    //await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, gameId);
+                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, "", tournamentId);
                 }
             }
             await UpdateTournament(tournament);
@@ -170,6 +168,8 @@ namespace Web.Hubs
             var user = GetCurrentUser();
             var tournament = _tournamentRepository.GetTournament(tournamentId);
 
+            await SendMessage($"{user.Name} has left the tournament.", TypeOfMessage.Server, "", tournamentId);
+
             var contestant = tournament.Contestants.FirstOrDefault(x => x.User == user);
 
             if (contestant != null)
@@ -188,6 +188,10 @@ namespace Web.Hubs
             if (spectator != null)
                 tournament.Spectators.Remove(spectator);
 
+
+            await Clients.Caller.SendAsync("ExitTournament");
+            await UpdateTournament(tournament);
+
             if (!GetPlayersAndSpectatorsFromTournament(tournament).Any())
             {
                 tournament.TournamentRounds.ForEach(x =>
@@ -197,8 +201,6 @@ namespace Web.Hubs
                 _tournamentRepository.RemoveTournament(tournament);
             }
 
-            await Clients.Caller.SendAsync("ExitTournament");
-            await UpdateTournament(tournament);
             await GetAllTournaments();
         }
 
@@ -305,7 +307,7 @@ namespace Web.Hubs
             }
 
             var tournamentSetup = _mapper.Map<TournamentSetup>(tournamentSetupDto);
-            tournament.TournamentSetup= tournamentSetup;
+            tournament.TournamentSetup = tournamentSetup;
             await UpdateTournament(tournament);
             await GetAllTournaments();
         }
