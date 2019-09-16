@@ -8,6 +8,7 @@ export interface Tournament {
   tournamentEnded: boolean;
   contestants: Contestant[];
   tournamentSetup: TournamentSetup;
+  tournamentWinner: User[];
   spectators: User[];
   tournamentRounds: TournamentRound[];
 }

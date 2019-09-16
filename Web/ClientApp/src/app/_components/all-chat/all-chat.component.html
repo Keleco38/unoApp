@@ -2,11 +2,23 @@
   <div class="col-12">
     <div class="card">
       <h5 class="card-header">
-        <h5>
-          Hello, <strong>{{ currentUser.name }}</strong>
-        </h5>
+        <div class="row">
+          <div class="col-12">
+            <h6 class="ml-2">
+              Hello, <strong>{{ currentUser.name }}</strong>
+            </h6>
+          </div>
+        </div>
         <form novalidate name="newMessageForm" (ngSubmit)="sendMessageAllChat()">
-          <input type="text" name="newMessage" [mention]="onlineUsers" autocomplete="off" class="form-control" placeholder="New Message" [(ngModel)]="newMessage" />
+          <input
+            type="text"
+            name="newMessage"
+            [mention]="onlineUsers"
+            autocomplete="off"
+            class="form-control"
+            placeholder="New Message"
+            [(ngModel)]="newMessage"
+          />
         </form>
       </h5>
       <div class="card-body">

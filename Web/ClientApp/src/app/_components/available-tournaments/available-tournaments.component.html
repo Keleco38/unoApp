@@ -3,7 +3,7 @@
     <div class="alert alert-primary">Available tournaments ({{ availableTournaments.length }}):</div>
     <button
       [class.btn-danger]="tournament.tournamentStarted"
-      class="btn btn-primary btn-block"
+      class="btn btn-primary btn-block my-2"
       *ngFor="let tournament of availableTournaments"
       (click)="joinTournament(tournament)"
     >

@@ -156,3 +156,6 @@ body {
     max-width: 200px !important;
   }
 }
+.nav-tabs .nav-item{
+  font-size:14px;
+}

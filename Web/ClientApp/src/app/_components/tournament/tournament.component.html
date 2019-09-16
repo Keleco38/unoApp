@@ -1,30 +1,63 @@
-<h1>2013 NCAA Tournament - Midwest Bracket</h1>
-<main id="tournament">
-  <ul class="round" *ngFor="let round of activeTournament.tournamentRounds">
-    <ng-container *ngFor="let roundGame of round.tournamentRoundGames">
-      <li class="spacer">&nbsp;</li>
+<app-navbar [hidden]="!sidebarSettings.showNavbar"></app-navbar>
+<div class="row">
+  <div class="col-12">
+    <h4 class="text-primary d-none d-sm-block">
+      Tournament brackets <button (click)="exitTournament()" class="btn btn-sm btn-danger">Exit tournament</button>
+    </h4>
+    <button (click)="exitTournament()" class="btn d-sm-none d-block btn-sm btn-block btn-danger">Exit tournament</button>
+    <div id="tournament" class="scrollable-div-x">
+      <ul class="round" *ngFor="let round of activeTournament.tournamentRounds">
+        <ng-container *ngFor="let roundGame of round.tournamentRoundGames">
+          <li class="spacer">&nbsp;</li>
 
-      <li
-        (click)="joinGame(roundGame.game)"
-        class="game game-top cursor-pointer"
-        [ngClass]="{ winner: roundGame.game.players[0]?.roundsWonCount == activeTournament.tournamentSetup.roundsToWin }"
-      >
-        {{ roundGame.game.players[0]?.user.name }} <span>{{ roundGame.game.players[0]?.roundsWonCount }}</span>
-      </li>
-      <li (click)="joinGame(roundGame.game)" class="game game-spacer cursor-pointer">&nbsp;</li>
-      <li
-        (click)="joinGame(roundGame.game)"
-        class="game game-bottom cursor-pointer"
-        [ngClass]="{ winner: roundGame.game.players[1]?.roundsWonCount == activeTournament.tournamentSetup.roundsToWin }"
-      >
-        {{ roundGame.game.players[1]?.user.name }} <span>{{ roundGame.game.players[1]?.roundsWonCount }}</span>
-      </li>
-    </ng-container>
-    <li class="spacer">&nbsp;</li>
-  </ul>
-  <ul class="round">
-    <li class="spacer">&nbsp;</li>
-    <li class="game game-top winner">Winner!<span></span></li>
-    <li class="spacer">&nbsp;</li>
-  </ul>
-</main>
+          <li
+            class="game game-top"
+            [ngClass]="{ 'winner winner-top': roundGame.game.players[0]?.roundsWonCount == activeTournament.tournamentSetup.roundsToWin }"
+          >
+            <span *ngIf="roundGame.game.players[0]?.user.name">{{ roundGame.game.players[0]?.user.name }}</span>
+            <span *ngIf="!roundGame.game.players[0]?.user.name">&nbsp;</span>
+
+            <span class="score">{{ roundGame.game.players[0]?.roundsWonCount }}</span>
+          </li>
+          <li (click)="joinGame(roundGame.game)" class="game game-spacer d-flex  align-items-center">
+            <div>
+              <button *ngIf="roundGame.game.gameStarted && !roundGame.game.gameEnded" class="btn btn-sm btn-block btn-outline-info">
+                Join game
+              </button>
+              <p class="text-center">
+                <i class="text-dark" *ngIf="roundGame.game.gameEnded"><small>[Game ended]</small></i>
+              </p>
+            </div>
+          </li>
+          <li
+            class="game game-bottom"
+            [ngClass]="{
+              'winner winner-bottom': roundGame.game.players[1]?.roundsWonCount == activeTournament.tournamentSetup.roundsToWin
+            }"
+          >
+            <span *ngIf="roundGame.game.players[1]?.user.name">{{ roundGame.game.players[1]?.user.name }}</span>
+            <span *ngIf="!roundGame.game.players[1]?.user.name">&nbsp;</span>
+            <span class="score">{{ roundGame.game.players[1]?.roundsWonCount }}</span>
+          </li>
+        </ng-container>
+        <li class="spacer">&nbsp;</li>
+      </ul>
+      <ul class="round">
+        <li class="spacer">&nbsp;</li>
+        <li class="game game-top winner">
+          <span [hidden]="!activeTournament.tournamentWinner">{{ activeTournament.tournamentWinner }}</span
+          ><span class="score lead">&#9819;</span>
+        </li>
+        <li class="spacer">&nbsp;</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-12 my-2" *ngIf="activeTournament.tournamentEnded">
+    <h3 class="text-success">Tournament ended!</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 fill-viewport-max-70 scrollable-div-y bg-white">
+    <app-game-tabs></app-game-tabs>
+  </div>
+</div>

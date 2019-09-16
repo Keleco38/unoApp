@@ -1,55 +1,73 @@
 /*
  *  Flex Layout Specifics
 */
-main{
-  display:flex;
-  flex-direction:row;
+#tournament {
+  display: flex;
+  flex-direction: row;
 }
-.round{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  width:200px;
-  list-style:none;
-  padding:0;
+.round {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 100px;
+  list-style: none;
+  padding: 0;
 }
-  .round .spacer{ flex-grow:1; }
-  .round .spacer:first-child,
-  .round .spacer:last-child{ flex-grow:.5; }
+.round .spacer {
+  flex-grow: 1;
+}
+.round .spacer:first-child,
+.round .spacer:last-child {
+  flex-grow: 0.5;
+}
 
-  .round .game-spacer{
-    flex-grow:1;
-  }
+.round .game-spacer {
+  flex-grow: 1;
+}
 
 /*
  *  General Styles
 */
-body{
-  font-family:sans-serif;
-  font-size:small;
-  padding:10px;
-  line-height:1.4em;
+body {
+  font-family: sans-serif;
+  font-size: small;
+  padding: 10px;
+  line-height: 1.4em;
 }
 
-li.game{
-  padding-left:20px;
+li.game {
+  padding-left: 20px;
 }
 
-  li.game.winner{
-    font-weight:bold;
-  }
-  li.game span{
-    float:right;
-    margin-right:5px;
-  }
+li.game.winner {
+  font-weight: bold;
+  color: #28a745!important;
+}
+li.game.winner-top {
+  border-bottom: 3px solid #28a745!important;
+}
+li.game.winner-bottom {
+  border-top: 3px solid #28a745!important;
+}
+li.game span.score {
+  float: right;
+  margin-right: 5px;
+}
 
-  li.game-top{ border-bottom:1px solid #aaa; }
+li.game-top {
+  border-bottom: 3px solid #aaa;
+}
 
-  li.game-spacer{ 
-    border-right:1px solid #aaa;
-    min-height:40px;
-  }
+li.game-spacer {
+  border-right: 3px solid #aaa;
+  min-height: 40px;
+  padding: 10px;
+}
 
-  li.game-bottom{ 
-    border-top:1px solid #aaa;
-  }
+.game-spacer p {
+  margin-bottom: 0;
+}
+
+li.game-bottom {
+  border-top: 3px solid #aaa;
+}

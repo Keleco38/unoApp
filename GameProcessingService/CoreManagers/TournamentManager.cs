@@ -49,7 +49,7 @@ namespace GameProcessingService.CoreManagers
                     {
                         for (int k = 0; k < 2; k++)
                         {
-                            var player = new Player(tournament.Contestants[(j - 1) * 2 + k].User) {LeftGame = true};
+                            var player = new Player(tournament.Contestants[(j - 1) * 2 + k].User) { LeftGame = true };
                             tournamentRoundGame.Game.Players.Add(player);
                             if (k == 1)
                                 _gameManager.StartNewGame(tournamentRoundGame.Game);
@@ -90,7 +90,7 @@ namespace GameProcessingService.CoreManagers
                 var gameNumberToAddNewPlayer = (int)Math.Ceiling((float)gameNumberInRound / 2);
                 var gameInTournament = tournament.TournamentRounds[roundNumberToAddNewPlayer - 1].TournamentRoundGames[gameNumberToAddNewPlayer - 1].Game;
                 var playerWon = gameEnded.Players.First(x => x.RoundsWonCount == gameEnded.GameSetup.RoundsToWin);
-                gameInTournament.Players.Add(new Player(playerWon.User));
+                gameInTournament.Players.Add(new Player(playerWon.User) { LeftGame = true });
                 if (gameInTournament.Players.Count == 2)
                 {
                     _gameManager.StartNewGame(gameInTournament);
@@ -98,6 +98,7 @@ namespace GameProcessingService.CoreManagers
             }
             else
             {
+                tournament.TournamentWinner = gameEnded.Players.Single(x => !x.Cards.Any()).User.Name;
                 tournament.TournamentEnded = true;
             }
         }

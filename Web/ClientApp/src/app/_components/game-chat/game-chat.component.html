@@ -4,14 +4,21 @@
       <div class="card-header">
         <div class="row">
           <div class="col-12">
-            <h5>
+            <h6 class="ml-2">
               Hello, <strong>{{ currentUser.name }}</strong>
-            </h5>
+            </h6>
           </div>
-         
         </div>
         <form novalidate name="newMessageForm" (ngSubmit)="sendMessageToGameChat()">
-          <input type="text" name="newMessage" [mention]="onlineUsers" autocomplete="off" class="form-control" placeholder="New Message" [(ngModel)]="newMessage" />
+          <input
+            type="text"
+            name="newMessage"
+            [mention]="onlineUsers"
+            autocomplete="off"
+            class="form-control"
+            placeholder="New Message"
+            [(ngModel)]="newMessage"
+          />
         </form>
       </div>
       <div class="card-body">

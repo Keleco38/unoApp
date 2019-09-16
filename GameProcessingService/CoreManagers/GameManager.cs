@@ -12,12 +12,6 @@ namespace GameProcessingService.CoreManagers
 {
     public class GameManager : IGameManager
     {
-        private readonly IHallOfFameRepository _hallOfFameRepository;
-
-        public GameManager(IHallOfFameRepository hallOfFameRepository)
-        {
-            _hallOfFameRepository = hallOfFameRepository;
-        }
 
         public void StartNewGame(Game game)
         {
@@ -120,9 +114,6 @@ namespace GameProcessingService.CoreManagers
                     game.GameEnded = true;
                     messages.Add($"Game ended! Players that won the game: {string.Join(',', playersThatMatchWinCriteria.Select(x => x.User.Name))}");
 
-                    var pointsToBeAdded = game.GameSetup.PlayersSetup == PlayersSetup.Individual ? (int)(game.GameSetup.RoundsToWin * (Math.Pow(game.Players.Count, 2))) : (int)(game.GameSetup.RoundsToWin * (Math.Pow(game.Players.Select(x => x.TeamNumber).Distinct().Count(), 2)));
-                    var usernamesAffected = playersThatMatchWinCriteria.Select(x => x.User.Name).ToList();
-                    _hallOfFameRepository.AddPoints(usernamesAffected, pointsToBeAdded);
                 }
                 else
                 {
