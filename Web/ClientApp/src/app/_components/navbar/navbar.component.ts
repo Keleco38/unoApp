@@ -1,3 +1,4 @@
+import { ContactFormComponent } from './../_modals/contact-form/contact-form.component';
 import { Component, OnInit } from '@angular/core';
 import { HubService } from 'src/app/_services/hub.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -40,6 +41,10 @@ export class NavbarComponent implements OnInit {
     if (window.innerWidth < 992) {
       this.navbarOpen = !this.navbarOpen;
     }
+  }
+
+  openContactModal(){
+    this._modalService.open(ContactFormComponent,{backdrop:'static'})
   }
 
   openSettings() {

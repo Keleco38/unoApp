@@ -1,3 +1,4 @@
+import { ContactFormComponent } from './_components/_modals/contact-form/contact-form.component';
 import { TournamentSetupComponent } from './_components/_modals/tournament-setup/tournament-setup.component';
 import { TournamentChatComponent } from './_components/tournament-chat/tournament-chat.component';
 import { TournamentSpectatorsComponent } from './_components/tournament-spectators/tournament-spectators.component';
@@ -96,6 +97,7 @@ import { TournamentWaitingRoomGuard } from './_guards/tournament-waiting-room.gu
     AvailableTournamentsComponent,
     GameSetupComponent,
     TournamentSetupComponent,
+    ContactFormComponent,
     TournamentWaitingRoomComponent,
     TournamentComponent
   ],
@@ -160,6 +162,7 @@ import { TournamentWaitingRoomGuard } from './_guards/tournament-waiting-room.gu
     BlackjackComponent,
     UserSettingsComponent,
     PickPromiseCardComponent,
+    ContactFormComponent,
     GuessOddEvenNumberComponent,
     GameSetupComponent,
     GameEndedResultComponent,

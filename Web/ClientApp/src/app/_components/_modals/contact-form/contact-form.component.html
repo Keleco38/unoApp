@@ -1,0 +1,66 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Report a bug</h4>
+  <button type="button" class="close" aria-describedby="modal-title" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-12">
+      <form
+        #contactForm="ngForm"
+        name="form"
+        [ngClass]="{ 'was-validated': contactForm.submitted }"
+        novalidate
+        (ngSubmit)="contactForm.form.valid && sendForm()"
+        action="https://formspree.io/tonymarkoc@gmail.com"
+        method="POST"
+      >
+        <div class="form-group" [ngClass]="{ 'is-invalid': contactForm.submitted && subject.invalid }">
+          <label for="subject">Subject</label>
+          <input
+            required
+            type="text"
+            [(ngModel)]="subjectModal"
+            #subject="ngModel"
+            class="form-control"
+            name="subject"
+            id="subject"
+            aria-describedby="subject"
+            placeholder="Subject"
+          />
+          <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input
+            required
+            type="email"
+            email
+            class="form-control"
+            name="_replyto"
+            [(ngModel)]="emailModal"
+            #email="ngModel"
+            id="email"
+            aria-describedby="emailHelp"
+            placeholder="Enter email"
+          />
+          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea
+            required
+            [(ngModel)]="descriptionModal"
+            #description="ngModel"
+            class="form-control"
+            name="description"
+            id="description"
+            rows="5"
+          ></textarea>
+        </div>
+        <input type="submit" class="btn btn-info btn-lg btn-block" value="Send" />
+      </form>
+    </div>
+  </div>
+</div>

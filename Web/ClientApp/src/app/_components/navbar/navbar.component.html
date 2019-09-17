@@ -16,7 +16,7 @@
         </a>
         <div ngbDropdownMenu aria-labelledby="navbarDropdown">
           <a ngbDropdownItem (click)="toggleNavbar()" [routerLink]="['/change-log']" routerLinkActive="router-link-active">Changelog</a>
-          <a ngbDropdownItem href="mailto:tonymarkoc@gmail.com">Report a bug</a>
+          <a ngbDropdownItem class="cursor-pointer" (click)="toggleNavbar();openContactModal();">Report a bug</a>
           <a ngbDropdownItem target="_blank" href="https://github.com/tonymarkoc/unoApp">Github</a>
         </div>
       </li>
