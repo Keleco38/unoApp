@@ -370,6 +370,9 @@ namespace Web.Hubs
                     playerLeftWithThisName.LeftGame = false;
                     await DisplayToastMessageToGame(gameId, $"Player {user.Name} has reconnected to the game.");
                     await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, gameId);
+                    await Clients.Caller.SendAsync("AddToGameLog", "Game started");
+                    await Clients.Caller.SendAsync("AddToGameLog", "If you need more detailed log info, press the 'Game info' button.");
+                    await Clients.Caller.SendAsync("AddToGameLog", "This is the game log summary. We will display the last 3 entries here.");
                 }
                 else
                 {
