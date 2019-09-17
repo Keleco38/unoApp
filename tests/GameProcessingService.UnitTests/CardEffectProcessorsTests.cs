@@ -31,15 +31,15 @@ namespace GameProcessingService.UnitTests
         public void Setup()
         {
             _hallOfFameRepository = A.Fake<IHallOfFameRepository>();
-            _gameManager = new GameManager(_hallOfFameRepository);
+            _gameManager = new GameManager();
             _gameSetup = new GameSetup() { BannedCards = new List<CardValue>() };
             _game = new Game(_gameSetup);
             _game.Direction = Direction.Left;
             _game.Deck = new Deck(_gameSetup);
             _game.DiscardedPile = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack() };
             _game.LastCardPlayed = new LastCardPlayed(CardColor.Blue, CardValue.Five, "", "", false);
-            var player = new Player(new User("123", "john"));
-            var player2 = new Player(new User("456", "andrew"));
+            var player = new Player(new User("123", "john"),1);
+            var player2 = new Player(new User("456", "andrew"),2);
             player.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack(), new Charity(), new BlackHole(), new Blackjack() };
             player2.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack(), new Charity(), new BlackHole(), new Blackjack() };
             _game.Players = new List<Player>() { player, player2 };

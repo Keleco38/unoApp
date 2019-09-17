@@ -20,8 +20,8 @@ namespace GameProcessingService.CoreManagers
         }
         public void StartTournament(Tournament tournament)
         {
-            tournament.TournamentStarted = true;
             tournament.Contestants.Shuffle();
+
             var numberOfRounds = (int)(Math.Log(tournament.Contestants.Count) / Math.Log(2));
             var numberOfGamesInARound = tournament.Contestants.Count / 2;
 
@@ -61,6 +61,8 @@ namespace GameProcessingService.CoreManagers
 
                 numberOfGamesInARound = numberOfGamesInARound / 2;
                 tournament.TournamentRounds.Add(tournamentRound);
+                tournament.TournamentStarted = true;
+
             }
         }
 
@@ -102,7 +104,7 @@ namespace GameProcessingService.CoreManagers
             }
             else
             {
-                tournament.TournamentWinner = gameEnded.Players.Single(x => !x.Cards.Any()).User.Name;
+                tournament.TournamentWinner = gameEnded.Players.First(x => !x.Cards.Any()).User.Name;
                 tournament.TournamentEnded = true;
             }
         }
