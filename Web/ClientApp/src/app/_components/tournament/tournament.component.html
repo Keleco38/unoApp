@@ -12,12 +12,17 @@
 
           <li
             class="game game-top"
-            [ngClass]="{ 'winner winner-top': roundGame.game.players[0]?.roundsWonCount == activeTournament.tournamentSetup.roundsToWin }"
+            [ngClass]="{
+              'winner winner-top':
+                getPlayerFromTheGameAtPosition(roundGame.game, 1)?.roundsWonCount == activeTournament.tournamentSetup.roundsToWin
+            }"
           >
-            <span *ngIf="roundGame.game.players[0]?.user.name">{{ roundGame.game.players[0]?.user.name }}</span>
-            <span *ngIf="!roundGame.game.players[0]?.user.name">&nbsp;</span>
+            <span *ngIf="getPlayerFromTheGameAtPosition(roundGame.game, 1)?.user.name">{{
+              getPlayerFromTheGameAtPosition(roundGame.game, 1)?.user.name
+            }}</span>
+            <span *ngIf="!getPlayerFromTheGameAtPosition(roundGame.game, 1)?.user.name">&nbsp;</span>
 
-            <span class="score">{{ roundGame.game.players[0]?.roundsWonCount }}</span>
+            <span class="score">{{ getPlayerFromTheGameAtPosition(roundGame.game, 1)?.roundsWonCount }}</span>
           </li>
           <li (click)="joinGame(roundGame.game)" class="game game-spacer d-flex  align-items-center">
             <div>
@@ -32,12 +37,15 @@
           <li
             class="game game-bottom"
             [ngClass]="{
-              'winner winner-bottom': roundGame.game.players[1]?.roundsWonCount == activeTournament.tournamentSetup.roundsToWin
+              'winner winner-bottom':
+                getPlayerFromTheGameAtPosition(roundGame.game, 2)?.roundsWonCount == activeTournament.tournamentSetup.roundsToWin
             }"
           >
-            <span *ngIf="roundGame.game.players[1]?.user.name">{{ roundGame.game.players[1]?.user.name }}</span>
-            <span *ngIf="!roundGame.game.players[1]?.user.name">&nbsp;</span>
-            <span class="score">{{ roundGame.game.players[1]?.roundsWonCount }}</span>
+            <span *ngIf="getPlayerFromTheGameAtPosition(roundGame.game, 2)?.user.name">{{
+              getPlayerFromTheGameAtPosition(roundGame.game, 2)?.user.name
+            }}</span>
+            <span *ngIf="!getPlayerFromTheGameAtPosition(roundGame.game, 2)?.user.name">&nbsp;</span>
+            <span class="score">{{ getPlayerFromTheGameAtPosition(roundGame.game, 2)?.roundsWonCount }}</span>
           </li>
         </ng-container>
         <li class="spacer">&nbsp;</li>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Common.Enums;
 using Common.Extensions;
@@ -44,12 +45,12 @@ namespace GameProcessingService.CoreManagers
                         WildCardCanBePlayedOnlyIfNoOtherOptions = tournament.TournamentSetup.WildCardCanBePlayedOnlyIfNoOtherOptions
                     }, tournament.Id);
                     _gameRepository.AddGame(game);
-                    var tournamentRoundGame = new TournamentRoundGame(j, game);
+                    var tournamentRoundGame = new TournamentRoundGame(j, game) { Game = { Players = new List<Player>(2) } };
                     if (i == 1)
                     {
                         for (int k = 0; k < 2; k++)
                         {
-                            var player = new Player(tournament.Contestants[(j - 1) * 2 + k].User) { LeftGame = true };
+                            var player = new Player(tournament.Contestants[(j - 1) * 2 + k].User, k + 1) { LeftGame = true };
                             tournamentRoundGame.Game.Players.Add(player);
                             if (k == 1)
                                 _gameManager.StartNewGame(tournamentRoundGame.Game);
@@ -90,7 +91,10 @@ namespace GameProcessingService.CoreManagers
                 var gameNumberToAddNewPlayer = (int)Math.Ceiling((float)gameNumberInRound / 2);
                 var gameInTournament = tournament.TournamentRounds[roundNumberToAddNewPlayer - 1].TournamentRoundGames[gameNumberToAddNewPlayer - 1].Game;
                 var playerWon = gameEnded.Players.First(x => x.RoundsWonCount == gameEnded.GameSetup.RoundsToWin);
-                gameInTournament.Players.Add(new Player(playerWon.User) { LeftGame = true });
+
+                var placeInNewGame = gameNumberInRound % 2 == 0 ? 2 : 1;
+
+                gameInTournament.Players.Add(new Player(playerWon.User, placeInNewGame) { LeftGame = true });
                 if (gameInTournament.Players.Count == 2)
                 {
                     _gameManager.StartNewGame(gameInTournament);

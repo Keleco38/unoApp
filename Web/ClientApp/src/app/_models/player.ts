@@ -7,4 +7,5 @@ export interface Player {
   numberOfCards: number;
   roundsWonCount: number;
   teamNumber: number;
+  positionInGame: number;
 }

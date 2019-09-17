@@ -35,7 +35,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             if (automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand.Count == 2)
             {
-                messageToLog += "Contestants exchanged hands.";
+                messageToLog += "Players exchanged hands.";
                 Player loopingPlayer = null;
                 List<ICard> firstCardsBackup = null;
 

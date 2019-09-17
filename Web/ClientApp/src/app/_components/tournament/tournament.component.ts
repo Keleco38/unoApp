@@ -35,6 +35,9 @@ export class TournamentComponent implements OnInit {
     this._hubService.joinGame(game.id, '');
   }
 
+  getPlayerFromTheGameAtPosition(game:Game, position:number){
+    return game.players.find(x=>x.positionInGame==position);
+  }
   
   ngOnDestroy(): void {
     this._isAlive = false;

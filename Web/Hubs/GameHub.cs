@@ -103,7 +103,7 @@ namespace Web.Hubs
         {
             var user = GetCurrentUser();
             var tournament = _tournamentRepository.GetTournament(tournamentId);
-            var spectator = tournament.Spectators.FirstOrDefault(x => x == user);
+            var spectator = tournament.Spectators.FirstOrDefault(x => x.Name == user.Name);
             if (!string.IsNullOrEmpty(tournament.TournamentSetup.Password) && spectator == null)
                 if (tournament.TournamentSetup.Password != password)
                 {
@@ -115,6 +115,10 @@ namespace Web.Hubs
                 if (spectator != null)
                 {
                     //join the game that hasn't started
+                    if (tournament.Contestants.Count >= tournament.TournamentSetup.NumberOfPlayers)
+                    {
+                        return;
+                    }
                     tournament.Spectators.Remove(spectator);
                     tournament.Contestants.Add(new Contestant(user));
                 }
@@ -157,6 +161,8 @@ namespace Web.Hubs
         {
             var user = GetCurrentUser();
             var tournament = _tournamentRepository.GetTournament(tournamentId);
+            if (tournament.TournamentStarted || tournament.Contestants.First().User != user)
+                return;
             _tournamentManager.StartTournament(tournament);
             await UpdateTournament(tournament);
             await GetAllTournaments();
@@ -208,7 +214,7 @@ namespace Web.Hubs
             var user = GetCurrentUser();
             var gameSetup = _mapper.Map<GameSetup>(gameSetupDto);
             var game = new Game(gameSetup);
-            game.Players.Add(new Player(user));
+            game.Players.Add(new Player(user, game.Players.Count + 1));
             _gameRepository.AddGame(game);
             await UpdateGame(game);
             await GetAllGames();
@@ -339,7 +345,7 @@ namespace Web.Hubs
             if (game.IsTournamentGame && !game.GameStarted)
                 return;
 
-            var spectator = game.Spectators.FirstOrDefault(x => x.User == user);
+            var spectator = game.Spectators.FirstOrDefault(x => x.User.Name == user.Name);
             if (!string.IsNullOrEmpty(game.GameSetup.Password) && spectator == null)
                 if (game.GameSetup.Password != password)
                 {
@@ -351,8 +357,12 @@ namespace Web.Hubs
                 if (spectator != null)
                 {
                     //join the game that hasn't started
+                    if (game.Players.Count >= game.GameSetup.MaxNumberOfPlayers)
+                    {
+                        return;
+                    }
                     game.Spectators.Remove(spectator);
-                    game.Players.Add(new Player(user));
+                    game.Players.Add(new Player(user, game.Players.Count + 1));
                 }
                 else
                 {
@@ -524,7 +534,7 @@ namespace Web.Hubs
                     await UpdateTournament(tournament);
                     if (tournament.TournamentEnded)
                     {
-                        additionalPointsFromTournament = (int)(game.GameSetup.RoundsToWin * (Math.Pow(tournament.Contestants.Count, 2)));
+                        additionalPointsFromTournament = (int)(game.GameSetup.RoundsToWin * tournament.Contestants.Count);
                     }
                 }
 
