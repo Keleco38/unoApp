@@ -22,8 +22,10 @@ namespace GameProcessingService.CoreManagers
         {
             tournament.Contestants.Shuffle();
 
-            var numberOfRounds = (int)(Math.Log(tournament.Contestants.Count) / Math.Log(2));
-            var numberOfGamesInARound = tournament.Contestants.Count / 2;
+            var paddedNumberOfPlayers = Math.Pow(2, (int)Math.Ceiling((Math.Log(tournament.Contestants.Count) / Math.Log(2))));
+
+            var numberOfRounds = (int)(Math.Log(paddedNumberOfPlayers) / Math.Log(2));
+            var numberOfGamesInARound = paddedNumberOfPlayers / 2;
 
             for (int i = 1; i <= numberOfRounds; i++)
             {
@@ -45,30 +47,50 @@ namespace GameProcessingService.CoreManagers
                         WildCardCanBePlayedOnlyIfNoOtherOptions = tournament.TournamentSetup.WildCardCanBePlayedOnlyIfNoOtherOptions
                     }, tournament.Id);
                     _gameRepository.AddGame(game);
+
                     var tournamentRoundGame = new TournamentRoundGame(j, game) { Game = { Players = new List<Player>(2) } };
-                    if (i == 1)
-                    {
-                        for (int k = 0; k < 2; k++)
-                        {
-                            var player = new Player(tournament.Contestants[(j - 1) * 2 + k].User, k + 1) { LeftGame = true };
-                            tournamentRoundGame.Game.Players.Add(player);
-                            if (k == 1)
-                                _gameManager.StartNewGame(tournamentRoundGame.Game);
-                        }
-                    }
                     tournamentRound.TournamentRoundGames.Add(tournamentRoundGame);
                 }
-
                 numberOfGamesInARound = numberOfGamesInARound / 2;
                 tournament.TournamentRounds.Add(tournamentRound);
-                tournament.TournamentStarted = true;
+            }
+
+
+            for (int i = 0; i < tournament.TournamentRounds[0].TournamentRoundGames.Count; i++)
+            {
+                tournament.TournamentRounds[0].TournamentRoundGames[i].Game.Players.Add(new Player(tournament.Contestants[i].User, 1) { LeftGame = true });
+                if (tournament.Contestants.ElementAtOrDefault(tournament.TournamentRounds[0].TournamentRoundGames.Count + i) != null)
+                {
+                    tournament.TournamentRounds[0].TournamentRoundGames[i].Game.Players.Add(new Player(tournament.Contestants[tournament.TournamentRounds[0].TournamentRoundGames.Count + i].User, 2) { LeftGame = true });
+                    _gameManager.StartNewGame(tournament.TournamentRounds[0].TournamentRoundGames[i].Game);
+                }
+                else
+                {
+                    tournament.TournamentRounds[0].TournamentRoundGames[i].Game.GameEnded = true;
+                    tournament.TournamentRounds[0].TournamentRoundGames[i].Game.Players.First().RoundsWonCount = tournament.TournamentSetup.RoundsToWin;
+                    UpdateTournament(tournament, tournament.TournamentRounds[0].TournamentRoundGames[i].Game);
+                }
 
             }
+
+
+            //for (int k = 0; k < 2; k++)
+            //{
+            //    var player = new Player(tournament.Contestants[(j - 1) * 2 + k].User, k + 1) { LeftGame = true };
+            //    tournamentRoundGame.Game.Players.Add(player);
+            //    if (k == 1)
+            //        _gameManager.StartNewGame(tournamentRoundGame.Game);
+            //}
+
+
+            tournament.TournamentStarted = true;
+
         }
 
         public void UpdateTournament(Tournament tournament, Game gameEnded)
         {
-            int totalNumberOfRounds = (int)(Math.Log(tournament.Contestants.Count) / Math.Log(2));
+            var paddedNumberOfPlayers = Math.Pow(2, (int)Math.Ceiling((Math.Log(tournament.Contestants.Count) / Math.Log(2))));
+            int totalNumberOfRounds = (int)(Math.Log(paddedNumberOfPlayers) / Math.Log(2));
             int roundNumber = 0;
             int gameNumberInRound = 0;
 

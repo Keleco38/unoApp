@@ -101,8 +101,8 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   startTournament() {
-    if (this.activeTournament.contestants.length !== this.activeTournament.tournamentSetup.numberOfPlayers) {
-      this._toastrService.info(`Not enough players. Tournament requires ${this.activeTournament.tournamentSetup.numberOfPlayers} players.`);
+    if (this.activeTournament.contestants.length < 3) {
+      this._toastrService.info(`Minimum 3 players to start the tournament.`);
       return;
     }
     this._hubService.startTournament();

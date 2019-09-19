@@ -24,9 +24,13 @@
 
             <span class="score">{{ getPlayerFromTheGameAtPosition(roundGame.game, 1)?.roundsWonCount }}</span>
           </li>
-          <li (click)="joinGame(roundGame.game)" class="game game-spacer d-flex  align-items-center">
+          <li class="game game-spacer d-flex  align-items-center">
             <div>
-              <button *ngIf="roundGame.game.gameStarted && !roundGame.game.gameEnded" class="btn btn-sm btn-block btn-outline-info">
+              <button
+                (click)="joinGame(roundGame.game)"
+                *ngIf="roundGame.game.gameStarted && !roundGame.game.gameEnded"
+                class="btn btn-sm btn-block btn-outline-info"
+              >
                 Join game
               </button>
               <p class="text-center">
@@ -61,7 +65,7 @@
     </div>
   </div>
   <div class="col-12 my-2" *ngIf="activeTournament.tournamentEnded">
-    <h3 class="text-success">Tournament ended!</h3>
+    <h3 class="text-success">Tournament ended! Extra points won: <u>{{getExtraPointsWon()}}</u></h3>
   </div>
 </div>
 <div class="row">

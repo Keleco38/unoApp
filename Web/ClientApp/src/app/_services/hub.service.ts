@@ -71,6 +71,9 @@ export class HubService {
     private _utilityService: UtilityService
   ) {
     this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
+    if (!environment.production) {
+      this._hubConnection.serverTimeoutInMilliseconds = 10000000;
+    }
     this.startConnection(false);
 
     this._hubConnection.onclose(async () => {
@@ -217,7 +220,7 @@ export class HubService {
 
   sendMessageToAllChat(message: string, isBuzz: boolean) {
     if (message == '') return;
-    this._hubConnection.invoke('SendMessage', message, '','');
+    this._hubConnection.invoke('SendMessage', message, '', '');
   }
   sendMessageToGameChat(message: string) {
     if (message == '') return;

@@ -38,6 +38,10 @@ export class TournamentComponent implements OnInit {
   getPlayerFromTheGameAtPosition(game:Game, position:number){
     return game.players.find(x=>x.positionInGame==position);
   }
+
+  getExtraPointsWon(){
+    return this.activeTournament.contestants.length*this.activeTournament.tournamentSetup.roundsToWin;
+  }
   
   ngOnDestroy(): void {
     this._isAlive = false;

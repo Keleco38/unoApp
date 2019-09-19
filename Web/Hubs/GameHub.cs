@@ -163,6 +163,8 @@ namespace Web.Hubs
             var tournament = _tournamentRepository.GetTournament(tournamentId);
             if (tournament.TournamentStarted || tournament.Contestants.First().User != user)
                 return;
+            if (tournament.Contestants.Count < 3)
+                return;
             _tournamentManager.StartTournament(tournament);
             await UpdateTournament(tournament);
             await GetAllTournaments();
