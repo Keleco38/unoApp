@@ -81,6 +81,12 @@ namespace Common.Enums
         Server = 2,
         Spectators = 3
     }
+  public enum ChatDestination
+    {
+        All = 1,
+        Tournament = 2,
+        Game = 3
+    }
 
     public enum ChatMessageIntention
     {

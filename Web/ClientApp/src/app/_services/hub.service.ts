@@ -5,7 +5,7 @@ import { GameSetup } from './../_models/gameSetup';
 import { UtilityService } from './utility.service';
 import { DigCardComponent } from './../_components/_modals/dig-card/dig-card.component';
 import { ShowCardsComponent } from './../_components/_modals/show-cards/show-cards.component';
-import { CardColor, CardValue } from './../_models/enums';
+import { CardColor, CardValue, ChatDestination } from './../_models/enums';
 import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
 import { Router } from '@angular/router';
@@ -218,18 +218,11 @@ export class HubService {
     });
   }
 
-  sendMessageToAllChat(message: string, isBuzz: boolean) {
+  sendMessage(message: string, chatDestination: ChatDestination) {
     if (message == '') return;
-    this._hubConnection.invoke('SendMessage', message, '', '');
-  }
-  sendMessageToGameChat(message: string) {
-    if (message == '') return;
-    this._hubConnection.invoke('SendMessage', message, this._activeGameObservable.getValue().id, '');
-  }
-
-  sendMessageToTournamentChat(message: string) {
-    if (message == '') return;
-    this._hubConnection.invoke('SendMessage', message, '', this._activeTournamentObservable.getValue().id);
+    var gameId = this._activeGameObservable.getValue() != null ? this._activeGameObservable.getValue().id : '';
+    var tournamentId = this._activeTournamentObservable.getValue() != null ? this._activeTournamentObservable.getValue().id : '';
+    this._hubConnection.invoke('SendMessage', message, chatDestination, gameId, tournamentId);
   }
 
   addOrRenameUser(forceRename: boolean) {

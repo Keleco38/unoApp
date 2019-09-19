@@ -3,6 +3,11 @@ export enum TypeOfMessage {
   server = 2,
   spectators = 3
 }
+export enum ChatDestination {
+  all = 1,
+  tournament = 2,
+  game = 3
+}
 
 export enum CardColor {
   blue = 1,

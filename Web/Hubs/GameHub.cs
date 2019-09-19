@@ -50,7 +50,7 @@ namespace Web.Hubs
             if (_userRepository.UserExistsByConnectionId(Context.ConnectionId))
             {
                 var user = GetCurrentUser();
-                await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server);
+                await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
                 await CleanupUserFromTournaments();
                 await CleanupUserFromGames();
                 await CleanupUserFromOnlineUsersList();
@@ -59,25 +59,23 @@ namespace Web.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task SendMessage(string message, string gameId = "", string tournamentId = "")
+        public async Task SendMessage(string message, ChatDestination chatDestination, string gameId, string tournamentId)
         {
-            if (!string.IsNullOrWhiteSpace(gameId))
+            var isPlayer = true;
+
+            if (chatDestination == ChatDestination.Game)
             {
                 var game = _gameRepository.GetGameByGameId(gameId);
-                var isPlayer = GetPlayersFromGame(game).FirstOrDefault(x => x == Context.ConnectionId) != null;
-                await SendMessage(message, isPlayer ? TypeOfMessage.Chat : TypeOfMessage.Spectators, gameId);
+                isPlayer = GetPlayersFromGame(game).FirstOrDefault(x => x == Context.ConnectionId) != null;
             }
 
-            else if (!string.IsNullOrWhiteSpace(tournamentId))
+            else if (chatDestination == ChatDestination.Tournament)
             {
                 var tournament = _tournamentRepository.GetTournament(tournamentId);
-                var isPlayer = GetContestantsFromTournament(tournament).FirstOrDefault(x => x == Context.ConnectionId) != null;
-                await SendMessage(message, isPlayer ? TypeOfMessage.Chat : TypeOfMessage.Spectators, "", tournamentId);
+                isPlayer = GetContestantsFromTournament(tournament).FirstOrDefault(x => x == Context.ConnectionId) != null;
             }
-            else
-            {
-                await SendMessage(message, TypeOfMessage.Chat);
-            }
+
+            await SendMessage(message, isPlayer ? TypeOfMessage.Chat : TypeOfMessage.Spectators, chatDestination, gameId, tournamentId);
         }
 
 
@@ -126,7 +124,7 @@ namespace Web.Hubs
                 {
                     //spectate game that hasn't started
                     tournament.Spectators.Add(user);
-                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, "", tournamentId);
+                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
                 }
             }
             else
@@ -136,12 +134,12 @@ namespace Web.Hubs
                 {
                     contestant.User = user;
                     contestant.LeftTournament = false;
-                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, "", tournamentId);
+                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
                 }
                 else
                 {
                     tournament.Spectators.Add((user));
-                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, "", tournamentId);
+                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
                 }
             }
             await UpdateTournament(tournament);
@@ -175,7 +173,7 @@ namespace Web.Hubs
             var user = GetCurrentUser();
             var tournament = _tournamentRepository.GetTournament(tournamentId);
 
-            await SendMessage($"{user.Name} has left the tournament.", TypeOfMessage.Server, "", tournamentId);
+            await SendMessage($"{user.Name} has left the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
 
             var contestant = tournament.Contestants.FirstOrDefault(x => x.User == user);
 
@@ -220,7 +218,7 @@ namespace Web.Hubs
             _gameRepository.AddGame(game);
             await UpdateGame(game);
             await GetAllGames();
-            await SendMessage($"User {user.Name} has created new game", TypeOfMessage.Server);
+            await SendMessage($"User {user.Name} has created new game", TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
         }
 
         public async Task ExitGame(string gameId)
@@ -246,7 +244,7 @@ namespace Web.Hubs
                 game.Spectators.Remove(game.Spectators.First(x => x.User.ConnectionId == Context.ConnectionId));
             }
             await UpdateGame(game);
-            await SendMessage($"{user.Name} has left the game.", TypeOfMessage.Server, gameId);
+            await SendMessage($"{user.Name} has left the game.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
             if (game.Players.All(x => x.LeftGame) && !game.Spectators.Any() && !game.IsTournamentGame)
             {
                 _gameRepository.RemoveGame(game);
@@ -370,7 +368,7 @@ namespace Web.Hubs
                 {
                     //spectate game that hasn't started
                     game.Spectators.Add(new Spectator(user));
-                    await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, gameId);
+                    await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
                 }
             }
             else
@@ -381,7 +379,7 @@ namespace Web.Hubs
                     playerLeftWithThisName.User = user;
                     playerLeftWithThisName.LeftGame = false;
                     await DisplayToastMessageToGame(gameId, $"Player {user.Name} has reconnected to the game.");
-                    await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, gameId);
+                    await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
                     await Clients.Caller.SendAsync("AddToGameLog", "Game started");
                     await Clients.Caller.SendAsync("AddToGameLog", "If you need more detailed log info, press the 'Game info' button.");
                     await Clients.Caller.SendAsync("AddToGameLog", "This is the game log summary. We will display the last 3 entries here.");
@@ -389,7 +387,7 @@ namespace Web.Hubs
                 else
                 {
                     game.Spectators.Add(new Spectator(user));
-                    await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, gameId);
+                    await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
                 }
             }
             await UpdateHands(game);
@@ -442,7 +440,7 @@ namespace Web.Hubs
                 _userRepository.AddUser(user);
             }
 
-            await SendMessage(message, TypeOfMessage.Server);
+            await SendMessage(message, TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
             var userDto = _mapper.Map<UserDto>(user);
             await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
             await GetAllOnlineUsers();
@@ -489,12 +487,12 @@ namespace Web.Hubs
 
             if (unoCalled)
             {
-                await SendMessage("*UNO!", gameId);
+                await SendMessage("*UNO!", ChatDestination.Game, gameId, string.Empty);
             }
             else
             {
                 _gameManager.DrawCard(game, player, 2, false);
-                await SendMessage($"Player [{player.User.Name}] forgot to call uno! They will draw 2 cards.", TypeOfMessage.Server, gameId);
+                await SendMessage($"Player [{player.User.Name}] forgot to call uno! They will draw 2 cards.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
                 await UpdateGame(game);
                 await UpdateHands(game);
             }
@@ -653,7 +651,7 @@ namespace Web.Hubs
             await GetAllOnlineUsers();
         }
 
-        private async Task SendMessage(string message, TypeOfMessage typeOfMessage, string gameId = "", string tournamentId = "")
+        private async Task SendMessage(string message, TypeOfMessage typeOfMessage, ChatDestination chatDestination, string gameId, string tournamentId)
         {
             var user = GetCurrentUser();
             var username = typeOfMessage == TypeOfMessage.Server ? "Server" : user.Name;
@@ -713,11 +711,11 @@ namespace Web.Hubs
             else if (chatMessageIntentionResult.ChatMessageIntention == ChatMessageIntention.Normal)
             {
                 msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage(username, message, typeOfMessage));
-                if (!string.IsNullOrWhiteSpace(gameId))
+                if (chatDestination == ChatDestination.Game)
                 {
                     await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
                 }
-                else if (!string.IsNullOrWhiteSpace(tournamentId))
+                else if (chatDestination == ChatDestination.Tournament)
                 {
                     await Clients.Clients(allUsersInTournament).SendAsync("PostNewMessageInTournamentChat", msgDto);
                 }

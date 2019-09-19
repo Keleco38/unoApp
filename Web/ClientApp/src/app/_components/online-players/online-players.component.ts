@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HubService } from 'src/app/_services/hub.service';
 import { User } from 'src/app/_models/user';
 import { takeWhile } from 'rxjs/operators';
+import { ChatDestination } from 'src/app/_models/enums';
 
 @Component({
   selector: 'app-online-players',
@@ -21,7 +22,7 @@ export class OnlinePlayersComponent implements OnInit, OnDestroy {
   }
 
   buzzUser(user: User, buzzType: string) {
-    this._hubService.sendMessageToAllChat(`/${buzzType} ${user.name}`, true);
+    this._hubService.sendMessage(`/${buzzType} ${user.name}`, ChatDestination.all);
   }
 
   ngOnDestroy(): void {

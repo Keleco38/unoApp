@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChatMessage } from 'src/app/_models/chatMessage';
 import { User } from 'src/app/_models/user';
 import { HubService } from 'src/app/_services/hub.service';
-import { TypeOfMessage } from 'src/app/_models/enums';
+import { TypeOfMessage, ChatDestination } from 'src/app/_models/enums';
 import { takeWhile, map, pluck } from 'rxjs/operators';
 
 @Component({
@@ -41,7 +41,7 @@ export class AllChatComponent implements OnInit, OnDestroy {
     if (!this.newMessage) {
       return;
     }
-    this._hubService.sendMessageToAllChat(this.newMessage, false);
+    this._hubService.sendMessage(this.newMessage,ChatDestination.all );
     this.newMessage = '';
   }
 

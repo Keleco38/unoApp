@@ -1,3 +1,4 @@
+import { ChatDestination } from './../../_models/enums';
 import { SidebarSettings } from './../../_models/sidebarSettings';
 import { UtilityService } from './../../_services/utility.service';
 import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
@@ -47,7 +48,7 @@ export class GameChatComponent implements OnInit, OnDestroy {
   }
 
   sendMessageToGameChat() {
-    this._hubService.sendMessageToGameChat(this.newMessage);
+    this._hubService.sendMessage(this.newMessage, ChatDestination.game);
     this.newMessage = '';
   }
 

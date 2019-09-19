@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { SidebarSettings } from '../../_models/sidebarSettings';
 import { UtilityService } from '../../_services/utility.service';
 import { takeWhile, map } from 'rxjs/operators';
-import { TypeOfMessage } from '../../_models/enums';
+import { TypeOfMessage, ChatDestination } from '../../_models/enums';
 
 @Component({
   selector: 'app-tournament-chat',
@@ -48,7 +48,7 @@ export class TournamentChatComponent implements OnInit {
   }
 
   sendMessageToTournamentChat() {
-    this._hubService.sendMessageToTournamentChat(this.newMessage);
+    this._hubService.sendMessage(this.newMessage, ChatDestination.tournament);
     this.newMessage = '';
   }
 
