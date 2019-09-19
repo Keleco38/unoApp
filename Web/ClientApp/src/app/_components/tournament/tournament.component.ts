@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { UtilityService } from 'src/app/_services/utility.service';
 import { Game } from 'src/app/_models/game';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Tournament } from 'src/app/_models/tournament';
 import { HubService } from 'src/app/_services/hub.service';
 import { takeWhile } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { SidebarSettings } from 'src/app/_models/sidebarSettings';
   templateUrl: './tournament.component.html',
   styleUrls: ['./tournament.component.css']
 })
-export class TournamentComponent implements OnInit {
+export class TournamentComponent implements OnInit, OnDestroy {
   private _isAlive: boolean = true;
   sidebarSettings: SidebarSettings;
   activeTournament: Tournament;
