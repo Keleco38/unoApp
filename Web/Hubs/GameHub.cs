@@ -309,13 +309,30 @@ namespace Web.Hubs
             if (game.IsTournamentGame && !game.GameStarted)
                 return;
 
-            var spectator = game.Spectators.FirstOrDefault(x => x.User.Name == user.Name);
-            if (!string.IsNullOrEmpty(game.GameSetup.Password) && spectator == null)
+
+            bool alreadyAuthorized = false;
+            if (game.IsTournamentGame)
+            {
+                var tournament = _tournamentRepository.GetTournament(game.TournamentId);
+                alreadyAuthorized = tournament.Contestants.FirstOrDefault(x => x.User.Name == user.Name) != null;
+                if (!alreadyAuthorized)
+                    alreadyAuthorized = tournament.Spectators.FirstOrDefault(x => x.Name == user.Name) != null;
+            }
+            else
+            {
+                alreadyAuthorized = game.Spectators.FirstOrDefault(x => x.User.Name == user.Name) != null;
+
+            }
+
+            if (!string.IsNullOrEmpty(game.GameSetup.Password) && !alreadyAuthorized)
                 if (game.GameSetup.Password != password)
                 {
                     await DisplayToastMessageToUser(user.ConnectionId, "Incorrect password.");
                     return;
                 }
+
+            var spectator = game.Spectators.FirstOrDefault(x => x.User.Name == user.Name);
+
             if (!game.GameStarted)
             {
                 if (spectator != null)
@@ -343,16 +360,16 @@ namespace Web.Hubs
                     playerLeftWithThisName.User = user;
                     playerLeftWithThisName.LeftGame = false;
                     await DisplayToastMessageToGame(gameId, $"Player {user.Name} has reconnected to the game.");
-                    await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
-                    await Clients.Caller.SendAsync("AddToGameLog", "Game started");
-                    await Clients.Caller.SendAsync("AddToGameLog", "If you need more detailed log info, press the 'Game info' button.");
-                    await Clients.Caller.SendAsync("AddToGameLog", "This is the game log summary. We will display the last 3 entries here.");
+
                 }
                 else
                 {
                     game.Spectators.Add(new Spectator(user));
-                    await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
                 }
+                await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
+                await Clients.Caller.SendAsync("AddToGameLog", "Game started");
+                await Clients.Caller.SendAsync("AddToGameLog", "If you need more detailed log info, press the 'Game info' button.");
+                await Clients.Caller.SendAsync("AddToGameLog", "This is the game log summary. We will display the last 3 entries here.");
             }
             await UpdateHands(game);
             await UpdateGame(game);
