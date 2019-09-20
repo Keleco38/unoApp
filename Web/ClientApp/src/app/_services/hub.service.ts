@@ -54,8 +54,9 @@ export class HubService {
       this._hubConnection.start().then(() => {
         this.addOrRenameUser(false);
         if (isReconnect) {
-          this._router.navigateByUrl('/');
           this._activeGameObservable.next(null);
+          this._activeTournamentObservable.next(null);
+          this._router.navigateByUrl('/');
           this._reconnectObservable.next();
         }
       });
