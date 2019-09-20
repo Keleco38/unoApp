@@ -9,7 +9,7 @@
             </h6>
           </div>
         </div>
-        <form novalidate name="newMessageForm" (ngSubmit)="sendMessageAllChat()">
+        <form novalidate name="newMessageForm" (ngSubmit)="sendMessageAllChat($event)">
           <input
             type="text"
             name="newMessage"

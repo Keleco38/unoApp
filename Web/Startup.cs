@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repository;
 using Web.Hubs;
+using Web.Models;
 
 namespace Web
 {
@@ -38,6 +39,7 @@ namespace Web
             services.AddSingleton<IHallOfFameRepository, HallOfFameRepository>();
             services.RegisterAllTypes<IPlayedCardEffectProcessor>(new[] { typeof(IPlayedCardEffectProcessor).Assembly }, ServiceLifetime.Singleton);
             services.RegisterAllTypes<IAutomaticallyTriggeredCardEffectProcessor>(new[] { typeof(IAutomaticallyTriggeredCardEffectProcessor).Assembly }, ServiceLifetime.Singleton);
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
 
             services.AddSignalR();

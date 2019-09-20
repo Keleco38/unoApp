@@ -1,3 +1,4 @@
+import { AdminSectionComponent } from './_components/_modals/admin-section/admin-section.component';
 import { ContactFormComponent } from './_components/_modals/contact-form/contact-form.component';
 import { TournamentSetupComponent } from './_components/_modals/tournament-setup/tournament-setup.component';
 import { TournamentChatComponent } from './_components/tournament-chat/tournament-chat.component';
@@ -99,6 +100,7 @@ import { TournamentWaitingRoomGuard } from './_guards/tournament-waiting-room.gu
     TournamentSetupComponent,
     ContactFormComponent,
     TournamentWaitingRoomComponent,
+    AdminSectionComponent,
     TournamentComponent
   ],
   imports: [
@@ -166,7 +168,8 @@ import { TournamentWaitingRoomGuard } from './_guards/tournament-waiting-room.gu
     GuessOddEvenNumberComponent,
     GameSetupComponent,
     GameEndedResultComponent,
-    TournamentSetupComponent
+    TournamentSetupComponent,
+    AdminSectionComponent
   ]
 })
 export class AppModule {}

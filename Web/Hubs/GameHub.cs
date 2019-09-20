@@ -11,6 +11,7 @@ using EntityObjects;
 using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using Repository;
 using Web.Helpers;
 using Web.Models;
@@ -27,8 +28,9 @@ namespace Web.Hubs
         private readonly IHallOfFameRepository _hallOfFameRepository;
         private readonly ITournamentRepository _tournamentRepository;
         private readonly ITournamentManager _tournamentManager;
+        private AppSettings _appSettings;
 
-        public GameHub(IMapper mapper, IGameManager gameManager, IPlayCardManager playCardManager, IUserRepository userRepository, IGameRepository gameRepository, IHallOfFameRepository hallOfFameRepository, ITournamentRepository tournamentRepository, ITournamentManager tournamentManager)
+        public GameHub(IMapper mapper, IGameManager gameManager, IPlayCardManager playCardManager, IUserRepository userRepository, IGameRepository gameRepository, IHallOfFameRepository hallOfFameRepository, ITournamentRepository tournamentRepository, ITournamentManager tournamentManager, IOptions<AppSettings> appSettings)
         {
             _gameManager = gameManager;
             _playCardManager = playCardManager;
@@ -37,6 +39,7 @@ namespace Web.Hubs
             _hallOfFameRepository = hallOfFameRepository;
             _tournamentRepository = tournamentRepository;
             _tournamentManager = tournamentManager;
+            _appSettings = appSettings.Value;
             _mapper = mapper;
         }
 
@@ -51,9 +54,9 @@ namespace Web.Hubs
             {
                 var user = GetCurrentUser();
                 await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
-                await CleanupUserFromTournaments();
-                await CleanupUserFromGames();
-                await CleanupUserFromOnlineUsersList();
+                await CleanupUserFromTournaments(user);
+                await CleanupUserFromGames(user);
+                await CleanupUserFromOnlineUsersList(user);
             }
 
             await base.OnDisconnectedAsync(exception);
@@ -171,43 +174,10 @@ namespace Web.Hubs
         public async Task ExitTournament(string tournamentId)
         {
             var user = GetCurrentUser();
-            var tournament = _tournamentRepository.GetTournament(tournamentId);
-
-            await SendMessage($"{user.Name} has left the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
-
-            var contestant = tournament.Contestants.FirstOrDefault(x => x.User == user);
-
-            if (contestant != null)
-            {
-                if (tournament.TournamentStarted)
-                {
-                    contestant.LeftTournament = true;
-                }
-                else
-                {
-                    tournament.Contestants.Remove(contestant);
-                }
-            }
-
-            var spectator = tournament.Spectators.FirstOrDefault(x => x == user);
-            if (spectator != null)
-                tournament.Spectators.Remove(spectator);
-
-
-            await Clients.Caller.SendAsync("ExitTournament");
-            await UpdateTournament(tournament);
-
-            if (!GetPlayersAndSpectatorsFromTournament(tournament).Any())
-            {
-                tournament.TournamentRounds.ForEach(x =>
-                {
-                    x.TournamentRoundGames.ForEach(y => { _gameRepository.RemoveGame(y.Game); });
-                });
-                _tournamentRepository.RemoveTournament(tournament);
-            }
-
-            await GetAllTournaments();
+            await ExitTournament(tournamentId, user);
         }
+
+
 
         public async Task CreateGame(GameSetupDto gameSetupDto)
         {
@@ -221,36 +191,29 @@ namespace Web.Hubs
             await SendMessage($"User {user.Name} has created new game", TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
         }
 
+        public async Task AdminKickUser(string name, string password)
+        {
+            if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))
+            {
+                await DisplayToastMessageToUser(Context.ConnectionId, "Unauthorized");
+                return;
+            }
+
+            if (_userRepository.UserExistsByName(name))
+            {
+                var user = _userRepository.GetUserByName(name);
+                await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
+                await CleanupUserFromTournaments(user);
+                await CleanupUserFromGames(user);
+                await CleanupUserFromOnlineUsersList(user);
+                await Clients.Client(user.ConnectionId).SendAsync("AdminKickUser");
+            }
+        }
+
         public async Task ExitGame(string gameId)
         {
-            var game = _gameRepository.GetGameByGameId(gameId);
             var user = GetCurrentUser();
-            var allPlayersFromGame = GetPlayersFromGame(game);
-            if (allPlayersFromGame.Contains(Context.ConnectionId))
-            {
-                var player = game.Players.First(y => y.User.ConnectionId == Context.ConnectionId);
-                if (game.GameStarted)
-                {
-                    player.LeftGame = true;
-                    await DisplayToastMessageToGame(gameId, $"User {player.User.Name} has left the game.");
-                }
-                else
-                {
-                    game.Players.Remove(player);
-                }
-            }
-            else
-            {
-                game.Spectators.Remove(game.Spectators.First(x => x.User.ConnectionId == Context.ConnectionId));
-            }
-            await UpdateGame(game);
-            await SendMessage($"{user.Name} has left the game.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
-            if (game.Players.All(x => x.LeftGame) && !game.Spectators.Any() && !game.IsTournamentGame)
-            {
-                _gameRepository.RemoveGame(game);
-            }
-            await GetAllGames();
-            await Clients.Caller.SendAsync("ExitGame");
+            await ExitGame(gameId, user);
         }
 
         public async Task ChangeTeam(string gameId, int teamNumber)
@@ -404,7 +367,6 @@ namespace Web.Hubs
                 name = name.Substring(0, 10);
             }
 
-
             if (name == "server" || string.IsNullOrEmpty(name))
             {
                 await Clients.Caller.SendAsync("RenamePlayer");
@@ -420,7 +382,6 @@ namespace Web.Hubs
                     await Clients.Caller.SendAsync("RenamePlayer");
                 }
                 return;
-
             }
 
             string message;
@@ -444,8 +405,6 @@ namespace Web.Hubs
             var userDto = _mapper.Map<UserDto>(user);
             await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
             await GetAllOnlineUsers();
-
-
         }
 
         public async Task DrawCard(string gameId)
@@ -617,21 +576,21 @@ namespace Web.Hubs
             return tournament.Contestants.Where(x => !x.LeftTournament).Select(y => y.User.ConnectionId).ToList().Concat(tournament.Spectators.Select(x => x.ConnectionId)).ToList();
         }
 
-        private async Task CleanupUserFromGames()
+        private async Task CleanupUserFromGames(User user)
         {
-            List<Game> games = _gameRepository.GetAllGames().Where(x => GetPlayersAndSpectatorsFromGame(x).Any(y => y == Context.ConnectionId)).ToList();
+            List<Game> games = _gameRepository.GetAllGames().Where(x => GetPlayersAndSpectatorsFromGame(x).Any(y => y == user.ConnectionId)).ToList();
             foreach (var game in games)
             {
-                await ExitGame(game.Id);
+                await ExitGame(game.Id, user);
             }
         }
 
-        private async Task CleanupUserFromTournaments()
+        private async Task CleanupUserFromTournaments(User user)
         {
-            List<Tournament> tournaments = _tournamentRepository.GetAllTournaments().Where(x => GetPlayersAndSpectatorsFromTournament(x).Any(y => y == Context.ConnectionId)).ToList();
+            List<Tournament> tournaments = _tournamentRepository.GetAllTournaments().Where(x => GetPlayersAndSpectatorsFromTournament(x).Any(y => y == user.ConnectionId)).ToList();
             foreach (var tournament in tournaments)
             {
-                await ExitTournament(tournament.Id);
+                await ExitTournament(tournament.Id, user);
             }
         }
 
@@ -644,9 +603,8 @@ namespace Web.Hubs
             }
         }
 
-        private async Task CleanupUserFromOnlineUsersList()
+        private async Task CleanupUserFromOnlineUsersList(User user)
         {
-            var user = GetCurrentUser();
             _userRepository.RemoveUser(user);
             await GetAllOnlineUsers();
         }
@@ -657,9 +615,9 @@ namespace Web.Hubs
             var username = typeOfMessage == TypeOfMessage.Server ? "Server" : user.Name;
             var chatMessageIntentionResult = GetChatMessageIntention(message);
             ChatMessageDto msgDto;
+            bool buzzFailed = false;
             var allUsersInGame = new List<string>();
             var allUsersInTournament = new List<string>();
-            bool buzzFailed = false;
             if (!string.IsNullOrWhiteSpace(gameId))
             {
                 var game = _gameRepository.GetGameByGameId(gameId);
@@ -804,7 +762,78 @@ namespace Web.Hubs
             }
         }
 
-        User GetCurrentUser()
+        private async Task ExitTournament(string tournamentId, User user)
+        {
+            var tournament = _tournamentRepository.GetTournament(tournamentId);
+
+            await SendMessage($"{user.Name} has left the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
+
+            var contestant = tournament.Contestants.FirstOrDefault(x => x.User == user);
+
+            if (contestant != null)
+            {
+                if (tournament.TournamentStarted)
+                {
+                    contestant.LeftTournament = true;
+                }
+                else
+                {
+                    tournament.Contestants.Remove(contestant);
+                }
+            }
+
+            var spectator = tournament.Spectators.FirstOrDefault(x => x == user);
+            if (spectator != null)
+                tournament.Spectators.Remove(spectator);
+
+
+            await Clients.Caller.SendAsync("ExitTournament");
+            await UpdateTournament(tournament);
+
+            if (!GetPlayersAndSpectatorsFromTournament(tournament).Any())
+            {
+                tournament.TournamentRounds.ForEach(x =>
+                {
+                    x.TournamentRoundGames.ForEach(y => { _gameRepository.RemoveGame(y.Game); });
+                });
+                _tournamentRepository.RemoveTournament(tournament);
+            }
+
+            await GetAllTournaments();
+        }
+
+        private async Task ExitGame(string gameId, User user)
+        {
+            var game = _gameRepository.GetGameByGameId(gameId);
+            var allPlayersFromGame = GetPlayersFromGame(game);
+            if (allPlayersFromGame.Contains(user.ConnectionId))
+            {
+                var player = game.Players.First(y => y.User.ConnectionId == user.ConnectionId);
+                if (game.GameStarted)
+                {
+                    player.LeftGame = true;
+                    await DisplayToastMessageToGame(gameId, $"User {player.User.Name} has left the game.");
+                }
+                else
+                {
+                    game.Players.Remove(player);
+                }
+            }
+            else
+            {
+                game.Spectators.Remove(game.Spectators.First(x => x.User.ConnectionId == Context.ConnectionId));
+            }
+            await UpdateGame(game);
+            await SendMessage($"{user.Name} has left the game.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
+            if (game.Players.All(x => x.LeftGame) && !game.Spectators.Any() && !game.IsTournamentGame)
+            {
+                _gameRepository.RemoveGame(game);
+            }
+            await GetAllGames();
+            await Clients.Caller.SendAsync("ExitGame");
+        }
+
+        private User GetCurrentUser()
         {
             return _userRepository.GetUserByConnectionId(Context.ConnectionId);
         }

@@ -1,3 +1,4 @@
+import { AdminSectionComponent } from './../_components/_modals/admin-section/admin-section.component';
 import { TournamentSetup } from './../_models/tournamentSetup';
 import { GameEndedResultComponent } from './../_components/_modals/game-ended-result/game-ended-result.component';
 import { GameEndedResult } from './../_models/gameEndedResult';
@@ -26,6 +27,7 @@ import { TournamentList } from '../_models/tournamentList';
   providedIn: 'root'
 })
 export class HubService {
+  private _wasKicked = false;
   private _hubConnection: signalR.HubConnection;
   private _gameChatMessages: ChatMessage[] = [];
   private _tournamentChatMessages: ChatMessage[] = [];
@@ -77,6 +79,7 @@ export class HubService {
     this.startConnection(false);
 
     this._hubConnection.onclose(async () => {
+      if (this._wasKicked) return;
       this.startConnection(true);
     });
 
@@ -178,6 +181,14 @@ export class HubService {
       this._myHandObservable.next(myCards);
     });
 
+    this._hubConnection.on('AdminKickUser', pw => {
+      console.log(pw);
+
+      this._wasKicked = true;
+      this._hubConnection.stop();
+      document.body.innerHTML = '<h1>You were temporarily kicked from the server</h1>';
+    });
+
     this._hubConnection.on('ShowCards', (cards: Card[]) => {
       setTimeout(() => {
         const modalRef = this._modalService.open(ShowCardsComponent, { backdrop: 'static' });
@@ -216,6 +227,10 @@ export class HubService {
         }
       }
     });
+  }
+
+  adminKickUser(user: User, password: string) {
+    this._hubConnection.invoke('AdminKickUser', user.name, password);
   }
 
   sendMessage(message: string, chatDestination: ChatDestination) {
