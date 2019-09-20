@@ -201,7 +201,6 @@ namespace Web.Hubs
 
             if (_userRepository.UserExistsByName(name))
             {
-                Console.WriteLine(_appSettings.AdminPassword);
                 var user = _userRepository.GetUserByName(name);
                 await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
                 await CleanupUserFromGames(user);

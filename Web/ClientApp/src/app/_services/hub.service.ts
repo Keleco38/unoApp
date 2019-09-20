@@ -182,11 +182,12 @@ export class HubService {
       this._myHandObservable.next(myCards);
     });
 
-    this._hubConnection.on('AdminKickUser', pw => {
-      console.log(pw);
-
+    this._hubConnection.on('AdminKickUser', () => {
       this._wasKicked = true;
       this._hubConnection.stop();
+      this._activeGameObservable.next(null);
+      this._activeTournamentObservable.next(null);
+      this._router.navigateByUrl("/");
       document.body.innerHTML = '<h1>You were temporarily kicked from the server</h1>';
     });
 
