@@ -11,7 +11,7 @@
       <span> {{ tournament.host }} </span>
       <span> - </span>
       <span [hidden]="tournament.tournamentStarted">({{ tournament.numberOfPlayers }}/{{ tournament.requiredNumberOfPlayers }})</span>
-      <span [hidden]="!tournament.tournamentStarted">(in progress})</span>
+      <span [hidden]="!tournament.tournamentStarted">[{{ tournament.numberOfPlayers }}]</span>
     </button>
   </div>
 </div>
