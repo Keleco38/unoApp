@@ -21,7 +21,7 @@
           <input
             required
             type="text"
-            [(ngModel)]="subjectModal"
+            [(ngModel)]="subjectModel"
             #subject="ngModel"
             class="form-control"
             name="subject"
@@ -39,7 +39,7 @@
             email
             class="form-control"
             name="_replyto"
-            [(ngModel)]="emailModal"
+            [(ngModel)]="emailModel"
             #email="ngModel"
             id="email"
             aria-describedby="emailHelp"
@@ -51,7 +51,7 @@
           <label for="description">Description</label>
           <textarea
             required
-            [(ngModel)]="descriptionModal"
+            [(ngModel)]="descriptionModel"
             #description="ngModel"
             class="form-control"
             name="description"

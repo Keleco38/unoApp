@@ -7,6 +7,10 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./contact-form.component.css']
 })
 export class ContactFormComponent implements OnInit {
+  subjectModel;
+  emailModel;
+  descriptionModel;
+
   constructor(private _activeModal: NgbActiveModal) {}
 
   ngOnInit() {}
