@@ -187,7 +187,7 @@ export class HubService {
       this._hubConnection.stop();
       this._activeGameObservable.next(null);
       this._activeTournamentObservable.next(null);
-      this._router.navigateByUrl("/");
+      this._router.navigateByUrl('/');
       document.body.innerHTML = '<h1>You were temporarily kicked from the server</h1>';
     });
 
@@ -248,6 +248,7 @@ export class HubService {
       do {
         if (forceRename) {
           name = prompt("Your name is already taken or it's not set. Please input a new name (only letters and numbers allowed):");
+          if (name == null && this._currentUserObservable.getValue() != null) return;
         } else {
           name =
             localStorage.getItem('name') ||
