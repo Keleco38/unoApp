@@ -838,7 +838,7 @@ namespace Web.Hubs
             }
             else
             {
-                game.Spectators.Remove(game.Spectators.First(x => x.User.ConnectionId == Context.ConnectionId));
+                game.Spectators.Remove(game.Spectators.First(x => x.User.ConnectionId == user.ConnectionId));
             }
             await UpdateGame(game);
             await SendMessage($"{user.Name} has left the game.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
