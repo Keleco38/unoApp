@@ -143,6 +143,21 @@ export class HubService {
       this._gameChatMessagesObservable.next(this._gameChatMessages);
     });
 
+    this._hubConnection.on('RetrieveFullGameChat', (messages: ChatMessage[]) => {
+      this._gameChatMessages=messages;
+      this._gameChatMessagesObservable.next(this._gameChatMessages);
+    });
+
+    this._hubConnection.on('RetrieveFullGameLog', (log: string[]) => {
+      this._gameLog=log;
+      this._gameLogObservable.next(this._gameLog);
+    });
+
+    this._hubConnection.on('RetrieveFullTournamentChat', (messages: ChatMessage[]) => {
+      this._tournamentChatMessages=messages;
+      this._tournamentChatMessagesObservable.next(this._tournamentChatMessages);
+    });
+
     this._hubConnection.on('AddToGameLog', (message: string) => {
       this._gameLog.unshift(message);
       this._gameLogObservable.next(this._gameLog);

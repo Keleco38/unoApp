@@ -64,7 +64,9 @@ export class UtilityService {
   }
 
   updateFirstTimeLunched() {
-    localStorage.setItem('is-first-time-lunched', JSON.stringify(false));
+    setTimeout(() => {
+      localStorage.setItem('is-first-time-lunched', JSON.stringify(false));
+    });
   }
 
   saveSidebarSettings() {
@@ -73,7 +75,9 @@ export class UtilityService {
     });
   }
   saveUserSettings() {
-    localStorage.setItem('user-settings', JSON.stringify(this._userSettings));
+    setTimeout(() => {
+      localStorage.setItem('user-settings', JSON.stringify(this._userSettings));
+    });
   }
 
   updateTheme(darkTheme: boolean) {

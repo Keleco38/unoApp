@@ -119,12 +119,6 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
     this._hubService.updateTournamentSetup(this.activeTournament.id, this.activeTournament.tournamentSetup);
   }
 
-  getSidebarClass() {
-    var classes = [];
-    classes.push(this._userSettings.useDarkTheme ? 'bg-dark' : 'bg-light');
-    return classes;
-  }
-
   ngOnDestroy(): void {
     this._isAlive = false;
   }

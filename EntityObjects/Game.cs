@@ -14,6 +14,8 @@ namespace EntityObjects
         public List<Spectator> Spectators { get; set; }
         public List<ICard> DiscardedPile { get; set; }
         public GameSetup GameSetup { get; set; }
+        public List<ChatMessage> ChatMessages { get; set; }
+        public List<string> GameLog { get; set; }
         public bool IsTournamentGame => !string.IsNullOrEmpty(TournamentId);
         public string TournamentId { get; set; }
         public Direction Direction { get; set; }
@@ -28,6 +30,8 @@ namespace EntityObjects
             TournamentId = tournamentId;
             Players = new List<Player>();
             Spectators = new List<Spectator>();
+            ChatMessages=new List<ChatMessage>();
+            GameLog=new List<string>();
         }
 
     }

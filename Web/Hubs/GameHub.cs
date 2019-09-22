@@ -145,6 +145,10 @@ namespace Web.Hubs
                     await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
                 }
             }
+
+            var chatMsgs = tournament.ChatMessages.ToList();
+            chatMsgs.Reverse();
+            await Clients.Caller.SendAsync("RetrieveFullTournamentChat", _mapper.Map<List<ChatMessageDto>>(chatMsgs));
             await UpdateTournament(tournament);
             await GetAllTournaments();
         }
@@ -395,10 +399,14 @@ namespace Web.Hubs
                     game.Spectators.Add(new Spectator(user));
                 }
                 await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
-                await Clients.Caller.SendAsync("AddToGameLog", "Game started");
-                await Clients.Caller.SendAsync("AddToGameLog", "If you need more detailed log info, press the 'Game info' button.");
-                await Clients.Caller.SendAsync("AddToGameLog", "This is the game log summary. We will display the last 3 entries here.");
             }
+            var chatMsgs = game.ChatMessages.ToList();
+            chatMsgs.Reverse();
+            var logs = game.GameLog.ToList();
+            logs.Reverse();
+
+            await Clients.Caller.SendAsync("RetrieveFullGameChat", _mapper.Map<List<ChatMessageDto>>(chatMsgs));
+            await Clients.Caller.SendAsync("RetrieveFullGameLog", logs);
             await UpdateHands(game);
             await UpdateGame(game);
             await GetAllGames();
@@ -563,6 +571,7 @@ namespace Web.Hubs
         private async Task AddToGameLog(string gameId, string message)
         {
             var game = _gameRepository.GetGameByGameId(gameId);
+            game.GameLog.Add(message);
             var allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
             await Clients.Clients(allUsersInGame).SendAsync("AddToGameLog", message);
         }
@@ -666,14 +675,16 @@ namespace Web.Hubs
             bool buzzFailed = false;
             var allUsersInGame = new List<string>();
             var allUsersInTournament = new List<string>();
+            Game game = null;
+            Tournament tournament = null;
             if (!string.IsNullOrWhiteSpace(gameId))
             {
-                var game = _gameRepository.GetGameByGameId(gameId);
+                game = _gameRepository.GetGameByGameId(gameId);
                 allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
             }
             if (!string.IsNullOrEmpty(tournamentId))
             {
-                var tournament = _tournamentRepository.GetTournament(tournamentId);
+                tournament = _tournamentRepository.GetTournament(tournamentId);
                 allUsersInTournament = GetPlayersAndSpectatorsFromTournament(tournament);
             }
             if (chatMessageIntentionResult.ChatMessageIntention == ChatMessageIntention.Buzz)
@@ -716,13 +727,16 @@ namespace Web.Hubs
             }
             else if (chatMessageIntentionResult.ChatMessageIntention == ChatMessageIntention.Normal)
             {
-                msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage(username, message, typeOfMessage));
+                var msg = new ChatMessage(username, message, typeOfMessage);
+                msgDto = _mapper.Map<ChatMessageDto>(msg);
                 if (chatDestination == ChatDestination.Game)
                 {
+                    game.ChatMessages.Add(msg);
                     await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
                 }
                 else if (chatDestination == ChatDestination.Tournament)
                 {
+                    tournament.ChatMessages.Add(msg);
                     await Clients.Clients(allUsersInTournament).SendAsync("PostNewMessageInTournamentChat", msgDto);
                 }
                 else

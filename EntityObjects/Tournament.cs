@@ -12,6 +12,7 @@ namespace EntityObjects
             Contestants = new List<Contestant>();
             TournamentRounds=new List<TournamentRound>();
             Spectators=new List<User>();
+            ChatMessages = new List<ChatMessage>();
         }
         public string Id { get; set; }
         public string Name { get; set; }
@@ -22,5 +23,6 @@ namespace EntityObjects
         public List<TournamentRound> TournamentRounds { get; set; }
         public List<Contestant> Contestants { get; set; }
         public List<User> Spectators { get; set; }
+        public List<ChatMessage> ChatMessages { get; set; }
     }
 }
