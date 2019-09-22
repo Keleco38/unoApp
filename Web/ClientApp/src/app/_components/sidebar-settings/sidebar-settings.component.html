@@ -12,27 +12,59 @@
       </div>
     </div>
     <div class="form-group row">
-      <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Sticky chat:</label>
+      <label for="keepSidebarOpen" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Sticky chat:</label>
       <div class="col-4 ">
-        <ui-switch class="form-check-input" size="small" [(ngModel)]="sidebarSettings.keepSidebarOpen"></ui-switch>
+        <ui-switch
+          class="form-check-input"
+          size="small"
+          name="keepSidebarOpen"
+          id="keepSidebarOpen"
+          [checked]="sidebarSettings.keepSidebarOpen"
+          [(ngModel)]="sidebarSettings.keepSidebarOpen"
+          (change)="saveSidebarSettings()"
+          ></ui-switch>
       </div>
     </div>
     <div class="form-group row">
-      <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Mute specs:</label>
+      <label for="muteSpectators" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Mute specs:</label>
       <div class="col-4 ">
-        <ui-switch class="form-check-input" size="small" [(ngModel)]="sidebarSettings.muteSpectators"></ui-switch>
+        <ui-switch
+          class="form-check-input"
+          size="small"
+          name="muteSpectators"
+          id="muteSpectators"
+          [checked]="sidebarSettings.muteSpectators"
+          [(ngModel)]="sidebarSettings.muteSpectators"
+          (change)="saveSidebarSettings()"
+          ></ui-switch>
       </div>
     </div>
     <div class="form-group row">
-      <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Mute server:</label>
+      <label for="muteServer" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Mute server:</label>
       <div class="col-4 ">
-        <ui-switch class="form-check-input" size="small" [(ngModel)]="sidebarSettings.muteServer"></ui-switch>
+        <ui-switch
+          class="form-check-input"
+          size="small"
+          name="muteServer"
+          id="muteServer"
+          [checked]="sidebarSettings.muteServer"
+          [(ngModel)]="sidebarSettings.muteServer"
+          (change)="saveSidebarSettings()"
+          ></ui-switch>
       </div>
     </div>
     <div class="form-group row">
-      <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Sticky navbar:</label>
+      <label for="showNavbar" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Sticky navbar:</label>
       <div class="col-4 ">
-        <ui-switch class="form-check-input" size="small" [(ngModel)]="sidebarSettings.showNavbar"></ui-switch>
+        <ui-switch
+          class="form-check-input"
+          size="small"
+          id="showNavbar"
+          name="showNavbar"
+          [checked]="sidebarSettings.showNavbar"
+          [(ngModel)]="sidebarSettings.showNavbar"
+          (change)="saveSidebarSettings()"
+          ></ui-switch>
       </div>
     </div>
   </div>

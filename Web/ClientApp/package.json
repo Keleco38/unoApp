@@ -33,7 +33,6 @@
     "ng-sidebar": "^9.0.0",
     "ngx-toastr": "^10.0.4",
     "ngx-toggle-switch": "^2.0.5",
-    "ngx-ui-switch": "^1.6.0",
     "popper.js": "^1.14.3",
     "rxjs": "^6.5.2",
     "rxjs-compat": "^6.5.2",

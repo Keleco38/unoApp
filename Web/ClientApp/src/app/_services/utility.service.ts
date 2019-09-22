@@ -30,8 +30,8 @@ export class UtilityService {
       this._sidebarSettings = JSON.parse(localStorage.getItem('sidebar-settings'));
       if (this._sidebarSettings === null) {
         this._sidebarSettings = { sidebarSize: 50, muteServer: false, muteSpectators: false, keepSidebarOpen: false, showNavbar: false };
-        this.saveSidebarSettings();
       }
+      this.saveSidebarSettings();
     }
     return this._sidebarSettings;
   }
@@ -68,7 +68,9 @@ export class UtilityService {
   }
 
   saveSidebarSettings() {
-    localStorage.setItem('sidebar-settings', JSON.stringify(this._sidebarSettings));
+    setTimeout(() => {
+      localStorage.setItem('sidebar-settings', JSON.stringify(this._sidebarSettings));
+    });
   }
   saveUserSettings() {
     localStorage.setItem('user-settings', JSON.stringify(this._userSettings));

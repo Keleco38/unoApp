@@ -12,8 +12,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     var userSettings = this._utilityService.userSettings;
-    console.log(userSettings);
-    
     if (userSettings.useDarkTheme) {
       this._utilityService.updateTheme(true);
     }
