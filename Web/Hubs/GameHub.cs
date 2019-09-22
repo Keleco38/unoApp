@@ -453,7 +453,7 @@ namespace Web.Hubs
                 message = $"{name} has connected to the server.";
                 user = new User(Context.ConnectionId, name);
                 _userRepository.AddUser(user);
-                ChatMessageDto msg = new ChatMessageDto() { CreatedUtc = DateTime.Now, Text = "If you need to create a tournament please contract one of the admins (discord link in the navbar)", TypeOfMessage = TypeOfMessage.Server, Username = "Server" };
+                ChatMessageDto msg = new ChatMessageDto() { CreatedUtc = DateTime.Now, Text = "If you need to create a tournament please contract one of the moderators (discord link in the navbar)", TypeOfMessage = TypeOfMessage.Server, Username = "Server" };
                 await Clients.Caller.SendAsync("PostNewMessageInAllChat", msg);
             }
 
