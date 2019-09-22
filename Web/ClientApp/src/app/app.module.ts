@@ -1,3 +1,4 @@
+import { TournamentWinnersComponent } from './_components/tournament-winners/tournament-winners.component';
 import { AdminSectionComponent } from './_components/_modals/admin-section/admin-section.component';
 import { ContactFormComponent } from './_components/_modals/contact-form/contact-form.component';
 import { TournamentSetupComponent } from './_components/_modals/tournament-setup/tournament-setup.component';
@@ -102,6 +103,7 @@ import { UiSwitchModule } from 'ngx-toggle-switch';
     ContactFormComponent,
     TournamentWaitingRoomComponent,
     AdminSectionComponent,
+    TournamentWinnersComponent,
     TournamentComponent
   ],
   imports: [
@@ -128,6 +130,7 @@ import { UiSwitchModule } from 'ngx-toggle-switch';
       { path: 'game', component: GameComponent, canActivate: [GameGuard], canDeactivate: [GameDeactivateGuard] },
       { path: 'help', component: HelpComponent },
       { path: 'change-log', component: ChangeLogComponent },
+      { path: 'tournament-winners', component: TournamentWinnersComponent },
       { path: 'hall-of-fame', component: HallOfFameComponent },
       {
         path: 'tournament-waiting-room',
