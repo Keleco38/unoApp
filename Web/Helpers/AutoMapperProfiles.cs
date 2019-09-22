@@ -54,9 +54,9 @@ namespace Web.Helpers
                {
                    opt.MapFrom(src => src.TournamentStarted);
                })
-                .ForMember(dest => dest.Host, opt =>
+                .ForMember(dest => dest.Name, opt =>
                 {
-                    opt.MapFrom(src => src.Contestants.Any() ? src.Contestants[0].User.Name : "No players.");
+                    opt.MapFrom(src => src.TournamentSetup.Name);
                 })
                 .ForMember(dest => dest.IsPasswordProtected, opt =>
                {

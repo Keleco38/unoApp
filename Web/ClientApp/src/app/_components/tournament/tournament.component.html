@@ -2,7 +2,9 @@
 <div class="row">
   <div class="col-12">
     <h4 class="text-primary d-none d-sm-block">
-      Tournament brackets <button (click)="exitTournament()" class="btn btn-sm btn-danger">Exit tournament</button>
+        Tournament: {{ activeTournament.tournamentSetup.name }} <button (click)="exitTournament()" class="btn btn-sm btn-danger mx-2">
+        Exit tournament
+      </button>
     </h4>
     <button (click)="exitTournament()" class="btn d-sm-none d-block btn-sm btn-block btn-danger">Exit tournament</button>
     <div id="tournament" class="scrollable-div-x">
@@ -65,7 +67,9 @@
     </div>
   </div>
   <div class="col-12 my-2" *ngIf="activeTournament.tournamentEnded">
-    <h3 class="text-success">Tournament ended! Extra points won: <u>{{getExtraPointsWon()}}</u></h3>
+    <h3 class="text-success">
+      Tournament ended! Extra points won: <u>{{ getExtraPointsWon() }}</u>
+    </h3>
   </div>
 </div>
 <div class="row">

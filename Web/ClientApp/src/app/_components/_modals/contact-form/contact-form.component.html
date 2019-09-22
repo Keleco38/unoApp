@@ -16,7 +16,7 @@
         action="https://formspree.io/tonymarkoc@gmail.com"
         method="POST"
       >
-        <div class="form-group" [ngClass]="{ 'is-invalid': contactForm.submitted && subject.invalid }">
+        <div class="form-group" >
           <label for="subject">Subject</label>
           <input
             required
@@ -29,7 +29,6 @@
             aria-describedby="subject"
             placeholder="Subject"
           />
-          <div class="invalid-feedback">Please fill out this field.</div>
         </div>
         <div class="form-group">
           <label for="email">Email address</label>

@@ -5,22 +5,15 @@
 <div class="row d-block d-sm-none">
   <div class="col-12">
     <div class="text-center my-2">
-      <h4 class="text-primary">Uno - Card Game</h4>
+      <h4 class="text-primary">Uno - Special Edition</h4>
     </div>
   </div>
 </div>
 <div class="row">
   <div class="col-sm-8 col-6">
     <div class="text-center my-2">
-      <h4 class="text-primary d-none d-sm-block">Uno - Card Game</h4>
-
-      <div ngbDropdown class="d-inline-block">
-        <button class="btn btn-primary" id="new-game" ngbDropdownToggle>New Game</button>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-          <button (click)="createGame()" ngbDropdownItem>Single Game</button>
-          <button (click)="createTournament()" ngbDropdownItem>Tournament</button>
-        </div>
-      </div>
+      <h4 class="text-primary d-none d-sm-block">Uno - Special Edition</h4>
+      <button class="btn btn-primary" id="new-game" (click)="createGame()">New Game</button>
     </div>
     <div class="fill-viewport-80  scrollable-div-y">
       <app-all-chat></app-all-chat>
@@ -28,7 +21,7 @@
   </div>
   <div class="col-sm-4 col-6 my-2 my-sm-0 fill-viewport-max-100  scrollable-div-y">
     <app-online-players></app-online-players>
-    <app-available-games></app-available-games>
     <app-available-tournaments></app-available-tournaments>
+    <app-available-games></app-available-games>
   </div>
 </div>

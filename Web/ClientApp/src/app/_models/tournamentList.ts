@@ -3,6 +3,6 @@ export interface TournamentList {
   numberOfPlayers: number;
   requiredNumberOfPlayers: number;
   isPasswordProtected: boolean;
-  host: string;
+  name: string;
   tournamentStarted: boolean;
 }

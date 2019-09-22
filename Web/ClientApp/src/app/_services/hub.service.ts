@@ -339,8 +339,8 @@ export class HubService {
     this._hubConnection.invoke('CreateGame', gameSetup);
   }
 
-  createTournament(tournamentSetup: TournamentSetup) {
-    this._hubConnection.invoke('CreateTournament', tournamentSetup);
+  createTournament(tournamentSetup: TournamentSetup, adminPassword :string) {
+    this._hubConnection.invoke('CreateTournament', tournamentSetup, adminPassword);
   }
 
   kickPlayerFromGame(user: User): any {

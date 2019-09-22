@@ -6,6 +6,7 @@ import { HubService } from 'src/app/_services/hub.service';
 import { TypeOfMessage, ChatDestination } from 'src/app/_models/enums';
 import { takeWhile, map, pluck } from 'rxjs/operators';
 import { AdminSectionComponent } from '../_modals/admin-section/admin-section.component';
+import { TournamentSetupComponent } from '../_modals/tournament-setup/tournament-setup.component';
 
 @Component({
   selector: 'app-all-chat',
@@ -48,7 +49,14 @@ export class AllChatComponent implements OnInit, OnDestroy {
     if (this.newMessage == '/admin') {
       this.newMessage = '';
       event.target.children[0].blur();
-      this._modalService.open(AdminSectionComponent);
+      this._modalService.open(AdminSectionComponent, { backdrop: 'static' });
+      return;
+    }
+
+    if (this.newMessage == '/tournament') {
+      this.newMessage = '';
+      event.target.children[0].blur();
+      this._modalService.open(TournamentSetupComponent, { backdrop: 'static' });
       return;
     }
 

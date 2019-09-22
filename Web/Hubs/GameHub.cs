@@ -149,8 +149,25 @@ namespace Web.Hubs
             await GetAllTournaments();
         }
 
-        public async Task CreateTournament(TournamentSetup tournamentSetup)
+        public async Task CreateTournament(TournamentSetup tournamentSetup, string password)
         {
+            if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))
+            {
+                await DisplayToastMessageToUser(Context.ConnectionId, "Unauthorized");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(tournamentSetup.Name))
+            {
+                tournamentSetup.Name = "tournament";
+            }
+
+            else if (tournamentSetup.Name.Length > 10)
+            {
+                tournamentSetup.Name = tournamentSetup.Name.Substring(0, 10);
+
+            }
+
             var tournament = new Tournament(tournamentSetup);
             tournament.Contestants.Add(new Contestant(GetCurrentUser()));
             _tournamentRepository.AddTournament(tournament);
@@ -275,6 +292,18 @@ namespace Web.Hubs
             }
 
             var tournamentSetup = _mapper.Map<TournamentSetup>(tournamentSetupDto);
+
+            if (string.IsNullOrEmpty(tournamentSetup.Name))
+            {
+                tournamentSetup.Name = "unnamed";
+            }
+
+            else if (tournamentSetup.Name.Length > 10)
+            {
+                tournamentSetup.Name = tournamentSetup.Name.Substring(0, 10);
+
+            }
+
             tournament.TournamentSetup = tournamentSetup;
             await UpdateTournament(tournament);
             await GetAllTournaments();
@@ -416,6 +445,8 @@ namespace Web.Hubs
                 message = $"{name} has connected to the server.";
                 user = new User(Context.ConnectionId, name);
                 _userRepository.AddUser(user);
+                ChatMessageDto msg = new ChatMessageDto() { CreatedUtc = DateTime.Now, Text = "If you need to create a tournament please contract one of the admins (discord link in the navbar)", TypeOfMessage = TypeOfMessage.Server, Username = "Server" };
+                await Clients.Caller.SendAsync("PostNewMessageInAllChat", msg);
             }
 
             await SendMessage(message, TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
@@ -640,7 +671,7 @@ namespace Web.Hubs
                 var game = _gameRepository.GetGameByGameId(gameId);
                 allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
             }
-            else if (!string.IsNullOrEmpty(tournamentId))
+            if (!string.IsNullOrEmpty(tournamentId))
             {
                 var tournament = _tournamentRepository.GetTournament(tournamentId);
                 allUsersInTournament = GetPlayersAndSpectatorsFromTournament(tournament);

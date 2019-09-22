@@ -5,6 +5,7 @@ namespace DomainObjects
 {
     public class TournamentSetupDto
     {
+        public string Name { get; set; }
         public string Password { get; set; }
         public List<CardValue> BannedCards { get; set; }
         public int RoundsToWin { get; set; }

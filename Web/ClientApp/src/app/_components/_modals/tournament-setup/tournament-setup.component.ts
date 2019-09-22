@@ -12,6 +12,7 @@ import { PlayersSetup, GameType } from '../../../_models/enums';
   styleUrls: ['./tournament-setup.component.css']
 })
 export class TournamentSetupComponent implements OnInit {
+  adminPassword = '';
 
   private _activeTournament: Tournament;
   tournamentSetup: TournamentSetup;
@@ -29,6 +30,7 @@ export class TournamentSetupComponent implements OnInit {
         numberOfPlayers: 8,
         reverseShouldSkipTurnInTwoPlayers: true,
         password: '',
+        name: '',
         gameType: GameType.specialWildCards,
         drawFourDrawTwoShouldSkipTurn: true,
         bannedCards: [],
@@ -45,8 +47,10 @@ export class TournamentSetupComponent implements OnInit {
   }
 
   confirm() {
+    console.log("test");
+    
     if (this._activeTournament === null) {
-      this._hubService.createTournament(this.tournamentSetup);
+      this._hubService.createTournament(this.tournamentSetup, this.adminPassword);
     } else {
       this._hubService.updateTournamentSetup(this._activeTournament.id, this.tournamentSetup);
     }

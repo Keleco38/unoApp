@@ -3,11 +3,11 @@
     <div class="alert alert-primary">Available games ({{ availableGames.length }}):</div>
     <button
       [class.btn-danger]="availableGame.gameStarted"
-      class="btn btn-primary btn-block my-2"
+      class="btn btn-primary btn-block mb-1"
       *ngFor="let availableGame of availableGames"
       (click)="joinGame(availableGame)"
     >
-      <span class="mx-2" *ngIf="availableGame.isPasswordProtected">&#9919;</span>
+      <span *ngIf="availableGame.isPasswordProtected">&#9919;</span>
       <span> {{ availableGame.host }} </span>
       <span> - </span>
       <span [hidden]="availableGame.gameStarted">({{ availableGame.numberOfPlayers }}/{{ availableGame.maxNumberOfPlayers }})</span>

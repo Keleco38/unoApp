@@ -1,14 +1,14 @@
-<div class="row" *ngIf="availableTournaments.length>0">
+<div class="row" *ngIf="availableTournaments.length > 0">
   <div class="col-12">
     <div class="alert alert-primary">Available tournaments ({{ availableTournaments.length }}):</div>
     <button
       [class.btn-danger]="tournament.tournamentStarted"
-      class="btn btn-primary btn-block my-2"
+      class="btn btn-primary btn-block mb-1"
       *ngFor="let tournament of availableTournaments"
       (click)="joinTournament(tournament)"
     >
-      <span class="mx-2" *ngIf="tournament.isPasswordProtected">&#9919;</span>
-      <span> {{ tournament.host }} </span>
+      <span *ngIf="tournament.isPasswordProtected">&#9919;</span>
+      <span> {{ tournament.name }} </span>
       <span> - </span>
       <span [hidden]="tournament.tournamentStarted">({{ tournament.numberOfPlayers }}/{{ tournament.requiredNumberOfPlayers }})</span>
       <span [hidden]="!tournament.tournamentStarted">[{{ tournament.numberOfPlayers }}]</span>

@@ -8,101 +8,156 @@
   <div class="row">
     <div class="col-12">
       <div class="form-group row">
-        <label for="gameType" class="col-4 col-form-label">Game type</label>
-        <div class="col-8">
-          <select [(ngModel)]="tournamentSetup.gameType" class="form-control form-control-sm" id="gameType">
-            <option value="1">Normal</option>
-            <option value="2">Special Wild Cards</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="maxNumberOfPlayers" class="col-4 col-form-label">Tournament size</label>
-        <div class="col-8">
-          <select [(ngModel)]="tournamentSetup.numberOfPlayers" class="form-control form-control-sm" id="maxNumberOfPlayers">
-            <option value="4">4</option>
-            <option value="8">8</option>
-            <option value="16">16</option>
-            <option value="32">32</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="playuntil" class="col-4 col-form-label">Play until</label>
-        <div class="col-8">
-          <select [(ngModel)]="tournamentSetup.roundsToWin" class="form-control form-control-sm" name="playuntil" id="playuntil">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="5">5</option>
-            <option value="7">7</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="password" class="col-4 col-form-label">Password</label>
+        <label for="adminPassword" class="col-4 col-form-label">Admin Password</label>
         <div class="col-8">
           <input
-            type="text"
-            [(ngModel)]="tournamentSetup.password"
+            type="password"
+            [(ngModel)]="adminPassword"
             class="form-control"
             autocomplete="off"
-            name="password"
-            id="password"
-            placeholder="(optional)"
+            name="adminPassword"
+            id="adminPassword"
           />
         </div>
       </div>
-      <div class="form-group row">
-        <label for="name" for="drawTwoFourShouldSkipTurn" class="col-8">Draw two/four should skip turn:</label>
-        <div class="col-4 ">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            [(ngModel)]="tournamentSetup.drawFourDrawTwoShouldSkipTurn"
-            id="drawTwoFourShouldSkipTurn"
-          />
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Reverse should skip turn in 2 players:</label>
-        <div class="col-4 ">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            [(ngModel)]="tournamentSetup.reverseShouldSkipTurnInTwoPlayers"
-            id="reverseShouldSkipTurnInTwoPlayers"
-          />
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="name" for="matchingCardStealsTurn" class="col-8">Matching card steals turn:</label>
-        <div class="col-4 ">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            [(ngModel)]="tournamentSetup.matchingCardStealsTurn"
-            id="matchingCardStealsTurn"
-          />
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="name" for="wildCardCanBePlayedOnlyIfNoOtherOptions" class="col-8">Wild card can be played only as the last option:</label>
-        <div class="col-4 ">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            [(ngModel)]="tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions"
-            id="wildCardCanBePlayedOnlyIfNoOtherOptions"
-          />
-        </div>
-      </div>
+      <hr />
     </div>
   </div>
-  <div class="row">
+  <div class="row" [hidden]="!adminPassword">
+    <div class="col-12">
+      <form #tournamentSetupForm="ngForm" (ngSubmit)="tournamentSetupForm.form.valid && confirm()" id="tournamentSetupForm" name="tournamentSetupForm" novalidate>
+        <div class="form-group row">
+          <label for="text" class="col-4 col-form-label">Name</label>
+          <div class="col-8">
+            <input
+              type="text"
+              #name="ngModel"
+              required
+              [ngClass]="{ 'is-invalid': tournamentSetupForm.submitted && name.invalid }"
+              [(ngModel)]="tournamentSetup.name"
+              class="form-control"
+              autocomplete="off"
+              name="name"
+              id="name"
+              placeholder="(max 10 chars)"
+            />
+            <div class="invalid-feedback">Please fill out this field.</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="gameType" class="col-4 col-form-label">Game type</label>
+          <div class="col-8">
+            <select [(ngModel)]="tournamentSetup.gameType" class="form-control form-control-sm" name="gameType" id="gameType">
+              <option value="1">Normal</option>
+              <option value="2">Special Wild Cards</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="maxNumberOfPlayers" class="col-4 col-form-label">Tournament size</label>
+          <div class="col-8">
+            <select
+              [(ngModel)]="tournamentSetup.numberOfPlayers"
+              name="maxNumberOfPlayers"
+              class="form-control form-control-sm"
+              id="maxNumberOfPlayers"
+            >
+              <option value="4">4</option>
+              <option value="8">8</option>
+              <option value="16">16</option>
+              <option value="32">32</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="playUntil" class="col-4 col-form-label">Play until</label>
+          <div class="col-8">
+            <select
+              [(ngModel)]="tournamentSetup.roundsToWin"
+              name="playUntil"
+              class="form-control form-control-sm"
+              name="playUntil"
+              id="playUntil"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="5">5</option>
+              <option value="7">7</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="password" class="col-4 col-form-label">Password</label>
+          <div class="col-8">
+            <input
+              type="text"
+              [(ngModel)]="tournamentSetup.password"
+              class="form-control"
+              autocomplete="off"
+              name="password"
+              id="password"
+              placeholder="(optional)"
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="name" for="drawTwoFourShouldSkipTurn" class="col-8">Draw two/four should skip turn:</label>
+          <div class="col-4 ">
+            <input
+              class="form-check-input"
+              name="drawTwoFourShouldSkipTurn"
+              type="checkbox"
+              [(ngModel)]="tournamentSetup.drawFourDrawTwoShouldSkipTurn"
+              id="drawTwoFourShouldSkipTurn"
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Reverse should skip turn in 2 players:</label>
+          <div class="col-4 ">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [(ngModel)]="tournamentSetup.reverseShouldSkipTurnInTwoPlayers"
+              name="reverseShouldSkipTurnInTwoPlayers"
+              id="reverseShouldSkipTurnInTwoPlayers"
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="name" for="matchingCardStealsTurn" class="col-8">Matching card steals turn:</label>
+          <div class="col-4 ">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [(ngModel)]="tournamentSetup.matchingCardStealsTurn"
+              name="matchingCardStealsTurn"
+              id="matchingCardStealsTurn"
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="name" for="wildCardCanBePlayedOnlyIfNoOtherOptions" class="col-8"
+            >Wild card can be played only as the last option:</label
+          >
+          <div class="col-4 ">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [(ngModel)]="tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions"
+              name="wildCardCanBePlayedOnlyIfNoOtherOptions"
+              id="wildCardCanBePlayedOnlyIfNoOtherOptions"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row" [hidden]="!adminPassword">
     <div class="col-12">
       <hr />
-      <button class="btn btn-lg btn-block btn-info" (click)="confirm()">Confirm</button>
+      <button class="btn btn-lg btn-block btn-info" form="tournamentSetupForm">Confirm</button>
     </div>
   </div>
 </div>
