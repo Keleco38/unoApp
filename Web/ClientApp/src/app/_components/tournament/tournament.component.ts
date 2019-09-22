@@ -26,7 +26,6 @@ export class TournamentComponent implements OnInit, OnDestroy {
     });
   }
 
-
   exitTournament(){
    this._router.navigateByUrl("/");
   }

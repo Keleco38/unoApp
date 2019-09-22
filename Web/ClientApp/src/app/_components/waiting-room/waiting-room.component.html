@@ -1,34 +1,27 @@
 <app-navbar [hidden]="!sidebarSettings.showNavbar"></app-navbar>
-<div class="row">
+<div class="row my-2">
   <div class="col-12">
-    <div class="alert alert-primary">
-      <div class="row" [hidden]="activeGame.players[0]?.user.name != currentUser.name">
-        <div class="col-6">
-          <button class="btn btn-sm btn-block btn-primary" (click)="openGameSetupDialog()">Game Setup</button>
-          <button class="btn btn-sm btn-block btn-primary" (click)="openBanCardsDialog()">
-            Ban Cards
-          </button>
-        </div>
-        <div class="col-6">
-          <button class="btn btn-sm btn-danger btn-block" (click)="leaveWaitingRoom()">Leave Room</button>
-          <button [style.opacity]="activeGame.players.length < 2 ? 0.5 : 1" class="btn btn-block btn-sm btn-success" (click)="startGame()">
-            Start Game
-          </button>
-        </div>
+    <div class="row" [hidden]="activeGame.players[0]?.user.name != currentUser.name">
+      <div class="col-6">
+        <button class="btn btn-sm btn-block btn-primary" (click)="openGameSetupDialog()">Game Setup</button>
+        <button class="btn btn-sm btn-block btn-primary" (click)="openBanCardsDialog()">
+          Ban Cards
+        </button>
       </div>
-      <div class="row" [hidden]="activeGame.players[0]?.user.name == currentUser.name">
-        <div class="col-12">
-          <div class="btn-group special">
-            <button class="btn btn-sm btn-danger" (click)="leaveWaitingRoom()">Leave room</button>
-            <button
-              class="btn btn-sm btn-primary"
-              [ngStyle]="getStyleJoinGameButton()"
-              [disabled]="!userIsSpectator()"
-              (click)="joinGame()"
-            >
-              Join Game
-            </button>
-          </div>
+      <div class="col-6">
+        <button class="btn btn-sm btn-danger btn-block" (click)="leaveWaitingRoom()">Leave Room</button>
+        <button [style.opacity]="activeGame.players.length < 2 ? 0.5 : 1" class="btn btn-block btn-sm btn-success" (click)="startGame()">
+          Start Game
+        </button>
+      </div>
+    </div>
+    <div class="row" [hidden]="activeGame.players[0]?.user.name == currentUser.name">
+      <div class="col-12">
+        <div class="btn-group special">
+          <button class="btn btn-sm btn-danger" (click)="leaveWaitingRoom()">Leave room</button>
+          <button class="btn btn-sm btn-primary" [ngStyle]="getStyleJoinGameButton()" [disabled]="!userIsSpectator()" (click)="joinGame()">
+            Join Game
+          </button>
         </div>
       </div>
     </div>
@@ -36,7 +29,7 @@
 </div>
 <div class="row">
   <div class="col-6">
-    <h6 class="text-success">Players joined ({{activeGame.players.length}})</h6>
+    <h6 class="text-success">Players joined ({{ activeGame.players.length }})</h6>
     <ul class="list-unstyled">
       <li *ngFor="let player of activeGame.players; let first = first">
         <span [hidden]="!first">&#9734;</span>
@@ -87,7 +80,7 @@
 </div>
 
 <div class="row">
-  <div class="col-12 fill-viewport-max-70 scrollable-div-y bg-white">
+  <div class="col-12 fill-viewport-max-70 scrollable-div-y">
     <app-game-tabs></app-game-tabs>
   </div>
 </div>

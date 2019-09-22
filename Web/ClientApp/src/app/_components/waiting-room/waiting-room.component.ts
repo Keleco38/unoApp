@@ -1,4 +1,3 @@
-import { GameSetup } from './../../_models/gameSetup';
 import { SidebarSettings } from 'src/app/_models/sidebarSettings';
 import { UtilityService } from './../../_services/utility.service';
 import { CardValue, GameType, PlayersSetup } from './../../_models/enums';
@@ -10,10 +9,10 @@ import { HubService } from 'src/app/_services/hub.service';
 import { Router } from '@angular/router';
 import { Player } from 'src/app/_models/player';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { KeyValue } from '@angular/common';
 import { takeWhile } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { GameSetupComponent } from '../_modals/game-setup/game-setup.component';
+import { UserSettings } from 'src/app/_models/userSettings';
 
 @Component({
   selector: 'app-waiting-room',
@@ -21,10 +20,11 @@ import { GameSetupComponent } from '../_modals/game-setup/game-setup.component';
   styleUrls: ['./waiting-room.component.css']
 })
 export class WaitingRoomComponent implements OnInit, OnDestroy {
-  sidebarSettings: SidebarSettings;
-
   private _isAlive: boolean = true;
+  private _userSettings: UserSettings;
+
   activeGame: Game;
+  sidebarSettings: SidebarSettings;
   currentUser: User;
 
   constructor(
@@ -36,6 +36,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this._userSettings = this._utilityService.userSettings;
     this.sidebarSettings = this._utilityService.sidebarSettings;
     this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.activeGame = game;

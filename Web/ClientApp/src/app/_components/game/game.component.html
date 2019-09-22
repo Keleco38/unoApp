@@ -4,7 +4,7 @@
   <!-- A sidebar -->
   <ng-sidebar [(opened)]="isSidebarOpen" [position]="'bottom'" [closeOnClickOutside]="!sidebarSettings.keepSidebarOpen">
     <div class="row">
-      <div class="col-12  bg-white" [ngClass]="getSidebarClass()">
+      <div class="col-12" [ngClass]="getSidebarClass()" [style.backgroundColor]="getSidebarBackgroundColor()">
         <app-game-tabs></app-game-tabs>
       </div>
     </div>

@@ -12,6 +12,7 @@ import { GameType, CardValue } from '../../_models/enums';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PickBannedCardsComponent } from '../_modals/pick-banned-cards/pick-banned-cards.component';
+import { UserSettings } from 'src/app/_models/userSettings';
 
 @Component({
   selector: 'app-tournament-waiting-room',
@@ -19,7 +20,9 @@ import { PickBannedCardsComponent } from '../_modals/pick-banned-cards/pick-bann
   styleUrls: ['./tournament-waiting-room.component.css']
 })
 export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
+  private _userSettings: UserSettings;
   private _isAlive: boolean = true;
+
   activeTournament: Tournament;
   sidebarSettings: SidebarSettings;
   currentUser: User;
@@ -34,6 +37,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sidebarSettings = this._utilityService.sidebarSettings;
+    this._userSettings = this._utilityService.userSettings;
 
     this._hubService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournament => {
       this.activeTournament = tournament;
@@ -113,6 +117,12 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
 
   updateTournamentSetup() {
     this._hubService.updateTournamentSetup(this.activeTournament.id, this.activeTournament.tournamentSetup);
+  }
+
+  getSidebarClass() {
+    var classes = [];
+    classes.push(this._userSettings.useDarkTheme ? 'bg-dark' : 'bg-light');
+    return classes;
   }
 
   ngOnDestroy(): void {

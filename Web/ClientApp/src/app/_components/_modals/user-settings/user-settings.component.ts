@@ -57,6 +57,11 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     this._utilityService.saveUserSettings();
   }
 
+  updateShouldUserDarkMode(event) {
+    var value = event.target.checked;
+    this._utilityService.updateTheme(value);
+  }
+
   shouldBeCheckedBuzzCommand(buzzType) {
     return this.userSettings.blockedBuzzCommands.indexOf(buzzType) != -1;
   }
@@ -73,7 +78,9 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     return this.userSettings.notifyWhenMentionedBuzz;
   }
 
-  
+  shouldBeCheckedDarkMode() {
+    return this.userSettings.useDarkTheme;
+  }
 
   closeModal() {
     this._activeModal.close();

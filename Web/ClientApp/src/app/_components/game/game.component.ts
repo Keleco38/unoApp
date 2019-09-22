@@ -23,6 +23,7 @@ import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { GuessOddEvenNumberComponent } from '../_modals/guess-odd-even-number/guess-odd-even-number.component';
 import { Tournament } from 'src/app/_models/tournament';
+import { UserSettings } from 'src/app/_models/userSettings';
 
 @Component({
   selector: 'app-game',
@@ -34,6 +35,7 @@ export class GameComponent implements OnInit, OnDestroy {
   private _mustCallUno: boolean = false;
   private _isAlive: boolean = true;
   private _activeTournament: Tournament;
+  private _userSettings: UserSettings;
 
   isSidebarOpen = false;
   currentUser: User;
@@ -52,6 +54,7 @@ export class GameComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this._userSettings = this._utilityService.userSettings;
     this.sidebarSettings = this._utilityService.sidebarSettings;
     this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       if (game === null) {
@@ -242,8 +245,16 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   getSidebarClass() {
-    return `fill-viewport-${this.sidebarSettings.sidebarSize}`;
+    var classes = [];
+    classes.push(`fill-viewport-${this.sidebarSettings.sidebarSize}`);
+    return classes;
   }
+
+
+  getSidebarBackgroundColor() {
+    return this._utilityService.getSidebarBackgroundColor()
+  }
+
 
   drawCard() {
     if (this.game.playerToPlay.user.name != this.currentUser.name) {

@@ -44,7 +44,8 @@ export class UtilityService {
           notifyUserWhenHisTurnToPlay: false,
           blockedBuzzCommands: [],
           notifyWhenMentionedBuzz: false,
-          notifyWhenMentionedToast: true
+          notifyWhenMentionedToast: true,
+          useDarkTheme: false
         };
       }
       this.saveUserSettings();
@@ -71,5 +72,29 @@ export class UtilityService {
   }
   saveUserSettings() {
     localStorage.setItem('user-settings', JSON.stringify(this._userSettings));
+  }
+
+  updateTheme(darkTheme: boolean) {
+    var theme = darkTheme ? 'dark' : 'light';
+    var links = document.getElementsByTagName('link');
+    for (var i = 0; i < links.length; i++) {
+      var link = links[i];
+      if (link.rel.indexOf('stylesheet') != -1 && link.title) {
+        if (link.title === theme) {
+          link.disabled = false;
+        } else {
+          link.disabled = true;
+        }
+      }
+    }
+    this.userSettings.useDarkTheme = darkTheme;
+    this.saveUserSettings();
+  }
+
+  getSidebarBackgroundColor() {
+    if (this.userSettings.useDarkTheme) {
+      return '#222';
+    }
+    return 'fff';
   }
 }
