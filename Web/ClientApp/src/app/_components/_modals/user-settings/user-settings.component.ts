@@ -29,9 +29,8 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     this._hubService.addOrRenameUser(true);
   }
 
-  updateBlockedBuzzCommands(event, buzzType) {
-    var value = event.target.checked;
-    if (value === true) {
+  updateBlockedBuzzCommands(checked, buzzType) {
+    if (checked === true) {
       this.userSettings.blockedBuzzCommands.push(buzzType);
     } else {
       var index = this.userSettings.blockedBuzzCommands.indexOf(buzzType);
@@ -40,26 +39,23 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     this._utilityService.saveUserSettings();
   }
 
-  updateNotifyWhenTurnToPlay(event) {
-    var value = event.target.checked;
-    this.userSettings.notifyUserWhenHisTurnToPlay = value;
+  updateNotifyWhenTurnToPlay(checked) {
+    this.userSettings.notifyUserWhenHisTurnToPlay = checked;
     this._utilityService.saveUserSettings();
   }
 
-  updateTextNotifyOnMentions(event) {
-    var value = event.target.checked;
-    this.userSettings.notifyWhenMentionedToast = value;
+  updateTextNotifyOnMentions(checked) {
+    this.userSettings.notifyWhenMentionedToast = checked;
     this._utilityService.saveUserSettings();
   }
-  updateSoundNotifyOnMentions(event) {
-    var value = event.target.checked;
-    this.userSettings.notifyWhenMentionedBuzz = value;
+  updateSoundNotifyOnMentions(checked) {
+    
+    this.userSettings.notifyWhenMentionedBuzz = checked;
     this._utilityService.saveUserSettings();
   }
 
-  updateShouldUserDarkMode(event) {
-    var value = event.target.checked;
-    this._utilityService.updateTheme(value);
+  updateShouldUserDarkMode(checked) {
+    this._utilityService.updateTheme(checked);
   }
 
   shouldBeCheckedBuzzCommand(buzzType) {

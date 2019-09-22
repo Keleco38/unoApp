@@ -95,6 +95,6 @@ export class UtilityService {
     if (this.userSettings.useDarkTheme) {
       return '#222';
     }
-    return 'fff';
+    return '#fff';
   }
 }

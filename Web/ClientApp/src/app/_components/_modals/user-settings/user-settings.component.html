@@ -143,49 +143,51 @@
       <div class="form-group row">
         <label for="name" for="notifymyturn" class="col-8">Sound notify me when it's my turn to play:</label>
         <div class="col-4 ">
-          <input
+          <ui-switch
             class="form-check-input"
-            type="checkbox"
+            size="small"
             [checked]="shouldBeCheckedNotifyWhenTurnToPlay()"
             (change)="updateNotifyWhenTurnToPlay($event)"
             id="notifymyturn"
-          />
+          ></ui-switch>
         </div>
       </div>
-
       <div class="form-group row">
         <label for="name" for="textNotifyMentioned" class="col-8">Text notify me when I'm mentioned in chat:</label>
         <div class="col-4 ">
-          <input
+          <ui-switch
+            size="small"
             class="form-check-input"
-            type="checkbox"
             [checked]="shouldBeCheckedTextNotifyOnMentions()"
             (change)="updateTextNotifyOnMentions($event)"
             id="textNotifyMentioned"
-          />
+          ></ui-switch>
         </div>
       </div>
       <div class="form-group row">
         <label for="name" for="soundNotifyMentioned" class="col-8">Sound notify me when I'm mentioned in chat:</label>
         <div class="col-4 ">
-          <input
+          <ui-switch
+            size="small"
             class="form-check-input"
-            type="checkbox"
             [checked]="shouldBeCheckedSoundNotifyOnMentions()"
             (change)="updateSoundNotifyOnMentions($event)"
             id="soundNotifyMentioned"
-          />
+          ></ui-switch>
         </div>
       </div>
       <div class="form-group row">
         <label for="name" for="darkMode" class="col-8">Dark mode:</label>
         <div class="col-4 ">
-          <input class="form-check-input" type="checkbox" 
-          [checked]="shouldBeCheckedDarkMode()"
-          (change)="updateShouldUserDarkMode($event)" id="darkMode" />
+          <ui-switch
+            class="form-check-input"
+            size="small"
+            [checked]="shouldBeCheckedDarkMode()"
+            (change)="updateShouldUserDarkMode($event)"
+            id="darkMode"
+          ></ui-switch>
         </div>
       </div>
-
       <hr />
       <button class="btn btn-info btn-block btn-lg" (click)="closeModal()">Close</button>
     </div>

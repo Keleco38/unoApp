@@ -25,7 +25,13 @@
   </div>
   <div class="row" [hidden]="!adminPassword">
     <div class="col-12">
-      <form #tournamentSetupForm="ngForm" (ngSubmit)="tournamentSetupForm.form.valid && confirm()" id="tournamentSetupForm" name="tournamentSetupForm" novalidate>
+      <form
+        #tournamentSetupForm="ngForm"
+        (ngSubmit)="tournamentSetupForm.form.valid && confirm()"
+        id="tournamentSetupForm"
+        name="tournamentSetupForm"
+        novalidate
+      >
         <div class="form-group row">
           <label for="text" class="col-4 col-form-label">Name</label>
           <div class="col-8">
@@ -104,37 +110,38 @@
         <div class="form-group row">
           <label for="name" for="drawTwoFourShouldSkipTurn" class="col-8">Draw two/four should skip turn:</label>
           <div class="col-4 ">
-            <input
+            <ui-switch
               class="form-check-input"
               name="drawTwoFourShouldSkipTurn"
+              size="small"
               type="checkbox"
               [(ngModel)]="tournamentSetup.drawFourDrawTwoShouldSkipTurn"
               id="drawTwoFourShouldSkipTurn"
-            />
+            ></ui-switch>
           </div>
         </div>
         <div class="form-group row">
           <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Reverse should skip turn in 2 players:</label>
           <div class="col-4 ">
-            <input
+            <ui-switch
               class="form-check-input"
-              type="checkbox"
+              size="small"
               [(ngModel)]="tournamentSetup.reverseShouldSkipTurnInTwoPlayers"
               name="reverseShouldSkipTurnInTwoPlayers"
               id="reverseShouldSkipTurnInTwoPlayers"
-            />
+            ></ui-switch>
           </div>
         </div>
         <div class="form-group row">
           <label for="name" for="matchingCardStealsTurn" class="col-8">Matching card steals turn:</label>
           <div class="col-4 ">
-            <input
+            <ui-switch
               class="form-check-input"
-              type="checkbox"
+              size="small"
               [(ngModel)]="tournamentSetup.matchingCardStealsTurn"
               name="matchingCardStealsTurn"
               id="matchingCardStealsTurn"
-            />
+            ></ui-switch>
           </div>
         </div>
         <div class="form-group row">
@@ -142,13 +149,13 @@
             >Wild card can be played only as the last option:</label
           >
           <div class="col-4 ">
-            <input
+            <ui-switch
               class="form-check-input"
-              type="checkbox"
+              size="small"
               [(ngModel)]="tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions"
               name="wildCardCanBePlayedOnlyIfNoOtherOptions"
               id="wildCardCanBePlayedOnlyIfNoOtherOptions"
-            />
+            ></ui-switch>
           </div>
         </div>
       </form>

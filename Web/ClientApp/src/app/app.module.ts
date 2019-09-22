@@ -60,6 +60,7 @@ import { TournamentDeactivateGuard } from './_guards/tournament-deactivate.guard
 import { TournamentGuard } from './_guards/tournament.guard';
 import { TournamentWaitingRoomDeactivateGuard } from './_guards/tournament-waiting-room-deactivate.guard';
 import { TournamentWaitingRoomGuard } from './_guards/tournament-waiting-room.guard';
+import { UiSwitchModule } from 'ngx-toggle-switch';
 
 @NgModule({
   declarations: [
@@ -105,6 +106,7 @@ import { TournamentWaitingRoomGuard } from './_guards/tournament-waiting-room.gu
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    UiSwitchModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       preventDuplicates: true,

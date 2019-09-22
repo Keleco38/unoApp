@@ -1,39 +1,39 @@
 <div class="row">
   <div class="col-12">
     <div class="alert alert-primary">Sidebar settings</div>
-      <div class="form-group row">
-        <label class="col-4 col-form-label">Size</label>
-        <div class="col-8">
-          <select (change)="saveSidebarSettings()" [(ngModel)]="sidebarSettings.sidebarSize" class="form-control form-control-sm">
-            <option value="30">30%</option>
-            <option value="40">40%</option>
-            <option value="50">50%</option>
-          </select>
-        </div>
+    <div class="form-group row">
+      <label class="col-4 col-form-label">Size</label>
+      <div class="col-8">
+        <select (change)="saveSidebarSettings()" [(ngModel)]="sidebarSettings.sidebarSize" class="form-control form-control-sm">
+          <option value="30">30%</option>
+          <option value="40">40%</option>
+          <option value="50">50%</option>
+        </select>
       </div>
-      <div class="form-check">
-        <input type="checkbox" [(ngModel)]="sidebarSettings.keepSidebarOpen" (change)="saveSidebarSettings()" class="form-check-input" id="sidebarOpenCheckbox" />
-        <label class="form-check-label" for="sidebarOpenCheckbox">
-          Keep chat sidebar open
-        </label>
+    </div>
+    <div class="form-group row">
+      <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Sticky chat:</label>
+      <div class="col-4 ">
+        <ui-switch class="form-check-input" size="small" [(ngModel)]="sidebarSettings.keepSidebarOpen"></ui-switch>
       </div>
-      <div class="form-check">
-        <input type="checkbox" [(ngModel)]="sidebarSettings.muteSpectators" (change)="saveSidebarSettings()" class="form-check-input" id="hideSpectatorChatCheckbox" />
-        <label class="form-check-label" for="hideSpectatorChatCheckbox">
-          Mute spectators
-        </label>
+    </div>
+    <div class="form-group row">
+      <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Mute specs:</label>
+      <div class="col-4 ">
+        <ui-switch class="form-check-input" size="small" [(ngModel)]="sidebarSettings.muteSpectators"></ui-switch>
       </div>
-      <div class="form-check">
-        <input type="checkbox" [(ngModel)]="sidebarSettings.muteServer" (change)="saveSidebarSettings()" class="form-check-input" id="hideServerChatCheckbox" />
-        <label class="form-check-label" for="hideServerChatCheckbox">
-          Mute server
-        </label>
+    </div>
+    <div class="form-group row">
+      <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Mute server:</label>
+      <div class="col-4 ">
+        <ui-switch class="form-check-input" size="small" [(ngModel)]="sidebarSettings.muteServer"></ui-switch>
       </div>
-      <div class="form-check">
-          <input type="checkbox" [(ngModel)]="sidebarSettings.showNavbar" (change)="saveSidebarSettings()" class="form-check-input" id="showNavbarCheckbox" />
-          <label class="form-check-label" for="showNavbarCheckbox">
-            Show navigation bar on top
-          </label>
-        </div>
+    </div>
+    <div class="form-group row">
+      <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Sticky navbar:</label>
+      <div class="col-4 ">
+        <ui-switch class="form-check-input" size="small" [(ngModel)]="sidebarSettings.showNavbar"></ui-switch>
+      </div>
+    </div>
   </div>
 </div>
