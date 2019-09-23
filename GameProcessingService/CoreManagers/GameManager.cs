@@ -108,11 +108,20 @@ namespace GameProcessingService.CoreManagers
 
                 messages.Add($"Round ended! Players that won that round: {string.Join(',', playersWithoutCards.Select(x => x.User.Name))}");
 
+
                 var playersThatMatchWinCriteria = game.Players.Where(x => x.RoundsWonCount == game.GameSetup.RoundsToWin).ToList();
                 if (playersThatMatchWinCriteria.Any())
                 {
-                    game.GameEnded = true;
-                    messages.Add($"Game ended! Players that won the game: {string.Join(',', playersThatMatchWinCriteria.Select(x => x.User.Name))}");
+                    if (game.IsTournamentGame && playersThatMatchWinCriteria.Count > 1)
+                    {
+                        messages.Add($"Both players reached the winning condition. Adding one extra round (game must have a winner).");
+                        game.GameSetup.RoundsToWin += 1;
+                    }
+                    else
+                    {
+                        game.GameEnded = true;
+                        messages.Add($"Game ended! Players that won the game: {string.Join(',', playersThatMatchWinCriteria.Select(x => x.User.Name))}");
+                    }
 
                 }
                 else

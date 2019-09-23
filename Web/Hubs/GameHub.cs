@@ -493,6 +493,8 @@ namespace Web.Hubs
             }
             var user = GetCurrentUser();
             var game = _gameRepository.GetGameByGameId(gameId);
+            if (game.GameEnded)
+                return;
             var player = game.Players.First(x => x.User == user);
 
             if (!player.MustCallUno)
