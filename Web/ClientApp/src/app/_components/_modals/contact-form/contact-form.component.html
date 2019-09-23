@@ -9,6 +9,7 @@
     <div class="col-12">
       <form
         #contactForm="ngForm"
+        #form
         name="form"
         [ngClass]="{ 'was-validated': formInvalid }"
         novalidate
@@ -24,6 +25,7 @@
             #subject="ngModel"
             class="form-control"
             name="subject"
+            autocomplete="off"
             id="subject"
             aria-describedby="subject"
             placeholder="Subject"
@@ -36,6 +38,7 @@
             type="email"
             email
             class="form-control"
+            autocomplete="off"
             name="_replyto"
             [(ngModel)]="emailModel"
             #email="ngModel"
@@ -51,13 +54,16 @@
             required
             [(ngModel)]="descriptionModel"
             #description="ngModel"
+            autocomplete="off"
             class="form-control"
             name="description"
             id="description"
             rows="5"
           ></textarea>
         </div>
-        <button [hidden]="formSubmitted" (click)="sendForm()" class="btn btn-info btn-lg btn-block">Send</button>
+        <button class="btn btn-info btn-lg btn-block" (click)="sendForm()">Send</button>
+        <!-- <button class="btn btn-info btn-lg btn-block" [hidden]="formSubmitted">Send</button> -->
+        <!-- <input [hidden]="!formSubmitted" type="submit" class="btn btn-info btn-lg btn-block" (click)="form.submit()" value="Send" /> -->
       </form>
     </div>
   </div>

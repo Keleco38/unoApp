@@ -8,12 +8,12 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ContactFormComponent implements OnInit {
   @ViewChild('contactForm', { static: true }) contactForm;
+  @ViewChild('form', { static: true }) form;
 
   subjectModel: string;
   emailModel: string;
   descriptionModel: string;
   formInvalid: boolean = false;
-  formSubmitted: boolean = false;
 
   constructor(private _activeModal: NgbActiveModal) {}
 
@@ -27,8 +27,7 @@ export class ContactFormComponent implements OnInit {
     if (this.contactForm.form.invalid) {
       this.formInvalid = true;
     } else {
-      this.contactForm.ngSubmit.emit();
-      this.formSubmitted = true;
+      this.form.nativeElement.submit();
     }
   }
 }
