@@ -1,5 +1,9 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" [routerLink]="['/']" routerLinkActive="router-link-active"><img id="brandingImage" src="images/branding.ico"/>UNO!</a>
+  <a class="navbar-brand" [routerLink]="['/']" routerLinkActive="router-link-active">
+    <img class="brandingImage" *ngIf="!userSettings.useDarkTheme" src="images/branding.ico" />
+    <img class="brandingImage" *ngIf="userSettings.useDarkTheme" src="images/branding-white.ico" />
+    UNO!</a
+  >
   <button class="navbar-toggler" (click)="toggleNavbar()" type="button">
     <span class="navbar-toggler-icon"></span>
   </button>

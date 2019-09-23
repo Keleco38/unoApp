@@ -39,43 +39,11 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     this._utilityService.saveUserSettings();
   }
 
-  updateNotifyWhenTurnToPlay(checked) {
-    this.userSettings.notifyUserWhenHisTurnToPlay = checked;
-    this._utilityService.saveUserSettings();
-  }
-
-  updateTextNotifyOnMentions(checked) {
-    this.userSettings.notifyWhenMentionedToast = checked;
-    this._utilityService.saveUserSettings();
-  }
-  updateSoundNotifyOnMentions(checked) {
-    
-    this.userSettings.notifyWhenMentionedBuzz = checked;
-    this._utilityService.saveUserSettings();
-  }
-
-  updateShouldUserDarkMode(checked) {
-    this._utilityService.updateTheme(checked);
-  }
-
   shouldBeCheckedBuzzCommand(buzzType) {
     return this.userSettings.blockedBuzzCommands.indexOf(buzzType) != -1;
   }
-
-  shouldBeCheckedNotifyWhenTurnToPlay() {
-    return this.userSettings.notifyUserWhenHisTurnToPlay;
-  }
-
-  shouldBeCheckedTextNotifyOnMentions() {
-    return this.userSettings.notifyWhenMentionedToast;
-  }
-
-  shouldBeCheckedSoundNotifyOnMentions() {
-    return this.userSettings.notifyWhenMentionedBuzz;
-  }
-
-  shouldBeCheckedDarkMode() {
-    return this.userSettings.useDarkTheme;
+  saveUserSettings() {
+    this._utilityService.saveUserSettings();
   }
 
   closeModal() {

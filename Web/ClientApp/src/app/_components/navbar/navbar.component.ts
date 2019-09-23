@@ -1,3 +1,5 @@
+import { UserSettings } from './../../_models/userSettings';
+import { UtilityService } from './../../_services/utility.service';
 import { ContactFormComponent } from './../_modals/contact-form/contact-form.component';
 import { Component, OnInit } from '@angular/core';
 import { HubService } from 'src/app/_services/hub.service';
@@ -32,10 +34,13 @@ import { UserSettingsComponent } from '../_modals/user-settings/user-settings.co
   ]
 })
 export class NavbarComponent implements OnInit {
+  userSettings: UserSettings;
   navbarOpen = false;
-  constructor(private _modalService: NgbModal) {}
+  constructor(private _modalService: NgbModal, private _utilityService: UtilityService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.userSettings = this._utilityService.userSettings;
+  }
 
   toggleNavbar() {
     if (window.innerWidth < 992) {
@@ -43,8 +48,8 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  openContactModal(){
-    this._modalService.open(ContactFormComponent,{backdrop:'static'})
+  openContactModal() {
+    this._modalService.open(ContactFormComponent, { backdrop: 'static' });
   }
 
   openSettings() {

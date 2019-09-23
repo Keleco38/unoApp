@@ -146,8 +146,8 @@
           <ui-switch
             class="form-check-input"
             size="small"
-            [checked]="shouldBeCheckedNotifyWhenTurnToPlay()"
-            (change)="updateNotifyWhenTurnToPlay($event)"
+            [(ngModel)]="userSettings.notifyUserWhenHisTurnToPlay"
+            (change)="saveUserSettings($event)"
             id="notifymyturn"
           ></ui-switch>
         </div>
@@ -158,8 +158,8 @@
           <ui-switch
             size="small"
             class="form-check-input"
-            [checked]="shouldBeCheckedTextNotifyOnMentions()"
-            (change)="updateTextNotifyOnMentions($event)"
+            [(ngModel)]="userSettings.notifyWhenMentionedToast"
+            (change)="saveUserSettings($event)"
             id="textNotifyMentioned"
           ></ui-switch>
         </div>
@@ -170,8 +170,8 @@
           <ui-switch
             size="small"
             class="form-check-input"
-            [checked]="shouldBeCheckedSoundNotifyOnMentions()"
-            (change)="updateSoundNotifyOnMentions($event)"
+            [(ngModel)]="userSettings.notifyWhenMentionedBuzz"
+            (change)="saveUserSettings($event)"
             id="soundNotifyMentioned"
           ></ui-switch>
         </div>
@@ -182,8 +182,8 @@
           <ui-switch
             class="form-check-input"
             size="small"
-            [checked]="shouldBeCheckedDarkMode()"
-            (change)="updateShouldUserDarkMode($event)"
+            [(ngModel)]="userSettings.useDarkTheme"
+            (change)="saveUserSettings($event)"
             id="darkMode"
           ></ui-switch>
         </div>
