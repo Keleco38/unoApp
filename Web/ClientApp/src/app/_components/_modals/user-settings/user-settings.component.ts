@@ -29,19 +29,21 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     this._hubService.addOrRenameUser(true);
   }
 
-  updateBlockedBuzzCommands(checked, buzzType) {
+  updateBlockedBuzzCommands(event, buzzType) {
+    var checked=event.target.checked;
     if (checked === true) {
       this.userSettings.blockedBuzzCommands.push(buzzType);
     } else {
       var index = this.userSettings.blockedBuzzCommands.indexOf(buzzType);
       this.userSettings.blockedBuzzCommands.splice(index, 1);
     }
-    this._utilityService.saveUserSettings();
+    this.saveUserSettings();
   }
 
   shouldBeCheckedBuzzCommand(buzzType) {
     return this.userSettings.blockedBuzzCommands.indexOf(buzzType) != -1;
   }
+
   saveUserSettings() {
     this._utilityService.saveUserSettings();
   }
