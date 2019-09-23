@@ -147,7 +147,7 @@
             class="form-check-input"
             size="small"
             [(ngModel)]="userSettings.notifyUserWhenHisTurnToPlay"
-            (change)="saveUserSettings($event)"
+            (change)="saveUserSettings()"
             id="notifyMyTurnToPlay"
           ></ui-switch>
         </div>
@@ -159,7 +159,7 @@
             size="small"
             class="form-check-input"
             [(ngModel)]="userSettings.notifyWhenMentionedToast"
-            (change)="saveUserSettings($event)"
+            (change)="saveUserSettings()"
             id="textNotifyMentioned"
           ></ui-switch>
         </div>
@@ -171,7 +171,7 @@
             size="small"
             class="form-check-input"
             [(ngModel)]="userSettings.notifyWhenMentionedBuzz"
-            (change)="saveUserSettings($event)"
+            (change)="saveUserSettings()"
             id="soundNotifyMentioned"
           ></ui-switch>
         </div>
@@ -183,7 +183,7 @@
             class="form-check-input"
             size="small"
             [(ngModel)]="userSettings.useDarkTheme"
-            (change)="saveUserSettings($event)"
+            (change)="saveUserSettings()"
             id="darkMode"
           ></ui-switch>
         </div>
