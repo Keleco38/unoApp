@@ -40,6 +40,11 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     this.saveUserSettings();
   }
 
+  updateUseDarkTheme(){
+    this.saveUserSettings();
+    this._utilityService.updateTheme();
+  }
+
   shouldBeCheckedBuzzCommand(buzzType) {
     return this.userSettings.blockedBuzzCommands.indexOf(buzzType) != -1;
   }

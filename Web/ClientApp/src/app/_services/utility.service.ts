@@ -80,21 +80,21 @@ export class UtilityService {
     });
   }
 
-  updateTheme(darkTheme: boolean) {
-    var theme = darkTheme ? 'dark' : 'light';
-    var links = document.getElementsByTagName('link');
-    for (var i = 0; i < links.length; i++) {
-      var link = links[i];
-      if (link.rel.indexOf('stylesheet') != -1 && link.title) {
-        if (link.title === theme) {
-          link.disabled = false;
-        } else {
-          link.disabled = true;
+  updateTheme() {
+    setTimeout(() => {
+      var theme = this.userSettings.useDarkTheme ? 'dark' : 'light';
+      var links = document.getElementsByTagName('link');
+      for (var i = 0; i < links.length; i++) {
+        var link = links[i];
+        if (link.rel.indexOf('stylesheet') != -1 && link.title) {
+          if (link.title === theme) {
+            link.disabled = false;
+          } else {
+            link.disabled = true;
+          }
         }
       }
-    }
-    this.userSettings.useDarkTheme = darkTheme;
-    this.saveUserSettings();
+    });
   }
 
   getSidebarBackgroundColor() {

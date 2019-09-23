@@ -11,9 +11,8 @@ export class AppComponent implements OnInit {
   constructor(private _utilityService: UtilityService, private _router: Router) {}
 
   ngOnInit(): void {
-    var userSettings = this._utilityService.userSettings;
-    if (userSettings.useDarkTheme) {
-      this._utilityService.updateTheme(true);
+    if (this._utilityService.userSettings.useDarkTheme) {
+      this._utilityService.updateTheme();
     }
     var isFirstTimeLunched = this._utilityService.isFirstTimeLunched;
     if (isFirstTimeLunched === true) {
