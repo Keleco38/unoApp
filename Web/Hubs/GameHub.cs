@@ -391,7 +391,7 @@ namespace Web.Hubs
                 {
                     playerLeftWithThisName.User = user;
                     playerLeftWithThisName.LeftGame = false;
-                    await DisplayToastMessageToGame(gameId, $"Player {user.Name} has reconnected to the game.");
+                    await DisplayToastMessageToGame(gameId, $"Player {user.Name} has reconnected to the game.", "info");
 
                 }
                 else
@@ -502,7 +502,7 @@ namespace Web.Hubs
 
             if (unoCalled)
             {
-                await SendMessage("*UNO!", ChatDestination.Game, gameId, string.Empty);
+                await DisplayToastMessageToGame(gameId, $"{player.User.Name} called *UNO!", "warning");
             }
             else
             {
@@ -576,11 +576,11 @@ namespace Web.Hubs
             await Clients.Clients(allUsersInGame).SendAsync("AddToGameLog", message);
         }
 
-        private async Task DisplayToastMessageToGame(string gameid, string message)
+        private async Task DisplayToastMessageToGame(string gameId, string message, string toastrType)
         {
-            var game = _gameRepository.GetGameByGameId(gameid);
+            var game = _gameRepository.GetGameByGameId(gameId);
             var allUsersInGame = GetPlayersAndSpectatorsFromGame(game);
-            await Clients.Clients(allUsersInGame).SendAsync("DisplayToastMessage", message);
+            await Clients.Clients(allUsersInGame).SendAsync("DisplayToastMessage", message, toastrType);
         }
 
         private async Task DisplayToastMessageToUser(string connectionId, string message)
@@ -874,7 +874,7 @@ namespace Web.Hubs
                 if (game.GameStarted)
                 {
                     player.LeftGame = true;
-                    await DisplayToastMessageToGame(gameId, $"User {player.User.Name} has left the game.");
+                    await DisplayToastMessageToGame(gameId, $"User {player.User.Name} has left the game.","info");
                 }
                 else
                 {

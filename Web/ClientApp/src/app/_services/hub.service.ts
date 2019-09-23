@@ -144,17 +144,17 @@ export class HubService {
     });
 
     this._hubConnection.on('RetrieveFullGameChat', (messages: ChatMessage[]) => {
-      this._gameChatMessages=messages;
+      this._gameChatMessages = messages;
       this._gameChatMessagesObservable.next(this._gameChatMessages);
     });
 
     this._hubConnection.on('RetrieveFullGameLog', (log: string[]) => {
-      this._gameLog=log;
+      this._gameLog = log;
       this._gameLogObservable.next(this._gameLog);
     });
 
     this._hubConnection.on('RetrieveFullTournamentChat', (messages: ChatMessage[]) => {
-      this._tournamentChatMessages=messages;
+      this._tournamentChatMessages = messages;
       this._tournamentChatMessagesObservable.next(this._tournamentChatMessages);
     });
 
@@ -189,8 +189,8 @@ export class HubService {
       this._router.navigateByUrl('/');
     });
 
-    this._hubConnection.on('DisplayToastMessage', (message: string) => {
-      this._toastrService.info(message);
+    this._hubConnection.on('DisplayToastMessage', (message: string, toastrType: string) => {
+      this._toastrService[toastrType](message);
     });
 
     this._hubConnection.on('UpdateMyHand', (myCards: Card[]) => {
@@ -354,7 +354,7 @@ export class HubService {
     this._hubConnection.invoke('CreateGame', gameSetup);
   }
 
-  createTournament(tournamentSetup: TournamentSetup, adminPassword :string) {
+  createTournament(tournamentSetup: TournamentSetup, adminPassword: string) {
     this._hubConnection.invoke('CreateTournament', tournamentSetup, adminPassword);
   }
 

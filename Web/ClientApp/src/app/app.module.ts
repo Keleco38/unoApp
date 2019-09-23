@@ -112,6 +112,7 @@ import { UiSwitchModule } from 'ngx-toggle-switch';
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       preventDuplicates: true,
+      resetTimeoutOnDuplicate:true,
       timeOut: 3000
     }),
     HttpClientModule,
