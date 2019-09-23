@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -7,9 +7,13 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./contact-form.component.css']
 })
 export class ContactFormComponent implements OnInit {
-  subjectModel;
-  emailModel;
-  descriptionModel;
+  @ViewChild('contactForm', { static: true }) contactForm;
+
+  subjectModel: string;
+  emailModel: string;
+  descriptionModel: string;
+  formInvalid: boolean = false;
+  formSubmitted: boolean = false;
 
   constructor(private _activeModal: NgbActiveModal) {}
 
@@ -20,6 +24,11 @@ export class ContactFormComponent implements OnInit {
   }
 
   sendForm() {
-    this.closeModal();
+    if (this.contactForm.form.invalid) {
+      this.formInvalid = true;
+    } else {
+      this.contactForm.ngSubmit.emit();
+      this.formSubmitted = true;
+    }
   }
 }

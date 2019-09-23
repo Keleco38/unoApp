@@ -10,13 +10,12 @@
       <form
         #contactForm="ngForm"
         name="form"
-        [ngClass]="{ 'was-validated': contactForm.submitted }"
+        [ngClass]="{ 'was-validated': formInvalid }"
         novalidate
-        (ngSubmit)="contactForm.form.valid && sendForm()"
         action="https://formspree.io/tonymarkoc@gmail.com"
         method="POST"
       >
-        <div class="form-group" >
+        <div class="form-group">
           <label for="subject">Subject</label>
           <input
             required
@@ -58,7 +57,7 @@
             rows="5"
           ></textarea>
         </div>
-        <input type="submit" class="btn btn-info btn-lg btn-block" value="Send" />
+        <button [hidden]="formSubmitted" (click)="sendForm()" class="btn btn-info btn-lg btn-block">Send</button>
       </form>
     </div>
   </div>
