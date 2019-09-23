@@ -2,13 +2,15 @@
   <h4 class="modal-title" id="modal-basic-title">Showing Cards</h4>
 </div>
 <div class="modal-body">
-  <div class="row">
+  <div class="row" *ngFor="let cardsAndName of cardsAndNames">
     <div class="col-12 p5">
-      <img
-        *ngFor="let card of cards;"
-        [src]="card.imageUrl"
-      />
-      <hr>
+      <div class="alert alert-info text-center">{{cardsAndName.key}}</div>
+      <img *ngFor="let card of cardsAndName.value" [src]="card.imageUrl" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <hr />
       <button (click)="closeModal()" class="btn btn-primary btn-lg btn-block">Close</button>
     </div>
   </div>

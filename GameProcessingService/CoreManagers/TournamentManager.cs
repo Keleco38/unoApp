@@ -44,7 +44,8 @@ namespace GameProcessingService.CoreManagers
                         MaxNumberOfPlayers = 2,
                         Password = tournament.TournamentSetup.Password,
                         ReverseShouldSkipTurnInTwoPlayers = tournament.TournamentSetup.ReverseShouldSkipTurnInTwoPlayers,
-                        WildCardCanBePlayedOnlyIfNoOtherOptions = tournament.TournamentSetup.WildCardCanBePlayedOnlyIfNoOtherOptions
+                        WildCardCanBePlayedOnlyIfNoOtherOptions = tournament.TournamentSetup.WildCardCanBePlayedOnlyIfNoOtherOptions,
+                        CanSeeTeammatesHandInTeamGame = false
                     }, tournament.Id);
                     _gameRepository.AddGame(game);
 
@@ -62,6 +63,11 @@ namespace GameProcessingService.CoreManagers
                 if (tournament.Contestants.ElementAtOrDefault(tournament.TournamentRounds[0].TournamentRoundGames.Count + i) != null)
                 {
                     tournament.TournamentRounds[0].TournamentRoundGames[i].Game.Players.Add(new Player(tournament.Contestants[tournament.TournamentRounds[0].TournamentRoundGames.Count + i].User, 2) { LeftGame = true });
+
+                    tournament.TournamentRounds[0].TournamentRoundGames[i].Game.GameLog.Add("Game started.");
+                    tournament.TournamentRounds[0].TournamentRoundGames[i].Game.GameLog.Add("If you need more detailed log info, press the 'Game info' button.");
+                    tournament.TournamentRounds[0].TournamentRoundGames[i].Game.GameLog.Add("This is the game log summary. We will display the last 3 entries here.");
+
                     _gameManager.StartNewGame(tournament.TournamentRounds[0].TournamentRoundGames[i].Game);
                 }
                 else
@@ -72,17 +78,7 @@ namespace GameProcessingService.CoreManagers
                 }
 
             }
-
-
-            //for (int k = 0; k < 2; k++)
-            //{
-            //    var player = new Player(tournament.Contestants[(j - 1) * 2 + k].User, k + 1) { LeftGame = true };
-            //    tournamentRoundGame.Game.Players.Add(player);
-            //    if (k == 1)
-            //        _gameManager.StartNewGame(tournamentRoundGame.Game);
-            //}
-
-
+            
             tournament.TournamentStarted = true;
 
         }
@@ -121,6 +117,9 @@ namespace GameProcessingService.CoreManagers
                 gameInTournament.Players.Add(new Player(playerWon.User, placeInNewGame) { LeftGame = true });
                 if (gameInTournament.Players.Count == 2)
                 {
+                    gameInTournament.GameLog.Add("Game started.");
+                    gameInTournament.GameLog.Add("If you need more detailed log info, press the 'Game info' button.");
+                    gameInTournament.GameLog.Add("This is the game log summary. We will display the last 3 entries here.");
                     _gameManager.StartNewGame(gameInTournament);
                 }
             }

@@ -3,6 +3,7 @@ using System.Linq;
 using Common.Contants;
 using Common.Enums;
 using EntityObjects;
+using EntityObjects.Cards.Abstraction;
 using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
@@ -27,7 +28,10 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             if (game.PlayerToPlay.Cards.Any())
             {
-                callbackParams.Add(new MoveResultCallbackParam(Constants.SHOW_CARDS_CALLBACK_COMMAND, moveParams.PlayerPlayed.User.ConnectionId, game.Deck.Cards.Take(5)));
+                List<KeyValuePair<string, List<ICard>>> result = new List<KeyValuePair<string, List<ICard>>>();
+                result.Add(new KeyValuePair<string, List<ICard>>("Deck's' top 5 cards", game.Deck.Cards.Take(5).ToList()));
+
+                callbackParams.Add(new MoveResultCallbackParam(Constants.Commands.SHOW_CARDS_CALLBACK_COMMAND, moveParams.PlayerPlayed.User.ConnectionId, result));
             }
 
             return new MoveResult(messagesToLog, callbackParams);

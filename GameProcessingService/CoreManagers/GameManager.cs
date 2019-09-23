@@ -116,6 +116,8 @@ namespace GameProcessingService.CoreManagers
                     {
                         messages.Add($"Both players reached the winning condition. Adding one extra round (game must have a winner).");
                         game.GameSetup.RoundsToWin += 1;
+                        game.RoundEnded = true;
+                        StartNewGame(game);
                     }
                     else
                     {
@@ -126,6 +128,7 @@ namespace GameProcessingService.CoreManagers
                 }
                 else
                 {
+                    game.RoundEnded = true;
                     StartNewGame(game);
                 }
             }

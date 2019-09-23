@@ -22,6 +22,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GameList } from '../_models/gameList';
 import { Tournament } from '../_models/tournament';
 import { TournamentList } from '../_models/tournamentList';
+import { KeyValue } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -195,6 +196,11 @@ export class HubService {
 
     this._hubConnection.on('UpdateMyHand', (myCards: Card[]) => {
       this._myHandObservable.next(myCards);
+      if (this._utilityService.userSettings.notifyUserWhenHisTurnToPlay) {
+        if (this._activeGameObservable.getValue().playerToPlay.user.name == this._currentUserObservable.getValue().name) {
+          this.buzzPlayer('ding', true);
+        }
+      }
     });
 
     this._hubConnection.on('AdminKickUser', () => {
@@ -206,11 +212,13 @@ export class HubService {
       document.body.innerHTML = '<h1>You were temporarily kicked from the server</h1>';
     });
 
-    this._hubConnection.on('ShowCards', (cards: Card[]) => {
+    this._hubConnection.on('ShowCards', (cardsAndNames: KeyValue<string, Card[]>[], showImmediately: boolean) => {
+      console.log(showImmediately)
+      var delay = showImmediately ? 0 : 2000;
       setTimeout(() => {
         const modalRef = this._modalService.open(ShowCardsComponent, { backdrop: 'static' });
-        modalRef.componentInstance.cards = cards;
-      }, 2000);
+        modalRef.componentInstance.cardsAndNames = cardsAndNames;
+      }, delay);
     });
 
     this._hubConnection.on('UpdateTournament', (tournament: Tournament) => {
@@ -235,12 +243,6 @@ export class HubService {
       } else {
         if (this._router.url !== '/waiting-room') {
           this._router.navigateByUrl('/waiting-room');
-        }
-      }
-
-      if (this._utilityService.userSettings.notifyUserWhenHisTurnToPlay) {
-        if (game.playerToPlay.user.name == this._currentUserObservable.getValue().name) {
-          this.buzzPlayer('ding', true);
         }
       }
     });
@@ -313,6 +315,10 @@ export class HubService {
 
   checkUnoCall(unoCalled: boolean) {
     this._hubConnection.invoke('CheckUnoCall', this._activeGameObservable.getValue().id, unoCalled);
+  }
+
+  seeTeammatesCards() {
+    this._hubConnection.invoke('ShowTeammatesHand', this._activeGameObservable.getValue().id);
   }
 
   playCard(

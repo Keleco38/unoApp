@@ -1,3 +1,4 @@
+import { UtilityService } from 'src/app/_services/utility.service';
 import { Tournament } from './../../_models/tournament';
 import { HubService } from './../../_services/hub.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -13,12 +14,18 @@ export class AvailableTournamentsComponent implements OnInit, OnDestroy {
   availableTournaments: TournamentList[] = [];
   _isAlive: boolean = true;
 
-  constructor(private _hubService: HubService) {}
+  constructor(private _hubService: HubService, private _utilityService:UtilityService) {}
 
   ngOnInit() {
     this._hubService.availableTournaments.pipe(takeWhile(() => this._isAlive)).subscribe(tournaments => {
       this.availableTournaments = tournaments;
     });
+  }
+
+  
+  getButtonClass(){
+    if(this._utilityService.userSettings.useDarkTheme) return "btn-info"
+    return "btn-primary"
   }
 
   joinTournament(tournament: TournamentList) {

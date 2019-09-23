@@ -57,14 +57,21 @@
     </div>
     <div class="row">
       <div class="col-12 text-center">
-        <img
-          class="last-card-played float-left float-sm-none"
-          [style.borderColor]="getBorderColor()"
-          [src]="game.lastCardPlayed.imageUrl"
-          alt=""
-        />
-        <button class="btn uno btn-primary" (click)="callUno(true)">Uno!</button>
-        <img (click)="drawCard()" class="deck-card float-right float-sm-none" src="/images/cards/small/card_back_alt.png" />
+        <div class="d-flex justify-content-around">
+          <div>
+            <img class="last-card-played" [style.borderColor]="getBorderColor()" [src]="game.lastCardPlayed.imageUrl" alt="" />
+          </div>
+          <div>
+            <button class="btn btn-primary btn-md" (click)="callUno(true)">Uno!</button>
+            <div *ngIf="game.gameSetup.playersSetup == 2 && game.gameSetup.canSeeTeammatesHandInTeamGame">
+              <hr />
+              <button class="btn btn-success btn-sm" (click)="seeTeammatesCards()">Ally's cards</button>
+            </div>
+          </div>
+          <div>
+            <img (click)="drawCard()" class="deck-card" src="/images/cards/small/card_back_alt.png" />
+          </div>
+        </div>
       </div>
     </div>
     <div class="row">

@@ -3,6 +3,7 @@ import { Game } from 'src/app/_models/game';
 import { HubService } from 'src/app/_services/hub.service';
 import { takeWhile } from 'rxjs/operators';
 import { GameList } from 'src/app/_models/gameList';
+import { UtilityService } from 'src/app/_services/utility.service';
 
 @Component({
   selector: 'app-available-games',
@@ -16,12 +17,17 @@ export class AvailableGamesComponent implements OnInit, OnDestroy {
   private _isAlive: boolean = true;
   availableGames: GameList[] = new Array<GameList>();
 
-  constructor(private _hubService: HubService) {}
+  constructor(private _hubService: HubService, private _utilityService:UtilityService) {}
 
   ngOnInit(): void {
     this._hubService.availableGames.pipe(takeWhile(() => this._isAlive)).subscribe((availableGames: GameList[]) => {
       this.availableGames = availableGames;
     });
+  }
+
+  getButtonClass(){
+    if(this._utilityService.userSettings.useDarkTheme) return "btn-info"
+    return "btn-primary"
   }
 
   joinGame(game: GameList) {

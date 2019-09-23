@@ -22,6 +22,7 @@ namespace EntityObjects
         public LastCardPlayed LastCardPlayed { get; set; }
         public Player PlayerToPlay { get; set; }
         public bool GameStarted { get; set; }
+        public bool RoundEnded { get; set; }
         public bool GameEnded { get; set; }
         public Game(GameSetup gameSetup, string tournamentId = "")
         {

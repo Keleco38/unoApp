@@ -1,4 +1,3 @@
-
 #game-short-info p {
   font-size: 0.8rem;
   margin-bottom: 0.5rem;
@@ -41,7 +40,7 @@ button.uno {
   }
   .last-card-played,
   .deck-card {
-    width: 25%;
+    width: 70%;
   }
   button.uno {
     margin: 0 10px;

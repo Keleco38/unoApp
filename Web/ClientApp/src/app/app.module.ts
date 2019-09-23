@@ -113,6 +113,7 @@ import { UiSwitchModule } from 'ngx-toggle-switch';
     ToastrModule.forRoot({
       preventDuplicates: true,
       resetTimeoutOnDuplicate:true,
+      positionClass: 'toast-bottom-right',
       timeOut: 3000
     }),
     HttpClientModule,

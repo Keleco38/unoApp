@@ -3,7 +3,8 @@
     <div class="alert alert-primary">Available games ({{ availableGames.length }}):</div>
     <button
       [class.btn-danger]="availableGame.gameStarted"
-      class="btn btn-primary btn-block mb-1"
+      class="btn  btn-block mb-1"
+      [ngClass]="getButtonClass()"
       *ngFor="let availableGame of availableGames"
       (click)="joinGame(availableGame)"
     >

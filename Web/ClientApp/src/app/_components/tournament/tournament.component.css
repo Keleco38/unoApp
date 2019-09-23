@@ -70,3 +70,23 @@ li.game-spacer {
 li.game-bottom {
   border-top: 3px solid #aaa;
 }
+
+
+
+
+.animation-text-shine {
+  animation-name: greenPulseText;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+@keyframes greenPulseText {
+  from {
+    color: #c0ff02;
+  }
+  50% {
+    color: #4b610b;
+  }
+  to {
+    color: #c0ff02;
+  }
+}

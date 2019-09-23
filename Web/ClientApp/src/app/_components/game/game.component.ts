@@ -105,6 +105,10 @@ export class GameComponent implements OnInit, OnDestroy {
     this._hubService.checkUnoCall(unoCalled);
   }
 
+  seeTeammatesCards() {
+    this._hubService.seeTeammatesCards();
+  }
+
   playCard(cardPlayed: Card) {
     if (this._mustCallUno) {
       return;

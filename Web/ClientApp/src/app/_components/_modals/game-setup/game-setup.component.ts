@@ -33,7 +33,8 @@ export class GameSetupComponent implements OnInit {
         bannedCards: [],
         matchingCardStealsTurn: true,
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
-        playersSetup: PlayersSetup.individual
+        playersSetup: PlayersSetup.individual,
+        canSeeTeammatesHandInTeamGame: true
       };
     } else {
       this.gameSetup = this._game.gameSetup;

@@ -1,9 +1,11 @@
-<div class="row" *ngIf="availableTournaments.length > 0">
+<div class="row " *ngIf="availableTournaments.length > 0">
   <div class="col-12">
+    <br>
     <div class="alert alert-primary">Available tournaments ({{ availableTournaments.length }}):</div>
     <button
       [class.btn-danger]="tournament.tournamentStarted"
-      class="btn btn-primary btn-block mb-1"
+      class="btn  btn-block mb-1"
+      [ngClass]="getButtonClass()"
       *ngFor="let tournament of availableTournaments"
       (click)="joinTournament(tournament)"
     >

@@ -15,5 +15,6 @@ namespace DomainObjects
         public bool MatchingCardStealsTurn { get; set; }
         public bool WildCardCanBePlayedOnlyIfNoOtherOptions { get; set; }
         public int MaxNumberOfPlayers { get; set; }
+        public bool CanSeeTeammatesHandInTeamGame { get; set; }
     }
 }

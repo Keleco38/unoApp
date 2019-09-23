@@ -516,6 +516,27 @@ namespace Web.Hubs
             player.MustCallUno = false;
         }
 
+
+        public async Task ShowTeammatesHand(string gameId)
+        {
+            var game = _gameRepository.GetGameByGameId(gameId);
+            if (game.GameSetup.PlayersSetup != PlayersSetup.Teams || !game.GameSetup.CanSeeTeammatesHandInTeamGame)
+            {
+                return;
+            }
+            var user = GetCurrentUser();
+            var player = game.Players.First(x => x.User.Name == user.Name);
+
+            List<KeyValuePair<string, List<CardDto>>> result = new List<KeyValuePair<string, List<CardDto>>>();
+            game.Players.Where(x => x.TeamNumber == player.TeamNumber && x != player).ToList().ForEach(x =>
+                  {
+                      result.Add(new KeyValuePair<string, List<CardDto>>($"{x.User.Name}'s cards", _mapper.Map<List<CardDto>>(x.Cards).OrderBy(y => y.Color).ThenBy(y => y.Value).ToList()));
+                  });
+
+            await Clients.Caller.SendAsync(Constants.Commands.SHOW_CARDS_CALLBACK_COMMAND, result, true);
+
+        }
+
         public async Task PlayCard(string gameId, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess)
         {
 
@@ -540,6 +561,16 @@ namespace Web.Hubs
             {
                 player.MustCallUno = true;
                 await Clients.Caller.SendAsync("MustCallUno");
+            }
+
+            if (game.RoundEnded)
+            {
+                game.RoundEnded = false;
+                if (game.IsTournamentGame)
+                {
+                    var tournament = _tournamentRepository.GetTournament(game.TournamentId);
+                    await UpdateTournament(tournament);
+                }
             }
             if (game.GameEnded)
             {
@@ -876,7 +907,7 @@ namespace Web.Hubs
                 if (game.GameStarted)
                 {
                     player.LeftGame = true;
-                    await DisplayToastMessageToGame(gameId, $"User {player.User.Name} has left the game.","info");
+                    await DisplayToastMessageToGame(gameId, $"User {player.User.Name} has left the game.", "info");
                 }
                 else
                 {

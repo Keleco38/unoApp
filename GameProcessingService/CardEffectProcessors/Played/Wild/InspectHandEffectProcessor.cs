@@ -3,6 +3,7 @@ using System.Linq;
 using Common.Contants;
 using Common.Enums;
 using EntityObjects;
+using EntityObjects.Cards.Abstraction;
 using GameProcessingService.CardEffectProcessors.AutomaticallyTriggered;
 using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
@@ -30,13 +31,19 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             var messageToLog = ($"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with inspect hand. ");
 
-            var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { MagneticPolarityParams = new AutomaticallyTriggeredMagneticPolarityParams(moveParams.TargetedCardColor,moveParams.PlayerPlayed,moveParams.PlayerTargeted) });
+            var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { MagneticPolarityParams = new AutomaticallyTriggeredMagneticPolarityParams(moveParams.TargetedCardColor, moveParams.PlayerPlayed, moveParams.PlayerTargeted) });
             moveParams.PlayerTargeted = automaticallyTriggeredResultMagneticPolarity.MagneticPolaritySelectedPlayer;
             messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
 
             if (game.PlayerToPlay.Cards.Any())
             {
-                var moveResultCallbackParam = new MoveResultCallbackParam(Constants.SHOW_CARDS_CALLBACK_COMMAND, moveParams.PlayerPlayed.User.ConnectionId, moveParams.PlayerTargeted.Cards);
+
+                List<KeyValuePair<string, List<ICard>>> result = new List<KeyValuePair<string, List<ICard>>>
+                {
+                    new KeyValuePair<string, List<ICard>>($"{moveParams.PlayerTargeted.User.Name}'s cards", moveParams.PlayerTargeted.Cards.OrderBy(y => y.Color).ThenBy(y => y.Value).ToList())
+                };
+
+                var moveResultCallbackParam = new MoveResultCallbackParam(Constants.Commands.SHOW_CARDS_CALLBACK_COMMAND, moveParams.PlayerPlayed.User.ConnectionId, result);
                 moveResultCallbackParams.Add(moveResultCallbackParam);
             }
 

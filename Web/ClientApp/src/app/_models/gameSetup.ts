@@ -11,4 +11,5 @@ export interface GameSetup {
   matchingCardStealsTurn:boolean;
   wildCardCanBePlayedOnlyIfNoOtherOptions:boolean;
   maxNumberOfPlayers: number;
+  canSeeTeammatesHandInTeamGame: boolean;
 }
