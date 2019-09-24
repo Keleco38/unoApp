@@ -75,11 +75,11 @@ li.game-bottom {
 
 
 .animation-text-shine {
-  animation-name: greenPulseText;
+  animation-name: greenText;
   animation-duration: 2s;
   animation-iteration-count: infinite;
 }
-@keyframes greenPulseText {
+@keyframes greenText {
   from {
     color: #c0ff02;
   }
