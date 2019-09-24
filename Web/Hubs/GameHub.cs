@@ -139,7 +139,7 @@ namespace Web.Hubs
                     contestant.LeftTournament = false;
                     await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
                 }
-                else
+                else if (spectator == null)
                 {
                     tournament.Spectators.Add((user));
                     await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
@@ -394,7 +394,7 @@ namespace Web.Hubs
                     await DisplayToastMessageToGame(gameId, $"Player {user.Name} has reconnected to the game.", "info");
 
                 }
-                else
+                else if (spectator == null)
                 {
                     game.Spectators.Add(new Spectator(user));
                 }

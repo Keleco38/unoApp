@@ -1,19 +1,21 @@
 <div class="row " *ngIf="availableTournaments.length > 0">
   <div class="col-12">
-    <br>
     <div class="alert alert-primary">Available tournaments ({{ availableTournaments.length }}):</div>
-    <button
-      [class.btn-danger]="tournament.tournamentStarted"
-      class="btn  btn-block mb-1"
-      [ngClass]="getButtonClass()"
-      *ngFor="let tournament of availableTournaments"
-      (click)="joinTournament(tournament)"
-    >
-      <span *ngIf="tournament.isPasswordProtected">&#9919;</span>
-      <span> {{ tournament.name }} </span>
-      <span> - </span>
-      <span [hidden]="tournament.tournamentStarted">({{ tournament.numberOfPlayers }}/{{ tournament.requiredNumberOfPlayers }})</span>
-      <span [hidden]="!tournament.tournamentStarted">[{{ tournament.numberOfPlayers }}]</span>
-    </button>
+    <ul class="list-group">
+      <li
+        class="list-group-item cursor-pointer d-flex justify-content-between align-items-center"
+        (click)="joinTournament(tournament)"
+        *ngFor="let tournament of availableTournaments"
+      >
+        <div>
+          <span *ngIf="tournament.isPasswordProtected">&#9919;</span>
+          <span> {{ tournament.name }} </span>
+        </div>
+        <span class="badge badge-pill" [ngClass]="getBadgeClass(tournament)">
+          <span [hidden]="tournament.tournamentStarted">({{ tournament.numberOfPlayers }}/{{ tournament.requiredNumberOfPlayers }})</span>
+          <span [hidden]="!tournament.tournamentStarted">[{{ tournament.numberOfPlayers }}]</span>
+        </span>
+      </li>
+    </ul>
   </div>
 </div>

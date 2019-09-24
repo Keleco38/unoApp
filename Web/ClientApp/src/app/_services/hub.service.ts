@@ -23,6 +23,7 @@ import { GameList } from '../_models/gameList';
 import { Tournament } from '../_models/tournament';
 import { TournamentList } from '../_models/tournamentList';
 import { KeyValue } from '@angular/common';
+import { RenameComponent } from '../_components/_modals/rename/rename.component';
 
 @Injectable({
   providedIn: 'root'
@@ -213,7 +214,6 @@ export class HubService {
     });
 
     this._hubConnection.on('ShowCards', (cardsAndNames: KeyValue<string, Card[]>[], showImmediately: boolean) => {
-      console.log(showImmediately)
       var delay = showImmediately ? 0 : 2000;
       setTimeout(() => {
         const modalRef = this._modalService.open(ShowCardsComponent, { backdrop: 'static' });
@@ -262,24 +262,35 @@ export class HubService {
   addOrRenameUser(forceRename: boolean) {
     let name;
     if (environment.production) {
-      do {
-        if (forceRename) {
-          name = prompt("Your name is already taken or it's not set. Please input a new name (only letters and numbers allowed):");
-          if (name == null && this._currentUserObservable.getValue() != null) return;
-        } else {
-          name =
-            localStorage.getItem('name') ||
-            prompt("Your name is already taken or it's not set. Please input a new name (only letters and numbers allowed):");
+      if (!forceRename) {
+        name = localStorage.getItem('name');
+        if (!name) forceRename = true;
+      }
+      if (forceRename) {
+        var modalRef = this._modalService.open(RenameComponent, { backdrop: 'static', keyboard: false });
+        if (this._currentUserObservable.getValue() != null) {
+          modalRef.componentInstance.currentUser = this._currentUserObservable.getValue();
         }
-      } while (!name);
+        modalRef.result.then((name: string) => {
+          localStorage.setItem('name', name);
+          this._hubConnection.invoke('AddOrRenameUser', name);
+          this._hubConnection.invoke('GetAllGames');
+          this._hubConnection.invoke('GetAllTournaments');
+        });
+      } else {
+        localStorage.setItem('name', name);
+        this._hubConnection.invoke('AddOrRenameUser', name);
+        this._hubConnection.invoke('GetAllGames');
+        this._hubConnection.invoke('GetAllTournaments');
+      }
     } else {
-      const myArray = ['Ante', 'Mate', 'Jure', 'Ivica', 'John'];
+      const myArray = ['Ante', 'Mate', 'Jure', 'Ivica', 'John', 'Bruno', 'Mike', 'David', 'Mokki'];
       name = myArray[Math.floor(Math.random() * myArray.length)];
+      localStorage.setItem('name', name);
+      this._hubConnection.invoke('AddOrRenameUser', name);
+      this._hubConnection.invoke('GetAllGames');
+      this._hubConnection.invoke('GetAllTournaments');
     }
-    localStorage.setItem('name', name);
-    this._hubConnection.invoke('AddOrRenameUser', name);
-    this._hubConnection.invoke('GetAllGames');
-    this._hubConnection.invoke('GetAllTournaments');
   }
 
   joinGame(id: string, password: string): any {

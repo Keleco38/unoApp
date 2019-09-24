@@ -1,18 +1,21 @@
-<div class="row">
+<div class="row"  *ngIf="availableGames.length > 0">
   <div class="col-12">
     <div class="alert alert-primary">Available games ({{ availableGames.length }}):</div>
-    <button
-      [class.btn-danger]="availableGame.gameStarted"
-      class="btn  btn-block mb-1"
-      [ngClass]="getButtonClass()"
-      *ngFor="let availableGame of availableGames"
-      (click)="joinGame(availableGame)"
-    >
-      <span *ngIf="availableGame.isPasswordProtected">&#9919;</span>
-      <span> {{ availableGame.host }} </span>
-      <span> - </span>
-      <span [hidden]="availableGame.gameStarted">({{ availableGame.numberOfPlayers }}/{{ availableGame.maxNumberOfPlayers }})</span>
-      <span [hidden]="!availableGame.gameStarted">[{{ availableGame.numberOfPlayers }}]</span>
-    </button>
+    <ul class="list-group">
+      <li
+        class="list-group-item cursor-pointer d-flex justify-content-between align-items-center"
+        (click)="joinGame(availableGame)"
+        *ngFor="let availableGame of availableGames"
+      >
+        <div>
+          <span *ngIf="availableGame.isPasswordProtected">&#9919;</span>
+          <span> {{ availableGame.host }} </span>
+        </div>
+        <span class="badge badge-pill" [ngClass]="getBadgeClass(availableGame)">
+          <span [hidden]="availableGame.gameStarted">({{ availableGame.numberOfPlayers }}/{{ availableGame.maxNumberOfPlayers }})</span>
+          <span [hidden]="!availableGame.gameStarted">[{{ availableGame.numberOfPlayers }}]</span>
+        </span>
+      </li>
+    </ul>
   </div>
 </div>

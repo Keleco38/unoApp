@@ -1,3 +1,4 @@
+import { FirstTimeLaunchComponent } from './_components/_modals/first-time-launch/first-time-launch.component';
 import { TournamentWinnersComponent } from './_components/tournament-winners/tournament-winners.component';
 import { AdminSectionComponent } from './_components/_modals/admin-section/admin-section.component';
 import { ContactFormComponent } from './_components/_modals/contact-form/contact-form.component';
@@ -62,6 +63,7 @@ import { TournamentGuard } from './_guards/tournament.guard';
 import { TournamentWaitingRoomDeactivateGuard } from './_guards/tournament-waiting-room-deactivate.guard';
 import { TournamentWaitingRoomGuard } from './_guards/tournament-waiting-room.guard';
 import { UiSwitchModule } from 'ngx-toggle-switch';
+import { RenameComponent } from './_components/_modals/rename/rename.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +105,9 @@ import { UiSwitchModule } from 'ngx-toggle-switch';
     ContactFormComponent,
     TournamentWaitingRoomComponent,
     AdminSectionComponent,
+    FirstTimeLaunchComponent,
     TournamentWinnersComponent,
+    RenameComponent,
     TournamentComponent
   ],
   imports: [
@@ -169,12 +173,14 @@ import { UiSwitchModule } from 'ngx-toggle-switch';
     PickNumbersToDiscardComponent,
     PickCharityCardsComponent,
     BlackjackComponent,
+    FirstTimeLaunchComponent,
     UserSettingsComponent,
     PickPromiseCardComponent,
     ContactFormComponent,
     GuessOddEvenNumberComponent,
     GameSetupComponent,
     GameEndedResultComponent,
+    RenameComponent,
     TournamentSetupComponent,
     AdminSectionComponent
   ]

@@ -1,0 +1,49 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Rename</h4>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-12">
+      <label>Please input your name:</label>
+      <form novalidate>
+        <div class="form-group">
+          <input
+            class="form-control"
+            [ngClass]="(nameModel.invalid || usernameTaken()) ? 'is-invalid' : 'is-valid'"
+            type="text"
+            required
+            name="name"
+            #nameModel="ngModel"
+            autocomplete="off"
+            [(ngModel)]="name"
+            pattern="[a-zA-Z0-9]{1,10}"
+            placeholder="Username"
+          />
+          <small class="form-text text-muted">Max 10 letters, no spaces and no special characters.</small>
+          <div class="valid-feedback" *ngIf="!usernameTaken() && !nameModel.invalid">
+            Looks good!
+          </div>
+          <div class="invalid-feedback" *ngIf="!usernameTaken() && nameModel.invalid">
+            Name is empty or it contains prohibited characters.
+          </div>
+          <div class="invalid-feedback" *ngIf="usernameTaken() && !nameModel.invalid">
+            Name is already taken.
+            <small class="mx-2 cursor-pointer" [ngbPopover]="takenNames" placement="bottom" [popoverTitle]="'Names taken'"
+              >(show taken names)</small
+            >
+          </div>
+        </div>
+        <hr />
+        <button class="btn-info btn btn-lg btn-block" (click)="confirmUsername()" [disabled]="nameModel.invalid || usernameTaken()">
+          Confirm
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #takenNames>
+  <ul>
+    <li *ngFor="let name of onlineUsers">{{ name }}</li>
+  </ul>
+</ng-template>

@@ -27,7 +27,8 @@ export class ContactFormComponent implements OnInit {
     if (this.contactForm.form.invalid) {
       this.formInvalid = true;
     } else {
-      this.form.nativeElement.submit();
+      this.form.
+      nativeElement.submit();
     }
   }
 }

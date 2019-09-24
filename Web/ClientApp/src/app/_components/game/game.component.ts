@@ -254,11 +254,9 @@ export class GameComponent implements OnInit, OnDestroy {
     return classes;
   }
 
-
   getSidebarBackgroundColor() {
-    return this._utilityService.getSidebarBackgroundColor()
+    return this._utilityService.getSidebarBackgroundColor();
   }
-
 
   drawCard() {
     if (this.game.playerToPlay.user.name != this.currentUser.name) {
@@ -268,7 +266,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   openGameInfoModal() {
-    this._modalService.open(GameInfoComponent);
+    this._modalService.open(GameInfoComponent, { backdrop: 'static' });
   }
 
   toggleGameChatSidebar() {

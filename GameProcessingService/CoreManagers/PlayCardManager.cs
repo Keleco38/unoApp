@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Common.Enums;
+using Common.Extensions;
 using EntityObjects;
 using EntityObjects.Cards.Abstraction;
 using GameProcessingService.CardEffectProcessors;
@@ -35,8 +36,11 @@ namespace GameProcessingService.CoreManagers
             if (!IsValidMove(game, playerPlayed, cardPlayed))
                 return null;
 
+
             playerPlayed.Cards.Remove(cardPlayed);
             game.DiscardedPile.Add(cardPlayed);
+
+            game.Players.ForEach(x => x.Cards.Shuffle());
 
             var playerTargeted = string.IsNullOrEmpty(playerTargetedId) ? _gameManager.GetNextPlayer(game, playerPlayed, game.Players) : game.Players.First(x => x.Id == playerTargetedId);
             var colorForLastCard = targetedCardColor == 0 ? cardPlayed.Color : targetedCardColor;

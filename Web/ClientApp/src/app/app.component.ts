@@ -1,3 +1,5 @@
+import { FirstTimeLaunchComponent } from './_components/_modals/first-time-launch/first-time-launch.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UtilityService } from 'src/app/_services/utility.service';
 import { Router } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -8,21 +10,26 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor(private _utilityService: UtilityService, private _router: Router) {}
+  modalOpen = false;
+
+  constructor(private _utilityService: UtilityService, private _router: Router, private _modalService: NgbModal) {}
 
   ngOnInit(): void {
     if (this._utilityService.userSettings.useDarkTheme) {
       this._utilityService.updateTheme();
     }
     var isFirstTimeLunched = this._utilityService.isFirstTimeLunched;
-    if (isFirstTimeLunched === true) {
-      var navigateToHelpPage = confirm(
-        "This is the first time you have launched this game. We suggest that you first read 'Help' page. Do you want us to take you there?"
-      );
-      if (navigateToHelpPage === true) {
-        this._router.navigateByUrl('/help');
-      }
-      this._utilityService.updateFirstTimeLunched();
+
+    if (isFirstTimeLunched) {
+      this.modalOpen = true;
+      var modalRef = this._modalService.open(FirstTimeLaunchComponent, { backdrop: 'static', keyboard: false });
+      modalRef.result.then((sendToHelpPage: boolean) => {
+        this._utilityService.updateFirstTimeLunched();
+        this.modalOpen = false;
+        if (sendToHelpPage) {
+          this._router.navigateByUrl('/help');
+        }
+      });
     }
   }
 }

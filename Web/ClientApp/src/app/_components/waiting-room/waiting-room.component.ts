@@ -46,7 +46,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
       this.currentUser = user;
     });
   }
-  
+
   getBannedCardName(bannedCard: CardValue) {
     return this._utilityService.getBannedCardName(bannedCard);
   }
@@ -91,7 +91,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   openBanCardsDialog() {
-    var banCardsModal = this._modalService.open(PickBannedCardsComponent);
+    var banCardsModal = this._modalService.open(PickBannedCardsComponent, { backdrop: 'static' });
     banCardsModal.componentInstance.bannedCards = Object.assign([], this.activeGame.gameSetup.bannedCards);
     banCardsModal.result.then((bannedCards: CardValue[]) => {
       this.activeGame.gameSetup.bannedCards = bannedCards;
@@ -107,7 +107,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   openGameSetupDialog() {
-    this._modalService.open(GameSetupComponent);
+    this._modalService.open(GameSetupComponent, { backdrop: 'static' });
   }
   startGame() {
     if (this.activeGame.players.length < 2) {
@@ -122,7 +122,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
       this._hubService.kickPlayerFromGame(player.user);
     }
   }
-  
+
   updateGameSetup() {
     this._hubService.updateGameSetup(this.activeGame.id, this.activeGame.gameSetup);
   }

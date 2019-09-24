@@ -66,7 +66,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   openTournamentSetupDialog() {
-    this._modalService.open(TournamentSetupComponent);
+    this._modalService.open(TournamentSetupComponent, { backdrop: 'static' });
   }
 
   kickContestantFromTournament(contestant: Contestant) {
@@ -84,7 +84,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   openBanCardsDialog() {
-    var banCardsModal = this._modalService.open(PickBannedCardsComponent);
+    var banCardsModal = this._modalService.open(PickBannedCardsComponent, { backdrop: 'static' });
     banCardsModal.componentInstance.bannedCards = Object.assign([], this.activeTournament.tournamentSetup.bannedCards);
     banCardsModal.result.then((bannedCards: CardValue[]) => {
       this.activeTournament.tournamentSetup.bannedCards = bannedCards;

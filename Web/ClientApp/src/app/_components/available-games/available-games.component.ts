@@ -25,9 +25,9 @@ export class AvailableGamesComponent implements OnInit, OnDestroy {
     });
   }
 
-  getButtonClass(){
-    if(this._utilityService.userSettings.useDarkTheme) return "btn-info"
-    return "btn-primary"
+  getBadgeClass(game:Game){
+    if(game.gameStarted) return "badge-danger"
+    return "badge-primary"
   }
 
   joinGame(game: GameList) {

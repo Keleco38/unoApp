@@ -5,7 +5,7 @@
   </button>
 </div>
 <div class="modal-body">
-  <div class="row">
+  <div class="row" [hidden]="hideAdminPasswordPart">
     <div class="col-12">
       <div class="form-group row">
         <label for="adminPassword" class="col-4 col-form-label">Admin Password</label>
@@ -23,7 +23,7 @@
       <hr />
     </div>
   </div>
-  <div class="row" [hidden]="!adminPassword">
+  <div class="row" [hidden]="!adminPassword && !hideAdminPasswordPart">
     <div class="col-12">
       <form
         #tournamentSetupForm="ngForm"
@@ -161,7 +161,7 @@
       </form>
     </div>
   </div>
-  <div class="row" [hidden]="!adminPassword">
+  <div class="row" [hidden]="!adminPassword && !hideAdminPasswordPart">
     <div class="col-12">
       <hr />
       <button class="btn btn-lg btn-block btn-info" form="tournamentSetupForm">Confirm</button>

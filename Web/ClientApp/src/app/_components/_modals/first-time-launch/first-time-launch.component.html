@@ -1,0 +1,18 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Welcome!</h4>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-12">
+      <p>
+        This is the first time you have launched <b>Uno - Special Edition</b>. We suggest that you first read 'Help' page. Do you want us to
+        take you there?
+      </p>
+      <p><small>**On the help page you can find descriptions for the 30 customized cards.</small></p>
+      <div class="btn-group btn-group-lg special">
+        <button (click)="updateAnswerSendToHelpPage(true)" class="btn btn-lg btn-success">Yes</button>
+        <button (click)="updateAnswerSendToHelpPage(false)" class="btn btn-lg btn-dark">No</button>
+      </div>
+    </div>
+  </div>
+</div>

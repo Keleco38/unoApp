@@ -11,4 +11,7 @@ export class HttpService {
   getHallOfFameStats() { 
     return this._httpClient.get<HallOfFame[]>('/api/halloffame');
   }
+  getOnlineUsers() { 
+    return this._httpClient.get<string[]>('/api/repository/users');
+  }
 }

@@ -12,6 +12,7 @@ import { PlayersSetup, GameType } from '../../../_models/enums';
   styleUrls: ['./tournament-setup.component.css']
 })
 export class TournamentSetupComponent implements OnInit {
+  hideAdminPasswordPart = false;
   adminPassword = '';
 
   private _activeTournament: Tournament;
@@ -38,6 +39,7 @@ export class TournamentSetupComponent implements OnInit {
         wildCardCanBePlayedOnlyIfNoOtherOptions: false
       };
     } else {
+      this.hideAdminPasswordPart = true;
       this.tournamentSetup = this._activeTournament.tournamentSetup;
     }
   }
@@ -47,8 +49,8 @@ export class TournamentSetupComponent implements OnInit {
   }
 
   confirm() {
-    console.log("test");
-    
+    console.log('test');
+
     if (this._activeTournament === null) {
       this._hubService.createTournament(this.tournamentSetup, this.adminPassword);
     } else {

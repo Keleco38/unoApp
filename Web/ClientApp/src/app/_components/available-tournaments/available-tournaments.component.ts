@@ -1,3 +1,4 @@
+import { Tournament } from 'src/app/_models/tournament';
 import { UtilityService } from 'src/app/_services/utility.service';
 import { Tournament } from './../../_models/tournament';
 import { HubService } from './../../_services/hub.service';
@@ -14,7 +15,7 @@ export class AvailableTournamentsComponent implements OnInit, OnDestroy {
   availableTournaments: TournamentList[] = [];
   _isAlive: boolean = true;
 
-  constructor(private _hubService: HubService, private _utilityService:UtilityService) {}
+  constructor(private _hubService: HubService, private _utilityService: UtilityService) {}
 
   ngOnInit() {
     this._hubService.availableTournaments.pipe(takeWhile(() => this._isAlive)).subscribe(tournaments => {
@@ -22,10 +23,9 @@ export class AvailableTournamentsComponent implements OnInit, OnDestroy {
     });
   }
 
-  
-  getButtonClass(){
-    if(this._utilityService.userSettings.useDarkTheme) return "btn-info"
-    return "btn-primary"
+  getBadgeClass(tournament: Tournament) {
+    if (tournament.tournamentStarted) return 'badge-danger';
+    return 'badge-primary';
   }
 
   joinTournament(tournament: TournamentList) {
