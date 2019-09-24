@@ -24,7 +24,7 @@ Basics features are explained below:
 - Player can change their settings and name any time by clicking "User Settings" button in the navbar.
 - Player can buzz another player by selecting the option from the dropdown next to other player's name (under online players section).
 - Host can define game setup (password/max no of players/draw two-four rules/reverse skip in 2p/number of rounds to win/game type).
-- Host can ban up to 5 cards from the game. Other player should give consent on the cards banned.
+- Host can ban up to 10 cards from the game. Other player should give consent on the cards banned.
 - Host can kick players from the game.
 - In game, players can chat by opening chat window by pressing the "Chat" button on top.
 - In game, players can see current game status by pressing "Game info" button on top.

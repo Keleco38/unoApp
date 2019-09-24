@@ -108,7 +108,7 @@ namespace Web.Hubs
             if (!string.IsNullOrEmpty(tournament.TournamentSetup.Password) && spectator == null)
                 if (tournament.TournamentSetup.Password != password)
                 {
-                    await DisplayToastMessageToUser(user.ConnectionId, "Incorrect password.");
+                    await DisplayToastMessageToUser(user.ConnectionId, "Incorrect password.", "error");
                     return;
                 }
             if (!tournament.TournamentStarted)
@@ -157,7 +157,7 @@ namespace Web.Hubs
         {
             if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))
             {
-                await DisplayToastMessageToUser(Context.ConnectionId, "Unauthorized");
+                await DisplayToastMessageToUser(Context.ConnectionId, "Unauthorized", "error");
                 return;
             }
 
@@ -216,7 +216,7 @@ namespace Web.Hubs
         {
             if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))
             {
-                await DisplayToastMessageToUser(Context.ConnectionId, "Unauthorized");
+                await DisplayToastMessageToUser(Context.ConnectionId, "Unauthorized", "error");
                 return;
             }
 
@@ -359,7 +359,7 @@ namespace Web.Hubs
             if (!string.IsNullOrEmpty(game.GameSetup.Password) && !alreadyAuthorized)
                 if (game.GameSetup.Password != password)
                 {
-                    await DisplayToastMessageToUser(user.ConnectionId, "Incorrect password.");
+                    await DisplayToastMessageToUser(user.ConnectionId, "Incorrect password.", "error");
                     return;
                 }
 
@@ -616,9 +616,9 @@ namespace Web.Hubs
             await Clients.Clients(allUsersInGame).SendAsync("DisplayToastMessage", message, toastrType);
         }
 
-        private async Task DisplayToastMessageToUser(string connectionId, string message)
+        private async Task DisplayToastMessageToUser(string connectionId, string message, string toastrType)
         {
-            await Clients.Client(connectionId).SendAsync("DisplayToastMessage", message);
+            await Clients.Client(connectionId).SendAsync("DisplayToastMessage", message, toastrType);
         }
 
         private async Task UpdateGame(Game game)
