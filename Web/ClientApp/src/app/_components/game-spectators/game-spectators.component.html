@@ -1,6 +1,6 @@
 <div class="row" *ngIf="game.spectators.length > 0">
   <div class="col-12">
-    <div class="alert alert-primary">Game Spectators ({{ game.spectators.length }}):</div>
+    <div class="alert alert-primary">Game Specs. ({{ game.spectators.length }}):</div>
     <ul class="list-group">
       <li class="list-group-item" *ngFor="let spectator of game.spectators">
         {{ spectator.user.name }}

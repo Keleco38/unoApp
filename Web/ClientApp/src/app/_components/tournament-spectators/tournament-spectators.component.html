@@ -1,6 +1,6 @@
 <div class="row" *ngIf="activeTournament.spectators.length > 0">
   <div class="col-12">
-    <div class="alert alert-primary">Tournament Spectators ({{ activeTournament.spectators.length }}):</div>
+    <div class="alert alert-primary">Tour. Specs. ({{ activeTournament.spectators.length }}):</div>
     <ul class="list-group">
       <li class="list-group-item" *ngFor="let spectator of activeTournament.spectators">
         {{ spectator.name }}
