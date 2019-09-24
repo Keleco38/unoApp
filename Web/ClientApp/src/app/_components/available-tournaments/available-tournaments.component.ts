@@ -1,4 +1,3 @@
-import { Tournament } from 'src/app/_models/tournament';
 import { UtilityService } from 'src/app/_services/utility.service';
 import { Tournament } from './../../_models/tournament';
 import { HubService } from './../../_services/hub.service';
