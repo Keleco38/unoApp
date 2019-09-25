@@ -386,7 +386,7 @@ namespace Web.Hubs
             }
             else
             {
-                var playerLeftWithThisName = game.Players.FirstOrDefault(x => x.LeftGame && x.User.Name == user.Name);
+                var playerLeftWithThisName = game.Players.FirstOrDefault(x =>x.User.Name == user.Name);
                 if (playerLeftWithThisName != null)
                 {
                     playerLeftWithThisName.User = user;

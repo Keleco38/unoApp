@@ -1,9 +1,9 @@
 <div class="row " *ngIf="availableTournaments.length > 0">
   <div class="col-12">
     <div class="alert alert-primary">Tournaments ({{ availableTournaments.length }}):</div>
-    <ul class="list-group">
-      <li
-        class="list-group-item cursor-pointer d-flex justify-content-between align-items-center"
+    <div class="list-group">
+      <button
+        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
         (click)="joinTournament(tournament)"
         *ngFor="let tournament of availableTournaments"
       >
@@ -15,7 +15,7 @@
           <span [hidden]="tournament.tournamentStarted">({{ tournament.numberOfPlayers }}/{{ tournament.requiredNumberOfPlayers }})</span>
           <span [hidden]="!tournament.tournamentStarted">[{{ tournament.numberOfPlayers }}]</span>
         </span>
-      </li>
-    </ul>
+      </button>
+    </div>
   </div>
 </div>
