@@ -1,3 +1,4 @@
+import { ReadyPhaseSpectatorsComponent } from './_components/_modals/ready-phase-spectators/ready-phase-spectators.component';
 import { ConfirmReadyComponent } from './_components/_modals/confirm-ready/confirm-ready.component';
 import { FirstTimeLaunchComponent } from './_components/_modals/first-time-launch/first-time-launch.component';
 import { TournamentWinnersComponent } from './_components/tournament-winners/tournament-winners.component';
@@ -107,6 +108,7 @@ import { RenameComponent } from './_components/_modals/rename/rename.component';
     TournamentWaitingRoomComponent,
     AdminSectionComponent,
     FirstTimeLaunchComponent,
+    ReadyPhaseSpectatorsComponent,
     ConfirmReadyComponent,
     TournamentWinnersComponent,
     RenameComponent,
@@ -185,6 +187,7 @@ import { RenameComponent } from './_components/_modals/rename/rename.component';
     RenameComponent,
     ConfirmReadyComponent,
     TournamentSetupComponent,
+    ReadyPhaseSpectatorsComponent,
     AdminSectionComponent
   ]
 })

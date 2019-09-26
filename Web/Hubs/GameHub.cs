@@ -330,7 +330,8 @@ namespace Web.Hubs
                 game.ReadyPhaseExpireUtc = DateTime.Now.AddSeconds(10);
                 game.ReadyPlayersLeft = game.Players.Select(x => x.User.Name).ToList();
                 await UpdateGame(game);
-                await Clients.Clients(GetPlayersFromGame(game)).SendAsync("DisplayReadyModal", false);
+                await Clients.Clients(GetPlayersFromGame(game)).SendAsync("DisplayReadyModalPlayers", false);
+                await Clients.Clients(GetSpectatorsFromGame(game)).SendAsync("DisplayReadyModalSpectators", false);
             }
         }
 
@@ -352,7 +353,7 @@ namespace Web.Hubs
                 await UpdateGame(game);
                 await UpdateHands(game);
                 await GetAllGames();
-                await Clients.Clients(GetPlayersFromGame(game)).SendAsync("GameStarted");
+                await Clients.Clients(GetPlayersAndSpectatorsFromGame(game)).SendAsync("GameStarted");
                 await AddToGameLog(gameId, "Game started!");
                 await AddToGameLog(gameId, "If you need more detailed log info, press the 'Game info' button.");
                 await AddToGameLog(gameId, "This is the game log summary. We will display the last 3 entries here.");
@@ -393,9 +394,17 @@ namespace Web.Hubs
 
             if (!game.GameStarted)
             {
+
+               
+
                 if (spectator != null)
                 {
                     //join the game that hasn't started
+                    if (game.ReadyPhaseExpireUtc > DateTime.Now)
+                    {
+                        return;
+                    }
+
                     if (game.Players.Count >= game.GameSetup.MaxNumberOfPlayers)
                     {
                         return;
@@ -678,13 +687,17 @@ namespace Web.Hubs
         {
             return game.Players.Where(x => !x.LeftGame).Select(y => y.User.ConnectionId).ToList();
         }
-        private List<string> GetContestantsFromTournament(Tournament tournament)
+        private List<string> GetSpectatorsFromGame(Game game)
         {
-            return tournament.Contestants.Where(x => !x.LeftTournament).Select(y => y.User.ConnectionId).ToList();
+            return game.Spectators.Select(x => x.User.ConnectionId).ToList();
         }
         private List<string> GetPlayersAndSpectatorsFromGame(Game game)
         {
-            return GetPlayersFromGame(game).Concat(game.Spectators.Select(x => x.User.ConnectionId)).ToList();
+            return GetPlayersFromGame(game).Concat(GetSpectatorsFromGame(game)).ToList();
+        }
+        private List<string> GetContestantsFromTournament(Tournament tournament)
+        {
+            return tournament.Contestants.Where(x => !x.LeftTournament).Select(y => y.User.ConnectionId).ToList();
         }
 
         private List<string> GetPlayersAndSpectatorsFromTournament(Tournament tournament)

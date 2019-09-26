@@ -1,3 +1,4 @@
+import { ReadyPhaseSpectatorsComponent } from './../_components/_modals/ready-phase-spectators/ready-phase-spectators.component';
 import { AdminSectionComponent } from './../_components/_modals/admin-section/admin-section.component';
 import { TournamentSetup } from './../_models/tournamentSetup';
 import { GameEndedResultComponent } from './../_components/_modals/game-ended-result/game-ended-result.component';
@@ -52,7 +53,8 @@ export class HubService {
   private _mustCallUnoObservable = new Subject();
   private _reconnectObservable = new Subject();
 
-  private _readyPhaseModal: any;
+  private _readyPhaseModalPlayers: any;
+  private _readyPhaseModalSpectators: any;
 
   private async startConnection(isReconnect: Boolean) {
     try {
@@ -194,9 +196,14 @@ export class HubService {
       this._router.navigateByUrl('/');
     });
 
-    this._hubConnection.on('DisplayReadyModal', (isTournament: boolean) => {
-      this._readyPhaseModal = this._modalService.open(ConfirmReadyComponent, { backdrop: 'static', keyboard: false });
-      this._readyPhaseModal.componentInstance.isTOurnament = isTournament;
+    this._hubConnection.on('DisplayReadyModalPlayers', (isTournament: boolean) => {
+      this._readyPhaseModalPlayers = this._modalService.open(ConfirmReadyComponent, { backdrop: 'static', keyboard: false });
+      this._readyPhaseModalPlayers.componentInstance.isTOurnament = isTournament;
+    });
+
+    this._hubConnection.on('DisplayReadyModalSpectators', (isTournament: boolean) => {
+      this._readyPhaseModalSpectators = this._modalService.open(ReadyPhaseSpectatorsComponent, { backdrop: 'static', keyboard: false });
+      this._readyPhaseModalSpectators.componentInstance.isTOurnament = isTournament;
     });
 
     this._hubConnection.on('DisplayToastMessage', (message: string, toastrType: string) => {
@@ -204,11 +211,14 @@ export class HubService {
     });
 
     this._hubConnection.on('GameStarted', () => {
-      if (this._readyPhaseModal){
-        setTimeout(() => {
-          this._readyPhaseModal.dismiss();
-        }, 500);
-      }
+      setTimeout(() => {
+        if (this._readyPhaseModalPlayers) {
+          this._readyPhaseModalPlayers.dismiss();
+        }
+        if (this._readyPhaseModalSpectators) {
+          this._readyPhaseModalSpectators.dismiss();
+        }
+      }, 500);
     });
 
     this._hubConnection.on('UpdateMyHand', (myCards: Card[]) => {
