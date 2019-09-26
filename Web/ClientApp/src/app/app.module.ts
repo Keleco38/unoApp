@@ -1,3 +1,4 @@
+import { ConfirmReadyComponent } from './_components/_modals/confirm-ready/confirm-ready.component';
 import { FirstTimeLaunchComponent } from './_components/_modals/first-time-launch/first-time-launch.component';
 import { TournamentWinnersComponent } from './_components/tournament-winners/tournament-winners.component';
 import { AdminSectionComponent } from './_components/_modals/admin-section/admin-section.component';
@@ -106,6 +107,7 @@ import { RenameComponent } from './_components/_modals/rename/rename.component';
     TournamentWaitingRoomComponent,
     AdminSectionComponent,
     FirstTimeLaunchComponent,
+    ConfirmReadyComponent,
     TournamentWinnersComponent,
     RenameComponent,
     TournamentComponent
@@ -181,6 +183,7 @@ import { RenameComponent } from './_components/_modals/rename/rename.component';
     GameSetupComponent,
     GameEndedResultComponent,
     RenameComponent,
+    ConfirmReadyComponent,
     TournamentSetupComponent,
     AdminSectionComponent
   ]

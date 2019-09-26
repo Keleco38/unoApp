@@ -67,6 +67,10 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
       this._toastrService.info(`Maximum number of players reached (${this.activeGame.gameSetup.maxNumberOfPlayers}).`);
       return;
     }
+    if (new Date(this.activeGame.readyPhaseExpireUtc) > new Date()) {
+      this._toastrService.info(`Game is in the ready phase. You can't join at this time..`);
+      return;
+    }
     this._hubService.joinGame(this.activeGame.id, '');
   }
 

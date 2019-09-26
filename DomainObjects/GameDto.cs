@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Common.Enums;
 
@@ -14,6 +15,8 @@ namespace DomainObjects
         public LastCardPlayedDto LastCardPlayed { get; set; }
         public PlayerDto PlayerToPlay { get; set; }
         public bool GameStarted { get; set; }
+        public DateTime ReadyPhaseExpireUtc { get; set; }
+        public List<string> ReadyPlayersLeft { get; set; }
         public List<CardDto> DiscardedPile { get; set; }
         public bool GameEnded { get; set; }
     }

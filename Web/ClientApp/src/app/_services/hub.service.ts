@@ -24,6 +24,7 @@ import { Tournament } from '../_models/tournament';
 import { TournamentList } from '../_models/tournamentList';
 import { KeyValue } from '@angular/common';
 import { RenameComponent } from '../_components/_modals/rename/rename.component';
+import { ConfirmReadyComponent } from '../_components/_modals/confirm-ready/confirm-ready.component';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,8 @@ export class HubService {
   private _myHandObservable = new BehaviorSubject<Card[]>([]);
   private _mustCallUnoObservable = new Subject();
   private _reconnectObservable = new Subject();
+
+  private _readyPhaseModal: any;
 
   private async startConnection(isReconnect: Boolean) {
     try {
@@ -191,8 +194,21 @@ export class HubService {
       this._router.navigateByUrl('/');
     });
 
+    this._hubConnection.on('DisplayReadyModal', (isTournament: boolean) => {
+      this._readyPhaseModal = this._modalService.open(ConfirmReadyComponent, { backdrop: 'static', keyboard: false });
+      this._readyPhaseModal.componentInstance.isTOurnament = isTournament;
+    });
+
     this._hubConnection.on('DisplayToastMessage', (message: string, toastrType: string) => {
       this._toastrService[toastrType](message);
+    });
+
+    this._hubConnection.on('GameStarted', () => {
+      if (this._readyPhaseModal){
+        setTimeout(() => {
+          this._readyPhaseModal.dismiss();
+        }, 500);
+      }
     });
 
     this._hubConnection.on('UpdateMyHand', (myCards: Card[]) => {
@@ -250,6 +266,10 @@ export class HubService {
 
   adminKickUser(user: User, password: string) {
     this._hubConnection.invoke('AdminKickUser', user.name, password);
+  }
+
+  sendIsReadyForGame() {
+    this._hubConnection.invoke('ReadyForGame', this._activeGameObservable.getValue().id);
   }
 
   sendMessage(message: string, chatDestination: ChatDestination) {

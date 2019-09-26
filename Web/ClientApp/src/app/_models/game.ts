@@ -18,4 +18,6 @@ export interface Game {
   direction: Direction;
   lastCardPlayed: LastCardPlayed;
   discardedPile: Card[];
+  readyPlayersLeft: string[];
+  readyPhaseExpireUtc: Date;
 }

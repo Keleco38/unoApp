@@ -1,0 +1,38 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Are you ready?</h4>
+</div>
+<div class="modal-body text-center">
+  <div class="row">
+    <div class="col-12">
+      <div class="spinner-grow" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <h1 class="text-primary">{{ timer }}</h1>
+    </div>
+    <div class="col-12" [hidden]="isReady">
+      <h3 class="text-warning">{{ isTournament ? 'Tournament' : 'Game' }} is starting. Please confirm that you are ready.</h3>
+    </div>
+    <div class="col-12" [hidden]="!isReady">
+      <h1 class="text-success">You are ready!</h1>
+    </div>
+    <div class="col-12">
+      <p>
+        <ngb-progressbar type="success" [value]="getProgressBarValue()" [striped]="true" [animated]="true"
+          ><i>{{ getProgressBarValue() }}%</i></ngb-progressbar
+        >
+      </p>
+      <p>Waiting on {{ readyPlayersLeft.length }} more players.</p>
+    </div>
+
+    <div class="col-12" [hidden]="isReady">
+      <hr />
+      <button (click)="ready()" class="btn btn-block btn-lg btn-info">I'm ready!</button>
+    </div>
+  </div>
+</div>

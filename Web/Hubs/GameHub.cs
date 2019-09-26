@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Common.Contants;
@@ -318,18 +319,44 @@ namespace Web.Hubs
         public async Task StartGame(string gameId)
         {
             var game = _gameRepository.GetGameByGameId(gameId);
-            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId))
+
+            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId) || game.GameStarted)
             {
                 return;
             }
 
-            _gameManager.StartNewGame(game);
+            if (DateTime.Now > game.ReadyPhaseExpireUtc)
+            {
+                game.ReadyPhaseExpireUtc = DateTime.Now.AddSeconds(10);
+                game.ReadyPlayersLeft = game.Players.Select(x => x.User.Name).ToList();
+                await UpdateGame(game);
+                await Clients.Clients(GetPlayersFromGame(game)).SendAsync("DisplayReadyModal", false);
+            }
+        }
+
+        public async Task ReadyForGame(string gameId)
+        {
+            var game = _gameRepository.GetGameByGameId(gameId);
+            var user = GetCurrentUser();
+            var player = game.Players.FirstOrDefault(x => x.User.Name == user.Name);
+            if (game.GameStarted || player == null || DateTime.Now > game.ReadyPhaseExpireUtc || !game.ReadyPlayersLeft.Contains(user.Name))
+            {
+                return;
+            }
+
+            game.ReadyPlayersLeft.Remove(user.Name);
             await UpdateGame(game);
-            await UpdateHands(game);
-            await GetAllGames();
-            await AddToGameLog(gameId, "Game started!");
-            await AddToGameLog(gameId, "If you need more detailed log info, press the 'Game info' button.");
-            await AddToGameLog(gameId, "This is the game log summary. We will display the last 3 entries here.");
+            if (!game.ReadyPlayersLeft.Any())
+            {
+                _gameManager.StartNewGame(game);
+                await UpdateGame(game);
+                await UpdateHands(game);
+                await GetAllGames();
+                await Clients.Clients(GetPlayersFromGame(game)).SendAsync("GameStarted");
+                await AddToGameLog(gameId, "Game started!");
+                await AddToGameLog(gameId, "If you need more detailed log info, press the 'Game info' button.");
+                await AddToGameLog(gameId, "This is the game log summary. We will display the last 3 entries here.");
+            }
         }
 
         public async Task JoinGame(string gameId, string password)
@@ -353,7 +380,6 @@ namespace Web.Hubs
             else
             {
                 alreadyAuthorized = game.Spectators.FirstOrDefault(x => x.User.Name == user.Name) != null;
-
             }
 
             if (!string.IsNullOrEmpty(game.GameSetup.Password) && !alreadyAuthorized)
@@ -386,7 +412,7 @@ namespace Web.Hubs
             }
             else
             {
-                var playerLeftWithThisName = game.Players.FirstOrDefault(x =>x.User.Name == user.Name);
+                var playerLeftWithThisName = game.Players.FirstOrDefault(x => x.User.Name == user.Name);
                 if (playerLeftWithThisName != null)
                 {
                     playerLeftWithThisName.User = user;

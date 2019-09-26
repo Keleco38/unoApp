@@ -266,7 +266,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   openGameInfoModal() {
-    this._modalService.open(GameInfoComponent, { backdrop: 'static' });
+    this._modalService.open(GameInfoComponent);
   }
 
   toggleGameChatSidebar() {

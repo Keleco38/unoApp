@@ -22,6 +22,8 @@ namespace EntityObjects
         public LastCardPlayed LastCardPlayed { get; set; }
         public Player PlayerToPlay { get; set; }
         public bool GameStarted { get; set; }
+        public DateTime ReadyPhaseExpireUtc { get; set; }
+        public List<string> ReadyPlayersLeft { get; set; }
         public bool RoundEnded { get; set; }
         public bool GameEnded { get; set; }
         public Game(GameSetup gameSetup, string tournamentId = "")
@@ -33,6 +35,8 @@ namespace EntityObjects
             Spectators = new List<Spectator>();
             ChatMessages=new List<ChatMessage>();
             GameLog=new List<string>();
+            ReadyPlayersLeft=new List<string>();
+            ReadyPhaseExpireUtc=DateTime.Now;
         }
 
     }

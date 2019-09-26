@@ -11,4 +11,6 @@ export interface Tournament {
   tournamentWinner: User[];
   spectators: User[];
   tournamentRounds: TournamentRound[];
+  readyPlayersLeft: string[];
+  readyPhaseExpireUtc: Date[];
 }
