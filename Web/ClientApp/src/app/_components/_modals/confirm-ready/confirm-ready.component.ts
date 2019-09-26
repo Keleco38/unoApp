@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { HubService } from './../../../_services/hub.service';
 import { Component, OnInit, Input, OnDestroy, Injector, EventEmitter, Output } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -22,7 +23,7 @@ export class ConfirmReadyComponent implements OnInit, OnDestroy {
   readyPlayersLeft: string[];
   originallyTotalPlayersCount: number = 0;
 
-  constructor(private _activeModal: NgbActiveModal, injector: Injector) {
+  constructor(private _activeModal: NgbActiveModal, private _toastrService: ToastrService, injector: Injector) {
     this._hubService = injector.get(HubService);
   }
 
@@ -31,6 +32,7 @@ export class ConfirmReadyComponent implements OnInit, OnDestroy {
       this._countDown -= 1000;
       this.timer = Math.floor(this._countDown / 1000);
       if (this.timer <= 0) {
+        this._toastrService.error(`Players not ready: ${this.readyPlayersLeft.join(', ')}`);
         this._activeModal.dismiss();
       }
     }, 1000);
