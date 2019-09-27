@@ -55,12 +55,16 @@ export class ConfirmReadyComponent implements OnInit, OnDestroy {
 
   ready() {
     this.isReady = true;
-    this._hubService.sendIsReadyForGame();
+    if(this.isTournament){
+      this._hubService.sendIsReadyForTournament();
+    }else{
+      this._hubService.sendIsReadyForGame();
+    }
   }
 
   getProgressBarValue() {
     var numberOfPlayersReady = this.originallyTotalPlayersCount - this.readyPlayersLeft.length;
-    return (numberOfPlayersReady / this.originallyTotalPlayersCount) * 100;
+    return Math.floor((numberOfPlayersReady / this.originallyTotalPlayersCount) * 100);
   }
 
   ngOnDestroy(): void {

@@ -48,7 +48,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
     });
   }
 
-  getStyleJoinGameButton() {
+  getStyleJoinTournamentButton() {
     var obj: any = {};
     if (this.activeTournament.contestants.length >= this.activeTournament.tournamentSetup.numberOfPlayers) {
       obj.opacity = '0.5';
@@ -101,7 +101,15 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
       this._toastrService.info(`Maximum number of players is reached ${this.activeTournament.tournamentSetup.numberOfPlayers}.`);
       return;
     }
+    if (this.isInReadyPhase()) {
+      this._toastrService.info(`Tournament is in the ready phase. You can't join at this time.`);
+      return;
+    }
     this._hubService.joinTournament(this.activeTournament.id, '');
+  }
+
+  isInReadyPhase() {
+    return new Date(this.activeTournament.readyPhaseExpireUtc) > new Date();
   }
 
   startTournament() {

@@ -54,7 +54,7 @@ export class ReadyPhaseSpectatorsComponent implements OnInit, OnDestroy {
 
   getProgressBarValue() {
     var numberOfPlayersReady = this.originallyTotalPlayersCount - this.readyPlayersLeft.length;
-    return (numberOfPlayersReady / this.originallyTotalPlayersCount) * 100;
+    return Math.floor((numberOfPlayersReady / this.originallyTotalPlayersCount) * 100);
   }
 
   ngOnDestroy(): void {

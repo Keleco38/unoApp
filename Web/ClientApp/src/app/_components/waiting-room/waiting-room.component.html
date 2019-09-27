@@ -19,7 +19,13 @@
       <div class="col-12">
         <div class="btn-group special">
           <button class="btn btn-sm btn-danger" (click)="leaveWaitingRoom()">Leave room</button>
-          <button class="btn btn-sm btn-primary" [ngStyle]="getStyleJoinGameButton()" [disabled]="!userIsSpectator()" (click)="joinGame()">
+          <button
+            class="btn btn-sm btn-primary"
+            [ngStyle]="getStyleJoinGameButton()"
+            [hidden]="isInReadyPhase()"
+            [disabled]="!userIsSpectator()"
+            (click)="joinGame()"
+          >
             Join Game
           </button>
         </div>
@@ -30,31 +36,38 @@
 <div class="row">
   <div class="col-6">
     <h6 class="text-success">Players joined ({{ activeGame.players.length }})</h6>
-    <ul class="list-unstyled">
-      <li *ngFor="let player of activeGame.players; let first = first">
-        <span [hidden]="!first">&#9734;</span>
-        *{{ player.user.name }}
-        <strong [hidden]="activeGame.gameSetup.playersSetup != 2">
+    <ul class="list-group">
+      <li class="list-group-item flex-column " *ngFor="let player of activeGame.players; let first = first">
+        <div class="d-flex w-100 justify-content-between align-items-center">
+          <div>
+            <span [hidden]="!first">&#9734;</span>
+            *{{ player.user.name }}
+          </div>
           <span
-            [hidden]="currentUser.connectionId != player.user.connectionId"
-            class="text-primary  cursor-pointer"
-            (click)="changeTeam(player.teamNumber, false)"
-            >(-)</span
+            class="badge badge-pill badge-danger cursor-pointer"
+            (click)="kickPlayerFromGame(player)"
+            [hidden]="currentUser.connectionId != activeGame.players[0].user.connectionId || first"
           >
-          <span>[Team {{ player.teamNumber }}]</span>
-          <span
-            [hidden]="currentUser.connectionId != player.user.connectionId"
-            class="text-primary cursor-pointer"
-            (click)="changeTeam(player.teamNumber, true)"
-            >(+)</span
-          >
-        </strong>
-        <strong
-          [hidden]="currentUser.connectionId != activeGame.players[0].user.connectionId || first"
-          class="ml-2 text-danger cursor-pointer"
-          (click)="kickPlayerFromGame(player)"
-          >[X]</strong
-        >
+            [X]
+          </span>
+        </div>
+        <small [hidden]="activeGame.gameSetup.playersSetup != 2">
+          <i>
+            <span
+              [hidden]="currentUser.connectionId != player.user.connectionId"
+              class="text-primary  cursor-pointer"
+              (click)="changeTeam(player.teamNumber, false)"
+              >(-)</span
+            >
+            <span>[Team {{ player.teamNumber }}]</span>
+            <span
+              [hidden]="currentUser.connectionId != player.user.connectionId"
+              class="text-primary cursor-pointer"
+              (click)="changeTeam(player.teamNumber, true)"
+              >(+)</span
+            >
+          </i>
+        </small>
       </li>
     </ul>
   </div>

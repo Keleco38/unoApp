@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DomainObjects
 {
@@ -10,6 +11,8 @@ namespace DomainObjects
         public string TournamentWinner { get; set; }
         public TournamentSetupDto TournamentSetup { get; set; }
         public List<TournamentRoundDto> TournamentRounds { get; set; }
+        public DateTime ReadyPhaseExpireUtc { get; set; }
+        public List<string> ReadyPlayersLeft { get; set; }
         public List<ContestantDto> Contestants { get; set; }
         public List<UserDto> Spectators { get; set; }
     }

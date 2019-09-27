@@ -13,6 +13,8 @@ namespace EntityObjects
             TournamentRounds=new List<TournamentRound>();
             Spectators=new List<User>();
             ChatMessages = new List<ChatMessage>();
+            ReadyPlayersLeft = new List<string>();
+            ReadyPhaseExpireUtc = DateTime.Now;
         }
         public string Id { get; set; }
         public string Name { get; set; }
@@ -21,6 +23,8 @@ namespace EntityObjects
         public bool TournamentEnded { get; set; }
         public TournamentSetup TournamentSetup { get; set; }
         public List<TournamentRound> TournamentRounds { get; set; }
+        public DateTime ReadyPhaseExpireUtc { get; set; }
+        public List<string> ReadyPlayersLeft { get; set; }
         public List<Contestant> Contestants { get; set; }
         public List<User> Spectators { get; set; }
         public List<ChatMessage> ChatMessages { get; set; }

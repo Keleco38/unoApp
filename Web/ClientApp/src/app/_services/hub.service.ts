@@ -198,12 +198,12 @@ export class HubService {
 
     this._hubConnection.on('DisplayReadyModalPlayers', (isTournament: boolean) => {
       this._readyPhaseModalPlayers = this._modalService.open(ConfirmReadyComponent, { backdrop: 'static', keyboard: false });
-      this._readyPhaseModalPlayers.componentInstance.isTOurnament = isTournament;
+      this._readyPhaseModalPlayers.componentInstance.isTournament = isTournament;
     });
 
     this._hubConnection.on('DisplayReadyModalSpectators', (isTournament: boolean) => {
       this._readyPhaseModalSpectators = this._modalService.open(ReadyPhaseSpectatorsComponent, { backdrop: 'static', keyboard: false });
-      this._readyPhaseModalSpectators.componentInstance.isTOurnament = isTournament;
+      this._readyPhaseModalSpectators.componentInstance.isTournament = isTournament;
     });
 
     this._hubConnection.on('DisplayToastMessage', (message: string, toastrType: string) => {
@@ -211,6 +211,17 @@ export class HubService {
     });
 
     this._hubConnection.on('GameStarted', () => {
+      setTimeout(() => {
+        if (this._readyPhaseModalPlayers) {
+          this._readyPhaseModalPlayers.dismiss();
+        }
+        if (this._readyPhaseModalSpectators) {
+          this._readyPhaseModalSpectators.dismiss();
+        }
+      }, 500);
+    });
+
+    this._hubConnection.on('TournamentStarted', () => {
       setTimeout(() => {
         if (this._readyPhaseModalPlayers) {
           this._readyPhaseModalPlayers.dismiss();
@@ -280,6 +291,10 @@ export class HubService {
 
   sendIsReadyForGame() {
     this._hubConnection.invoke('ReadyForGame', this._activeGameObservable.getValue().id);
+  }
+  
+  sendIsReadyForTournament() {
+    this._hubConnection.invoke('ReadyForTournament', this._activeTournamentObservable.getValue().id);
   }
 
   sendMessage(message: string, chatDestination: ChatDestination) {

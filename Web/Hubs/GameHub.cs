@@ -116,6 +116,11 @@ namespace Web.Hubs
             {
                 if (spectator != null)
                 {
+                    if (tournament.ReadyPhaseExpireUtc > DateTime.Now)
+                    {
+                        return;
+                    }
+
                     //join the game that hasn't started
                     if (tournament.Contestants.Count >= tournament.TournamentSetup.NumberOfPlayers)
                     {
@@ -164,13 +169,12 @@ namespace Web.Hubs
 
             if (string.IsNullOrEmpty(tournamentSetup.Name))
             {
-                tournamentSetup.Name = "tournament";
+                tournamentSetup.Name = "tour.";
             }
 
             else if (tournamentSetup.Name.Length > 10)
             {
                 tournamentSetup.Name = tournamentSetup.Name.Substring(0, 10);
-
             }
 
             var tournament = new Tournament(tournamentSetup);
@@ -184,14 +188,39 @@ namespace Web.Hubs
         {
             var user = GetCurrentUser();
             var tournament = _tournamentRepository.GetTournament(tournamentId);
-            if (tournament.TournamentStarted || tournament.Contestants.First().User != user)
+
+            if (tournament.TournamentStarted || tournament.Contestants.Count < 3 || tournament.Contestants.First().User != user || DateTime.Now <= tournament.ReadyPhaseExpireUtc)
                 return;
-            if (tournament.Contestants.Count < 3)
-                return;
-            _tournamentManager.StartTournament(tournament);
+
+            tournament.ReadyPhaseExpireUtc = DateTime.Now.AddSeconds(10);
+            tournament.ReadyPlayersLeft = tournament.Contestants.Select(x => x.User.Name).ToList();
             await UpdateTournament(tournament);
-            await GetAllTournaments();
+            await Clients.Clients(GetContestantsFromTournament(tournament)).SendAsync("DisplayReadyModalPlayers", true);
+            await Clients.Clients(GetSpectatorsFromTournament(tournament)).SendAsync("DisplayReadyModalSpectators", true);
         }
+
+
+        public async Task ReadyForTournament(string tournamentId)
+        {
+            var tournament = _tournamentRepository.GetTournament(tournamentId);
+            var user = GetCurrentUser();
+            var player = tournament.Contestants.FirstOrDefault(x => x.User.Name == user.Name);
+            if (tournament.TournamentStarted || player == null || DateTime.Now > tournament.ReadyPhaseExpireUtc || !tournament.ReadyPlayersLeft.Contains(user.Name))
+            {
+                return;
+            }
+
+            tournament.ReadyPlayersLeft.Remove(user.Name);
+            await UpdateTournament(tournament);
+            if (!tournament.ReadyPlayersLeft.Any())
+            {
+                _tournamentManager.StartTournament(tournament);
+                await UpdateTournament(tournament);
+                await GetAllTournaments();
+                await Clients.Clients(GetContestantsAndSpectatorsFromTournament(tournament)).SendAsync("TournamentStarted");
+            }
+        }
+
 
         public async Task ExitTournament(string tournamentId)
         {
@@ -320,19 +349,18 @@ namespace Web.Hubs
         {
             var game = _gameRepository.GetGameByGameId(gameId);
 
-            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId) || game.GameStarted)
+            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId) || game.GameStarted || DateTime.Now <= game.ReadyPhaseExpireUtc)
             {
                 return;
             }
 
-            if (DateTime.Now > game.ReadyPhaseExpireUtc)
-            {
-                game.ReadyPhaseExpireUtc = DateTime.Now.AddSeconds(10);
-                game.ReadyPlayersLeft = game.Players.Select(x => x.User.Name).ToList();
-                await UpdateGame(game);
-                await Clients.Clients(GetPlayersFromGame(game)).SendAsync("DisplayReadyModalPlayers", false);
-                await Clients.Clients(GetSpectatorsFromGame(game)).SendAsync("DisplayReadyModalSpectators", false);
-            }
+
+            game.ReadyPhaseExpireUtc = DateTime.Now.AddSeconds(10);
+            game.ReadyPlayersLeft = game.Players.Select(x => x.User.Name).ToList();
+            await UpdateGame(game);
+            await Clients.Clients(GetPlayersFromGame(game)).SendAsync("DisplayReadyModalPlayers", false);
+            await Clients.Clients(GetSpectatorsFromGame(game)).SendAsync("DisplayReadyModalSpectators", false);
+
         }
 
         public async Task ReadyForGame(string gameId)
@@ -394,8 +422,6 @@ namespace Web.Hubs
 
             if (!game.GameStarted)
             {
-
-               
 
                 if (spectator != null)
                 {
@@ -665,7 +691,7 @@ namespace Web.Hubs
 
         private async Task UpdateTournament(Tournament tournament)
         {
-            var allUsersInTournament = GetPlayersAndSpectatorsFromTournament(tournament);
+            var allUsersInTournament = GetContestantsAndSpectatorsFromTournament(tournament);
             var tournamentDto = _mapper.Map<TournamentDto>(tournament);
             await Clients.Clients(allUsersInTournament).SendAsync("UpdateTournament", tournamentDto);
         }
@@ -699,10 +725,14 @@ namespace Web.Hubs
         {
             return tournament.Contestants.Where(x => !x.LeftTournament).Select(y => y.User.ConnectionId).ToList();
         }
-
-        private List<string> GetPlayersAndSpectatorsFromTournament(Tournament tournament)
+        private List<string> GetSpectatorsFromTournament(Tournament tournament)
         {
-            return tournament.Contestants.Where(x => !x.LeftTournament).Select(y => y.User.ConnectionId).ToList().Concat(tournament.Spectators.Select(x => x.ConnectionId)).ToList();
+            return tournament.Spectators.Select(y => y.ConnectionId).ToList();
+        }
+
+        private List<string> GetContestantsAndSpectatorsFromTournament(Tournament tournament)
+        {
+            return GetContestantsFromTournament(tournament).Concat(GetSpectatorsFromTournament(tournament)).ToList();
         }
 
         private async Task CleanupUserFromGames(User user)
@@ -716,7 +746,7 @@ namespace Web.Hubs
 
         private async Task CleanupUserFromTournaments(User user)
         {
-            List<Tournament> tournaments = _tournamentRepository.GetAllTournaments().Where(x => GetPlayersAndSpectatorsFromTournament(x).Any(y => y == user.ConnectionId)).ToList();
+            List<Tournament> tournaments = _tournamentRepository.GetAllTournaments().Where(x => GetContestantsAndSpectatorsFromTournament(x).Any(y => y == user.ConnectionId)).ToList();
             foreach (var tournament in tournaments)
             {
                 await ExitTournament(tournament.Id, user);
@@ -757,7 +787,7 @@ namespace Web.Hubs
             if (!string.IsNullOrEmpty(tournamentId))
             {
                 tournament = _tournamentRepository.GetTournament(tournamentId);
-                allUsersInTournament = GetPlayersAndSpectatorsFromTournament(tournament);
+                allUsersInTournament = GetContestantsAndSpectatorsFromTournament(tournament);
             }
             if (chatMessageIntentionResult.ChatMessageIntention == ChatMessageIntention.Buzz)
             {
@@ -924,7 +954,7 @@ namespace Web.Hubs
             await Clients.Caller.SendAsync("ExitTournament");
             await UpdateTournament(tournament);
 
-            if (!GetPlayersAndSpectatorsFromTournament(tournament).Any())
+            if (!GetContestantsAndSpectatorsFromTournament(tournament).Any())
             {
                 tournament.TournamentRounds.ForEach(x =>
                 {

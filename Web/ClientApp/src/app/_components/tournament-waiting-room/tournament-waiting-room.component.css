@@ -6,3 +6,6 @@
     font-size: 12px;
   }
 }
+.list-group-item {
+  padding: 0.3rem 0.3rem;
+}

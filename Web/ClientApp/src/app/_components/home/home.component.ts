@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   }
 
   createGame() {
-    this._modalService.open(GameSetupComponent);
+    this._modalService.open(GameSetupComponent, { backdrop: 'static' });
   }
 
   createTournament() {

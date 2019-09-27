@@ -25,7 +25,8 @@
           <button class="btn btn-sm btn-danger" (click)="exitTournament()">Leave tournament</button>
           <button
             class="btn btn-sm btn-primary"
-            [ngStyle]="getStyleJoinGameButton()"
+            [ngStyle]="getStyleJoinTournamentButton()"
+            [hidden]="isInReadyPhase()"
             [disabled]="!userIsSpectator()"
             (click)="joinTournament()"
           >
@@ -39,16 +40,22 @@
 <div class="row">
   <div class="col-6">
     <h6 class="text-success">Players joined ({{ activeTournament.contestants.length }})</h6>
-    <ul class="list-unstyled">
-      <li *ngFor="let contestant of activeTournament.contestants; let first = first">
-        <span [hidden]="!first">&#9734;</span>
-        *{{ contestant.user.name }}
-        <strong
-          [hidden]="currentUser.connectionId != activeTournament.contestants[0].user.connectionId || first"
-          class="ml-2 text-danger cursor-pointer"
+    <ul class="list-group">
+      <li
+        class="list-group-item d-flex justify-content-between "
+        *ngFor="let contestant of activeTournament.contestants; let first = first"
+      >
+        <div>
+          <span [hidden]="!first">&#9734;</span>
+          *{{ contestant.user.name }}
+        </div>
+        <span
+          class="badge badge-pill badge-danger cursor-pointer"
           (click)="kickContestantFromTournament(contestant)"
-          >[X]</strong
+          [hidden]="currentUser.connectionId != activeTournament.contestants[0].user.connectionId || first"
         >
+          [X]
+        </span>
       </li>
     </ul>
   </div>
@@ -79,7 +86,7 @@
 </div>
 
 <div class="row">
-  <div class="col-12 fill-viewport-max-70 scrollable-div-y" >
+  <div class="col-12 fill-viewport-max-70 scrollable-div-y">
     <app-game-tabs></app-game-tabs>
   </div>
 </div>
