@@ -74,7 +74,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     this._hubService.joinGame(this.activeGame.id, '');
   }
 
-  isInReadyPhase(){
+  isInReadyPhase() {
     return new Date(this.activeGame.readyPhaseExpireUtc) > new Date();
   }
 
@@ -121,6 +121,17 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     if (this.activeGame.players.length < 2) {
       this._toastrService.info('Minimum 2 players to start the game.');
       return;
+    }
+
+    if (this.activeGame.gameSetup.playersSetup == PlayersSetup.teams) {
+      var allteams = this.activeGame.players.map(x => x.teamNumber);
+      allteams = allteams.filter((value, index, self) => {
+        return self.indexOf(value) === index;
+      });
+      if (allteams.length < 2) {
+        this._toastrService.error("Can't start the team game with only one team.");
+        return;
+      }
     }
     this._hubService.startGame();
   }

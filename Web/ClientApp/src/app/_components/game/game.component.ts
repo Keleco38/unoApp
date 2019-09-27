@@ -4,7 +4,7 @@ import { UtilityService } from './../../_services/utility.service';
 import { BlackjackComponent } from './../_modals/blackjack/blackjack.component';
 import { PickCharityCardsComponent } from './../_modals/pick-charity-cards/pick-charity-cards.component';
 import { GameInfoComponent } from './../_modals/game-info/game-info.component';
-import { CardValue, TypeOfMessage } from './../../_models/enums';
+import { CardValue, TypeOfMessage, PlayersSetup } from './../../_models/enums';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { Game } from 'src/app/_models/game';
@@ -195,6 +195,14 @@ export class GameComponent implements OnInit, OnDestroy {
                 return;
               });
             } else if (cardPlayed.value == CardValue.gambling) {
+              if (this.game.gameSetup.playersSetup == PlayersSetup.teams) {
+                var targetedPlayerTeam = this.game.players.find(x => x.id == playerId).teamNumber;
+                var myTeam = this.game.players.find(x => x.user.name == this.currentUser.name).teamNumber;
+                if (targetedPlayerTeam == myTeam) {
+                  this._toastrService.error("You can't pick your teammate for the gambling card.");
+                  return;
+                }
+              }
               const modalRef = this._modalService.open(GuessOddEvenNumberComponent);
               modalRef.result.then((guessOddOrEven: string) => {
                 this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null, null, 0, null, null, guessOddOrEven);
