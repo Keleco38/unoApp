@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ChatMessage } from 'src/app/_models/chatMessage';
 import { User } from 'src/app/_models/user';
 import { HubService } from 'src/app/_services/hub.service';
@@ -14,6 +14,8 @@ import { TournamentSetupComponent } from '../_modals/tournament-setup/tournament
   styleUrls: ['./all-chat.component.css']
 })
 export class AllChatComponent implements OnInit, OnDestroy {
+  @Input('heightClassString') heightClassString: string;
+  
   private _isAlive: boolean = true;
   onlineUsers: string[] = [];
   messages: ChatMessage[];

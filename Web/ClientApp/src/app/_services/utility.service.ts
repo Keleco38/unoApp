@@ -29,7 +29,7 @@ export class UtilityService {
     if (this._sidebarSettings === null) {
       this._sidebarSettings = JSON.parse(localStorage.getItem('sidebar-settings'));
       if (this._sidebarSettings === null) {
-        this._sidebarSettings = { sidebarSize: 50, muteServer: false, muteSpectators: false, keepSidebarOpen: false, showNavbar: false };
+        this._sidebarSettings = { sidebarSize: 40, muteServer: false, muteSpectators: false, keepSidebarOpen: false, showNavbar: false };
       }
       this.saveSidebarSettings();
     }

@@ -1,7 +1,7 @@
 import { ChatDestination } from './../../_models/enums';
 import { SidebarSettings } from './../../_models/sidebarSettings';
 import { UtilityService } from './../../_services/utility.service';
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy, Input } from '@angular/core';
 import { ChatMessage } from 'src/app/_models/chatMessage';
 import { User } from 'src/app/_models/user';
 import { HubService } from 'src/app/_services/hub.service';
@@ -15,6 +15,8 @@ import { takeWhile, map } from 'rxjs/operators';
   styleUrls: ['./game-chat.component.css']
 })
 export class GameChatComponent implements OnInit, OnDestroy {
+  @Input('heightClassString') heightClassString: string;
+
   private _isAlive: boolean = true;
   onlineUsers: string[];
   messages: ChatMessage[];

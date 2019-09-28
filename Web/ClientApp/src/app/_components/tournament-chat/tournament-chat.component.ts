@@ -2,7 +2,7 @@ import { HubService } from 'src/app/_services/hub.service';
 import { Tournament } from './../../_models/tournament';
 import { User } from 'src/app/_models/user';
 import { ChatMessage } from 'src/app/_models/chatMessage';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SidebarSettings } from '../../_models/sidebarSettings';
 import { UtilityService } from '../../_services/utility.service';
 import { takeWhile, map } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { TypeOfMessage, ChatDestination } from '../../_models/enums';
   styleUrls: ['./tournament-chat.component.css']
 })
 export class TournamentChatComponent implements OnInit {
+  @Input('heightClassString') heightClassString: string;
 
   private _isAlive: boolean = true;
   onlineUsers: string[];

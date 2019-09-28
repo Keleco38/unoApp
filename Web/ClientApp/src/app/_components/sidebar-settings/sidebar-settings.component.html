@@ -5,9 +5,11 @@
       <label class="col-4 col-form-label">Size</label>
       <div class="col-8">
         <select (change)="saveSidebarSettings()" [(ngModel)]="sidebarSettings.sidebarSize" class="form-control form-control-sm">
+          <option value="20">20%</option>
           <option value="30">30%</option>
           <option value="40">40%</option>
           <option value="50">50%</option>
+          <option value="60">60%</option>
         </select>
       </div>
     </div>

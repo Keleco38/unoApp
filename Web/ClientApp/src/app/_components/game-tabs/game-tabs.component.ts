@@ -1,7 +1,7 @@
 import { HubService } from 'src/app/_services/hub.service';
 import { Game } from 'src/app/_models/game';
 import { Tournament } from 'src/app/_models/tournament';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({
@@ -10,6 +10,8 @@ import { takeWhile } from 'rxjs/operators';
   styleUrls: ['./game-tabs.component.css']
 })
 export class GameTabsComponent implements OnInit {
+  @Input('heightClassString') heightClassString: string;
+
   private _isAlive: boolean = true;
   activeGame: Game;
   activeTournament: Tournament;
