@@ -1,15 +1,32 @@
 <div class="modal-header">
-  <h4 class="modal-title" id="modal-basic-title">Pick player</h4>
+  <h4 class="modal-title" id="modal-basic-title">Player selection</h4>
   <button type="button" class="close" aria-describedby="modal-title" (click)="closeModal()">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
   <div class="row">
-    <ul>
-      <li *ngFor="let player of players" class="my-3" [hidden]="currentUser.name == player.user.name" (click)="selectPlayer(player)">
-        {{ player.user.name }} -({{ player.numberOfCards }})
-      </li>
-    </ul>
+    <div class="col-12">
+      <h5 class="text-primary">Select a player you wish to target</h5>
+      <br>
+      <table class="table table-sm">
+        <thead>
+          <th>Name</th>
+          <th>Cards Left</th>
+          <th>Rounds Won</th>
+          <th>Select</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let player of players"  [hidden]="currentUser.name == player.user.name">
+            <td>{{ player.user.name }}</td>
+            <td>{{ player.numberOfCards }}</td>
+            <td>{{ player.roundsWonCount }}</td>
+            <td>
+              <button class="btn btn-block btn-primary" (click)="selectPlayer(player)">Select</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
