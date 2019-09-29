@@ -1,4 +1,4 @@
-> Developed with: .net core 2.2 + angular8 + bootstrap 4.1
+> Developed with: .net core 3.0 + angular8 + bootstrap 4.1
 
 ##### DEMO: http://unoapp.tonymarkoc.com/
 
