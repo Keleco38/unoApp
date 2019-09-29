@@ -61,6 +61,9 @@ export class ConfirmReadyComponent implements OnInit, OnDestroy {
       this._hubService.sendIsReadyForGame();
     }
   }
+  notReady(){
+    this._activeModal.dismiss();
+  }
 
   getProgressBarValue() {
     var numberOfPlayersReady = this.originallyTotalPlayersCount - this.readyPlayersLeft.length;

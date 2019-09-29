@@ -64,15 +64,16 @@ namespace Web
             {
                 app.UseExceptionHandler("/Error");
             }
+            app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+
             app.UseSpaStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<GameHub>("/gamehub");
+                endpoints.MapControllers();
                 endpoints.MapControllerRoute("default", "{controller}/{action=Index}/{id?}");
             });
 

@@ -1,11 +1,9 @@
 import { ReadyPhaseSpectatorsComponent } from './../_components/_modals/ready-phase-spectators/ready-phase-spectators.component';
-import { AdminSectionComponent } from './../_components/_modals/admin-section/admin-section.component';
 import { TournamentSetup } from './../_models/tournamentSetup';
 import { GameEndedResultComponent } from './../_components/_modals/game-ended-result/game-ended-result.component';
 import { GameEndedResult } from './../_models/gameEndedResult';
 import { GameSetup } from './../_models/gameSetup';
 import { UtilityService } from './utility.service';
-import { DigCardComponent } from './../_components/_modals/dig-card/dig-card.component';
 import { ShowCardsComponent } from './../_components/_modals/show-cards/show-cards.component';
 import { CardColor, CardValue, ChatDestination } from './../_models/enums';
 import { Injectable } from '@angular/core';
@@ -14,7 +12,6 @@ import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
 import { User } from '../_models/user';
-import { TypeOfMessage } from '../_models/enums';
 import { ChatMessage } from '../_models/chatMessage';
 import { Game } from '../_models/game';
 import { ToastrService } from 'ngx-toastr';
@@ -80,7 +77,9 @@ export class HubService {
     private _modalService: NgbModal,
     private _utilityService: UtilityService
   ) {
-    this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
+    this._hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl('/gamehub')
+      .build();
     if (!environment.production) {
       this._hubConnection.serverTimeoutInMilliseconds = 10000000;
     }
@@ -292,7 +291,7 @@ export class HubService {
   sendIsReadyForGame() {
     this._hubConnection.invoke('ReadyForGame', this._activeGameObservable.getValue().id);
   }
-  
+
   sendIsReadyForTournament() {
     this._hubConnection.invoke('ReadyForTournament', this._activeTournamentObservable.getValue().id);
   }
