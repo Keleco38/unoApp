@@ -163,7 +163,7 @@ export class GameComponent implements OnInit, OnDestroy {
       (cardPlayed.value === CardValue.magneticPolarity || cardPlayed.value === CardValue.doubleDraw) &&
       this.game.lastCardPlayed.wasWildCard === false
     ) {
-      this._toastrService.info('This card only can be played if last card played is a wildcard.');
+      this._toastrService.info('This card can only be played if the last card on the table is a wildcard.');
       return;
     }
 

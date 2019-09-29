@@ -22,10 +22,6 @@
   border-style: solid;
 }
 
-button.uno {
-  margin: 0 50px;
-}
-
 .player-hand-card:hover {
   margin-top: -5%;
 }
@@ -35,6 +31,11 @@ button.uno {
 }
 
 @media (max-width: 768px) {
+  .action-button {
+    padding: .5rem;
+    line-height: 1;
+    font-size: .75rem
+  }
   .player-hand-card {
     width: 20%;
   }

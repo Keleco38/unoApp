@@ -63,10 +63,10 @@
           </div>
           <div class="d-flex align-items-center flex-column">
             <div class="mb-auto p-1">
-              <button class="btn btn-primary btn-md" (click)="callUno(true)">Uno!</button>
+              <button class="btn btn-primary btn-md action-button"  (click)="callUno(true)">Uno!</button>
             </div>
             <div class="p-1" *ngIf="game.gameSetup.playersSetup == 2 && game.gameSetup.canSeeTeammatesHandInTeamGame && !isSpectator()">
-              <button class="btn btn-success btn-sm" (click)="seeTeammatesCards()">See cards</button>
+              <button class="btn btn-success btn-md action-button" (click)="seeTeammatesCards()">Team cards</button>
             </div>
           </div>
           <div>
