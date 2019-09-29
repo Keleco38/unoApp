@@ -53,6 +53,10 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             else
             {
                 var numberOfCardsToDraw = 17 - moveParams.BlackjackNumber;
+                if (numberOfCardsToDraw > 5)
+                {
+                    numberOfCardsToDraw = 5;
+                }
                 var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerPlayed, numberOfCardsToDraw, moveParams.TargetedCardColor) });
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 

@@ -13,7 +13,6 @@
         <button
           [style.opacity]="activeGame.players.length < 2 ? 0.5 : 1"
           class="btn btn-block btn-sm btn-success"
-          [hidden]="isInReadyPhase()"
           (click)="startGame()"
         >
           Start Game
@@ -27,7 +26,6 @@
           <button
             class="btn btn-sm btn-primary"
             [ngStyle]="getStyleJoinGameButton()"
-            [hidden]="isInReadyPhase()"
             [disabled]="!userIsSpectator()"
             (click)="joinGame()"
           >

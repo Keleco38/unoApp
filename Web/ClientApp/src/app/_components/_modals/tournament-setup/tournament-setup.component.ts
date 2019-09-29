@@ -37,7 +37,7 @@ export class TournamentSetupComponent implements OnInit {
         bannedCards: [],
         matchingCardStealsTurn: true,
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
-        drawAutoPlay:true
+        drawAutoPlay:false
       };
     } else {
       this.hideAdminPasswordPart = true;

@@ -6,6 +6,7 @@
 </div>
 <div class="modal-body">
   <div class="col-12">
+    <h4 class="text-primary">Game setup</h4>
     <div *ngIf="game.gameSetup.bannedCards.length > 0">
       <strong>Banned cards: </strong>
       <ul>
@@ -24,6 +25,7 @@
     <p><strong>Can see teammate's cards: </strong> {{ game.gameSetup.canSeeTeammatesHandInTeamGame }}</p>
     <p><strong>Wild card playable only as last option: </strong> {{ game.gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}</p>
     <p><strong>Password set:</strong> {{ game.gameSetup.password.length > 0 }}</p>
+    <h4 class="text-primary">Players info</h4>
     <table class="table">
       <thead>
         <th>Name</th>
@@ -41,7 +43,7 @@
       </tbody>
     </table>
   </div>
-  <div class="col-12 fill-viewport-max-100 scrollable-div-y">
+  <div class="col-12">
     <h4 class="text-primary">Log</h4>
     <p *ngFor="let log of gameLog">*{{ log }}</p>
   </div>

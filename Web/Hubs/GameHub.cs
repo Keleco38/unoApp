@@ -253,11 +253,11 @@ namespace Web.Hubs
             if (_userRepository.UserExistsByName(name))
             {
                 var user = _userRepository.GetUserByName(name);
+                await Clients.Client(user.ConnectionId).SendAsync("AdminKickUser");
                 await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
                 await CleanupUserFromGames(user);
                 await CleanupUserFromTournaments(user);
                 await CleanupUserFromOnlineUsersList(user);
-                await Clients.Client(user.ConnectionId).SendAsync("AdminKickUser");
             }
         }
 
@@ -961,7 +961,7 @@ namespace Web.Hubs
                 tournament.Spectators.Remove(spectator);
 
 
-            await Clients.Caller.SendAsync("ExitTournament");
+            await Clients.Clients(user.ConnectionId).SendAsync("ExitTournament");
             await UpdateTournament(tournament);
 
             if (!GetContestantsAndSpectatorsFromTournament(tournament).Any())
@@ -1004,7 +1004,7 @@ namespace Web.Hubs
                 _gameRepository.RemoveGame(game);
             }
             await GetAllGames();
-            await Clients.Caller.SendAsync("ExitGame");
+            await Clients.Client(user.ConnectionId).SendAsync("ExitGame");
         }
 
         private User GetCurrentUser()

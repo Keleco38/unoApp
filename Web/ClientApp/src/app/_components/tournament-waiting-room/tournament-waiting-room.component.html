@@ -13,7 +13,6 @@
         <button
           [style.opacity]="activeTournament.contestants.length < 3 ? 0.5 : 1"
           class="btn btn-block btn-sm btn-success"
-          [hidden]="isInReadyPhase()"
           (click)="startTournament()"
         >
           Start Tournament
@@ -27,7 +26,6 @@
           <button
             class="btn btn-sm btn-primary"
             [ngStyle]="getStyleJoinTournamentButton()"
-            [hidden]="isInReadyPhase()"
             [disabled]="!userIsSpectator()"
             (click)="joinTournament()"
           >

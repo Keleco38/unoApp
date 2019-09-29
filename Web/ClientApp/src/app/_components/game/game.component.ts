@@ -281,7 +281,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   openGameInfoModal() {
-    this._modalService.open(GameInfoComponent);
+    this._modalService.open(GameInfoComponent, { scrollable: true });
   }
 
   toggleGameChatSidebar() {

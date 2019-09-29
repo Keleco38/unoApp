@@ -53,6 +53,6 @@ export class NavbarComponent implements OnInit {
   }
 
   openSettings() {
-    this._modalService.open(UserSettingsComponent);
+    this._modalService.open(UserSettingsComponent,{ backdrop: 'static' });
   }
 }
