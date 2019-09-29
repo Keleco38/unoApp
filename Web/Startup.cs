@@ -29,7 +29,7 @@ namespace Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddSingleton<IGameManager, GameManager>();
             services.AddSingleton<IPlayCardManager, PlayCardManager>();
@@ -42,8 +42,9 @@ namespace Web
             services.RegisterAllTypes<IAutomaticallyTriggeredCardEffectProcessor>(new[] { typeof(IAutomaticallyTriggeredCardEffectProcessor).Assembly }, ServiceLifetime.Singleton);
             services.Configure<AppSettings>(Configuration.GetSection("UnoAppSettings"));
 
+            services.AddSignalR()
+                .AddNewtonsoftJsonProtocol();
 
-            services.AddSignalR();
             services.AddAutoMapper(typeof(Startup));
 
             // In production, the Angular files will be served from this directory
