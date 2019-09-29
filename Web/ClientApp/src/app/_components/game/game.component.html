@@ -65,7 +65,7 @@
             <button class="btn btn-primary btn-md" (click)="callUno(true)">Uno!</button>
             <div *ngIf="game.gameSetup.playersSetup == 2 && game.gameSetup.canSeeTeammatesHandInTeamGame">
               <hr />
-              <button class="btn btn-success btn-sm" (click)="seeTeammatesCards()">Ally's cards</button>
+              <button class="btn btn-success btn-sm" [hidden]="isSpectator()" (click)="seeTeammatesCards()">Ally's cards</button>
             </div>
           </div>
           <div>

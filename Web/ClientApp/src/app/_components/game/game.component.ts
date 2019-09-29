@@ -99,6 +99,13 @@ export class GameComponent implements OnInit, OnDestroy {
     });
   }
 
+  isSpectator() {
+    const exists = this.game.spectators.find(spectator => {
+      return spectator.user.name === this.currentUser.name;
+    });
+    return exists != null;
+  }
+
   callUno(unoCalled: boolean) {
     this._mustCallUno = false;
     window.clearTimeout(this._timer);

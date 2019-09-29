@@ -9,7 +9,7 @@ import { DigCardComponent } from './../_components/_modals/dig-card/dig-card.com
 import { ShowCardsComponent } from './../_components/_modals/show-cards/show-cards.component';
 import { CardColor, CardValue, ChatDestination } from './../_models/enums';
 import { Injectable } from '@angular/core';
-import * as signalR from '@aspnet/signalr';
+import * as signalR from '@microsoft/signalr';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
