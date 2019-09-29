@@ -61,11 +61,12 @@
           <div>
             <img class="last-card-played" [style.borderColor]="getBorderColor()" [src]="game.lastCardPlayed.imageUrl" alt="" />
           </div>
-          <div>
-            <button class="btn btn-primary btn-md" (click)="callUno(true)">Uno!</button>
-            <div *ngIf="game.gameSetup.playersSetup == 2 && game.gameSetup.canSeeTeammatesHandInTeamGame">
-              <hr />
-              <button class="btn btn-success btn-sm" [hidden]="isSpectator()" (click)="seeTeammatesCards()">Ally's cards</button>
+          <div class="d-flex align-items-center flex-column">
+            <div class="mb-auto p-1">
+              <button class="btn btn-primary btn-md" (click)="callUno(true)">Uno!</button>
+            </div>
+            <div class="p-1" *ngIf="game.gameSetup.playersSetup == 2 && game.gameSetup.canSeeTeammatesHandInTeamGame && !isSpectator()">
+              <button class="btn btn-success btn-sm" (click)="seeTeammatesCards()">See cards</button>
             </div>
           </div>
           <div>

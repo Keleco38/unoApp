@@ -133,6 +133,12 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
         return;
       }
     }
+
+    if (this.isInReadyPhase()) {
+      this._toastrService.info(`Game is in the ready phase. You can't start the game again.`);
+      return;
+    }
+
     this._hubService.startGame();
   }
   kickPlayerFromGame(player: Player) {
