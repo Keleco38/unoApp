@@ -540,6 +540,16 @@ namespace Web.Hubs
                 await AddToGameLog(gameId, $"Player didn't fulfill their promise, they will draw 2 cards. ");
             }
 
+            var cardToDraw = game.Deck.Cards.Take(1).First();
+
+            if (game.GameSetup.DrawAutoPlay && (cardToDraw.Color == game.LastCardPlayed.Color || (cardToDraw.Value == game.LastCardPlayed.Value && !game.LastCardPlayed.WasWildCard)))
+            {
+                _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
+                await AddToGameLog(gameId, $"{user.Name} drew and autoplayed a card.");
+                await PlayCard(game.Id, cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty);
+                return;
+            }
+
             _gameManager.DrawCard(game, game.PlayerToPlay, 1, true);
             await AddToGameLog(gameId, $"{user.Name} drew a card (normal draw)");
             await UpdateGame(game);

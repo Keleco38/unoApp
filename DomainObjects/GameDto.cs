@@ -19,6 +19,7 @@ namespace DomainObjects
         public List<string> ReadyPlayersLeft { get; set; }
         public List<CardDto> DiscardedPile { get; set; }
         public bool GameEnded { get; set; }
+        public bool DrawAutoPlay { get; set; }
     }
 
 }

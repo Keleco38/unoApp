@@ -12,4 +12,5 @@ export interface TournamentSetup{
     reverseShouldSkipTurnInTwoPlayers: boolean;
     matchingCardStealsTurn:boolean;
     wildCardCanBePlayedOnlyIfNoOtherOptions:boolean;
+    drawAutoPlay:boolean;
 }

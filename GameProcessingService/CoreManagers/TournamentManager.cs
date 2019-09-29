@@ -45,7 +45,8 @@ namespace GameProcessingService.CoreManagers
                         Password = tournament.TournamentSetup.Password,
                         ReverseShouldSkipTurnInTwoPlayers = tournament.TournamentSetup.ReverseShouldSkipTurnInTwoPlayers,
                         WildCardCanBePlayedOnlyIfNoOtherOptions = tournament.TournamentSetup.WildCardCanBePlayedOnlyIfNoOtherOptions,
-                        CanSeeTeammatesHandInTeamGame = false
+                        CanSeeTeammatesHandInTeamGame = false,
+                        DrawAutoPlay = tournament.TournamentSetup.DrawAutoPlay
                     }, tournament.Id);
                     _gameRepository.AddGame(game);
 

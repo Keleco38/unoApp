@@ -12,4 +12,5 @@ export interface GameSetup {
   wildCardCanBePlayedOnlyIfNoOtherOptions:boolean;
   maxNumberOfPlayers: number;
   canSeeTeammatesHandInTeamGame: boolean;
+  drawAutoPlay: boolean;
 }

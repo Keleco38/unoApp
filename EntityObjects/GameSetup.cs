@@ -16,5 +16,6 @@ namespace EntityObjects
         public bool WildCardCanBePlayedOnlyIfNoOtherOptions { get; set; }
         public int MaxNumberOfPlayers { get; set; }
         public bool CanSeeTeammatesHandInTeamGame { get; set; }
+        public bool DrawAutoPlay { get; set; }
     }
 }

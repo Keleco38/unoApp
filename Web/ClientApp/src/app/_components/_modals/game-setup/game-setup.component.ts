@@ -34,7 +34,8 @@ export class GameSetupComponent implements OnInit {
         matchingCardStealsTurn: true,
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
         playersSetup: PlayersSetup.individual,
-        canSeeTeammatesHandInTeamGame: true
+        canSeeTeammatesHandInTeamGame: true,
+        drawAutoPlay:true
       };
     } else {
       this.gameSetup = this._game.gameSetup;
