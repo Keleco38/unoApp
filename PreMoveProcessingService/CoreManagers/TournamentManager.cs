@@ -4,9 +4,10 @@ using System.Linq;
 using Common.Enums;
 using Common.Extensions;
 using EntityObjects;
+using GameProcessingService.CoreManagers;
 using Repository;
 
-namespace GameProcessingService.CoreManagers
+namespace PreMoveProcessingService.CoreManagers
 {
     public class TournamentManager : ITournamentManager
     {

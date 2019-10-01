@@ -1,6 +1,6 @@
 ﻿using EntityObjects;
 
-namespace GameProcessingService.CoreManagers
+namespace PreMoveProcessingService.CoreManagers
 {
     public interface ITournamentManager
     {

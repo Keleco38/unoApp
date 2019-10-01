@@ -3,7 +3,7 @@ using Common.Enums;
 using EntityObjects;
 using GameProcessingService.Models;
 
-namespace GameProcessingService.CoreManagers
+namespace PreMoveProcessingService.CoreManagers
 {
     public interface IPlayCardManager
     {

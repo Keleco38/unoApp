@@ -13,6 +13,7 @@ using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
+using PreMoveProcessingService.CoreManagers;
 using Repository;
 using Web.Helpers;
 using Web.Models;
@@ -29,7 +30,7 @@ namespace Web.Hubs
         private readonly IHallOfFameRepository _hallOfFameRepository;
         private readonly ITournamentRepository _tournamentRepository;
         private readonly ITournamentManager _tournamentManager;
-        private AppSettings _appSettings;
+        private readonly AppSettings _appSettings;
 
         public GameHub(IMapper mapper, IGameManager gameManager, IPlayCardManager playCardManager, IUserRepository userRepository, IGameRepository gameRepository, IHallOfFameRepository hallOfFameRepository, ITournamentRepository tournamentRepository, ITournamentManager tournamentManager, IOptions<AppSettings> appSettings)
         {
