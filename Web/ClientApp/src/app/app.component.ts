@@ -1,8 +1,7 @@
-import { FirstTimeLaunchComponent } from './_components/_modals/first-time-launch/first-time-launch.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UtilityService } from 'src/app/_services/utility.service';
 import { Router } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ModalService } from './_services/modal-services/modal.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +11,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 export class AppComponent implements OnInit {
   modalOpen = false;
 
-  constructor(private _utilityService: UtilityService, private _router: Router, private _modalService: NgbModal) {}
+  constructor(private _utilityService: UtilityService, private _router: Router, private _modalService: ModalService) {}
 
   ngOnInit(): void {
     if (this._utilityService.userSettings.useDarkTheme) {
@@ -22,13 +21,17 @@ export class AppComponent implements OnInit {
 
     if (isFirstTimeLunched) {
       this.modalOpen = true;
-      var modalRef = this._modalService.open(FirstTimeLaunchComponent, { backdrop: 'static', keyboard: false });
-      modalRef.result.then((sendToHelpPage: boolean) => {
-        this._utilityService.updateFirstTimeLunched();
-        this.modalOpen = false;
-        if (sendToHelpPage) {
-          this._router.navigateByUrl('/help');
-        }
+      var firstTimeLaunchedModal = this._modalService.displayFirstTimeLaunchedModal();
+      firstTimeLaunchedModal.result.then((sendToHelpPage: boolean) => {
+        var renameModal = this._modalService.displayRenameModal();
+        renameModal.result.then((name: string) => {
+          localStorage.setItem('name', name);
+          this._utilityService.updateFirstTimeLunched();
+          this.modalOpen = false;
+          if (sendToHelpPage) {
+            this._router.navigateByUrl('/help');
+          }
+        });
       });
     }
   }

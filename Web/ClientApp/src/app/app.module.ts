@@ -1,3 +1,4 @@
+import { ModalObservablesService } from './_services/modal-services/modal-observables.service';
 import { ReadyPhaseSpectatorsComponent } from './_components/_modals/ready-phase-spectators/ready-phase-spectators.component';
 import { ConfirmReadyComponent } from './_components/_modals/confirm-ready/confirm-ready.component';
 import { FirstTimeLaunchComponent } from './_components/_modals/first-time-launch/first-time-launch.component';
@@ -66,6 +67,7 @@ import { TournamentWaitingRoomDeactivateGuard } from './_guards/tournament-waiti
 import { TournamentWaitingRoomGuard } from './_guards/tournament-waiting-room.guard';
 import { UiSwitchModule } from 'ngx-toggle-switch';
 import { RenameComponent } from './_components/_modals/rename/rename.component';
+import { ModalService } from './_services/modal-services/modal.service';
 
 @NgModule({
   declarations: [
@@ -163,6 +165,8 @@ import { RenameComponent } from './_components/_modals/rename/rename.component';
     TournamentGuard,
     TournamentDeactivateGuard,
     UtilityService,
+    ModalService,
+    ModalObservablesService,
     HttpService
   ],
   bootstrap: [AppComponent],

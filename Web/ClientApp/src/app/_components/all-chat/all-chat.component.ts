@@ -1,4 +1,4 @@
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalService } from '../../_services/modal-services/modal.service';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ChatMessage } from 'src/app/_models/chatMessage';
 import { User } from 'src/app/_models/user';
@@ -22,7 +22,7 @@ export class AllChatComponent implements OnInit, OnDestroy {
   currentUser: User;
   newMessage = '';
 
-  constructor(private _hubService: HubService, private _modalService: NgbModal) {}
+  constructor(private _hubService: HubService, private _modalService: ModalService) {}
   ngOnInit(): void {
     this._hubService.allChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
       this.messages = messages;
@@ -51,14 +51,14 @@ export class AllChatComponent implements OnInit, OnDestroy {
     if (this.newMessage == '/admin') {
       this.newMessage = '';
       event.target.children[0].blur();
-      this._modalService.open(AdminSectionComponent, { backdrop: 'static' });
+      this._modalService.displayAdminSectionModal();
       return;
     }
 
     if (this.newMessage == '/tournament') {
       this.newMessage = '';
       event.target.children[0].blur();
-      this._modalService.open(TournamentSetupComponent, { backdrop: 'static' });
+      this._modalService.displayTournamentSetupModal();
       return;
     }
 

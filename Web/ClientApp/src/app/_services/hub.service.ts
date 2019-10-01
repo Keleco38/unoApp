@@ -1,40 +1,35 @@
-import { ReadyPhaseSpectatorsComponent } from './../_components/_modals/ready-phase-spectators/ready-phase-spectators.component';
+import { ModalObservablesService } from './modal-services/modal-observables.service';
+import { ModalService } from 'src/app/_services/modal-services/modal.service';
 import { TournamentSetup } from './../_models/tournamentSetup';
-import { GameEndedResultComponent } from './../_components/_modals/game-ended-result/game-ended-result.component';
 import { GameEndedResult } from './../_models/gameEndedResult';
 import { GameSetup } from './../_models/gameSetup';
 import { UtilityService } from './utility.service';
-import { ShowCardsComponent } from './../_components/_modals/show-cards/show-cards.component';
-import { CardColor, CardValue, ChatDestination } from './../_models/enums';
+import { CardColor, ChatDestination } from './../_models/enums';
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { User } from '../_models/user';
 import { ChatMessage } from '../_models/chatMessage';
 import { Game } from '../_models/game';
 import { ToastrService } from 'ngx-toastr';
 import { Card } from '../_models/card';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GameList } from '../_models/gameList';
 import { Tournament } from '../_models/tournament';
 import { TournamentList } from '../_models/tournamentList';
 import { KeyValue } from '@angular/common';
-import { RenameComponent } from '../_components/_modals/rename/rename.component';
-import { ConfirmReadyComponent } from '../_components/_modals/confirm-ready/confirm-ready.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HubService {
   private _wasKicked = false;
-  private _hubConnection: signalR.HubConnection;
+   _hubConnection: signalR.HubConnection;
   private _gameChatMessages: ChatMessage[] = [];
   private _tournamentChatMessages: ChatMessage[] = [];
   private _gameLog: string[] = [];
   private _allChatMessages: ChatMessage[] = [];
-
   private _currentUserObservable = new BehaviorSubject<User>({} as User);
   private _onlineUsersObservable = new BehaviorSubject<User[]>([]);
   private _availableGamesObservable = new BehaviorSubject<GameList[]>([]);
@@ -49,9 +44,8 @@ export class HubService {
   private _myHandObservable = new BehaviorSubject<Card[]>([]);
   private _mustCallUnoObservable = new Subject();
   private _reconnectObservable = new Subject();
-
-  private _readyPhaseModalPlayers: any;
-  private _readyPhaseModalSpectators: any;
+  private _gameStartedObservable = new Subject();
+  private _tournamentStartedObservable = new Subject();
 
   private async startConnection(isReconnect: Boolean) {
     try {
@@ -74,12 +68,10 @@ export class HubService {
   constructor(
     private _router: Router,
     private _toastrService: ToastrService,
-    private _modalService: NgbModal,
+    private _modalObservableService: ModalObservablesService,
     private _utilityService: UtilityService
   ) {
-    this._hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('/gamehub')
-      .build();
+    this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
     if (!environment.production) {
       this._hubConnection.serverTimeoutInMilliseconds = 10000000;
     }
@@ -91,8 +83,7 @@ export class HubService {
     });
 
     this._hubConnection.on('GameEnded', (gameEndedResult: GameEndedResult) => {
-      var modalRef = this._modalService.open(GameEndedResultComponent, { backdrop: 'static' });
-      modalRef.componentInstance.gameEndedResult = gameEndedResult;
+      this._modalObservableService.gameEndedResultModalObservable.next(gameEndedResult);
     });
 
     this._hubConnection.on('ExitGame', () => {
@@ -196,13 +187,11 @@ export class HubService {
     });
 
     this._hubConnection.on('DisplayReadyModalPlayers', (isTournament: boolean) => {
-      this._readyPhaseModalPlayers = this._modalService.open(ConfirmReadyComponent, { backdrop: 'static', keyboard: false });
-      this._readyPhaseModalPlayers.componentInstance.isTournament = isTournament;
+      this._modalObservableService.readyPhasePlayersModalObservable.next(isTournament);
     });
 
     this._hubConnection.on('DisplayReadyModalSpectators', (isTournament: boolean) => {
-      this._readyPhaseModalSpectators = this._modalService.open(ReadyPhaseSpectatorsComponent, { backdrop: 'static', keyboard: false });
-      this._readyPhaseModalSpectators.componentInstance.isTournament = isTournament;
+      this._modalObservableService.readyPhaseSpectatorsModalObservable.next(isTournament);
     });
 
     this._hubConnection.on('DisplayToastMessage', (message: string, toastrType: string) => {
@@ -210,25 +199,11 @@ export class HubService {
     });
 
     this._hubConnection.on('GameStarted', () => {
-      setTimeout(() => {
-        if (this._readyPhaseModalPlayers) {
-          this._readyPhaseModalPlayers.dismiss();
-        }
-        if (this._readyPhaseModalSpectators) {
-          this._readyPhaseModalSpectators.dismiss();
-        }
-      }, 500);
+      this._gameStartedObservable.next();
     });
 
     this._hubConnection.on('TournamentStarted', () => {
-      setTimeout(() => {
-        if (this._readyPhaseModalPlayers) {
-          this._readyPhaseModalPlayers.dismiss();
-        }
-        if (this._readyPhaseModalSpectators) {
-          this._readyPhaseModalSpectators.dismiss();
-        }
-      }, 500);
+      this._tournamentStartedObservable.next();
     });
 
     this._hubConnection.on('UpdateMyHand', (myCards: Card[]) => {
@@ -252,8 +227,7 @@ export class HubService {
     this._hubConnection.on('ShowCards', (cardsAndNames: KeyValue<string, Card[]>[], showImmediately: boolean) => {
       var delay = showImmediately ? 0 : 2000;
       setTimeout(() => {
-        const modalRef = this._modalService.open(ShowCardsComponent, { backdrop: 'static' });
-        modalRef.componentInstance.cardsAndNames = cardsAndNames;
+        this._modalObservableService.showCardsModalObservable.next(cardsAndNames);
       }, delay);
     });
 
@@ -304,37 +278,7 @@ export class HubService {
   }
 
   addOrRenameUser(forceRename: boolean) {
-    let name;
-    if (environment.production) {
-      if (!forceRename) {
-        name = localStorage.getItem('name');
-        if (!name) forceRename = true;
-      }
-      if (forceRename) {
-        var modalRef = this._modalService.open(RenameComponent, { backdrop: 'static', keyboard: false });
-        if (this._currentUserObservable.getValue() != null) {
-          modalRef.componentInstance.currentUser = this._currentUserObservable.getValue();
-        }
-        modalRef.result.then((name: string) => {
-          localStorage.setItem('name', name);
-          this._hubConnection.invoke('AddOrRenameUser', name);
-          this._hubConnection.invoke('GetAllGames');
-          this._hubConnection.invoke('GetAllTournaments');
-        });
-      } else {
-        localStorage.setItem('name', name);
-        this._hubConnection.invoke('AddOrRenameUser', name);
-        this._hubConnection.invoke('GetAllGames');
-        this._hubConnection.invoke('GetAllTournaments');
-      }
-    } else {
-      const myArray = ['Ante', 'Mate', 'Jure', 'Ivica', 'John', 'Bruno', 'Mike', 'David', 'Mokki'];
-      name = myArray[Math.floor(Math.random() * myArray.length)];
-      localStorage.setItem('name', name);
-      this._hubConnection.invoke('AddOrRenameUser', name);
-      this._hubConnection.invoke('GetAllGames');
-      this._hubConnection.invoke('GetAllTournaments');
-    }
+    this._modalObservableService.renameModalObservable.next(forceRename);
   }
 
   joinGame(id: string, password: string): any {
@@ -508,5 +452,11 @@ export class HubService {
 
   get tournamentChatMessages() {
     return this._tournamentChatMessagesObservable.asObservable();
+  }
+  get gameStarted() {
+    return this._gameStartedObservable.asObservable();
+  }
+  get tournamentStarted() {
+    return this._tournamentStartedObservable.asObservable();
   }
 }

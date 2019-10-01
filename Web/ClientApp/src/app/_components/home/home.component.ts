@@ -1,10 +1,9 @@
+import { ModalService } from '../../_services/modal-services/modal.service';
 import { TournamentSetupComponent } from './../_modals/tournament-setup/tournament-setup.component';
 import { GameSetupComponent } from './../_modals/game-setup/game-setup.component';
 import { Component, OnInit } from '@angular/core';
 import { HubService } from 'src/app/_services/hub.service';
 import { Subscription } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GameType } from 'src/app/_models/enums';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +14,7 @@ export class HomeComponent implements OnInit {
   private _subscription: Subscription;
   userReconnected: boolean;
 
-  constructor(private _hubService: HubService, private _modalService: NgbModal) {}
+  constructor(private _hubService: HubService, private _modalService: ModalService) {}
 
   ngOnInit() {
     this._subscription = this._hubService.onReconnect.subscribe(() => {
@@ -28,11 +27,7 @@ export class HomeComponent implements OnInit {
   }
 
   createGame() {
-    this._modalService.open(GameSetupComponent, { backdrop: 'static' });
-  }
-
-  createTournament() {
-    this._modalService.open(TournamentSetupComponent);
+    this._modalService.displayGameSetupModal();
   }
 
   ngOnDestroy(): void {

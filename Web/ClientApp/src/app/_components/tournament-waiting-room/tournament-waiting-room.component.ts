@@ -10,9 +10,9 @@ import { User } from '../../_models/user';
 import { Router } from '@angular/router';
 import { GameType, CardValue } from '../../_models/enums';
 import { ToastrService } from 'ngx-toastr';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PickBannedCardsComponent } from '../_modals/pick-banned-cards/pick-banned-cards.component';
 import { UserSettings } from 'src/app/_models/userSettings';
+import { ModalService } from 'src/app/_services/modal-services/modal.service';
 
 @Component({
   selector: 'app-tournament-waiting-room',
@@ -32,7 +32,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
     private _utilityService: UtilityService,
     private _router: Router,
     private _toastrService: ToastrService,
-    private _modalService: NgbModal
+    private _modalService: ModalService
   ) {}
 
   ngOnInit() {
@@ -66,7 +66,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   openTournamentSetupDialog() {
-    this._modalService.open(TournamentSetupComponent, { backdrop: 'static' });
+    this._modalService.displayTournamentSetupModal();
   }
 
   kickContestantFromTournament(contestant: Contestant) {
@@ -84,7 +84,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   openBanCardsDialog() {
-    var banCardsModal = this._modalService.open(PickBannedCardsComponent, { backdrop: 'static' });
+    var banCardsModal = this._modalService.displayPickCardsToBanModal();
     banCardsModal.componentInstance.bannedCards = Object.assign([], this.activeTournament.tournamentSetup.bannedCards);
     banCardsModal.result.then((bannedCards: CardValue[]) => {
       this.activeTournament.tournamentSetup.bannedCards = bannedCards;

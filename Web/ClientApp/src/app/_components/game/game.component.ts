@@ -1,9 +1,6 @@
-import { PickPromiseCardComponent } from './../_modals/pick-promise-card/pick-promise-card.component';
+import { ModalService } from '../../_services/modal-services/modal.service';
 import { ChatMessage } from './../../_models/chatMessage';
 import { UtilityService } from './../../_services/utility.service';
-import { BlackjackComponent } from './../_modals/blackjack/blackjack.component';
-import { PickCharityCardsComponent } from './../_modals/pick-charity-cards/pick-charity-cards.component';
-import { GameInfoComponent } from './../_modals/game-info/game-info.component';
 import { CardValue, TypeOfMessage, PlayersSetup } from './../../_models/enums';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from 'src/app/_models/user';
@@ -11,19 +8,11 @@ import { Game } from 'src/app/_models/game';
 import { Card } from 'src/app/_models/card';
 import { HubService } from 'src/app/_services/hub.service';
 import { CardColor, Direction } from 'src/app/_models/enums';
-import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { PickColorComponent } from '../_modals/pick-color/pick-color.component';
-import { PickPlayerComponent } from '../_modals/pick-player/pick-player.component';
-import { DigCardComponent } from '../_modals/dig-card/dig-card.component';
-import { PickDuelNumbersComponent } from '../_modals/pick-duel-numbers/pick-duel-numbers.component';
-import { PickNumbersToDiscardComponent } from '../_modals/pick-numbers-to-discard/pick-numbers-to-discard.component';
 import { ToastrService } from 'ngx-toastr';
 import { SidebarSettings } from 'src/app/_models/sidebarSettings';
 import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { GuessOddEvenNumberComponent } from '../_modals/guess-odd-even-number/guess-odd-even-number.component';
 import { Tournament } from 'src/app/_models/tournament';
-import { UserSettings } from 'src/app/_models/userSettings';
 
 @Component({
   selector: 'app-game',
@@ -35,7 +24,6 @@ export class GameComponent implements OnInit, OnDestroy {
   private _mustCallUno: boolean = false;
   private _isAlive: boolean = true;
   private _activeTournament: Tournament;
-  private _userSettings: UserSettings;
 
   isSidebarOpen = false;
   currentUser: User;
@@ -47,14 +35,13 @@ export class GameComponent implements OnInit, OnDestroy {
 
   constructor(
     private _hubService: HubService,
-    private _modalService: NgbModal,
+    private _modalService: ModalService,
     private _toastrService: ToastrService,
     private _utilityService: UtilityService,
     private _router: Router
   ) {}
 
   ngOnInit() {
-    this._userSettings = this._utilityService.userSettings;
     this.sidebarSettings = this._utilityService.sidebarSettings;
     this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       if (game === null) {
@@ -183,19 +170,19 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     if (cardPlayed.requirePickColor) {
-      this._modalService.open(PickColorComponent).result.then(pickedColor => {
+      this._modalService.displayPickColorModal().result.then(pickedColor => {
         if (cardPlayed.requireTargetPlayer) {
-          const playerModal = this._modalService.open(PickPlayerComponent);
+          const playerModal = this._modalService.displayPickPlayerModal();
           playerModal.componentInstance.players = this.game.players;
           playerModal.componentInstance.currentUser = this.currentUser;
           playerModal.result.then((playerId: string) => {
             if (cardPlayed.value == CardValue.duel) {
-              this._modalService.open(PickDuelNumbersComponent).result.then((duelNumbers: number[]) => {
+              this._modalService.displayPickDuelNumbers().result.then((duelNumbers: number[]) => {
                 this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, duelNumbers);
                 return;
               });
             } else if (cardPlayed.value == CardValue.charity) {
-              const modalRef = this._modalService.open(PickCharityCardsComponent);
+              const modalRef = this._modalService.displayPickCharityCardsModal();
               modalRef.componentInstance.cards = this.myCards.filter((card: Card) => card.id != cardPlayed.id);
               modalRef.result.then((charityCardsIds: string[]) => {
                 this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null, charityCardsIds);
@@ -210,7 +197,7 @@ export class GameComponent implements OnInit, OnDestroy {
                   return;
                 }
               }
-              const modalRef = this._modalService.open(GuessOddEvenNumberComponent);
+              const modalRef = this._modalService.displayGuessOdEvenNumbersModal();
               modalRef.result.then((guessOddOrEven: string) => {
                 this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null, null, 0, null, null, guessOddOrEven);
                 return;
@@ -221,24 +208,24 @@ export class GameComponent implements OnInit, OnDestroy {
             }
           });
         } else if (cardPlayed.value === CardValue.graveDigger) {
-          const digModal = this._modalService.open(DigCardComponent);
+          const digModal = this._modalService.displayDigCardModal();
           digModal.componentInstance.discardedPile = this.game.discardedPile;
           digModal.result.then((cardToDigId: string) => {
             this._hubService.playCard(cardPlayed.id, pickedColor, null, cardToDigId);
             return;
           });
         } else if (cardPlayed.value === CardValue.blackjack) {
-          this._modalService.open(BlackjackComponent, { backdrop: 'static', keyboard: false }).result.then(blackjackNumber => {
+          this._modalService.displayBlackjackModal().result.then(blackjackNumber => {
             this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, blackjackNumber);
             return;
           });
         } else if (cardPlayed.value === CardValue.discardNumber) {
-          this._modalService.open(PickNumbersToDiscardComponent).result.then((numbersToDiscard: number[]) => {
+          this._modalService.displayPickNumbersToDiscardModal().result.then((numbersToDiscard: number[]) => {
             this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, numbersToDiscard);
             return;
           });
         } else if (cardPlayed.value === CardValue.promiseKeeper) {
-          var modalRef = this._modalService.open(PickPromiseCardComponent);
+          var modalRef = this._modalService.displayPickPromiseKeeperCardModal();
           modalRef.componentInstance.cards = this.myCards.filter((card: Card) => card.color != CardColor.wild);
           modalRef.result.then((promisedCardId: string) => {
             this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, promisedCardId);
@@ -281,7 +268,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   openGameInfoModal() {
-    this._modalService.open(GameInfoComponent, { scrollable: true });
+    this._modalService.displayGameInfoModal();
   }
 
   toggleGameChatSidebar() {
