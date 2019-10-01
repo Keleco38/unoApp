@@ -54,7 +54,7 @@ namespace PreMoveProcessingService.CoreManagers
                     var tournamentRoundGame = new TournamentRoundGame(j, game) { Game = { Players = new List<Player>(2) } };
                     tournamentRound.TournamentRoundGames.Add(tournamentRoundGame);
                 }
-                numberOfGamesInARound = numberOfGamesInARound / 2;
+                numberOfGamesInARound /= 2;
                 tournament.TournamentRounds.Add(tournamentRound);
             }
 
