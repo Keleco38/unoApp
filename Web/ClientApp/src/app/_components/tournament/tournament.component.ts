@@ -23,11 +23,11 @@ export class TournamentComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sidebarSettings = this._utilityService.sidebarSettings;
-    this._hubService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournament => {
+    this._hubService.updateActiveTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournament => {
       this.activeTournament = tournament;
     });
 
-    this._hubService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
   }

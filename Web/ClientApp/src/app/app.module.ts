@@ -1,4 +1,6 @@
-import { ModalObservablesService } from './_services/modal-services/modal-observables.service';
+import { UserStorageService } from './_services/storage-services/user-storage.service';
+import { TournamentStorageService } from './_services/storage-services/tournament-storage.service';
+import { LobbyStorageService } from './_services/storage-services/lobby-storage.service';
 import { ReadyPhaseSpectatorsComponent } from './_components/_modals/ready-phase-spectators/ready-phase-spectators.component';
 import { ConfirmReadyComponent } from './_components/_modals/confirm-ready/confirm-ready.component';
 import { FirstTimeLaunchComponent } from './_components/_modals/first-time-launch/first-time-launch.component';
@@ -8,11 +10,9 @@ import { ContactFormComponent } from './_components/_modals/contact-form/contact
 import { TournamentSetupComponent } from './_components/_modals/tournament-setup/tournament-setup.component';
 import { TournamentChatComponent } from './_components/tournament-chat/tournament-chat.component';
 import { TournamentSpectatorsComponent } from './_components/tournament-spectators/tournament-spectators.component';
-import { Tournament } from 'src/app/_models/tournament';
 import { HttpService } from './_services/http.service';
 import { HallOfFameComponent } from './_components/hall-of-fame/hall-of-fame.component';
 import { GameEndedResultComponent } from './_components/_modals/game-ended-result/game-ended-result.component';
-import { GameEndedResult } from './_models/gameEndedResult';
 import { PickPromiseCardComponent } from './_components/_modals/pick-promise-card/pick-promise-card.component';
 import { ChangeLogComponent } from './_components/change-log/change-log.component';
 import { SidebarSettingsComponent } from './_components/sidebar-settings/sidebar-settings.component';
@@ -67,7 +67,8 @@ import { TournamentWaitingRoomDeactivateGuard } from './_guards/tournament-waiti
 import { TournamentWaitingRoomGuard } from './_guards/tournament-waiting-room.guard';
 import { UiSwitchModule } from 'ngx-toggle-switch';
 import { RenameComponent } from './_components/_modals/rename/rename.component';
-import { ModalService } from './_services/modal-services/modal.service';
+import { ModalService } from './_services/modal.service';
+import { GameStorageService } from './_services/storage-services/game-storage.service';
 
 @NgModule({
   declarations: [
@@ -166,7 +167,10 @@ import { ModalService } from './_services/modal-services/modal.service';
     TournamentDeactivateGuard,
     UtilityService,
     ModalService,
-    ModalObservablesService,
+    GameStorageService,
+    LobbyStorageService,
+    TournamentStorageService,
+    UserStorageService,
     HttpService
   ],
   bootstrap: [AppComponent],

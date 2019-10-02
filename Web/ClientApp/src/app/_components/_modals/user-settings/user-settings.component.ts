@@ -20,7 +20,7 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userSettings = this._utilityService.userSettings;
-    this._subscription = this._hubService.currentUser.subscribe((currentUser: User) => {
+    this._subscription = this._hubService.updateCurrentUser.subscribe((currentUser: User) => {
       this.currentUser = currentUser;
     });
   }

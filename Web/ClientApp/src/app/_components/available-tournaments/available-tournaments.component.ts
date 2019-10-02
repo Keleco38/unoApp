@@ -17,7 +17,7 @@ export class AvailableTournamentsComponent implements OnInit, OnDestroy {
   constructor(private _hubService: HubService, private _utilityService: UtilityService) {}
 
   ngOnInit() {
-    this._hubService.availableTournaments.pipe(takeWhile(() => this._isAlive)).subscribe(tournaments => {
+    this._hubService.updateAvailableTournaments.pipe(takeWhile(() => this._isAlive)).subscribe(tournaments => {
       this.availableTournaments = tournaments;
     });
   }

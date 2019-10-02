@@ -1,4 +1,4 @@
-import { ModalService } from '../../_services/modal-services/modal.service';
+import { ModalService } from '../../_services/modal.service';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ChatMessage } from 'src/app/_models/chatMessage';
 import { User } from 'src/app/_models/user';
@@ -24,13 +24,13 @@ export class AllChatComponent implements OnInit, OnDestroy {
 
   constructor(private _hubService: HubService, private _modalService: ModalService) {}
   ngOnInit(): void {
-    this._hubService.allChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
+    this._hubService.updateAllChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
       this.messages = messages;
     });
-    this._hubService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
-    this._hubService.onlineUsers
+    this._hubService.updateOnlineUsers
       .pipe(takeWhile(() => this._isAlive))
       .pipe(
         map(users => {

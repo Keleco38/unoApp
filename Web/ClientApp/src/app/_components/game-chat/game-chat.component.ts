@@ -28,16 +28,16 @@ export class GameChatComponent implements OnInit, OnDestroy {
   constructor(private _hubService: HubService, private _utilityService: UtilityService) {}
 
   ngOnInit(): void {
-    this._hubService.gameChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
+    this._hubService.updateGameChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
       this.messages = messages;
     });
-    this._hubService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
-    this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
+    this._hubService.updateActiveGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.activeGame = game;
     });
-    this._hubService.onlineUsers.pipe(takeWhile(() => this._isAlive)).pipe(
+    this._hubService.updateOnlineUsers.pipe(takeWhile(() => this._isAlive)).pipe(
       map(users => {
         return users.map(user => {
           return user.name;

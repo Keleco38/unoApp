@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { Player } from 'src/app/_models/player';
 import { takeWhile } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
-import { ModalService } from 'src/app/_services/modal-services/modal.service';
+import { ModalService } from 'src/app/_services/modal.service';
 
 @Component({
   selector: 'app-waiting-room',
@@ -33,11 +33,11 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sidebarSettings = this._utilityService.sidebarSettings;
-    this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
+    this._hubService.updateActiveGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.activeGame = game;
     });
 
-    this._hubService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
   }

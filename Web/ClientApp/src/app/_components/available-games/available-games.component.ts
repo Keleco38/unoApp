@@ -20,7 +20,7 @@ export class AvailableGamesComponent implements OnInit, OnDestroy {
   constructor(private _hubService: HubService, private _utilityService:UtilityService) {}
 
   ngOnInit(): void {
-    this._hubService.availableGames.pipe(takeWhile(() => this._isAlive)).subscribe((availableGames: GameList[]) => {
+    this._hubService.updateAvailableGames.pipe(takeWhile(() => this._isAlive)).subscribe((availableGames: GameList[]) => {
       this.availableGames = availableGames;
     });
   }

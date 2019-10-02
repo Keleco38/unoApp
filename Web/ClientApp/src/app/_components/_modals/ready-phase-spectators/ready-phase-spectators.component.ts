@@ -35,14 +35,14 @@ export class ReadyPhaseSpectatorsComponent implements OnInit, OnDestroy {
       }
     }, 1000);
     if (!this.isTournament) {
-      this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
+      this._hubService.updateActiveGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
         this.readyPlayersLeft = game.readyPlayersLeft;
         if (this.originallyTotalPlayersCount == 0) {
           this.originallyTotalPlayersCount = game.players.length;
         }
       });
     } else {
-      this._hubService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournament => {
+      this._hubService.updateActiveTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournament => {
         this.readyPlayersLeft = tournament.readyPlayersLeft;
         if (this.originallyTotalPlayersCount == 0) {
           this.originallyTotalPlayersCount = tournament.contestants.length;

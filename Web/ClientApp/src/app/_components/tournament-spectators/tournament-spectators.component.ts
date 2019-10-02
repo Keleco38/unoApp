@@ -16,7 +16,7 @@ export class TournamentSpectatorsComponent implements OnInit {
   constructor(private _hubService: HubService) {}
 
   ngOnInit() {
-    this._hubService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
+    this._hubService.updateActiveTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
       this.activeTournament = activeTournament;
     });
   }

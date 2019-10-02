@@ -8,7 +8,7 @@ import { map, catchError } from 'rxjs/operators';
 export class WaitingRoomGuard implements CanActivate {
   constructor(private _hubService: HubService, private _router: Router) {}
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this._hubService.activeGame.pipe(
+    return this._hubService.updateActiveGame.pipe(
       map(activeGame => {
         if (activeGame !== null && activeGame.gameStarted === false) {
           return true;

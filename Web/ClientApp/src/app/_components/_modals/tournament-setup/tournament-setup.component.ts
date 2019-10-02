@@ -21,7 +21,7 @@ export class TournamentSetupComponent implements OnInit {
   constructor(private _hubService: HubService, private _activeModal: NgbActiveModal) {}
 
   ngOnInit() {
-    this._hubService.activeTournament.pipe(first()).subscribe((tournament: Tournament) => {
+    this._hubService.updateActiveTournament.pipe(first()).subscribe((tournament: Tournament) => {
       this._activeTournament = JSON.parse(JSON.stringify(tournament));
     });
 

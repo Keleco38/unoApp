@@ -1,4 +1,4 @@
-import { ModalService } from 'src/app/_services/modal-services/modal.service';
+import { ModalService } from 'src/app/_services/modal.service';
 import { UserSettings } from './../../_models/userSettings';
 import { UtilityService } from './../../_services/utility.service';
 import { ContactFormComponent } from './../_modals/contact-form/contact-form.component';

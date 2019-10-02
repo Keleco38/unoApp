@@ -16,7 +16,7 @@ export class OnlinePlayersComponent implements OnInit, OnDestroy {
   constructor(private _hubService: HubService) {}
 
   ngOnInit(): void {
-    this._hubService.onlineUsers.pipe(takeWhile(() => this._isAlive)).subscribe((onlineUsers: User[]) => {
+    this._hubService.updateOnlineUsers.pipe(takeWhile(() => this._isAlive)).subscribe((onlineUsers: User[]) => {
       this.onlineUsers = onlineUsers;
     });
   }

@@ -1,7 +1,7 @@
 import { UtilityService } from 'src/app/_services/utility.service';
 import { Router } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ModalService } from './_services/modal-services/modal.service';
+import { ModalService } from './_services/modal.service';
 
 @Component({
   selector: 'app-root',

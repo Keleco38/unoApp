@@ -1,28 +1,39 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { LobbyStorageService } from './../../../_services/storage-services/lobby-storage.service';
+import { HubService } from './../../../_services/hub.service';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { HttpService } from 'src/app/_services/http.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'src/app/_models/user';
+import { pipe } from 'rxjs';
+import { takeWhile, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rename',
   templateUrl: './rename.component.html',
   styleUrls: ['./rename.component.css']
 })
-export class RenameComponent implements OnInit {
+export class RenameComponent implements OnInit, OnDestroy {
+  private _isAlive = true;
+
   @Input('currentUser') currentUser: User = null;
-  onlineUsers: string[];
+  onlineUsers: string[] = [];
   name: string = '';
 
-  constructor(private _httpService: HttpService, private _activeModal: NgbActiveModal) {}
+  constructor(private _hubService: HubService, private _lobbyStorageService: LobbyStorageService, private _activeModal: NgbActiveModal) {}
 
   ngOnInit(): void {
-    this._httpService.getOnlineUsers().subscribe((onlineUsers: string[]) => {
-      this.onlineUsers = onlineUsers;
-      if (this.currentUser != null) {
-        var index = this.onlineUsers.indexOf(this.currentUser.name);
-        if (index != -1) this.onlineUsers.splice(index, 1);
-      }
-    });
+    this._lobbyStorageService.onlineUsers
+      .pipe(takeWhile(() => this._isAlive))
+      .pipe(
+        map(users => {
+          return users.map(user => {
+            return user.name;
+          });
+        })
+      )
+      .subscribe((userNames: string[]) => {
+        this.onlineUsers = userNames;
+      });
   }
 
   processName() {
@@ -31,12 +42,16 @@ export class RenameComponent implements OnInit {
 
   confirmUsername() {
     if (this.usernameTaken()) return;
-    this._activeModal.close(this.name.toLowerCase());
+    this._hubService.addOrRenameUser(this.name.toLowerCase());
+    this._activeModal.dismiss();
   }
 
   usernameTaken() {
-    if (!this.onlineUsers) return;
     if (this.onlineUsers.indexOf(this.name.toLowerCase()) != -1) return true;
     return false;
+  }
+
+  ngOnDestroy(): void {
+    this._isAlive = false;
   }
 }

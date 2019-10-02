@@ -19,10 +19,10 @@ export class GameTabsComponent implements OnInit {
   constructor(private _hubService: HubService) {}
 
   ngOnInit() {
-    this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
+    this._hubService.updateActiveGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.activeGame = game;
     });
-    this._hubService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
+    this._hubService.updateActiveTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
       this.activeTournament = activeTournament;
     });
   }

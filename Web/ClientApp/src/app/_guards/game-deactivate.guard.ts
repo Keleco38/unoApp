@@ -17,7 +17,7 @@ export class GameDeactivateGuard implements CanDeactivate<GameComponent> {
   ): boolean | Observable<boolean> | Promise<boolean> {
     this._hubService.exitGame();
 
-    return this._hubService.activeTournament.pipe(
+    return this._hubService.updateActiveTournament.pipe(
       map(tournament => {
         if (tournament !== null) {
           if (nextState.url != '/tournament') {

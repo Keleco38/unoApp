@@ -18,7 +18,7 @@ export class GameSetupComponent implements OnInit {
   constructor(private _hubService: HubService, private _activeModal: NgbActiveModal) {}
 
   ngOnInit() {
-    this._hubService.activeGame.pipe(first()).subscribe((game: Game) => {
+    this._hubService.updateActiveGame.pipe(first()).subscribe((game: Game) => {
       this._game = JSON.parse(JSON.stringify(game));
     });
 

@@ -21,11 +21,11 @@ export class GameInfoComponent implements OnInit, OnDestroy {
   constructor(private _activeModal: NgbActiveModal, private _hubService: HubService,private _utilityService:UtilityService) {}
 
   ngOnInit() {
-    this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
+    this._hubService.updateActiveGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.game = game;
     });
 
-    this._hubService.gameLog.pipe(takeWhile(() => this._isAlive)).subscribe(gameLog => {
+    this._hubService.updateGameLog.pipe(takeWhile(() => this._isAlive)).subscribe(gameLog => {
       this.gameLog = gameLog;
     });
   }

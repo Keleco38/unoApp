@@ -1,4 +1,4 @@
-import { ModalService } from 'src/app/_services/modal-services/modal.service';
+import { ModalService } from 'src/app/_services/modal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 

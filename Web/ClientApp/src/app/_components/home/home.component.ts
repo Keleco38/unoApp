@@ -1,4 +1,4 @@
-import { ModalService } from '../../_services/modal-services/modal.service';
+import { ModalService } from '../../_services/modal.service';
 import { TournamentSetupComponent } from './../_modals/tournament-setup/tournament-setup.component';
 import { GameSetupComponent } from './../_modals/game-setup/game-setup.component';
 import { Component, OnInit } from '@angular/core';
@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   constructor(private _hubService: HubService, private _modalService: ModalService) {}
 
   ngOnInit() {
-    this._subscription = this._hubService.onReconnect.subscribe(() => {
+    this._subscription = this._hubService.updateOnReconnect.subscribe(() => {
       this.userReconnected = true;
     });
   }

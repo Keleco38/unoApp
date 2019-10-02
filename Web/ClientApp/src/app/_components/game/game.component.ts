@@ -1,4 +1,4 @@
-import { ModalService } from '../../_services/modal-services/modal.service';
+import { ModalService } from '../../_services/modal.service';
 import { ChatMessage } from './../../_models/chatMessage';
 import { UtilityService } from './../../_services/utility.service';
 import { CardValue, TypeOfMessage, PlayersSetup } from './../../_models/enums';
@@ -43,22 +43,22 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sidebarSettings = this._utilityService.sidebarSettings;
-    this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
+    this._hubService.updateActiveGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       if (game === null) {
         return;
       }
       this.game = game;
     });
 
-    this._hubService.gameLog.pipe(takeWhile(() => this._isAlive)).subscribe(gameLog => {
+    this._hubService.updateGameLog.pipe(takeWhile(() => this._isAlive)).subscribe(gameLog => {
       this.gameLog = gameLog;
     });
 
-    this._hubService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
+    this._hubService.updateActiveTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
       this._activeTournament = activeTournament;
     });
 
-    this._hubService.mustCallUno.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
+    this._hubService.updateMustCallUno.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
       this._mustCallUno = true;
       window.clearTimeout(this._timer);
       this._timer = window.setTimeout(() => {
@@ -66,18 +66,18 @@ export class GameComponent implements OnInit, OnDestroy {
       }, 2000);
     });
 
-    this._hubService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
 
-    this._hubService.myHand.pipe(takeWhile(() => this._isAlive)).subscribe((myCards: Card[]) => {
+    this._hubService.updateMyHand.pipe(takeWhile(() => this._isAlive)).subscribe((myCards: Card[]) => {
       if (this.game === null) {
         return;
       }
       this.myCards = myCards;
     });
 
-    this._hubService.gameChatNumberOfMessages.pipe(takeWhile(() => this._isAlive)).subscribe((message: ChatMessage) => {
+    this._hubService.updateGameChatNumberOfMessages.pipe(takeWhile(() => this._isAlive)).subscribe((message: ChatMessage) => {
       if (!this.isSidebarOpen) {
         if (message.typeOfMessage == TypeOfMessage.server && this.sidebarSettings.muteServer) return;
         if (message.typeOfMessage == TypeOfMessage.spectators && this.sidebarSettings.muteSpectators) return;

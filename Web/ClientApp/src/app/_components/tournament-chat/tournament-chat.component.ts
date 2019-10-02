@@ -27,16 +27,16 @@ export class TournamentChatComponent implements OnInit {
   constructor(private _hubService: HubService, private _utilityService: UtilityService) {}
 
   ngOnInit(): void {
-    this._hubService.tournamentChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
+    this._hubService.updateTournamentChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
       this.messages = messages;
     });
-    this._hubService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
-    this._hubService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
+    this._hubService.updateActiveTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
       this.activeTournament = activeTournament;
     });
-    this._hubService.onlineUsers.pipe(takeWhile(() => this._isAlive)).pipe(
+    this._hubService.updateOnlineUsers.pipe(takeWhile(() => this._isAlive)).pipe(
       map(users => {
         return users.map(user => {
           return user.name;

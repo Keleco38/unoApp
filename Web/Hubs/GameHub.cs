@@ -732,6 +732,7 @@ namespace Web.Hubs
                     var myCardsDto = _mapper.Map<List<CardDto>>(myCards).OrderBy(x => x.Color).ThenBy(x => x.Value);
                     await Clients.Client(connectionId).SendAsync("UpdateMyHand", myCardsDto);
                 }
+                await Clients.Client(game.PlayerToPlay.User.ConnectionId).SendAsync("BuzzMyTurnToPlay");
             }
         }
 

@@ -15,7 +15,7 @@ export class GameSpectatorsComponent implements OnInit, OnDestroy {
   constructor(private _hubService: HubService) {}
 
   ngOnInit() {
-    this._hubService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
+    this._hubService.updateActiveGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.game = game;
     });
   }

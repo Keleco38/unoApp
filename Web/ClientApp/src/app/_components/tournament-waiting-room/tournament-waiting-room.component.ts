@@ -12,7 +12,7 @@ import { GameType, CardValue } from '../../_models/enums';
 import { ToastrService } from 'ngx-toastr';
 import { PickBannedCardsComponent } from '../_modals/pick-banned-cards/pick-banned-cards.component';
 import { UserSettings } from 'src/app/_models/userSettings';
-import { ModalService } from 'src/app/_services/modal-services/modal.service';
+import { ModalService } from 'src/app/_services/modal.service';
 
 @Component({
   selector: 'app-tournament-waiting-room',
@@ -39,11 +39,11 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
     this.sidebarSettings = this._utilityService.sidebarSettings;
     this._userSettings = this._utilityService.userSettings;
 
-    this._hubService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournament => {
+    this._hubService.updateActiveTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournament => {
       this.activeTournament = tournament;
     });
 
-    this._hubService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
   }

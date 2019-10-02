@@ -17,7 +17,7 @@ export class AdminSectionComponent implements OnInit, OnDestroy {
   constructor(private _activeModal: NgbActiveModal, private _hubService: HubService) {}
 
   ngOnInit() {
-    this._hubService.onlineUsers.pipe(takeWhile(() => this._isAlive)).subscribe(onlinePlayers => {
+    this._hubService.updateOnlineUsers.pipe(takeWhile(() => this._isAlive)).subscribe(onlinePlayers => {
       this.onlineUsers = onlinePlayers;
     });
   }
