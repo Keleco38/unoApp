@@ -1,3 +1,4 @@
+import { LobbyStorageService } from './../../_services/storage-services/lobby-storage.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Game } from 'src/app/_models/game';
 import { HubService } from 'src/app/_services/hub.service';
@@ -17,10 +18,10 @@ export class AvailableGamesComponent implements OnInit, OnDestroy {
   private _isAlive: boolean = true;
   availableGames: GameList[] = new Array<GameList>();
 
-  constructor(private _hubService: HubService, private _utilityService:UtilityService) {}
+  constructor(private _hubService: HubService, private _utilityService:UtilityService, private _lobbyStorageService:LobbyStorageService) {}
 
   ngOnInit(): void {
-    this._hubService.updateAvailableGames.pipe(takeWhile(() => this._isAlive)).subscribe((availableGames: GameList[]) => {
+    this._lobbyStorageService.availableGames.pipe(takeWhile(() => this._isAlive)).subscribe((availableGames: GameList[]) => {
       this.availableGames = availableGames;
     });
   }

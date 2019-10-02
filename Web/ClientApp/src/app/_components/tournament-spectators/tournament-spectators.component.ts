@@ -1,3 +1,4 @@
+import { TournamentStorageService } from './../../_services/storage-services/tournament-storage.service';
 import { HubService } from 'src/app/_services/hub.service';
 import { Tournament } from 'src/app/_models/tournament';
 import { Component, OnInit } from '@angular/core';
@@ -9,14 +10,14 @@ import { takeWhile } from 'rxjs/operators';
   styleUrls: ['./tournament-spectators.component.css']
 })
 export class TournamentSpectatorsComponent implements OnInit {
-
   private _isAlive: boolean = true;
+
   activeTournament: Tournament;
 
-  constructor(private _hubService: HubService) {}
+  constructor(private _tournamentStorageService:TournamentStorageService) {}
 
   ngOnInit() {
-    this._hubService.updateActiveTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
+    this._tournamentStorageService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
       this.activeTournament = activeTournament;
     });
   }
@@ -24,5 +25,4 @@ export class TournamentSpectatorsComponent implements OnInit {
   ngOnDestroy(): void {
     this._isAlive = false;
   }
-
 }

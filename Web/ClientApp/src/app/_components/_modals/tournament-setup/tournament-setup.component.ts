@@ -1,3 +1,4 @@
+import { TournamentStorageService } from './../../../_services/storage-services/tournament-storage.service';
 import { TournamentSetup } from './../../../_models/tournamentSetup';
 import { Tournament } from 'src/app/_models/tournament';
 import { Component, OnInit } from '@angular/core';
@@ -18,10 +19,10 @@ export class TournamentSetupComponent implements OnInit {
   private _activeTournament: Tournament;
   tournamentSetup: TournamentSetup;
 
-  constructor(private _hubService: HubService, private _activeModal: NgbActiveModal) {}
+  constructor(private _hubService: HubService, private _activeModal: NgbActiveModal, private _tournamentStorageService:TournamentStorageService) {}
 
   ngOnInit() {
-    this._hubService.updateActiveTournament.pipe(first()).subscribe((tournament: Tournament) => {
+    this._tournamentStorageService.activeTournament.pipe(first()).subscribe((tournament: Tournament) => {
       this._activeTournament = JSON.parse(JSON.stringify(tournament));
     });
 

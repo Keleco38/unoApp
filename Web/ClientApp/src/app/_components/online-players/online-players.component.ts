@@ -1,3 +1,4 @@
+import { LobbyStorageService } from './../../_services/storage-services/lobby-storage.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HubService } from 'src/app/_services/hub.service';
 import { User } from 'src/app/_models/user';
@@ -13,10 +14,10 @@ export class OnlinePlayersComponent implements OnInit, OnDestroy {
   private _isAlive: boolean = true;
   onlineUsers: User[] = new Array<User>();
 
-  constructor(private _hubService: HubService) {}
+  constructor(private _hubService: HubService, private _lobbyStorageService:LobbyStorageService) {}
 
   ngOnInit(): void {
-    this._hubService.updateOnlineUsers.pipe(takeWhile(() => this._isAlive)).subscribe((onlineUsers: User[]) => {
+    this._lobbyStorageService.onlineUsers.pipe(takeWhile(() => this._isAlive)).subscribe((onlineUsers: User[]) => {
       this.onlineUsers = onlineUsers;
     });
   }

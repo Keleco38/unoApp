@@ -1,14 +1,14 @@
-import { HubService } from './../_services/hub.service';
+import { TournamentStorageService } from './../_services/storage-services/tournament-storage.service';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class TournamentGuard implements CanActivate {
-  constructor(private _hubService: HubService, private _router: Router) {}
+  constructor(private _router: Router, private tournamentStorageService:TournamentStorageService) {}
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this._hubService.updateActiveTournament.pipe(
+    return this.tournamentStorageService.activeTournament.pipe(
       map(tournament => {
         if (tournament !== null && tournament.tournamentStarted === true) {
           return true;

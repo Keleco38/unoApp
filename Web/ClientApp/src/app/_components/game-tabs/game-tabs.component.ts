@@ -1,4 +1,5 @@
-import { HubService } from 'src/app/_services/hub.service';
+import { GameStorageService } from './../../_services/storage-services/game-storage.service';
+import { TournamentStorageService } from './../../_services/storage-services/tournament-storage.service';
 import { Game } from 'src/app/_models/game';
 import { Tournament } from 'src/app/_models/tournament';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
@@ -16,13 +17,13 @@ export class GameTabsComponent implements OnInit {
   activeGame: Game;
   activeTournament: Tournament;
 
-  constructor(private _hubService: HubService) {}
+  constructor(private _tournamentStorageService:TournamentStorageService, private _gameStorageService:GameStorageService) {}
 
   ngOnInit() {
-    this._hubService.updateActiveGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
+    this._gameStorageService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.activeGame = game;
     });
-    this._hubService.updateActiveTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
+    this._tournamentStorageService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
       this.activeTournament = activeTournament;
     });
   }

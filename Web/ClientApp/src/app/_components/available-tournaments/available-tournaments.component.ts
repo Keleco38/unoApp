@@ -1,3 +1,4 @@
+import { LobbyStorageService } from './../../_services/storage-services/lobby-storage.service';
 import { UtilityService } from 'src/app/_services/utility.service';
 import { Tournament } from './../../_models/tournament';
 import { HubService } from './../../_services/hub.service';
@@ -14,10 +15,10 @@ export class AvailableTournamentsComponent implements OnInit, OnDestroy {
   availableTournaments: TournamentList[] = [];
   _isAlive: boolean = true;
 
-  constructor(private _hubService: HubService, private _utilityService: UtilityService) {}
+  constructor(private _hubService: HubService, private _utilityService: UtilityService, private _lobbyStorageService:LobbyStorageService) {}
 
   ngOnInit() {
-    this._hubService.updateAvailableTournaments.pipe(takeWhile(() => this._isAlive)).subscribe(tournaments => {
+    this._lobbyStorageService.availableTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournaments => {
       this.availableTournaments = tournaments;
     });
   }

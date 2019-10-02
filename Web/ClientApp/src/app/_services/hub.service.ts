@@ -270,9 +270,9 @@ export class HubService {
     this._hubConnection.invoke('ReadyForTournament', tournamentId);
   }
 
-  sendMessage(tournamentId: string, gameId: string, message: string, chatDestination: ChatDestination) {
+  sendMessage(message: string, chatDestination: ChatDestination) {
     if (message == '') return;
-    this._hubConnection.invoke('SendMessage', message, chatDestination, gameId, tournamentId);
+    this._hubConnection.invoke('SendMessage', message, chatDestination);
   }
 
   addOrRenameUser(name: string) {

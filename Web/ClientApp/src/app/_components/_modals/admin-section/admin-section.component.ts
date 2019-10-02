@@ -1,4 +1,5 @@
-import { HubService } from './../../../_services/hub.service';
+import { HubService } from 'src/app/_services/hub.service';
+import { LobbyStorageService } from './../../../_services/storage-services/lobby-storage.service';
 import { User } from 'src/app/_models/user';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -14,10 +15,10 @@ export class AdminSectionComponent implements OnInit, OnDestroy {
   password: string;
   onlineUsers: User[];
 
-  constructor(private _activeModal: NgbActiveModal, private _hubService: HubService) {}
+  constructor(private _activeModal: NgbActiveModal, private _lobbyStorageService: LobbyStorageService, private _hubService:HubService) {}
 
   ngOnInit() {
-    this._hubService.updateOnlineUsers.pipe(takeWhile(() => this._isAlive)).subscribe(onlinePlayers => {
+    this._lobbyStorageService.onlineUsers.pipe(takeWhile(() => this._isAlive)).subscribe(onlinePlayers => {
       this.onlineUsers = onlinePlayers;
     });
   }

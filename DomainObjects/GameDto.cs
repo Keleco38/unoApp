@@ -15,10 +15,10 @@ namespace DomainObjects
         public LastCardPlayedDto LastCardPlayed { get; set; }
         public PlayerDto PlayerToPlay { get; set; }
         public bool GameStarted { get; set; }
-        public DateTime ReadyPhaseExpireUtc { get; set; }
         public List<string> ReadyPlayersLeft { get; set; }
         public List<CardDto> DiscardedPile { get; set; }
         public bool GameEnded { get; set; }
+        public bool IsTournamentGame { get; set; }
         public bool DrawAutoPlay { get; set; }
     }
 

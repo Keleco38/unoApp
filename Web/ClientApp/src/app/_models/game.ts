@@ -19,5 +19,5 @@ export interface Game {
   lastCardPlayed: LastCardPlayed;
   discardedPile: Card[];
   readyPlayersLeft: string[];
-  readyPhaseExpireUtc: Date;
+  isTournamentGame:boolean;
 }

@@ -12,6 +12,8 @@ namespace EntityObjects
         }
         public string Name { get; set; }
         public string ConnectionId { get; set; }
+        public string ActiveGameId { get; set; }
+        public string ActiveTournamentId { get; set; }
         public DateTime LastBuzzedUtc { get; set; }
 
     }

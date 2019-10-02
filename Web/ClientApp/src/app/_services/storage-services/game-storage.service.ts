@@ -60,6 +60,9 @@ export class GameStorageService implements OnDestroy {
     });
   }
 
+  get gameChatNumberOfMessage() {
+    return this._gameChatNumberOfMessagesObservable.asObservable();
+  }
   get gameChat() {
     return this._gameChatMessagesObservable.asObservable();
   }

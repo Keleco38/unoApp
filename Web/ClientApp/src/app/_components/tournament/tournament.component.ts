@@ -1,3 +1,5 @@
+import { UserStorageService } from './../../_services/storage-services/user-storage.service';
+import { TournamentStorageService } from './../../_services/storage-services/tournament-storage.service';
 import { Router } from '@angular/router';
 import { UtilityService } from 'src/app/_services/utility.service';
 import { Game } from 'src/app/_models/game';
@@ -19,15 +21,15 @@ export class TournamentComponent implements OnInit, OnDestroy {
   activeTournament: Tournament;
   currentUser: User;
 
-  constructor(private _hubService: HubService, private _utilityService: UtilityService, private _router: Router) {}
+  constructor(private _hubService: HubService, private _utilityService: UtilityService, private _router: Router, private _tournamentStorageService:TournamentStorageService, private _userStorageService:UserStorageService) {}
 
   ngOnInit() {
     this.sidebarSettings = this._utilityService.sidebarSettings;
-    this._hubService.updateActiveTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournament => {
+    this._tournamentStorageService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournament => {
       this.activeTournament = tournament;
     });
 
-    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._userStorageService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
   }

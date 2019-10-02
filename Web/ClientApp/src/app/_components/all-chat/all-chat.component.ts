@@ -1,3 +1,7 @@
+import { UserStorageService } from './../../_services/storage-services/user-storage.service';
+import { GameStorageService } from './../../_services/storage-services/game-storage.service';
+import { TournamentStorageService } from './../../_services/storage-services/tournament-storage.service';
+import { LobbyStorageService } from './../../_services/storage-services/lobby-storage.service';
 import { ModalService } from '../../_services/modal.service';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ChatMessage } from 'src/app/_models/chatMessage';
@@ -5,8 +9,6 @@ import { User } from 'src/app/_models/user';
 import { HubService } from 'src/app/_services/hub.service';
 import { TypeOfMessage, ChatDestination } from 'src/app/_models/enums';
 import { takeWhile, map, pluck } from 'rxjs/operators';
-import { AdminSectionComponent } from '../_modals/admin-section/admin-section.component';
-import { TournamentSetupComponent } from '../_modals/tournament-setup/tournament-setup.component';
 
 @Component({
   selector: 'app-all-chat',
@@ -15,22 +17,29 @@ import { TournamentSetupComponent } from '../_modals/tournament-setup/tournament
 })
 export class AllChatComponent implements OnInit, OnDestroy {
   @Input('heightClassString') heightClassString: string;
-  
+
   private _isAlive: boolean = true;
   onlineUsers: string[] = [];
   messages: ChatMessage[];
   currentUser: User;
   newMessage = '';
 
-  constructor(private _hubService: HubService, private _modalService: ModalService) {}
+  constructor(
+    private _hubService: HubService,
+    private _modalService: ModalService,
+    private _lobbyStorageService: LobbyStorageService,
+    private _tournamentStorageService: TournamentStorageService,
+    private _gameStorageService: GameStorageService,
+    private _userStorageService:UserStorageService
+  ) {}
   ngOnInit(): void {
-    this._hubService.updateAllChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
+    this._lobbyStorageService.allChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
       this.messages = messages;
     });
-    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._userStorageService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
-    this._hubService.updateOnlineUsers
+    this._lobbyStorageService.onlineUsers
       .pipe(takeWhile(() => this._isAlive))
       .pipe(
         map(users => {

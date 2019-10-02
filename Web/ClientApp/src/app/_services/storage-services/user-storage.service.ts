@@ -18,7 +18,7 @@ export class UserStorageService implements OnDestroy {
   }
 
   get currentUser(){
-    return this._currentUserObservable.asObservable;
+    return this._currentUserObservable.asObservable();
   }
 
   ngOnDestroy(): void {

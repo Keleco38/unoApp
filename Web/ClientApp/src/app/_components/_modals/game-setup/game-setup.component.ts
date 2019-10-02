@@ -1,3 +1,4 @@
+import { GameStorageService } from './../../../_services/storage-services/game-storage.service';
 import { first } from 'rxjs/operators';
 import { GameType, PlayersSetup } from './../../../_models/enums';
 import { GameSetup } from './../../../_models/gameSetup';
@@ -15,10 +16,10 @@ export class GameSetupComponent implements OnInit {
   private _game: Game;
   gameSetup: GameSetup;
 
-  constructor(private _hubService: HubService, private _activeModal: NgbActiveModal) {}
+  constructor(private _hubService: HubService, private _activeModal: NgbActiveModal, private _gameStorageService: GameStorageService) {}
 
   ngOnInit() {
-    this._hubService.updateActiveGame.pipe(first()).subscribe((game: Game) => {
+    this._gameStorageService.activeGame.pipe(first()).subscribe((game: Game) => {
       this._game = JSON.parse(JSON.stringify(game));
     });
 
@@ -35,7 +36,7 @@ export class GameSetupComponent implements OnInit {
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
         playersSetup: PlayersSetup.individual,
         canSeeTeammatesHandInTeamGame: true,
-        drawAutoPlay:false
+        drawAutoPlay: false
       };
     } else {
       this.gameSetup = this._game.gameSetup;

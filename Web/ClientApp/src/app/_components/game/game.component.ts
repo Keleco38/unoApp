@@ -1,3 +1,5 @@
+import { UserStorageService } from './../../_services/storage-services/user-storage.service';
+import { GameStorageService } from './../../_services/storage-services/game-storage.service';
 import { ModalService } from '../../_services/modal.service';
 import { ChatMessage } from './../../_models/chatMessage';
 import { UtilityService } from './../../_services/utility.service';
@@ -23,7 +25,6 @@ export class GameComponent implements OnInit, OnDestroy {
   private _timer: number;
   private _mustCallUno: boolean = false;
   private _isAlive: boolean = true;
-  private _activeTournament: Tournament;
 
   isSidebarOpen = false;
   currentUser: User;
@@ -38,27 +39,25 @@ export class GameComponent implements OnInit, OnDestroy {
     private _modalService: ModalService,
     private _toastrService: ToastrService,
     private _utilityService: UtilityService,
-    private _router: Router
+    private _router: Router,
+    private _gameStorageService: GameStorageService,
+    private _userStorageService: UserStorageService
   ) {}
 
   ngOnInit() {
     this.sidebarSettings = this._utilityService.sidebarSettings;
-    this._hubService.updateActiveGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
+    this._gameStorageService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       if (game === null) {
         return;
       }
       this.game = game;
     });
 
-    this._hubService.updateGameLog.pipe(takeWhile(() => this._isAlive)).subscribe(gameLog => {
+    this._gameStorageService.gameLog.pipe(takeWhile(() => this._isAlive)).subscribe(gameLog => {
       this.gameLog = gameLog;
     });
 
-    this._hubService.updateActiveTournament.pipe(takeWhile(() => this._isAlive)).subscribe(activeTournament => {
-      this._activeTournament = activeTournament;
-    });
-
-    this._hubService.updateMustCallUno.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
+    this._gameStorageService.mustCallUno.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
       this._mustCallUno = true;
       window.clearTimeout(this._timer);
       this._timer = window.setTimeout(() => {
@@ -66,18 +65,18 @@ export class GameComponent implements OnInit, OnDestroy {
       }, 2000);
     });
 
-    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._userStorageService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
 
-    this._hubService.updateMyHand.pipe(takeWhile(() => this._isAlive)).subscribe((myCards: Card[]) => {
+    this._gameStorageService.myHand.pipe(takeWhile(() => this._isAlive)).subscribe((myCards: Card[]) => {
       if (this.game === null) {
         return;
       }
       this.myCards = myCards;
     });
 
-    this._hubService.updateGameChatNumberOfMessages.pipe(takeWhile(() => this._isAlive)).subscribe((message: ChatMessage) => {
+    this._gameStorageService.gameChatNumberOfMessage.pipe(takeWhile(() => this._isAlive)).subscribe((message: ChatMessage) => {
       if (!this.isSidebarOpen) {
         if (message.typeOfMessage == TypeOfMessage.server && this.sidebarSettings.muteServer) return;
         if (message.typeOfMessage == TypeOfMessage.spectators && this.sidebarSettings.muteSpectators) return;
@@ -96,11 +95,11 @@ export class GameComponent implements OnInit, OnDestroy {
   callUno(unoCalled: boolean) {
     this._mustCallUno = false;
     window.clearTimeout(this._timer);
-    this._hubService.checkUnoCall(unoCalled);
+    this._hubService.checkUnoCall(this.game.id, unoCalled);
   }
 
   seeTeammatesCards() {
-    this._hubService.seeTeammatesCards();
+    this._hubService.seeTeammatesCards(this.game.id);
   }
 
   playCard(cardPlayed: Card) {
@@ -112,7 +111,7 @@ export class GameComponent implements OnInit, OnDestroy {
       cardPlayed.value === CardValue.stealTurn &&
       (cardPlayed.color == this.game.lastCardPlayed.color || this.game.lastCardPlayed.value == cardPlayed.value)
     ) {
-      this._hubService.playCard(cardPlayed.id, cardPlayed.color);
+      this._hubService.playCard(this.game.id, cardPlayed.id, cardPlayed.color);
       return;
     }
 
@@ -121,7 +120,7 @@ export class GameComponent implements OnInit, OnDestroy {
       cardPlayed.color == this.game.lastCardPlayed.color &&
       this.game.lastCardPlayed.value == cardPlayed.value
     ) {
-      this._hubService.playCard(cardPlayed.id, cardPlayed.color);
+      this._hubService.playCard(this.game.id, cardPlayed.id, cardPlayed.color);
       return;
     }
 
@@ -178,14 +177,14 @@ export class GameComponent implements OnInit, OnDestroy {
           playerModal.result.then((playerId: string) => {
             if (cardPlayed.value == CardValue.duel) {
               this._modalService.displayPickDuelNumbers().result.then((duelNumbers: number[]) => {
-                this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, duelNumbers);
+                this._hubService.playCard(this.game.id, cardPlayed.id, pickedColor, playerId, null, duelNumbers);
                 return;
               });
             } else if (cardPlayed.value == CardValue.charity) {
               const modalRef = this._modalService.displayPickCharityCardsModal();
               modalRef.componentInstance.cards = this.myCards.filter((card: Card) => card.id != cardPlayed.id);
               modalRef.result.then((charityCardsIds: string[]) => {
-                this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null, charityCardsIds);
+                this._hubService.playCard(this.game.id, cardPlayed.id, pickedColor, playerId, null, null, charityCardsIds);
                 return;
               });
             } else if (cardPlayed.value == CardValue.gambling) {
@@ -199,11 +198,23 @@ export class GameComponent implements OnInit, OnDestroy {
               }
               const modalRef = this._modalService.displayGuessOdEvenNumbersModal();
               modalRef.result.then((guessOddOrEven: string) => {
-                this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null, null, 0, null, null, guessOddOrEven);
+                this._hubService.playCard(
+                  this.game.id,
+                  cardPlayed.id,
+                  pickedColor,
+                  playerId,
+                  null,
+                  null,
+                  null,
+                  0,
+                  null,
+                  null,
+                  guessOddOrEven
+                );
                 return;
               });
             } else {
-              this._hubService.playCard(cardPlayed.id, pickedColor, playerId);
+              this._hubService.playCard(this.game.id, cardPlayed.id, pickedColor, playerId);
               return;
             }
           });
@@ -211,39 +222,39 @@ export class GameComponent implements OnInit, OnDestroy {
           const digModal = this._modalService.displayDigCardModal();
           digModal.componentInstance.discardedPile = this.game.discardedPile;
           digModal.result.then((cardToDigId: string) => {
-            this._hubService.playCard(cardPlayed.id, pickedColor, null, cardToDigId);
+            this._hubService.playCard(this.game.id, cardPlayed.id, pickedColor, null, cardToDigId);
             return;
           });
         } else if (cardPlayed.value === CardValue.blackjack) {
           this._modalService.displayBlackjackModal().result.then(blackjackNumber => {
-            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, blackjackNumber);
+            this._hubService.playCard(this.game.id, cardPlayed.id, pickedColor, null, null, null, null, blackjackNumber);
             return;
           });
         } else if (cardPlayed.value === CardValue.discardNumber) {
           this._modalService.displayPickNumbersToDiscardModal().result.then((numbersToDiscard: number[]) => {
-            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, numbersToDiscard);
+            this._hubService.playCard(this.game.id, cardPlayed.id, pickedColor, null, null, null, null, 0, numbersToDiscard);
             return;
           });
         } else if (cardPlayed.value === CardValue.promiseKeeper) {
           var modalRef = this._modalService.displayPickPromiseKeeperCardModal();
           modalRef.componentInstance.cards = this.myCards.filter((card: Card) => card.color != CardColor.wild);
           modalRef.result.then((promisedCardId: string) => {
-            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, promisedCardId);
+            this._hubService.playCard(this.game.id, cardPlayed.id, pickedColor, null, null, null, null, 0, null, promisedCardId);
             return;
           });
         } else {
-          this._hubService.playCard(cardPlayed.id, pickedColor);
+          this._hubService.playCard(this.game.id, cardPlayed.id, pickedColor);
           return;
         }
       });
     } else {
-      this._hubService.playCard(cardPlayed.id);
+      this._hubService.playCard(this.game.id,cardPlayed.id);
       return;
     }
   }
 
   exitGame() {
-    if (this._activeTournament == null) {
+    if (!this.game.isTournamentGame) {
       this._router.navigateByUrl('/');
     } else {
       this._router.navigateByUrl('/tournament');
@@ -264,7 +275,7 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this.game.playerToPlay.user.name != this.currentUser.name) {
       return;
     }
-    this._hubService.drawCard();
+    this._hubService.drawCard(this.game.id);
   }
 
   openGameInfoModal() {

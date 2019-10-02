@@ -1,3 +1,5 @@
+import { ModalService } from './../../../_services/modal.service';
+import { UserStorageService } from './../../../_services/storage-services/user-storage.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'src/app/_models/user';
 import { HubService } from './../../../_services/hub.service';
@@ -16,17 +18,17 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   userSettings: UserSettings;
   currentUser: User;
 
-  constructor(private _hubService: HubService, private _utilityService: UtilityService, private _activeModal: NgbActiveModal) {}
+  constructor(private _hubService: HubService,private _userStorageService:UserStorageService, private _utilityService: UtilityService,private _modalService:ModalService, private _activeModal: NgbActiveModal) {}
 
   ngOnInit() {
     this.userSettings = this._utilityService.userSettings;
-    this._subscription = this._hubService.updateCurrentUser.subscribe((currentUser: User) => {
+    this._subscription = this._userStorageService.currentUser.subscribe((currentUser: User) => {
       this.currentUser = currentUser;
     });
   }
 
   rename() {
-    this._hubService.addOrRenameUser(true);
+    this._modalService.displayRenameModal();
   }
 
   updateBlockedBuzzCommands(event, buzzType) {

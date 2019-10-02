@@ -1,5 +1,5 @@
+import { GameStorageService } from './../../_services/storage-services/game-storage.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HubService } from 'src/app/_services/hub.service';
 import { Game } from 'src/app/_models/game';
 import { takeWhile } from 'rxjs/operators';
 
@@ -12,10 +12,10 @@ export class GameSpectatorsComponent implements OnInit, OnDestroy {
   private _isAlive: boolean = true;
   game: Game;
 
-  constructor(private _hubService: HubService) {}
+  constructor(private _gameStorageService: GameStorageService) {}
 
   ngOnInit() {
-    this._hubService.updateActiveGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
+    this._gameStorageService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.game = game;
     });
   }

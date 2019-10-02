@@ -64,23 +64,24 @@ namespace Web.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task SendMessage(string message, ChatDestination chatDestination, string gameId, string tournamentId)
+        public async Task SendMessage(string message, ChatDestination chatDestination)
         {
+            var user = GetCurrentUser();
             var isPlayer = true;
 
             if (chatDestination == ChatDestination.Game)
             {
-                var game = _gameRepository.GetGameByGameId(gameId);
+                var game = _gameRepository.GetGameByGameId(user.ActiveGameId);
                 isPlayer = GetPlayersFromGame(game).FirstOrDefault(x => x == Context.ConnectionId) != null;
             }
 
             else if (chatDestination == ChatDestination.Tournament)
             {
-                var tournament = _tournamentRepository.GetTournament(tournamentId);
+                var tournament = _tournamentRepository.GetTournament(user.ActiveTournamentId);
                 isPlayer = GetContestantsFromTournament(tournament).FirstOrDefault(x => x == Context.ConnectionId) != null;
             }
 
-            await SendMessage(message, isPlayer ? TypeOfMessage.Chat : TypeOfMessage.Spectators, chatDestination, gameId, tournamentId);
+            await SendMessage(message, isPlayer ? TypeOfMessage.Chat : TypeOfMessage.Spectators, chatDestination, user.ActiveGameId, user.ActiveTournamentId);
         }
 
 
@@ -153,6 +154,8 @@ namespace Web.Hubs
                     await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
                 }
             }
+
+            user.ActiveTournamentId = tournament.Id;
 
             var chatMsgs = tournament.ChatMessages.ToList();
             chatMsgs.Reverse();
@@ -433,6 +436,7 @@ namespace Web.Hubs
                     return;
                 }
 
+
             var spectator = game.Spectators.FirstOrDefault(x => x.User.Name == user.Name);
 
             if (!game.GameStarted)
@@ -481,6 +485,8 @@ namespace Web.Hubs
             chatMsgs.Reverse();
             var logs = game.GameLog.ToList();
             logs.Reverse();
+
+            user.ActiveGameId = game.Id;
 
             await Clients.Caller.SendAsync("RetrieveFullGameChat", _mapper.Map<List<ChatMessageDto>>(chatMsgs));
             await Clients.Caller.SendAsync("RetrieveFullGameLog", logs);
@@ -990,6 +996,8 @@ namespace Web.Hubs
                 _tournamentRepository.RemoveTournament(tournament);
             }
 
+            user.ActiveTournamentId = string.Empty;
+
             await GetAllTournaments();
         }
 
@@ -1020,6 +1028,9 @@ namespace Web.Hubs
             {
                 _gameRepository.RemoveGame(game);
             }
+
+            user.ActiveGameId = string.Empty;
+
             await GetAllGames();
             await Clients.Client(user.ConnectionId).SendAsync("ExitGame");
         }
