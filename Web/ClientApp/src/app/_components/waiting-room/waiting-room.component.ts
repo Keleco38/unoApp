@@ -62,15 +62,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
       this._toastrService.info(`Maximum number of players reached (${this.activeGame.gameSetup.maxNumberOfPlayers}).`);
       return;
     }
-    if (this.isInReadyPhase()) {
-      this._toastrService.info(`Game is in the ready phase. You can't join at this time.`);
-      return;
-    }
     this._hubService.joinGame(this.activeGame.id, '');
-  }
-
-  isInReadyPhase() {
-    return new Date(this.activeGame.readyPhaseExpireUtc) > new Date();
   }
 
   userIsSpectator() {
@@ -127,11 +119,6 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
         this._toastrService.error("Can't start the team game with only one team.");
         return;
       }
-    }
-
-    if (this.isInReadyPhase()) {
-      this._toastrService.info(`Game is in the ready phase. You can't start the game again.`);
-      return;
     }
 
     this._hubService.startGame();

@@ -101,26 +101,17 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
       this._toastrService.info(`Maximum number of players is reached ${this.activeTournament.tournamentSetup.numberOfPlayers}.`);
       return;
     }
-    if (this.isInReadyPhase()) {
-      this._toastrService.info(`Tournament is in the ready phase. You can't join at this time.`);
-      return;
-    }
     this._hubService.joinTournament(this.activeTournament.id, '');
   }
 
-  isInReadyPhase() {
-    return new Date(this.activeTournament.readyPhaseExpireUtc) > new Date();
-  }
+ 
 
   startTournament() {
     if (this.activeTournament.contestants.length < 3) {
       this._toastrService.info(`Minimum 3 players to start the tournament.`);
       return;
     }
-    if (this.isInReadyPhase()) {
-      this._toastrService.info(`Tournament is in the ready phase. You can't join at this time.`);
-      return;
-    }
+ 
     this._hubService.startTournament();
   }
   exitTournament() {

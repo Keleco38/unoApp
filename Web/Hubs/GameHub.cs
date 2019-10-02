@@ -119,6 +119,7 @@ namespace Web.Hubs
                 {
                     if (tournament.ReadyPhaseExpireUtc > DateTime.Now)
                     {
+                        await DisplayToastMessageToUser(Context.ConnectionId, "Tournament is in the ready phase. You can't join at this time.", "info");
                         return;
                     }
 
@@ -190,8 +191,15 @@ namespace Web.Hubs
             var user = GetCurrentUser();
             var tournament = _tournamentRepository.GetTournament(tournamentId);
 
-            if (tournament.TournamentStarted || tournament.Contestants.Count < 3 || tournament.Contestants.First().User != user || DateTime.Now <= tournament.ReadyPhaseExpireUtc)
+            if (tournament.TournamentStarted || tournament.Contestants.Count < 3 || tournament.Contestants.First().User != user)
                 return;
+
+            if (tournament.ReadyPhaseExpireUtc > DateTime.Now)
+            {
+                await DisplayToastMessageToUser(Context.ConnectionId, "Tournament is in the ready phase. You can't start the tournament now.", "info");
+                return;
+            }
+
 
             tournament.ReadyPhaseExpireUtc = DateTime.Now.AddSeconds(10);
             tournament.ReadyPlayersLeft = tournament.Contestants.Select(x => x.User.Name).ToList();
@@ -350,8 +358,14 @@ namespace Web.Hubs
         {
             var game = _gameRepository.GetGameByGameId(gameId);
 
-            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId) || game.GameStarted || DateTime.Now <= game.ReadyPhaseExpireUtc)
+            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId) || game.GameStarted)
             {
+                return;
+            }
+
+            if (DateTime.Now <= game.ReadyPhaseExpireUtc)
+            {
+                await DisplayToastMessageToUser(Context.ConnectionId, "Game is in the ready phase. You can't start the game again", "info");
                 return;
             }
 
@@ -429,6 +443,7 @@ namespace Web.Hubs
                     //join the game that hasn't started
                     if (game.ReadyPhaseExpireUtc > DateTime.Now)
                     {
+                        await DisplayToastMessageToUser(Context.ConnectionId, "Game is in the ready phase. You can't join at this time", "info");
                         return;
                     }
 
