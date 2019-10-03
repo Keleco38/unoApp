@@ -26,6 +26,7 @@ namespace EntityObjects
         public List<string> ReadyPlayersLeft { get; set; }
         public bool RoundEnded { get; set; }
         public bool GameEnded { get; set; }
+        public List<User> BannedUsers { get; set; }
         public Game(GameSetup gameSetup, string tournamentId = "")
         {
             Id = Guid.NewGuid().ToString();
@@ -37,6 +38,7 @@ namespace EntityObjects
             GameLog=new List<string>();
             ReadyPlayersLeft=new List<string>();
             ReadyPhaseExpireUtc=DateTime.Now;
+            BannedUsers=new List<User>();
         }
 
     }

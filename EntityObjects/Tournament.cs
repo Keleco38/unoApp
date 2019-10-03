@@ -15,7 +15,9 @@ namespace EntityObjects
             ChatMessages = new List<ChatMessage>();
             ReadyPlayersLeft = new List<string>();
             ReadyPhaseExpireUtc = DateTime.Now;
+            BannedUsers=new List<User>();
         }
+
         public string Id { get; set; }
         public string Name { get; set; }
         public bool TournamentStarted { get; set; }
@@ -28,5 +30,6 @@ namespace EntityObjects
         public List<Contestant> Contestants { get; set; }
         public List<User> Spectators { get; set; }
         public List<ChatMessage> ChatMessages { get; set; }
+        public List<User> BannedUsers { get; set; }
     }
 }

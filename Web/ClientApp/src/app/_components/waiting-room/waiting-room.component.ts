@@ -1,3 +1,4 @@
+import { ModalService } from './../../_services/modal.service';
 import { UserStorageService } from './../../_services/storage-services/user-storage.service';
 import { GameStorageService } from './../../_services/storage-services/game-storage.service';
 import { SidebarSettings } from 'src/app/_models/sidebarSettings';
@@ -11,7 +12,6 @@ import { Router } from '@angular/router';
 import { Player } from 'src/app/_models/player';
 import { takeWhile } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
-import { ModalService } from 'src/app/_services/modal.service';
 
 @Component({
   selector: 'app-waiting-room',
@@ -127,11 +127,8 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
     this._hubService.startGame();
   }
-  kickPlayerFromGame(player: Player) {
-    const cfrm = confirm('Really kick this player? ' + player.user.name);
-    if (cfrm) {
-      this._hubService.kickPlayerFromGame(player.user);
-    }
+  openKickBanPlayerModal(player: Player) {
+    this._modalService.displayKickBanPlayerModal(false, player.user);
   }
 
   updateGameSetup() {

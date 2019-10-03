@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -106,6 +107,14 @@ namespace Web.Hubs
         {
             var user = GetCurrentUser();
             var tournament = _tournamentRepository.GetTournament(tournamentId);
+
+            var bannedUser = tournament.BannedUsers.FirstOrDefault(x => x.Name == user.Name);
+            if (bannedUser != null)
+            {
+                await DisplayToastMessageToUser(user.ConnectionId, "You have been banned from this tournament.", "error");
+                return;
+            }
+
             var spectator = tournament.Spectators.FirstOrDefault(x => x.Name == user.Name);
             if (!string.IsNullOrEmpty(tournament.TournamentSetup.Password) && spectator == null)
                 if (tournament.TournamentSetup.Password != password)
@@ -294,7 +303,7 @@ namespace Web.Hubs
             await UpdateGame(game);
         }
 
-        public async Task KickPlayerFromGame(string name)
+        public async Task KickPlayerFromGame(bool isBan, string name)
         {
             var user = GetCurrentUser();
             var game = _gameRepository.GetGameByGameId(user.ActiveGameId);
@@ -304,9 +313,19 @@ namespace Web.Hubs
             }
 
             var playerToKick = game.Players.First(y => y.User.Name == name);
-            await Clients.Client(playerToKick.User.ConnectionId).SendAsync("KickPlayerFromGame");
+            if (isBan)
+            {
+                game.BannedUsers.Add(playerToKick.User);
+            }
+
+            var action = isBan ? "banned" : "kicked";
+
+            await DisplayToastMessageToUser(playerToKick.User.ConnectionId, $"You have been {action} from the game.", "error");
+            await SendMessage($"Player {playerToKick.User.Name} was {action} from the game.", TypeOfMessage.Server, ChatDestination.Game);
+            await Clients.Client(playerToKick.User.ConnectionId).SendAsync("SendToTheLobby");
+            await ExitGame(playerToKick.User);
         }
-        public async Task KickContestantFromTournament(string name)
+        public async Task KickContestantFromTournament(bool isBan, string name)
         {
             var user = GetCurrentUser();
             var tournament = _tournamentRepository.GetTournament(user.ActiveTournamentId);
@@ -316,7 +335,17 @@ namespace Web.Hubs
             }
 
             var playerToKick = tournament.Contestants.First(y => y.User.Name == name);
-            await Clients.Client(playerToKick.User.ConnectionId).SendAsync("KickContestantFromTournament");
+            if (isBan)
+            {
+                tournament.BannedUsers.Add(playerToKick.User);
+            }
+
+            var action = isBan ? "banned" : "kicked";
+
+            await DisplayToastMessageToUser(playerToKick.User.ConnectionId, $"You have been {action} from the tournament.", "error");
+            await SendMessage($"Player {playerToKick.User.Name} was {action} from the tournament.", TypeOfMessage.Server, ChatDestination.Tournament);
+            await Clients.Client(playerToKick.User.ConnectionId).SendAsync("SendToTheLobby");
+            await ExitTournament(playerToKick.User);
         }
 
         public async Task UpdateGameSetup(GameSetupDto gameSetupDto)
@@ -419,6 +448,13 @@ namespace Web.Hubs
 
             if (game.IsTournamentGame && !game.GameStarted)
                 return;
+
+            var bannedUser = game.BannedUsers.FirstOrDefault(x => x.Name == user.Name);
+            if (bannedUser != null)
+            {
+                await DisplayToastMessageToUser(user.ConnectionId, "You have been banned from this game.", "error");
+                return;
+            }
 
             bool alreadyAuthorized = false;
             if (game.IsTournamentGame)
@@ -537,6 +573,24 @@ namespace Web.Hubs
                 user = GetCurrentUser();
                 message = $"{user.Name} has renamed to {name}";
                 user.Name = name;
+                if (!string.IsNullOrEmpty(user.ActiveGameId))
+                {
+                    var game = _gameRepository.GetGameByGameId(user.ActiveGameId);
+                    var bannedUser = game.BannedUsers.FirstOrDefault(x => x.Name == user.Name);
+                    if (bannedUser != null)
+                    {
+                        game.BannedUsers.Remove(bannedUser);
+                    }
+                }         
+                if (!string.IsNullOrEmpty(user.ActiveTournamentId))
+                {
+                    var tournament = _tournamentRepository.GetTournament(user.ActiveTournamentId);
+                    var bannedUser = tournament.BannedUsers.FirstOrDefault(x => x.Name == user.Name);
+                    if (bannedUser != null)
+                    {
+                        tournament.BannedUsers.Remove(bannedUser);
+                    }
+                }
             }
             else
             {

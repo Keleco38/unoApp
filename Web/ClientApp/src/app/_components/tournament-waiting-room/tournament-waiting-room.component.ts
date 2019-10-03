@@ -34,8 +34,8 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _toastrService: ToastrService,
     private _modalService: ModalService,
-    private _tournamentStorageService:TournamentStorageService,
-    private _userStorageService:UserStorageService
+    private _tournamentStorageService: TournamentStorageService,
+    private _userStorageService: UserStorageService
   ) {}
 
   ngOnInit() {
@@ -72,10 +72,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   kickContestantFromTournament(contestant: Contestant) {
-    const cfrm = confirm('Really kick this player? ' + contestant.user.name);
-    if (cfrm) {
-      this._hubService.kickContestantFromTournament(contestant.user);
-    }
+    this._modalService.displayKickBanPlayerModal(true, contestant.user);
   }
 
   userIsSpectator() {
@@ -106,8 +103,6 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
     this._hubService.joinTournament(this.activeTournament.id, '');
   }
 
- 
-
   startTournament() {
     if (this.activeTournament.contestants.length < 3) {
       this._toastrService.info(`Minimum 3 players to start the tournament.`);
@@ -120,7 +115,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   updateTournamentSetup() {
-    this._hubService.updateTournamentSetup( this.activeTournament.tournamentSetup);
+    this._hubService.updateTournamentSetup(this.activeTournament.tournamentSetup);
   }
 
   ngOnDestroy(): void {

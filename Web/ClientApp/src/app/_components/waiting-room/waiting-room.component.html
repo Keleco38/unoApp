@@ -48,7 +48,7 @@
           </div>
           <span
             class="badge badge-pill badge-danger cursor-pointer"
-            (click)="kickPlayerFromGame(player)"
+            (click)="openKickBanPlayerModal(player)"
             [hidden]="currentUser.connectionId != activeGame.players[0].user.connectionId || first"
           >
             [X]

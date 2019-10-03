@@ -95,6 +95,13 @@ export class HubService {
     });
 
     this._hubConnection.on('RenamePlayer', () => {
+      if (!environment.production) {
+        const myArray = ['Ante', 'Mate', 'Jure', 'Ivica', 'John', 'Bruno', 'Mike', 'David', 'Mokki'];
+        var name = myArray[Math.floor(Math.random() * myArray.length)];
+        localStorage.setItem('name', name);
+        this.addOrRenameUser(name);
+        return;
+      }
       this._updateRenameUserObservable.next();
     });
 
@@ -142,13 +149,7 @@ export class HubService {
       this.buzzPlayer(buzzType, false);
     });
 
-    this._hubConnection.on('KickPlayerFromGame', () => {
-      this._toastrService.info('You have been kicked from the game');
-      this._router.navigateByUrl('/');
-    });
-
-    this._hubConnection.on('KickContestantFromTournament', () => {
-      this._toastrService.info('You have been kicked from the tournament');
+    this._hubConnection.on('SendToTheLobby', () => {
       this._router.navigateByUrl('/');
     });
 
@@ -223,6 +224,18 @@ export class HubService {
     });
   }
 
+  private buzzPlayer(buzzType: string, forceBuzz: boolean) {
+    var index = this._utilityService.userSettings.blockedBuzzCommands.indexOf(buzzType);
+    if (forceBuzz) {
+      index = -1;
+    }
+    if (index == -1) {
+      const alert = new Audio(`/sounds/${buzzType}.mp3`);
+      alert.load();
+      alert.play();
+    }
+  }
+
   startConnection(isReconnect: Boolean) {
     if (this._hubConnection.state == 'Connected') {
       return;
@@ -235,6 +248,7 @@ export class HubService {
           name = myArray[Math.floor(Math.random() * myArray.length)];
           localStorage.setItem('name', name);
         }
+
         this.addOrRenameUser(name);
 
         if (isReconnect) {
@@ -248,18 +262,6 @@ export class HubService {
       if (environment.production) {
         setTimeout(() => this.startConnection(true), 5000);
       }
-    }
-  }
-
-  private buzzPlayer(buzzType: string, forceBuzz: boolean) {
-    var index = this._utilityService.userSettings.blockedBuzzCommands.indexOf(buzzType);
-    if (forceBuzz) {
-      index = -1;
-    }
-    if (index == -1) {
-      const alert = new Audio(`/sounds/${buzzType}.mp3`);
-      alert.load();
-      alert.play();
     }
   }
 
@@ -355,12 +357,12 @@ export class HubService {
     this._hubConnection.invoke('CreateTournament', tournamentSetup, adminPassword);
   }
 
-  kickPlayerFromGame(user: User): any {
-    this._hubConnection.invoke('KickPlayerFromGame', user.name);
+  kickPlayerFromGame(isBan: boolean, name: string): any {
+    this._hubConnection.invoke('KickPlayerFromGame', isBan, name);
   }
 
-  kickContestantFromTournament(user: User): any {
-    this._hubConnection.invoke('KickContestantFromTournament', user.name);
+  kickContestantFromTournament(isBan: boolean, name: string): any {
+    this._hubConnection.invoke('KickContestantFromTournament', isBan, name);
   }
 
   updateGameSetup(gameSetup: GameSetup) {

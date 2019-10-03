@@ -1,3 +1,4 @@
+import { KickBanPlayerComponent } from './../_components/_modals/kick-ban-player/kick-ban-player.component';
 import { HubService } from 'src/app/_services/hub.service';
 import { GameEndedResult } from 'src/app/_models/gameEndedResult';
 import { Injectable, OnDestroy } from '@angular/core';
@@ -25,6 +26,7 @@ import { ConfirmReadyComponent } from '../_components/_modals/confirm-ready/conf
 import { ReadyPhaseSpectatorsComponent } from '../_components/_modals/ready-phase-spectators/ready-phase-spectators.component';
 import { ShowCardsComponent } from '../_components/_modals/show-cards/show-cards.component';
 import { takeWhile } from 'rxjs/operators';
+import { User } from '../_models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -99,6 +101,13 @@ export class ModalService implements OnDestroy {
 
   displayContactFormModal() {
     return this._modalService.open(ContactFormComponent, { backdrop: 'static', keyboard: false });
+  }
+
+  displayKickBanPlayerModal(isTournament:boolean, userToKick:User) {
+    var kickBanModal= this._modalService.open(KickBanPlayerComponent, { backdrop: 'static', keyboard: false });
+    kickBanModal.componentInstance.isTournament = isTournament;
+    kickBanModal.componentInstance.userToKick = userToKick;
+    return kickBanModal;
   }
 
   displayGameInfoModal() {

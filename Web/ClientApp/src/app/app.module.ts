@@ -1,3 +1,4 @@
+import { KickBanPlayerComponent } from './_components/_modals/kick-ban-player/kick-ban-player.component';
 import { UserStorageService } from './_services/storage-services/user-storage.service';
 import { TournamentStorageService } from './_services/storage-services/tournament-storage.service';
 import { LobbyStorageService } from './_services/storage-services/lobby-storage.service';
@@ -115,6 +116,7 @@ import { GameStorageService } from './_services/storage-services/game-storage.se
     ConfirmReadyComponent,
     TournamentWinnersComponent,
     RenameComponent,
+    KickBanPlayerComponent,
     TournamentComponent
   ],
   imports: [
@@ -196,6 +198,7 @@ import { GameStorageService } from './_services/storage-services/game-storage.se
     ConfirmReadyComponent,
     TournamentSetupComponent,
     ReadyPhaseSpectatorsComponent,
+    KickBanPlayerComponent,
     AdminSectionComponent
   ]
 })
