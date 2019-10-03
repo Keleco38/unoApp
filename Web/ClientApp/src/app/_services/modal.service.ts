@@ -27,6 +27,7 @@ import { ReadyPhaseSpectatorsComponent } from '../_components/_modals/ready-phas
 import { ShowCardsComponent } from '../_components/_modals/show-cards/show-cards.component';
 import { takeWhile } from 'rxjs/operators';
 import { User } from '../_models/user';
+import { InputPasswordComponent } from '../_components/_modals/input-password/input-password.component';
 
 @Injectable({
   providedIn: 'root'
@@ -75,6 +76,24 @@ export class ModalService implements OnDestroy {
     return this._modalService.open(RenameComponent, { backdrop: 'static', keyboard: false });
   }
 
+  displayInputPasswordModal(
+    isTournament: boolean,
+    id: string,
+    name: string,
+    started: boolean,
+    numberOfPlayers: number,
+    maxNumberOfPlayers: number
+  ) {
+    var inputPasswordModal = this._modalService.open(InputPasswordComponent, { backdrop: 'static', keyboard: false });
+    inputPasswordModal.componentInstance.id = id;
+    inputPasswordModal.componentInstance.isTournament = isTournament;
+    inputPasswordModal.componentInstance.name = name;
+    inputPasswordModal.componentInstance.started = started;
+    inputPasswordModal.componentInstance.numberOfPlayers = numberOfPlayers;
+    inputPasswordModal.componentInstance.maxNumberOfPlayers = maxNumberOfPlayers;
+    return inputPasswordModal;
+  }
+
   displayFirstTimeLaunchedModal() {
     return this._modalService.open(FirstTimeLaunchComponent, { backdrop: 'static', keyboard: false });
   }
@@ -103,8 +122,8 @@ export class ModalService implements OnDestroy {
     return this._modalService.open(ContactFormComponent, { backdrop: 'static', keyboard: false });
   }
 
-  displayKickBanPlayerModal(isTournament:boolean, userToKick:User) {
-    var kickBanModal= this._modalService.open(KickBanPlayerComponent, { backdrop: 'static', keyboard: false });
+  displayKickBanPlayerModal(isTournament: boolean, userToKick: User) {
+    var kickBanModal = this._modalService.open(KickBanPlayerComponent, { backdrop: 'static', keyboard: false });
     kickBanModal.componentInstance.isTournament = isTournament;
     kickBanModal.componentInstance.userToKick = userToKick;
     return kickBanModal;

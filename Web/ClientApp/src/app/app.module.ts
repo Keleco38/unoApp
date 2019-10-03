@@ -70,6 +70,7 @@ import { UiSwitchModule } from 'ngx-toggle-switch';
 import { RenameComponent } from './_components/_modals/rename/rename.component';
 import { ModalService } from './_services/modal.service';
 import { GameStorageService } from './_services/storage-services/game-storage.service';
+import { InputPasswordComponent } from './_components/_modals/input-password/input-password.component';
 
 @NgModule({
   declarations: [
@@ -117,6 +118,7 @@ import { GameStorageService } from './_services/storage-services/game-storage.se
     TournamentWinnersComponent,
     RenameComponent,
     KickBanPlayerComponent,
+    InputPasswordComponent,
     TournamentComponent
   ],
   imports: [
@@ -199,6 +201,7 @@ import { GameStorageService } from './_services/storage-services/game-storage.se
     TournamentSetupComponent,
     ReadyPhaseSpectatorsComponent,
     KickBanPlayerComponent,
+    InputPasswordComponent,
     AdminSectionComponent
   ]
 })
