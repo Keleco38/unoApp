@@ -55,9 +55,9 @@ namespace Web.Hubs
             if (_userRepository.UserExistsByConnectionId(Context.ConnectionId))
             {
                 var user = GetCurrentUser();
-                await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
-                await CleanupUserFromGames(user);
-                await CleanupUserFromTournaments(user);
+                await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server, ChatDestination.All);
+                await ExitGame(user);
+                await ExitTournament(user);
                 await CleanupUserFromOnlineUsersList(user);
             }
 
@@ -81,9 +81,8 @@ namespace Web.Hubs
                 isPlayer = GetContestantsFromTournament(tournament).FirstOrDefault(x => x == Context.ConnectionId) != null;
             }
 
-            await SendMessage(message, isPlayer ? TypeOfMessage.Chat : TypeOfMessage.Spectators, chatDestination, user.ActiveGameId, user.ActiveTournamentId);
+            await SendMessage(message, isPlayer ? TypeOfMessage.Chat : TypeOfMessage.Spectators, chatDestination);
         }
-
 
         public async Task GetAllOnlineUsers()
         {
@@ -114,6 +113,9 @@ namespace Web.Hubs
                     await DisplayToastMessageToUser(user.ConnectionId, "Incorrect password.", "error");
                     return;
                 }
+
+            user.ActiveTournamentId = tournament.Id;
+
             if (!tournament.TournamentStarted)
             {
                 if (spectator != null)
@@ -136,7 +138,7 @@ namespace Web.Hubs
                 {
                     //spectate game that hasn't started
                     tournament.Spectators.Add(user);
-                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
+                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, ChatDestination.Tournament);
                 }
             }
             else
@@ -146,16 +148,13 @@ namespace Web.Hubs
                 {
                     contestant.User = user;
                     contestant.LeftTournament = false;
-                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
                 }
                 else if (spectator == null)
                 {
                     tournament.Spectators.Add((user));
-                    await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
                 }
+                await SendMessage($"{user.Name} has joined the tournament.", TypeOfMessage.Server, ChatDestination.Tournament);
             }
-
-            user.ActiveTournamentId = tournament.Id;
 
             var chatMsgs = tournament.ChatMessages.ToList();
             chatMsgs.Reverse();
@@ -181,18 +180,21 @@ namespace Web.Hubs
             {
                 tournamentSetup.Name = tournamentSetup.Name.Substring(0, 10);
             }
-
             var tournament = new Tournament(tournamentSetup);
             tournament.Contestants.Add(new Contestant(GetCurrentUser()));
             _tournamentRepository.AddTournament(tournament);
+
+            var user = GetCurrentUser();
+            user.ActiveTournamentId = tournament.Id;
+
             await UpdateTournament(tournament);
             await GetAllTournaments();
         }
 
-        public async Task StartTournament(string tournamentId)
+        public async Task StartTournament()
         {
             var user = GetCurrentUser();
-            var tournament = _tournamentRepository.GetTournament(tournamentId);
+            var tournament = _tournamentRepository.GetTournament(user.ActiveTournamentId);
 
             if (tournament.TournamentStarted || tournament.Contestants.Count < 3 || tournament.Contestants.First().User != user)
                 return;
@@ -203,19 +205,18 @@ namespace Web.Hubs
                 return;
             }
 
-
             tournament.ReadyPhaseExpireUtc = DateTime.Now.AddSeconds(10);
             tournament.ReadyPlayersLeft = tournament.Contestants.Select(x => x.User.Name).ToList();
             await UpdateTournament(tournament);
-            await Clients.Clients(GetContestantsFromTournament(tournament)).SendAsync("DisplayReadyModalPlayers", true);
-            await Clients.Clients(GetSpectatorsFromTournament(tournament)).SendAsync("DisplayReadyModalSpectators", true);
+            await Clients.Clients(GetContestantsFromTournament(tournament)).SendAsync("StartModalPhasePlayers", true);
+            await Clients.Clients(GetSpectatorsFromTournament(tournament)).SendAsync("StartModalPhaseSpectators", true);
         }
 
 
-        public async Task ReadyForTournament(string tournamentId)
+        public async Task ReadyForTournament()
         {
-            var tournament = _tournamentRepository.GetTournament(tournamentId);
             var user = GetCurrentUser();
+            var tournament = _tournamentRepository.GetTournament(user.ActiveTournamentId);
             var player = tournament.Contestants.FirstOrDefault(x => x.User.Name == user.Name);
             if (tournament.TournamentStarted || player == null || DateTime.Now > tournament.ReadyPhaseExpireUtc || !tournament.ReadyPlayersLeft.Contains(user.Name))
             {
@@ -233,14 +234,11 @@ namespace Web.Hubs
             }
         }
 
-
-        public async Task ExitTournament(string tournamentId)
+        public async Task ExitTournament()
         {
             var user = GetCurrentUser();
-            await ExitTournament(tournamentId, user);
+            await ExitTournament(user);
         }
-
-
 
         public async Task CreateGame(GameSetupDto gameSetupDto)
         {
@@ -249,9 +247,12 @@ namespace Web.Hubs
             var game = new Game(gameSetup);
             game.Players.Add(new Player(user, game.Players.Count + 1));
             _gameRepository.AddGame(game);
+
+            user.ActiveGameId = game.Id;
+
             await UpdateGame(game);
             await GetAllGames();
-            await SendMessage($"User {user.Name} has created new game", TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
+            await SendMessage($"User {user.Name} has created new game", TypeOfMessage.Server, ChatDestination.All);
         }
 
         public async Task AdminKickUser(string name, string password)
@@ -266,36 +267,37 @@ namespace Web.Hubs
             {
                 var user = _userRepository.GetUserByName(name);
                 await Clients.Client(user.ConnectionId).SendAsync("AdminKickUser");
-                await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
-                await CleanupUserFromGames(user);
-                await CleanupUserFromTournaments(user);
+                await SendMessage($"{user.Name} has left the server.", TypeOfMessage.Server, ChatDestination.All);
+                await ExitGame(user);
+                await ExitTournament(user);
                 await CleanupUserFromOnlineUsersList(user);
             }
         }
 
-        public async Task ExitGame(string gameId)
+        public async Task ExitGame()
         {
             var user = GetCurrentUser();
-            await ExitGame(gameId, user);
+            await ExitGame(user);
         }
 
-        public async Task ChangeTeam(string gameId, int teamNumber)
+        public async Task ChangeTeam(int teamNumber)
         {
+            var user = GetCurrentUser();
             if (teamNumber < 1 || teamNumber > 5)
                 return;
 
-            var game = _gameRepository.GetGameByGameId(gameId);
+            var game = _gameRepository.GetGameByGameId(user.ActiveGameId);
             if (game.GameSetup.PlayersSetup != PlayersSetup.Teams)
                 return;
-            var user = GetCurrentUser();
             var player = game.Players.First(x => x.User == user);
             player.TeamNumber = teamNumber;
             await UpdateGame(game);
         }
 
-        public async Task KickPlayerFromGame(string name, string gameId)
+        public async Task KickPlayerFromGame(string name)
         {
-            var game = _gameRepository.GetGameByGameId(gameId);
+            var user = GetCurrentUser();
+            var game = _gameRepository.GetGameByGameId(user.ActiveGameId);
             if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId))
             {
                 return;
@@ -304,9 +306,10 @@ namespace Web.Hubs
             var playerToKick = game.Players.First(y => y.User.Name == name);
             await Clients.Client(playerToKick.User.ConnectionId).SendAsync("KickPlayerFromGame");
         }
-        public async Task KickContestantFromTournament(string name, string tournamentId)
+        public async Task KickContestantFromTournament(string name)
         {
-            var tournament = _tournamentRepository.GetTournament(tournamentId);
+            var user = GetCurrentUser();
+            var tournament = _tournamentRepository.GetTournament(user.ActiveTournamentId);
             if (!Context.ConnectionId.Equals(tournament.Contestants.First().User.ConnectionId))
             {
                 return;
@@ -316,9 +319,10 @@ namespace Web.Hubs
             await Clients.Client(playerToKick.User.ConnectionId).SendAsync("KickContestantFromTournament");
         }
 
-        public async Task UpdateGameSetup(string gameId, GameSetupDto gameSetupDto)
+        public async Task UpdateGameSetup(GameSetupDto gameSetupDto)
         {
-            var game = _gameRepository.GetGameByGameId(gameId);
+            var user = GetCurrentUser();
+            var game = _gameRepository.GetGameByGameId(user.ActiveGameId);
             if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId) || game.GameStarted)
             {
                 return;
@@ -329,9 +333,10 @@ namespace Web.Hubs
             await UpdateGame(game);
             await GetAllGames();
         }
-        public async Task UpdateTournamentSetup(string tournamentId, TournamentSetupDto tournamentSetupDto)
+        public async Task UpdateTournamentSetup(TournamentSetupDto tournamentSetupDto)
         {
-            var tournament = _tournamentRepository.GetTournament(tournamentId);
+            var user = GetCurrentUser();
+            var tournament = _tournamentRepository.GetTournament(user.ActiveTournamentId);
             if (!Context.ConnectionId.Equals(tournament.Contestants.First().User.ConnectionId) || tournament.TournamentStarted)
             {
                 return;
@@ -357,9 +362,10 @@ namespace Web.Hubs
 
 
 
-        public async Task StartGame(string gameId)
+        public async Task StartGame()
         {
-            var game = _gameRepository.GetGameByGameId(gameId);
+            var user = GetCurrentUser();
+            var game = _gameRepository.GetGameByGameId(user.ActiveGameId);
 
             if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId) || game.GameStarted)
             {
@@ -372,19 +378,19 @@ namespace Web.Hubs
                 return;
             }
 
-
             game.ReadyPhaseExpireUtc = DateTime.Now.AddSeconds(10);
             game.ReadyPlayersLeft = game.Players.Select(x => x.User.Name).ToList();
+
             await UpdateGame(game);
             await Clients.Clients(GetPlayersFromGame(game)).SendAsync("DisplayReadyModalPlayers", false);
             await Clients.Clients(GetSpectatorsFromGame(game)).SendAsync("DisplayReadyModalSpectators", false);
-
         }
 
-        public async Task ReadyForGame(string gameId)
+        public async Task ReadyForGame()
         {
-            var game = _gameRepository.GetGameByGameId(gameId);
             var user = GetCurrentUser();
+            var gameId = user.ActiveGameId;
+            var game = _gameRepository.GetGameByGameId(gameId);
             var player = game.Players.FirstOrDefault(x => x.User.Name == user.Name);
             if (game.GameStarted || player == null || DateTime.Now > game.ReadyPhaseExpireUtc || !game.ReadyPlayersLeft.Contains(user.Name))
             {
@@ -408,13 +414,11 @@ namespace Web.Hubs
 
         public async Task JoinGame(string gameId, string password)
         {
-            await CleanupUserFromGamesExceptThisGame(gameId);
             var user = GetCurrentUser();
             var game = _gameRepository.GetGameByGameId(gameId);
 
             if (game.IsTournamentGame && !game.GameStarted)
                 return;
-
 
             bool alreadyAuthorized = false;
             if (game.IsTournamentGame)
@@ -436,12 +440,12 @@ namespace Web.Hubs
                     return;
                 }
 
-
             var spectator = game.Spectators.FirstOrDefault(x => x.User.Name == user.Name);
+
+            user.ActiveGameId = game.Id;
 
             if (!game.GameStarted)
             {
-
                 if (spectator != null)
                 {
                     //join the game that hasn't started
@@ -462,7 +466,7 @@ namespace Web.Hubs
                 {
                     //spectate game that hasn't started
                     game.Spectators.Add(new Spectator(user));
-                    await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
+                    await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, ChatDestination.Game);
                 }
             }
             else
@@ -473,20 +477,17 @@ namespace Web.Hubs
                     playerLeftWithThisName.User = user;
                     playerLeftWithThisName.LeftGame = false;
                     await DisplayToastMessageToGame(gameId, $"Player {user.Name} has reconnected to the game.", "info");
-
                 }
                 else if (spectator == null)
                 {
                     game.Spectators.Add(new Spectator(user));
                 }
-                await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
+                await SendMessage($"{user.Name} has joined the game room.", TypeOfMessage.Server, ChatDestination.Game);
             }
             var chatMsgs = game.ChatMessages.ToList();
             chatMsgs.Reverse();
             var logs = game.GameLog.ToList();
             logs.Reverse();
-
-            user.ActiveGameId = game.Id;
 
             await Clients.Caller.SendAsync("RetrieveFullGameChat", _mapper.Map<List<ChatMessageDto>>(chatMsgs));
             await Clients.Caller.SendAsync("RetrieveFullGameLog", logs);
@@ -497,6 +498,12 @@ namespace Web.Hubs
 
         public async Task AddOrRenameUser(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                await Clients.Caller.SendAsync("RenamePlayer");
+                return;
+            };
+
             name = Regex.Replace(name, @"[^a-zA-Z0-9]", "").ToLower();
 
             if (name.Length > 10)
@@ -540,15 +547,16 @@ namespace Web.Hubs
                 await Clients.Caller.SendAsync("PostNewMessageInAllChat", msg);
             }
 
-            await SendMessage(message, TypeOfMessage.Server, ChatDestination.All, string.Empty, string.Empty);
+            await SendMessage(message, TypeOfMessage.Server, ChatDestination.All);
             var userDto = _mapper.Map<UserDto>(user);
             await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
             await GetAllOnlineUsers();
         }
 
-        public async Task DrawCard(string gameId)
+        public async Task DrawCard()
         {
             var user = GetCurrentUser();
+            var gameId = user.ActiveGameId;
             var game = _gameRepository.GetGameByGameId(gameId);
             if (game.GameEnded || game.PlayerToPlay.User.Name != user.Name)
             {
@@ -568,7 +576,7 @@ namespace Web.Hubs
             {
                 _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
                 await AddToGameLog(gameId, $"{user.Name} drew and autoplayed a card.");
-                await PlayCard(game.Id, cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty);
+                await PlayCard(cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty);
                 return;
             }
 
@@ -578,15 +586,12 @@ namespace Web.Hubs
             await UpdateHands(game);
         }
 
-        public async Task CheckUnoCall(string gameId, bool unoCalled)
+        public async Task CheckUnoCall(bool unoCalled)
         {
-            if (!_userRepository.UserExistsByConnectionId(Context.ConnectionId))
-            {
-                return;
-            }
             var user = GetCurrentUser();
+            var gameId = user.ActiveGameId;
             var game = _gameRepository.GetGameByGameId(gameId);
-            if (game.GameEnded)
+            if (game == null || game.GameEnded)
                 return;
             var player = game.Players.First(x => x.User == user);
 
@@ -602,22 +607,21 @@ namespace Web.Hubs
             else
             {
                 _gameManager.DrawCard(game, player, 2, false);
-                await SendMessage($"Player [{player.User.Name}] forgot to call uno! They will draw 2 cards.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
+                await SendMessage($"Player [{player.User.Name}] forgot to call uno! They will draw 2 cards.", TypeOfMessage.Server, ChatDestination.Game);
                 await UpdateGame(game);
                 await UpdateHands(game);
             }
             player.MustCallUno = false;
         }
 
-
-        public async Task ShowTeammatesHand(string gameId)
+        public async Task ShowTeammatesHand()
         {
-            var game = _gameRepository.GetGameByGameId(gameId);
+            var user = GetCurrentUser();
+            var game = _gameRepository.GetGameByGameId(user.ActiveGameId);
             if (game.GameSetup.PlayersSetup != PlayersSetup.Teams || !game.GameSetup.CanSeeTeammatesHandInTeamGame)
             {
                 return;
             }
-            var user = GetCurrentUser();
             var player = game.Players.First(x => x.User.Name == user.Name);
 
             List<KeyValuePair<string, List<CardDto>>> result = new List<KeyValuePair<string, List<CardDto>>>();
@@ -630,13 +634,13 @@ namespace Web.Hubs
 
         }
 
-        public async Task PlayCard(string gameId, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess)
+        public async Task PlayCard(string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess)
         {
-
+            var user = GetCurrentUser();
+            var gameId = user.ActiveGameId;
             var game = _gameRepository.GetGameByGameId(gameId);
             if (game.GameEnded || !game.GameStarted)
                 return;
-            var user = GetCurrentUser();
             var player = game.Players.First(x => x.User.Name == user.Name);
             var moveResult = _playCardManager.PlayCard(game, player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard, cardPromisedToDiscardId, oddOrEvenGuess);
             if (moveResult == null)
@@ -768,32 +772,6 @@ namespace Web.Hubs
             return GetContestantsFromTournament(tournament).Concat(GetSpectatorsFromTournament(tournament)).ToList();
         }
 
-        private async Task CleanupUserFromGames(User user)
-        {
-            List<Game> games = _gameRepository.GetAllGames().Where(x => GetPlayersAndSpectatorsFromGame(x).Any(y => y == user.ConnectionId)).ToList();
-            foreach (var game in games)
-            {
-                await ExitGame(game.Id, user);
-            }
-        }
-
-        private async Task CleanupUserFromTournaments(User user)
-        {
-            List<Tournament> tournaments = _tournamentRepository.GetAllTournaments().Where(x => GetContestantsAndSpectatorsFromTournament(x).Any(y => y == user.ConnectionId)).ToList();
-            foreach (var tournament in tournaments)
-            {
-                await ExitTournament(tournament.Id, user);
-            }
-        }
-
-        private async Task CleanupUserFromGamesExceptThisGame(string gameId)
-        {
-            List<Game> games = _gameRepository.GetAllGames().Where(x => x.Id != gameId && GetPlayersAndSpectatorsFromGame(x).Any(y => y == Context.ConnectionId)).ToList();
-            foreach (var game in games)
-            {
-                await ExitGame(game.Id);
-            }
-        }
 
         private async Task CleanupUserFromOnlineUsersList(User user)
         {
@@ -801,9 +779,12 @@ namespace Web.Hubs
             await GetAllOnlineUsers();
         }
 
-        private async Task SendMessage(string message, TypeOfMessage typeOfMessage, ChatDestination chatDestination, string gameId, string tournamentId)
+        private async Task SendMessage(string message, TypeOfMessage typeOfMessage, ChatDestination chatDestination)
         {
             var user = GetCurrentUser();
+            var gameId = user.ActiveGameId;
+            var tournamentId = user.ActiveTournamentId;
+
             var username = typeOfMessage == TypeOfMessage.Server ? "Server" : user.Name;
             var chatMessageIntentionResult = GetChatMessageIntention(message);
             ChatMessageDto msgDto;
@@ -848,8 +829,10 @@ namespace Web.Hubs
 
                 if (buzzFailed)
                 {
-                    await Clients.Caller.SendAsync("PostNewMessageInGameChat", msgDto);
-                    await Clients.Caller.SendAsync("PostNewMessageInTournamentChat", msgDto);
+                    if (!string.IsNullOrEmpty(user.ActiveGameId))
+                        await Clients.Caller.SendAsync("PostNewMessageInGameChat", msgDto);
+                    if (!string.IsNullOrEmpty(user.ActiveTournamentId))
+                        await Clients.Caller.SendAsync("PostNewMessageInTournamentChat", msgDto);
                     await Clients.Caller.SendAsync("PostNewMessageInAllChat", msgDto);
                 }
                 else
@@ -857,6 +840,19 @@ namespace Web.Hubs
                     await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
                     await Clients.Clients(allUsersInTournament).SendAsync("PostNewMessageInTournamentChat", msgDto);
                     await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
+                    if (!string.IsNullOrEmpty(targetedUser.ActiveGameId) && user.ActiveGameId != targetedUser.ActiveGameId)
+                    {
+                        var targetedPlayersGame = _gameRepository.GetGameByGameId(targetedUser.ActiveGameId);
+                        var allUsersInTargetedUsersGame = GetPlayersAndSpectatorsFromGame(targetedPlayersGame);
+                        await Clients.Clients(allUsersInTargetedUsersGame).SendAsync("PostNewMessageInGameChat", msgDto);
+
+                    }
+                    if (!string.IsNullOrEmpty(targetedUser.ActiveTournamentId) && user.ActiveTournamentId != targetedUser.ActiveTournamentId)
+                    {
+                        var targetedPlayersTournament = _tournamentRepository.GetTournament(targetedUser.ActiveTournamentId);
+                        var allUsersInTargetedUsersTournament = GetContestantsAndSpectatorsFromTournament(targetedPlayersTournament);
+                        await Clients.Clients(allUsersInTargetedUsersTournament).SendAsync("PostNewMessageInTournamentChat", msgDto);
+                    }
                 }
 
             }
@@ -959,11 +955,16 @@ namespace Web.Hubs
             }
         }
 
-        private async Task ExitTournament(string tournamentId, User user)
+        private async Task ExitTournament(User user)
         {
+            var tournamentId = user.ActiveTournamentId;
+
+            if (string.IsNullOrEmpty(tournamentId))
+                return;
+
             var tournament = _tournamentRepository.GetTournament(tournamentId);
 
-            await SendMessage($"{user.Name} has left the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, string.Empty, tournamentId);
+            await SendMessage($"{user.Name} has left the tournament.", TypeOfMessage.Server, ChatDestination.Tournament);
 
             var contestant = tournament.Contestants.FirstOrDefault(x => x.User == user);
 
@@ -1001,10 +1002,16 @@ namespace Web.Hubs
             await GetAllTournaments();
         }
 
-        private async Task ExitGame(string gameId, User user)
+        private async Task ExitGame(User user)
         {
+            var gameId = user.ActiveGameId;
+
+            if (string.IsNullOrEmpty(gameId))
+                return;
+
             var game = _gameRepository.GetGameByGameId(gameId);
             var allPlayersFromGame = GetPlayersFromGame(game);
+
             if (allPlayersFromGame.Contains(user.ConnectionId))
             {
                 var player = game.Players.First(y => y.User.ConnectionId == user.ConnectionId);
@@ -1022,8 +1029,10 @@ namespace Web.Hubs
             {
                 game.Spectators.Remove(game.Spectators.First(x => x.User.ConnectionId == user.ConnectionId));
             }
+
             await UpdateGame(game);
-            await SendMessage($"{user.Name} has left the game.", TypeOfMessage.Server, ChatDestination.Game, gameId, string.Empty);
+            await SendMessage($"{user.Name} has left the game.", TypeOfMessage.Server, ChatDestination.Game);
+
             if (game.Players.All(x => x.LeftGame) && !game.Spectators.Any() && !game.IsTournamentGame)
             {
                 _gameRepository.RemoveGame(game);

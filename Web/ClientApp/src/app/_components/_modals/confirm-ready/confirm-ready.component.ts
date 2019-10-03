@@ -20,9 +20,6 @@ export class ConfirmReadyComponent implements OnInit, OnDestroy {
   private _interval;
   private _countDown = 10000;
 
-  private _tournament: Tournament;
-  private _game: Game;
-
   timer: number = 10;
   isReady: boolean = false;
   readyPlayersLeft: string[];
@@ -47,7 +44,6 @@ export class ConfirmReadyComponent implements OnInit, OnDestroy {
     }, 1000);
     if (!this.isTournament) {
       this._gameStorageService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
-        this._game = game;
         this.readyPlayersLeft = game.readyPlayersLeft;
         if (this.originallyTotalPlayersCount == 0) {
           this.originallyTotalPlayersCount = game.players.length;
@@ -55,7 +51,6 @@ export class ConfirmReadyComponent implements OnInit, OnDestroy {
       });
     } else {
       this._tournamentStorageService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournament => {
-        this._tournament = tournament;
         this.readyPlayersLeft = tournament.readyPlayersLeft;
         if (this.originallyTotalPlayersCount == 0) {
           this.originallyTotalPlayersCount = tournament.contestants.length;
@@ -67,9 +62,9 @@ export class ConfirmReadyComponent implements OnInit, OnDestroy {
   ready() {
     this.isReady = true;
     if (this.isTournament) {
-      this._hubService.sendIsReadyForTournament(this._tournament.id);
+      this._hubService.sendIsReadyForTournament();
     } else {
-      this._hubService.sendIsReadyForGame(this._game.id);
+      this._hubService.sendIsReadyForGame();
     }
   }
   notReady() {

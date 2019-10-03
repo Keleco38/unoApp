@@ -74,7 +74,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
   kickContestantFromTournament(contestant: Contestant) {
     const cfrm = confirm('Really kick this player? ' + contestant.user.name);
     if (cfrm) {
-      this._hubService.kickContestantFromTournament(this.activeTournament.id,contestant.user);
+      this._hubService.kickContestantFromTournament(contestant.user);
     }
   }
 
@@ -113,14 +113,14 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
       this._toastrService.info(`Minimum 3 players to start the tournament.`);
       return;
     }
-    this._hubService.startTournament(this.activeTournament.id);
+    this._hubService.startTournament();
   }
   exitTournament() {
     this._router.navigateByUrl('/');
   }
 
   updateTournamentSetup() {
-    this._hubService.updateTournamentSetup(this.activeTournament.id, this.activeTournament.tournamentSetup);
+    this._hubService.updateTournamentSetup( this.activeTournament.tournamentSetup);
   }
 
   ngOnDestroy(): void {

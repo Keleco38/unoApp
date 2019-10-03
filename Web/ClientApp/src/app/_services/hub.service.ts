@@ -45,7 +45,6 @@ export class HubService {
   private _updateTournamentStartedObservable = new Subject();
   private _updateExitGameObservable = new Subject();
   private _updateExitTournamentObservable = new Subject();
-
   private _updateShowCardsObservable = new Subject<KeyValue<string, Card[]>[]>();
   private _updateRenameUserObservable = new Subject();
   private _updateShowReadyPhasePlayersObservable = new Subject<boolean>();
@@ -57,6 +56,7 @@ export class HubService {
     if (!environment.production) {
       this._hubConnection.serverTimeoutInMilliseconds = 10000000;
     }
+    
     this.startConnection(false);
 
     this._hubConnection.onclose(async () => {
@@ -154,11 +154,11 @@ export class HubService {
       this._router.navigateByUrl('/');
     });
 
-    this._hubConnection.on('DisplayReadyModalPlayers', (isTournament: boolean) => {
+    this._hubConnection.on('StartModalPhasePlayers', (isTournament: boolean) => {
       this._updateShowReadyPhasePlayersObservable.next(isTournament);
     });
 
-    this._hubConnection.on('DisplayReadyModalSpectators', (isTournament: boolean) => {
+    this._hubConnection.on('StartModalPhaseSpectators', (isTournament: boolean) => {
       this._updateShowReadyPhaseSpectatorsObservable.next(isTournament);
     });
 
@@ -187,8 +187,6 @@ export class HubService {
     this._hubConnection.on('AdminKickUser', () => {
       this._wasKicked = true;
       this._router.navigateByUrl('/');
-      this._updateActiveGameObservable.next(null);
-      this._updateActiveTournamentObservable.next(null);
       this._hubConnection.stop();
       document.body.innerHTML = '<h1>You were temporarily kicked from the server</h1>';
     });
@@ -227,24 +225,9 @@ export class HubService {
     });
   }
 
-  private async startConnection(isReconnect: Boolean) {
+  private startConnection(isReconnect: Boolean) {
     try {
       this._hubConnection.start().then(() => {
-        var name = localStorage.getItem('name');
-
-        if (!environment.production) {
-          const myArray = ['Ante', 'Mate', 'Jure', 'Ivica', 'John', 'Bruno', 'Mike', 'David', 'Mokki'];
-          name = myArray[Math.floor(Math.random() * myArray.length)];
-          localStorage.setItem('name', name);
-        }
-
-        if(!name){
-          this._updateRenameUserObservable.next();
-          return;
-        }
-
-        this.addOrRenameUser(name);
-
         if (isReconnect) {
           this._updateActiveGameObservable.next(null);
           this._updateActiveTournamentObservable.next(null);
@@ -275,12 +258,12 @@ export class HubService {
     this._hubConnection.invoke('AdminKickUser', user.name, password);
   }
 
-  sendIsReadyForGame(gameId: string) {
-    this._hubConnection.invoke('ReadyForGame', gameId);
+  sendIsReadyForGame() {
+    this._hubConnection.invoke('ReadyForGame');
   }
 
-  sendIsReadyForTournament(tournamentId: string) {
-    this._hubConnection.invoke('ReadyForTournament', tournamentId);
+  sendIsReadyForTournament() {
+    this._hubConnection.invoke('ReadyForTournament');
   }
 
   sendMessage(message: string, chatDestination: ChatDestination) {
@@ -303,32 +286,31 @@ export class HubService {
     this._hubConnection.invoke('JoinTournament', tournamentId, password);
   }
 
-  startTournament(tournamentId: string): any {
-    this._hubConnection.invoke('StartTournament', tournamentId);
+  startTournament(): any {
+    this._hubConnection.invoke('StartTournament');
   }
 
-  exitTournament(tournamentId: string): any {
-    this._hubConnection.invoke('ExitTournament', tournamentId);
+  exitTournament(): any {
+    this._hubConnection.invoke('ExitTournament');
   }
 
-  drawCard(gameId: string) {
-    this._hubConnection.invoke('DrawCard', gameId);
+  drawCard() {
+    this._hubConnection.invoke('DrawCard');
   }
 
-  changeTeam(gameId: string, teamNumber: number) {
-    this._hubConnection.invoke('ChangeTeam', gameId, teamNumber);
+  changeTeam(teamNumber: number) {
+    this._hubConnection.invoke('ChangeTeam', teamNumber);
   }
 
-  checkUnoCall(gameId: string, unoCalled: boolean) {
-    this._hubConnection.invoke('CheckUnoCall', gameId, unoCalled);
+  checkUnoCall(unoCalled: boolean) {
+    this._hubConnection.invoke('CheckUnoCall', unoCalled);
   }
 
-  seeTeammatesCards(gameId: string) {
-    this._hubConnection.invoke('ShowTeammatesHand', gameId);
+  seeTeammatesCards() {
+    this._hubConnection.invoke('ShowTeammatesHand');
   }
 
   playCard(
-    gameId: string,
     cardPlayedId: string,
     targetedCardColor: CardColor = 0,
     targetedPlayer: string = '',
@@ -342,7 +324,6 @@ export class HubService {
   ) {
     this._hubConnection.invoke(
       'PlayCard',
-      gameId,
       cardPlayedId,
       targetedCardColor,
       targetedPlayer,
@@ -364,28 +345,28 @@ export class HubService {
     this._hubConnection.invoke('CreateTournament', tournamentSetup, adminPassword);
   }
 
-  kickPlayerFromGame(gameId: string, user: User): any {
-    this._hubConnection.invoke('KickPlayerFromGame', user.name, gameId);
+  kickPlayerFromGame(user: User): any {
+    this._hubConnection.invoke('KickPlayerFromGame', user.name);
   }
 
-  kickContestantFromTournament(tournamentId: string, user: User): any {
-    this._hubConnection.invoke('KickContestantFromTournament', user.name, tournamentId);
+  kickContestantFromTournament(user: User): any {
+    this._hubConnection.invoke('KickContestantFromTournament', user.name);
   }
 
-  updateGameSetup(gameId: string, gameSetup: GameSetup) {
-    this._hubConnection.invoke('UpdateGameSetup', gameId, gameSetup);
+  updateGameSetup(gameSetup: GameSetup) {
+    this._hubConnection.invoke('UpdateGameSetup', gameSetup);
   }
 
-  updateTournamentSetup(tournamentId: string, tournamentSetup: TournamentSetup) {
-    this._hubConnection.invoke('UpdateTournamentSetup', tournamentId, tournamentSetup);
+  updateTournamentSetup(tournamentSetup: TournamentSetup) {
+    this._hubConnection.invoke('UpdateTournamentSetup', tournamentSetup);
   }
 
-  exitGame(gameId: string): any {
-    this._hubConnection.invoke('ExitGame', gameId);
+  exitGame(): any {
+    this._hubConnection.invoke('ExitGame');
   }
 
-  startGame(gameId: string): any {
-    this._hubConnection.invoke('StartGame', gameId);
+  startGame(): any {
+    this._hubConnection.invoke('StartGame');
   }
 
   get updateOnlineUsers() {

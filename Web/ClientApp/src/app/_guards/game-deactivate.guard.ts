@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { WaitingRoomComponent } from '../_components/waiting-room/waiting-room.component';
 import { map } from 'rxjs/operators';
+import { Game } from '../_models/game';
 
 @Injectable()
 export class GameDeactivateGuard implements CanDeactivate<GameComponent> {
@@ -22,14 +23,13 @@ export class GameDeactivateGuard implements CanDeactivate<GameComponent> {
     currentState: RouterStateSnapshot,
     nextState?: RouterStateSnapshot
   ): boolean | Observable<boolean> | Promise<boolean> {
-    return forkJoin(this._gameStorageService.activeGame, this._tournamentStorageService.activeTournament).pipe(
-      map(([activeGame, tournament]) => {
-        if (activeGame !== null) {
-          this._hubService.exitGame(activeGame.id);
-        }
-        if (tournament !== null) {
+    this._hubService.exitGame();
+
+    return this._gameStorageService.activeGame.pipe(
+      map((game:Game) => {
+        if (game.isTournamentGame) {
           if (nextState.url != '/tournament') {
-            this._hubService.exitTournament(tournament.id);
+            this._hubService.exitTournament();
             this._router.navigateByUrl('/');
           }
         }

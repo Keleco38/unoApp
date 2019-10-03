@@ -10,21 +10,13 @@ import { map } from 'rxjs/operators';
 export class WaitingRoomDeactivateGuard implements CanDeactivate<WaitingRoomComponent> {
   constructor(private _hubService: HubService, private _router: Router, private _gameStorageService: GameStorageService) {}
   canDeactivate(
-    component: WaitingRoomComponent,
-    currentRoute: ActivatedRouteSnapshot,
-    currentState: RouterStateSnapshot,
     nextState?: RouterStateSnapshot
   ): boolean | Observable<boolean> | Promise<boolean> {
     if (nextState.url === '/game') {
       return true;
     }
-    return this._gameStorageService.activeGame.pipe(
-      map(activeGame => {
-        if (activeGame !== null && activeGame.gameStarted === false) {
-          this._hubService.exitGame(activeGame.id);
-          return true;
-        }
-      })
-    );
+
+      this._hubService.exitGame();
+      return true;
   }
 }

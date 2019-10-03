@@ -54,7 +54,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     var teamNumber = isIncrement ? ++currentTeamNumber : --currentTeamNumber;
     if (teamNumber < 1 || teamNumber > 5) return;
 
-    this._hubService.changeTeam(this.activeGame.id, teamNumber);
+    this._hubService.changeTeam(teamNumber);
   }
 
   leaveWaitingRoom() {
@@ -125,17 +125,17 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
       }
     }
 
-    this._hubService.startGame(this.activeGame.id);
+    this._hubService.startGame();
   }
   kickPlayerFromGame(player: Player) {
     const cfrm = confirm('Really kick this player? ' + player.user.name);
     if (cfrm) {
-      this._hubService.kickPlayerFromGame(this.activeGame.id, player.user);
+      this._hubService.kickPlayerFromGame(player.user);
     }
   }
 
   updateGameSetup() {
-    this._hubService.updateGameSetup(this.activeGame.id, this.activeGame.gameSetup);
+    this._hubService.updateGameSetup(this.activeGame.gameSetup);
   }
 
   ngOnDestroy(): void {

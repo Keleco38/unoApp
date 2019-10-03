@@ -18,13 +18,8 @@ export class TournamentWaitingRoomDeactivateGuard implements CanDeactivate<Waiti
     if (nextState.url === '/tournament') {
       return true;
     }
-    this._tournamentStorageService.activeTournament.pipe(
-      map(tournament => {
-        if (tournament != null) {
-          this._hubService.exitTournament(tournament.id);
-        }
-      })
-    );
+
+    this._hubService.exitTournament();
     return true;
   }
 }

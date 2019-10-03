@@ -28,8 +28,10 @@
         >
       </p>
       <p>Waiting on {{ readyPlayersLeft.length }} more player(s).</p>
+      <ul [hidden]="!isReady">
+        <li *ngFor="let player of readyPlayersLeft">*{{player}}</li>
+      </ul>
     </div>
-
     <div class="col-12" [hidden]="isReady">
       <hr />
       <div class="row">

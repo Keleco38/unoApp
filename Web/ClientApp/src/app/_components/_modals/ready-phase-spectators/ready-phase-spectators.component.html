@@ -25,6 +25,9 @@
           >
         </p>
         <p>Waiting on {{ readyPlayersLeft.length }} more players.</p>
+        <ul>
+          <li *ngFor="let player of readyPlayersLeft">*{{player}}</li>
+        </ul>
       </div>
     </div>
   </div>

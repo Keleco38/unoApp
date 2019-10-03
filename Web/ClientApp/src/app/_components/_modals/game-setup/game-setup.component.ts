@@ -51,7 +51,7 @@ export class GameSetupComponent implements OnInit {
     if (this._game === null) {
       this._hubService.createGame(this.gameSetup);
     } else {
-      this._hubService.updateGameSetup(this._game.id, this.gameSetup);
+      this._hubService.updateGameSetup(this.gameSetup);
     }
     this._activeModal.close();
   }
