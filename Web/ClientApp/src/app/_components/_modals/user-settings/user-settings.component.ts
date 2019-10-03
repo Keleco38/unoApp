@@ -5,7 +5,7 @@ import { User } from 'src/app/_models/user';
 import { HubService } from './../../../_services/hub.service';
 import { UserSettings } from './../../../_models/userSettings';
 import { UtilityService } from 'src/app/_services/utility.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,11 +14,14 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./user-settings.component.css']
 })
 export class UserSettingsComponent implements OnInit, OnDestroy {
+  @Output('displayRenameModal') displayRenameModal=new EventEmitter();
+
   private _subscription: Subscription;
+
   userSettings: UserSettings;
   currentUser: User;
 
-  constructor(private _hubService: HubService,private _userStorageService:UserStorageService, private _utilityService: UtilityService,private _modalService:ModalService, private _activeModal: NgbActiveModal) {}
+  constructor(private _userStorageService:UserStorageService, private _utilityService: UtilityService,private _activeModal: NgbActiveModal) {}
 
   ngOnInit() {
     this.userSettings = this._utilityService.userSettings;
@@ -28,7 +31,7 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   }
 
   rename() {
-    this._modalService.displayRenameModal();
+    this.displayRenameModal.emit();
   }
 
   updateBlockedBuzzCommands(event, buzzType) {

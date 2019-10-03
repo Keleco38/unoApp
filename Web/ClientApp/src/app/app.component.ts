@@ -23,15 +23,11 @@ export class AppComponent implements OnInit {
       this.modalOpen = true;
       var firstTimeLaunchedModal = this._modalService.displayFirstTimeLaunchedModal();
       firstTimeLaunchedModal.result.then((sendToHelpPage: boolean) => {
-        var renameModal = this._modalService.displayRenameModal();
-        renameModal.result.then((name: string) => {
-          localStorage.setItem('name', name);
-          this._utilityService.updateFirstTimeLunched();
-          this.modalOpen = false;
-          if (sendToHelpPage) {
-            this._router.navigateByUrl('/help');
-          }
-        });
+        this._utilityService.updateFirstTimeLunched();
+        this.modalOpen = false;
+        if (sendToHelpPage) {
+          this._router.navigateByUrl('/help');
+        }
       });
     }
   }

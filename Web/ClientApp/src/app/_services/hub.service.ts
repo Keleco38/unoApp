@@ -231,7 +231,20 @@ export class HubService {
     try {
       this._hubConnection.start().then(() => {
         var name = localStorage.getItem('name');
+
+        if (!environment.production) {
+          const myArray = ['Ante', 'Mate', 'Jure', 'Ivica', 'John', 'Bruno', 'Mike', 'David', 'Mokki'];
+          name = myArray[Math.floor(Math.random() * myArray.length)];
+          localStorage.setItem('name', name);
+        }
+
+        if(!name){
+          this._updateRenameUserObservable.next();
+          return;
+        }
+
         this.addOrRenameUser(name);
+
         if (isReconnect) {
           this._updateActiveGameObservable.next(null);
           this._updateActiveTournamentObservable.next(null);

@@ -1,4 +1,3 @@
-import { HubService } from './hub.service';
 import { HubService } from 'src/app/_services/hub.service';
 import { GameEndedResult } from 'src/app/_models/gameEndedResult';
 import { Injectable, OnDestroy } from '@angular/core';
@@ -26,7 +25,6 @@ import { ConfirmReadyComponent } from '../_components/_modals/confirm-ready/conf
 import { ReadyPhaseSpectatorsComponent } from '../_components/_modals/ready-phase-spectators/ready-phase-spectators.component';
 import { ShowCardsComponent } from '../_components/_modals/show-cards/show-cards.component';
 import { takeWhile } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -92,7 +90,11 @@ export class ModalService implements OnDestroy {
   }
 
   displayUserSettingsModal() {
-    return this._modalService.open(UserSettingsComponent, { backdrop: 'static', keyboard: false });
+    var userSettingsModal = this._modalService.open(UserSettingsComponent, { backdrop: 'static', keyboard: false });
+    userSettingsModal.componentInstance.displayRenameModal.subscribe($e => {
+      this.displayRenameModal();
+    });
+    return userSettingsModal;
   }
 
   displayContactFormModal() {

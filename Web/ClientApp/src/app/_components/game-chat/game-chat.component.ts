@@ -1,3 +1,6 @@
+import { UserStorageService } from './../../_services/storage-services/user-storage.service';
+import { LobbyStorageService } from './../../_services/storage-services/lobby-storage.service';
+import { GameStorageService } from './../../_services/storage-services/game-storage.service';
 import { ChatDestination } from './../../_models/enums';
 import { SidebarSettings } from './../../_models/sidebarSettings';
 import { UtilityService } from './../../_services/utility.service';
@@ -20,24 +23,24 @@ export class GameChatComponent implements OnInit, OnDestroy {
   private _isAlive: boolean = true;
   onlineUsers: string[];
   messages: ChatMessage[];
-  currentUser: User;
   newMessage = '';
   activeGame: Game;
   sidebarSettings: SidebarSettings;
+  currentUser: User;
 
-  constructor(private _hubService: HubService, private _utilityService: UtilityService) {}
+  constructor(private _hubService: HubService,private _userStorageService:UserStorageService, private _utilityService: UtilityService,private _lobbyStorageService:LobbyStorageService, private _gameStorageService:GameStorageService) {}
 
   ngOnInit(): void {
-    this._hubService.updateGameChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
+    this._gameStorageService.gameChat.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
       this.messages = messages;
     });
-    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._userStorageService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
-    this._hubService.updateActiveGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
+    this._gameStorageService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.activeGame = game;
     });
-    this._hubService.updateOnlineUsers.pipe(takeWhile(() => this._isAlive)).pipe(
+    this._lobbyStorageService.onlineUsers.pipe(takeWhile(() => this._isAlive)).pipe(
       map(users => {
         return users.map(user => {
           return user.name;

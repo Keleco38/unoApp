@@ -1,3 +1,5 @@
+import { UserStorageService } from './../../_services/storage-services/user-storage.service';
+import { TournamentStorageService } from './../../_services/storage-services/tournament-storage.service';
 import { TournamentSetupComponent } from './../_modals/tournament-setup/tournament-setup.component';
 import { Contestant } from './../../_models/contestant';
 import { SidebarSettings } from 'src/app/_models/sidebarSettings';
@@ -20,7 +22,6 @@ import { ModalService } from 'src/app/_services/modal.service';
   styleUrls: ['./tournament-waiting-room.component.css']
 })
 export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
-  private _userSettings: UserSettings;
   private _isAlive: boolean = true;
 
   activeTournament: Tournament;
@@ -32,18 +33,19 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
     private _utilityService: UtilityService,
     private _router: Router,
     private _toastrService: ToastrService,
-    private _modalService: ModalService
+    private _modalService: ModalService,
+    private _tournamentStorageService:TournamentStorageService,
+    private _userStorageService:UserStorageService
   ) {}
 
   ngOnInit() {
     this.sidebarSettings = this._utilityService.sidebarSettings;
-    this._userSettings = this._utilityService.userSettings;
 
-    this._hubService.updateActiveTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournament => {
+    this._tournamentStorageService.activeTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournament => {
       this.activeTournament = tournament;
     });
 
-    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._userStorageService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
   }
@@ -72,7 +74,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
   kickContestantFromTournament(contestant: Contestant) {
     const cfrm = confirm('Really kick this player? ' + contestant.user.name);
     if (cfrm) {
-      this._hubService.kickContestantFromTournament(contestant.user);
+      this._hubService.kickContestantFromTournament(this.activeTournament.id,contestant.user);
     }
   }
 
@@ -111,8 +113,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
       this._toastrService.info(`Minimum 3 players to start the tournament.`);
       return;
     }
- 
-    this._hubService.startTournament();
+    this._hubService.startTournament(this.activeTournament.id);
   }
   exitTournament() {
     this._router.navigateByUrl('/');

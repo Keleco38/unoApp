@@ -1,3 +1,5 @@
+import { UserStorageService } from './../../_services/storage-services/user-storage.service';
+import { GameStorageService } from './../../_services/storage-services/game-storage.service';
 import { SidebarSettings } from 'src/app/_models/sidebarSettings';
 import { UtilityService } from './../../_services/utility.service';
 import { CardValue, GameType, PlayersSetup } from './../../_models/enums';
@@ -28,16 +30,18 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     private _modalService: ModalService,
     private _utilityService: UtilityService,
     private _toastrService: ToastrService,
-    private _router: Router
+    private _router: Router,
+    private _gameStorageService: GameStorageService,
+    private _userStorageService: UserStorageService
   ) {}
 
   ngOnInit() {
     this.sidebarSettings = this._utilityService.sidebarSettings;
-    this._hubService.updateActiveGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
+    this._gameStorageService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.activeGame = game;
     });
 
-    this._hubService.updateCurrentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+    this._userStorageService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
   }
@@ -50,7 +54,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     var teamNumber = isIncrement ? ++currentTeamNumber : --currentTeamNumber;
     if (teamNumber < 1 || teamNumber > 5) return;
 
-    this._hubService.changeTeam(teamNumber);
+    this._hubService.changeTeam(this.activeGame.id, teamNumber);
   }
 
   leaveWaitingRoom() {
@@ -121,12 +125,12 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
       }
     }
 
-    this._hubService.startGame();
+    this._hubService.startGame(this.activeGame.id);
   }
   kickPlayerFromGame(player: Player) {
     const cfrm = confirm('Really kick this player? ' + player.user.name);
     if (cfrm) {
-      this._hubService.kickPlayerFromGame(player.user);
+      this._hubService.kickPlayerFromGame(this.activeGame.id, player.user);
     }
   }
 

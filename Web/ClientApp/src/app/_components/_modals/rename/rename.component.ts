@@ -42,6 +42,7 @@ export class RenameComponent implements OnInit, OnDestroy {
 
   confirmUsername() {
     if (this.usernameTaken()) return;
+    localStorage.setItem('name', this.name.toLocaleLowerCase());
     this._hubService.addOrRenameUser(this.name.toLowerCase());
     this._activeModal.dismiss();
   }
