@@ -1,3 +1,6 @@
+<div id="reconnect-info" *ngIf="userReconnected" (click)="removeAlert()" class="alert alert-danger p-4 cursor-pointer">
+  <h4>You have been automatically reconnected. Click here to remove this notification.</h4>
+</div>
 <div class="container" *ngIf="!modalOpen">
   <router-outlet></router-outlet>
 </div>

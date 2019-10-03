@@ -45,14 +45,17 @@ body {
 .fill-viewport-70 {
   height: 70vh !important;
 }
+.fill-viewport-60 {
+  height: 60vh !important;
+}
 .fill-viewport-50 {
   height: 50vh !important;
 }
-.fill-viewport-30 {
-  height: 30vh !important;
-}
 .fill-viewport-40 {
   height: 40vh !important;
+}
+.fill-viewport-30 {
+  height: 30vh !important;
 }
 .fill-viewport-20 {
   height: 20vh !important;
@@ -70,14 +73,17 @@ body {
 .fill-viewport-max-70 {
   max-height: 70vh !important;
 }
+.fill-viewport-max-60 {
+  max-height: 60vh !important;
+}
 .fill-viewport-max-50 {
   max-height: 50vh !important;
 }
-.fill-viewport-max-30 {
-  max-height: 30vh !important;
-}
 .fill-viewport-max-40 {
   max-height: 40vh !important;
+}
+.fill-viewport-max-30 {
+  max-height: 30vh !important;
 }
 .fill-viewport-max-20 {
   max-height: 20vh !important;
@@ -92,14 +98,18 @@ body {
 .fill-viewport-min-70 {
   min-height: 70vh !important;
 }
-
+.fill-viewport-min-60 {
+  min-height: 60vh !important;
+}
 .fill-viewport-min-50 {
   min-height: 50vh !important;
 }
 .fill-viewport-min-40 {
   min-height: 50vh !important;
 }
-
+.fill-viewport-min-30 {
+  min-height: 50vh !important;
+}
 .fill-viewport-min-20 {
   min-height: 20vh !important;
 }

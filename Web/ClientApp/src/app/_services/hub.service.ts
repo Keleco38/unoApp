@@ -56,8 +56,6 @@ export class HubService {
     if (!environment.production) {
       this._hubConnection.serverTimeoutInMilliseconds = 10000000;
     }
-    
-    this.startConnection(false);
 
     this._hubConnection.onclose(async () => {
       if (this._wasKicked) return;
@@ -225,9 +223,20 @@ export class HubService {
     });
   }
 
-  private startConnection(isReconnect: Boolean) {
+  startConnection(isReconnect: Boolean) {
+    if (this._hubConnection.state == 'Connected') {
+      return;
+    }
     try {
       this._hubConnection.start().then(() => {
+        var name = localStorage.getItem('name');
+        if (!environment.production) {
+          const myArray = ['Ante', 'Mate', 'Jure', 'Ivica', 'John', 'Bruno', 'Mike', 'David', 'Mokki'];
+          name = myArray[Math.floor(Math.random() * myArray.length)];
+          localStorage.setItem('name', name);
+        }
+        this.addOrRenameUser(name);
+
         if (isReconnect) {
           this._updateActiveGameObservable.next(null);
           this._updateActiveTournamentObservable.next(null);
@@ -274,6 +283,7 @@ export class HubService {
   addOrRenameUser(name: string) {
     this._hubConnection.invoke('AddOrRenameUser', name);
     this._hubConnection.invoke('GetAllGames');
+    this._hubConnection.invoke('GetAllOnlineUsers');
     this._hubConnection.invoke('GetAllTournaments');
   }
 

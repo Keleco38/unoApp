@@ -382,8 +382,8 @@ namespace Web.Hubs
             game.ReadyPlayersLeft = game.Players.Select(x => x.User.Name).ToList();
 
             await UpdateGame(game);
-            await Clients.Clients(GetPlayersFromGame(game)).SendAsync("DisplayReadyModalPlayers", false);
-            await Clients.Clients(GetSpectatorsFromGame(game)).SendAsync("DisplayReadyModalSpectators", false);
+            await Clients.Clients(GetPlayersFromGame(game)).SendAsync("StartModalPhasePlayers", false);
+            await Clients.Clients(GetSpectatorsFromGame(game)).SendAsync("StartModalPhaseSpectators", false);
         }
 
         public async Task ReadyForGame()

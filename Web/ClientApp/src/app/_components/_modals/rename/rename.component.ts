@@ -1,3 +1,4 @@
+import { UserStorageService } from './../../../_services/storage-services/user-storage.service';
 import { LobbyStorageService } from './../../../_services/storage-services/lobby-storage.service';
 import { HubService } from './../../../_services/hub.service';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
@@ -19,7 +20,12 @@ export class RenameComponent implements OnInit, OnDestroy {
   onlineUsers: string[] = [];
   name: string = '';
 
-  constructor(private _hubService: HubService, private _lobbyStorageService: LobbyStorageService, private _activeModal: NgbActiveModal) {}
+  constructor(
+    private _hubService: HubService,
+    private _lobbyStorageService: LobbyStorageService,
+    private _userStorageService: UserStorageService,
+    private _activeModal: NgbActiveModal
+  ) {}
 
   ngOnInit(): void {
     this._lobbyStorageService.onlineUsers
@@ -34,6 +40,11 @@ export class RenameComponent implements OnInit, OnDestroy {
       .subscribe((userNames: string[]) => {
         this.onlineUsers = userNames;
       });
+
+    this._userStorageService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
+      var index = this.onlineUsers.indexOf(user.name);
+      this.onlineUsers.splice(index, 1);
+    });
   }
 
   processName() {
