@@ -1,3 +1,5 @@
+import { UserSettings } from 'src/app/_models/userSettings';
+import { UtilityService } from './../../_services/utility.service';
 import { UserStorageService } from './../../_services/storage-services/user-storage.service';
 import { LobbyStorageService } from './../../_services/storage-services/lobby-storage.service';
 import { ModalService } from '../../_services/modal.service';
@@ -18,6 +20,8 @@ export class AllChatComponent implements OnInit, OnDestroy {
   @ViewChild('messageInput', { static: false }) messageInput: ElementRef;
 
   private _isAlive: boolean = true;
+
+  userSettings:UserSettings;
   onlineUsers: string[] = [];
   messages: ChatMessage[];
   currentUser: User;
@@ -27,9 +31,11 @@ export class AllChatComponent implements OnInit, OnDestroy {
     private _hubService: HubService,
     private _modalService: ModalService,
     private _lobbyStorageService: LobbyStorageService,
-    private _userStorageService: UserStorageService
+    private _userStorageService: UserStorageService,
+    private _utilityService:UtilityService
   ) {}
   ngOnInit(): void {
+    this.userSettings=this._utilityService.userSettings;
     this._lobbyStorageService.allChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
       this.messages = messages;
     });

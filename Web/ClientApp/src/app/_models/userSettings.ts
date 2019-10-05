@@ -4,4 +4,5 @@ export interface UserSettings {
   notifyWhenMentionedToast: boolean;
   useDarkTheme: boolean;
   notifyWhenMentionedBuzz: boolean;
+  showEmoji: boolean;
 }

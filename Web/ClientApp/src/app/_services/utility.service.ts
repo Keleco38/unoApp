@@ -45,9 +45,13 @@ export class UtilityService {
           blockedBuzzCommands: [],
           notifyWhenMentionedBuzz: false,
           notifyWhenMentionedToast: true,
-          useDarkTheme: false
+          useDarkTheme: false,
+          showEmoji: true
         };
       }
+      console.log(this.userSettings.showEmoji);
+
+      this._userSettings.showEmoji = this._userSettings.showEmoji || true;
       this.saveUserSettings();
     }
     return this._userSettings;

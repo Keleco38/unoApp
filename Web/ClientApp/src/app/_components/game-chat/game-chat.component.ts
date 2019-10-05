@@ -11,6 +11,7 @@ import { HubService } from 'src/app/_services/hub.service';
 import { TypeOfMessage } from 'src/app/_models/enums';
 import { Game } from 'src/app/_models/game';
 import { takeWhile, map } from 'rxjs/operators';
+import { UserSettings } from 'src/app/_models/userSettings';
 
 @Component({
   selector: 'app-game-chat',
@@ -28,6 +29,7 @@ export class GameChatComponent implements OnInit, OnDestroy {
   activeGame: Game;
   sidebarSettings: SidebarSettings;
   currentUser: User;
+  userSettings: UserSettings;
 
   constructor(
     private _hubService: HubService,
@@ -38,6 +40,7 @@ export class GameChatComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.userSettings = this._utilityService.userSettings;
     this._gameStorageService.gameChat.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
       this.messages = messages;
     });
@@ -64,6 +67,7 @@ export class GameChatComponent implements OnInit, OnDestroy {
 
   addEmojiToChat(event) {
     this.newMessage += event;
+    this.messageInput.nativeElement.focus();
   }
 
   sendMessageToGameChat() {

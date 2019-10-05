@@ -177,6 +177,18 @@
         </div>
       </div>
       <div class="form-group row">
+        <label for="name" for="showEmoji" class="col-8">Show emoji:</label>
+        <div class="col-4 ">
+          <ui-switch
+            class="form-check-input"
+            size="small"
+            [(ngModel)]="userSettings.showEmoji"
+            (change)="saveUserSettings()"
+            id="showEmoji"
+          ></ui-switch>
+        </div>
+      </div>
+      <div class="form-group row">
         <label for="name" for="darkMode" class="col-8">Dark mode:</label>
         <div class="col-4 ">
           <ui-switch

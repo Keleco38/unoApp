@@ -10,6 +10,7 @@ import { takeWhile, map } from 'rxjs/operators';
 import { TypeOfMessage, ChatDestination } from '../../_models/enums';
 import { LobbyStorageService } from 'src/app/_services/storage-services/lobby-storage.service';
 import { UserStorageService } from 'src/app/_services/storage-services/user-storage.service';
+import { UserSettings } from 'src/app/_models/userSettings';
 
 @Component({
   selector: 'app-tournament-chat',
@@ -27,6 +28,7 @@ export class TournamentChatComponent implements OnInit {
   newMessage = '';
   activeTournament: Tournament;
   sidebarSettings: SidebarSettings;
+  userSettings: UserSettings;
 
   constructor(
     private _hubService: HubService,
@@ -37,6 +39,7 @@ export class TournamentChatComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.userSettings = this._utilityService.userSettings;
     this._tournamentStorageService.tournamentChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
       this.messages = messages;
     });
@@ -83,11 +86,10 @@ export class TournamentChatComponent implements OnInit {
     return false;
   }
 
-  addEmojiToChat(event){ 
+  addEmojiToChat(event) {
     this.newMessage += event;
-    this.newMessage+=event;
+    this.messageInput.nativeElement.focus();
   }
-
 
   ngOnDestroy(): void {
     this._isAlive = false;

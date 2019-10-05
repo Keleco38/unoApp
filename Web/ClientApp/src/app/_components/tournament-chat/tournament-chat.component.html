@@ -6,7 +6,7 @@
           <div class="col-12">
             <h6 class="ml-2">
               Hello, <strong>{{ currentUser.name }}</strong>
-              <span class="d-block d-md-inline float-left float-md-right">
+              <span *ngIf="userSettings.showEmoji" class="d-block d-md-inline float-left float-md-right">
                   <app-emoticon-picker (emoji)="addEmojiToChat($event)"></app-emoticon-picker>
                 </span>
             </h6>
