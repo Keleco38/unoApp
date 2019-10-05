@@ -18,5 +18,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => true;
+        public string Description => "Target a person. They draw 4 cards while the user draws 2 cards. Can be deflected from both players. (max cards one person can draw is 6, if the opposite player deflects, and the player playing doesn't have deflect card)";
+
     }
 }

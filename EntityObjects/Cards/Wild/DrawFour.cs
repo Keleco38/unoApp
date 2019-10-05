@@ -18,5 +18,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => false;
+        public string Description => "Next player must draw four cards. Can be deflected.";
+
     }
 }

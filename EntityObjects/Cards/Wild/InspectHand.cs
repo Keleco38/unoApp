@@ -18,5 +18,6 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => true;
+        public string Description => "Select a person. That person must show their hand to you.";
     }
 }

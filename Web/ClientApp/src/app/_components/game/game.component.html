@@ -83,6 +83,10 @@
           (click)="playCard(card)"
           [class.firstPlayedCard]="firstItem"
           [src]="card.imageUrl"
+          placement="top" 
+          container="body"
+          [disableTooltip]="!userSettings.showNewbieTips"
+          [ngbTooltip]="card.description"
           class="player-hand-card animate"
         />
       </div>

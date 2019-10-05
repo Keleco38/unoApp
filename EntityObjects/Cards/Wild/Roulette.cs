@@ -18,5 +18,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => false;
+        public string Description => "Randomly selected player will either draw or discard X number of cards, or their hand will remain intact. Maximum number of cards to draw is 4, while the maximum number of cards to discard is 2. Cannot be deflected.";
+
     }
 }

@@ -17,5 +17,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => false;
+        public string Description => "Player can hit the \"HIT ME!\" button to get a random number from 1 to 10. If the player goes over 21, they draw 5 cards. If the player hits 21, they will discard 3 cards. If the player hits number bigger than 17 but less than 21 they will discard 1 cards. If the player hits the number lower than 17, they will draw the difference between 17 and the number they hit.";
+
     }
 }

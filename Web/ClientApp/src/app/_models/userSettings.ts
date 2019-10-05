@@ -5,4 +5,5 @@ export interface UserSettings {
   useDarkTheme: boolean;
   notifyWhenMentionedBuzz: boolean;
   showEmoji: boolean;
+  showNewbieTips: boolean;
 }

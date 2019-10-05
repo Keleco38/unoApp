@@ -189,6 +189,18 @@
         </div>
       </div>
       <div class="form-group row">
+        <label for="name" for="showNewbieTips" class="col-8">Show newbie tips:</label>
+        <div class="col-4 ">
+          <ui-switch
+            class="form-check-input"
+            size="small"
+            [(ngModel)]="userSettings.showNewbieTips"
+            (change)="saveUserSettings()"
+            id="showNewbieTips"
+          ></ui-switch>
+        </div>
+      </div>
+      <div class="form-group row">
         <label for="name" for="darkMode" class="col-8">Dark mode:</label>
         <div class="col-4 ">
           <ui-switch

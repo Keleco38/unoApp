@@ -17,5 +17,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         public bool RequirePickColor => false;
         public bool RequireTargetPlayer => false;
+        public string Description => "Random color is assigned.";
+
     }
 }

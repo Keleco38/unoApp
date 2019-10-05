@@ -14,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SidebarSettings } from 'src/app/_models/sidebarSettings';
 import { takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { Tournament } from 'src/app/_models/tournament';
+import { UserSettings } from 'src/app/_models/userSettings';
 
 @Component({
   selector: 'app-game',
@@ -33,6 +33,7 @@ export class GameComponent implements OnInit, OnDestroy {
   myCards: Card[];
   sidebarSettings: SidebarSettings;
   gameLog: string[];
+  userSettings: UserSettings;
 
   constructor(
     private _hubService: HubService,
@@ -45,6 +46,7 @@ export class GameComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.userSettings = this._utilityService.userSettings;
     this.sidebarSettings = this._utilityService.sidebarSettings;
     this._gameStorageService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       if (game === null) {

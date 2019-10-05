@@ -18,5 +18,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => true;
+        public string Description => "Swap hands with the targeted user. Can be blocked by \"keep my hand\" card.";
+
     }
 }

@@ -18,5 +18,6 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => true;
+        public string Description => "Target another player. If they have more cards than you, they discard until they have the same number as you. If they have less cards than you, they draw until the same number as you. Can be blocked by \"keep my hand\" card.";
     }
 }

@@ -19,7 +19,7 @@ namespace EntityObjects.Cards.Colored
         public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         public bool RequirePickColor => false;
         public bool RequireTargetPlayer => false;
-
+        public string Description => "Next player will draw 2 cards. Can be deflected.";
 
     }
 }

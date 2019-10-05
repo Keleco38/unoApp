@@ -18,7 +18,7 @@ namespace EntityObjects.Cards.Colored
         public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         public bool RequirePickColor => false;
         public bool RequireTargetPlayer => false;
-
+        public string Description => "Can be played anytime. Steal someone's turn and rotation continues from the user.";
 
     }
 }

@@ -18,5 +18,6 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => true;
+        public string Description => "Target a player. Player tries to guess if the targeted player has odd or even number of numbered cards (0-9). If he is correct, he can discard one card, otherwise draw 3.";
     }
 }

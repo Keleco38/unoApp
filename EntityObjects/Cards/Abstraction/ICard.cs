@@ -8,6 +8,7 @@ namespace EntityObjects.Cards.Abstraction
         CardColor Color { get; }
         CardValue Value { get; }
         string ImageUrl { get; }
+        string Description { get; }
         bool RequirePickColor { get; }
         bool RequireTargetPlayer { get; }
     }

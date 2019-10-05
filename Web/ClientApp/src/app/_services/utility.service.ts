@@ -46,12 +46,12 @@ export class UtilityService {
           notifyWhenMentionedBuzz: false,
           notifyWhenMentionedToast: true,
           useDarkTheme: false,
-          showEmoji: true
+          showEmoji: true,
+          showNewbieTips: true
         };
       }
-      console.log(this.userSettings.showEmoji);
-
       this._userSettings.showEmoji = this._userSettings.showEmoji || true;
+      this._userSettings.showNewbieTips = this._userSettings.showNewbieTips || true;
       this.saveUserSettings();
     }
     return this._userSettings;

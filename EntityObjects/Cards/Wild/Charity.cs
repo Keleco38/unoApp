@@ -18,5 +18,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => true;
+        public string Description => "At the cost of drawing one card target a player and select two cards from your hand. The targeted player will receive this two cards as a gift. Cannot be deflected. Cannot be played if the number of the cards in your hand is less than 3 .";
+
     }
 }
