@@ -129,10 +129,13 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     UiSwitchModule,
     BrowserAnimationsModule,
-    NgxLinkifyjsModule.forRoot(),
+    NgxLinkifyjsModule.forRoot({
+      enableHash: false,
+      enableMention: false,
+    }),
     ToastrModule.forRoot({
       preventDuplicates: true,
-      resetTimeoutOnDuplicate:true,
+      resetTimeoutOnDuplicate: true,
       positionClass: 'toast-bottom-right',
       timeOut: 3000
     }),
