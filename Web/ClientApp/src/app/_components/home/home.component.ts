@@ -1,3 +1,7 @@
+import { LobbyStorageService } from 'src/app/_services/storage-services/lobby-storage.service';
+import { TournamentStorageService } from './../../_services/storage-services/tournament-storage.service';
+import { GameStorageService } from 'src/app/_services/storage-services/game-storage.service';
+import { UserStorageService } from './../../_services/storage-services/user-storage.service';
 import { ModalSubscribingService } from './../../_services/modal-subscribing.service';
 import { ModalService } from '../../_services/modal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -21,7 +25,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     private _utilityService: UtilityService,
     private _modalService: ModalService,
     private _router: Router,
-    activateMSS: ModalSubscribingService
+    activateMSS: ModalSubscribingService,
+    activateUSS: UserStorageService,
+    activateGSS: GameStorageService,
+    activateTSS: TournamentStorageService,
+    activateLSS: LobbyStorageService,
   ) {}
 
   ngOnInit(): void {
