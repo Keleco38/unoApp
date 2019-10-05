@@ -30,7 +30,7 @@
           *ngFor="let message of messages"
         >
           <strong> [{{ message.createdUtc | date: 'shortTime' }} | {{ message.username }}]: </strong>
-          <span >{{message.text}}</span>
+          <span [outerHTML]="message.text | linkify"></span>
         </p>
       </div>
     </div>
