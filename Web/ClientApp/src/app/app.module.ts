@@ -1,3 +1,4 @@
+import { ModalSubscribingService } from './_services/modal-subscribing.service';
 import { KickBanPlayerComponent } from './_components/_modals/kick-ban-player/kick-ban-player.component';
 import { UserStorageService } from './_services/storage-services/user-storage.service';
 import { TournamentStorageService } from './_services/storage-services/tournament-storage.service';
@@ -170,6 +171,7 @@ import { InputPasswordComponent } from './_components/_modals/input-password/inp
     TournamentGuard,
     TournamentDeactivateGuard,
     UtilityService,
+    ModalSubscribingService,
     ModalService,
     GameStorageService,
     LobbyStorageService,

@@ -25,43 +25,19 @@ import { GameEndedResultComponent } from '../_components/_modals/game-ended-resu
 import { ConfirmReadyComponent } from '../_components/_modals/confirm-ready/confirm-ready.component';
 import { ReadyPhaseSpectatorsComponent } from '../_components/_modals/ready-phase-spectators/ready-phase-spectators.component';
 import { ShowCardsComponent } from '../_components/_modals/show-cards/show-cards.component';
-import { takeWhile } from 'rxjs/operators';
 import { User } from '../_models/user';
 import { InputPasswordComponent } from '../_components/_modals/input-password/input-password.component';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ModalService implements OnDestroy {
-  private _isAlive = true;
+export class ModalService {
   private _readyPhaseModalPlayers: any;
   private _readyPhaseModalSpectators: any;
 
-  constructor(private _modalService: NgbModal, private _hubService: HubService) {
-    this._hubService.updateGameEnded.pipe(takeWhile(() => this._isAlive)).subscribe(gameEndedResult => {
-      this.displayGameEndedResultModal(gameEndedResult);
-    });
-    this._hubService.updateShowReadyPhasePlayers.pipe(takeWhile(() => this._isAlive)).subscribe(isTournament => {
-      this.displayReadyPhasePlayersModal(isTournament);
-    });
-    this._hubService.updateShowReadyPhaseSpectators.pipe(takeWhile(() => this._isAlive)).subscribe(isTournament => {
-      this.displayReadyPhaseSpectatorsModal(isTournament);
-    });
-    this._hubService.updateShowCards.pipe(takeWhile(() => this._isAlive)).subscribe(cardsAndNames => {
-      this.displayShowCardsModal(cardsAndNames);
-    });
-    this._hubService.updateRenameUser.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
-      this.displayRenameModal();
-    });
-    this._hubService.updateGameStarted.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
-      this.hideReadyPhaseDialogs();
-    });
-    this._hubService.updateTournamentStarted.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
-      this.hideReadyPhaseDialogs();
-    });
-  }
+  constructor(private _modalService: NgbModal) {}
 
-  private hideReadyPhaseDialogs() {
+  hideReadyPhaseDialogs() {
     setTimeout(() => {
       if (this._readyPhaseModalPlayers) {
         this._readyPhaseModalPlayers.dismiss();
@@ -195,9 +171,5 @@ export class ModalService implements OnDestroy {
 
   displayPickPromiseKeeperCardModal() {
     return this._modalService.open(PickPromiseCardComponent);
-  }
-
-  ngOnDestroy(): void {
-    this._isAlive = false;
   }
 }

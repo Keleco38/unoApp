@@ -1,3 +1,6 @@
+<div id="reconnect-info" *ngIf="userReconnected" (click)="removeAlert()" class="alert alert-danger p-4 cursor-pointer">
+  <h4>You have been automatically reconnected. Click here to remove this notification.</h4>
+</div>
 <app-navbar></app-navbar>
 <div class="row d-block d-sm-none">
   <div class="col-12">
@@ -12,7 +15,7 @@
       <h4 class="text-primary d-none d-sm-block">Uno - Special Edition</h4>
       <button class="btn btn-primary" id="new-game" (click)="createGame()">New Game</button>
     </div>
-      <app-all-chat [heightClassString]="'fill-viewport-80'"></app-all-chat>
+    <app-all-chat [heightClassString]="'fill-viewport-80'"></app-all-chat>
   </div>
   <div class="col-sm-4 col-6 my-2 my-sm-0 fill-viewport-max-100  scrollable-div-y">
     <app-available-tournaments></app-available-tournaments>

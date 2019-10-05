@@ -56,6 +56,7 @@ export class HubService {
     if (!environment.production) {
       this._hubConnection.serverTimeoutInMilliseconds = 10000000;
     }
+    this.startConnection(false);
 
     this._hubConnection.onclose(async () => {
       if (this._wasKicked) return;
@@ -237,9 +238,6 @@ export class HubService {
   }
 
   startConnection(isReconnect: Boolean) {
-    if (this._hubConnection.state == 'Connected') {
-      return;
-    }
     try {
       this._hubConnection.start().then(() => {
         var name = localStorage.getItem('name');
@@ -248,14 +246,15 @@ export class HubService {
           name = myArray[Math.floor(Math.random() * myArray.length)];
           localStorage.setItem('name', name);
         }
-
         this.addOrRenameUser(name);
 
         if (isReconnect) {
           this._updateActiveGameObservable.next(null);
           this._updateActiveTournamentObservable.next(null);
           this._router.navigateByUrl('/');
-          this._updateReconnectObservable.next();
+          setTimeout(() => {
+            this._updateReconnectObservable.next();
+          });
         }
       });
     } catch (err) {

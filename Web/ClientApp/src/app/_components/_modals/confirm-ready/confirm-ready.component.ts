@@ -4,9 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { HubService } from './../../../_services/hub.service';
 import { Component, OnInit, Input, OnDestroy, Injector, EventEmitter, Output } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Game } from 'src/app/_models/game';
 import { takeWhile } from 'rxjs/operators';
-import { Tournament } from 'src/app/_models/tournament';
 
 @Component({
   selector: 'app-confirm-ready',
