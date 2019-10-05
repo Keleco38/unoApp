@@ -196,6 +196,7 @@ namespace Web.Hubs
             var user = GetCurrentUser();
             user.ActiveTournamentId = tournament.Id;
 
+            await SendMessage($"User {user.Name} has created new tournament", TypeOfMessage.Server, ChatDestination.All);
             await UpdateTournament(tournament);
             await GetAllTournaments();
         }
