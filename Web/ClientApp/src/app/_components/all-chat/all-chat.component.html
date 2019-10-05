@@ -25,7 +25,7 @@
         <p class="card-text" [hidden]="messages.length > 0">No messages</p>
         <p class="card-text" [ngClass]="getChatMessageClass(message)" *ngFor="let message of messages">
           <strong>[{{ message.createdUtc | date: 'shortTime' }} | {{ message.username }}]: </strong>
-          <span [innerHTML]="message.text | highlightMentions"></span>
+          <span [outerHTML]="message.text | linkify"></span>
         </p>
       </div>
     </div>

@@ -73,6 +73,7 @@ import { RenameComponent } from './_components/_modals/rename/rename.component';
 import { ModalService } from './_services/modal.service';
 import { GameStorageService } from './_services/storage-services/game-storage.service';
 import { InputPasswordComponent } from './_components/_modals/input-password/input-password.component';
+import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 
 @NgModule({
   declarations: [
@@ -128,6 +129,7 @@ import { InputPasswordComponent } from './_components/_modals/input-password/inp
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     UiSwitchModule,
     BrowserAnimationsModule,
+    NgxLinkifyjsModule.forRoot(),
     ToastrModule.forRoot({
       preventDuplicates: true,
       resetTimeoutOnDuplicate:true,

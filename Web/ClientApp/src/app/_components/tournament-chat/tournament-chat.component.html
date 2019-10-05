@@ -30,7 +30,7 @@
           *ngFor="let message of messages"
         >
           <strong> [{{ message.createdUtc | date: 'shortTime' }} | {{ message.username }}]: </strong>
-          <span [innerHTML]="message.text | highlightMentions"></span>
+          <span >{{message.text}}</span>
         </p>
       </div>
     </div>
