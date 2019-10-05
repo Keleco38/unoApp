@@ -39,6 +39,7 @@ namespace EntityObjects
             ReadyPlayersLeft=new List<string>();
             ReadyPhaseExpireUtc=DateTime.Now;
             BannedUsers=new List<User>();
+            DiscardedPile=new List<ICard>();
         }
 
     }
