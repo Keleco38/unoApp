@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { Injectable, OnDestroy } from '@angular/core';
 import { ChatMessage } from 'src/app/_models/chatMessage';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -19,6 +20,7 @@ export class GameStorageService implements OnDestroy {
   private _gameLogObservable = new BehaviorSubject<string[]>([]);
   private _activeGameObservable = new BehaviorSubject<Game>(null);
   private _myHandObservable = new BehaviorSubject<Card[]>([]);
+  private _spectatorsViewHandsAndUserObservable = new BehaviorSubject<KeyValue<string,Card[]>[]>([]);
   private _mustCallUnoObservable = new Subject();
   private _gameChatNumberOfMessagesObservable = new Subject<ChatMessage>();
 
@@ -37,7 +39,9 @@ export class GameStorageService implements OnDestroy {
     });
     this._hubService.updateMyHand.pipe(takeWhile(() => this._isAlive)).subscribe(cards => {
       this._myHandObservable.next(cards);
-      
+    });
+    this._hubService.updateSpectatorsViewHandAndUser.pipe(takeWhile(() => this._isAlive)).subscribe(cards => {
+      this._spectatorsViewHandsAndUserObservable.next(cards);
     });
     this._hubService.updateMustCallUno.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
       this._mustCallUnoObservable.next();
@@ -56,6 +60,7 @@ export class GameStorageService implements OnDestroy {
       this._gameLogObservable.next(this._gameLog);
       this._gameChatMessagesObservable.next(this._gameChatMessages);
       this._myHandObservable.next(null);
+      this._spectatorsViewHandsAndUserObservable.next(null);
       this._activeGameObservable.next(null);
     });
   }
@@ -77,6 +82,10 @@ export class GameStorageService implements OnDestroy {
 
   get myHand() {
     return this._myHandObservable.asObservable();
+  }
+
+  get spectatorsViewHandsAndUser() {
+    return this._spectatorsViewHandsAndUserObservable.asObservable();
   }
 
   get mustCallUno() {

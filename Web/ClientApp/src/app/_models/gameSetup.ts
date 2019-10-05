@@ -13,4 +13,5 @@ export interface GameSetup {
   maxNumberOfPlayers: number;
   canSeeTeammatesHandInTeamGame: boolean;
   drawAutoPlay: boolean;
+  spectatorsCanViewHands: boolean;
 }

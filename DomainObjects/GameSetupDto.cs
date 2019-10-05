@@ -17,5 +17,6 @@ namespace DomainObjects
         public int MaxNumberOfPlayers { get; set; }
         public bool CanSeeTeammatesHandInTeamGame { get; set; }
         public bool DrawAutoPlay { get; set; }
+        public bool SpectatorsCanViewHands { get; set; }
     }
 }

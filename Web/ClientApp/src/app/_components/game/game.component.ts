@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { UserStorageService } from './../../_services/storage-services/user-storage.service';
 import { GameStorageService } from './../../_services/storage-services/game-storage.service';
 import { ModalService } from '../../_services/modal.service';
@@ -34,6 +35,7 @@ export class GameComponent implements OnInit, OnDestroy {
   sidebarSettings: SidebarSettings;
   gameLog: string[];
   userSettings: UserSettings;
+  spectatorsViewCardsAndUser: KeyValue<string, Card[]>[];
 
   constructor(
     private _hubService: HubService,
@@ -77,6 +79,15 @@ export class GameComponent implements OnInit, OnDestroy {
       }
       this.myCards = myCards;
     });
+
+    this._gameStorageService.spectatorsViewHandsAndUser
+      .pipe(takeWhile(() => this._isAlive))
+      .subscribe((spectatorsViewCardsAndUser: KeyValue<string, Card[]>[]) => {
+        if (this.game === null) {
+          return;
+        }
+        this.spectatorsViewCardsAndUser = spectatorsViewCardsAndUser;
+      });
 
     this._gameStorageService.gameChatNumberOfMessage.pipe(takeWhile(() => this._isAlive)).subscribe((message: ChatMessage) => {
       if (!this.isSidebarOpen) {
@@ -199,18 +210,7 @@ export class GameComponent implements OnInit, OnDestroy {
               }
               const modalRef = this._modalService.displayGuessOdEvenNumbersModal();
               modalRef.result.then((guessOddOrEven: string) => {
-                this._hubService.playCard(
-                  cardPlayed.id,
-                  pickedColor,
-                  playerId,
-                  null,
-                  null,
-                  null,
-                  0,
-                  null,
-                  null,
-                  guessOddOrEven
-                );
+                this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null, null, 0, null, null, guessOddOrEven);
                 return;
               });
             } else {
@@ -227,23 +227,23 @@ export class GameComponent implements OnInit, OnDestroy {
           });
         } else if (cardPlayed.value === CardValue.blackjack) {
           this._modalService.displayBlackjackModal().result.then(blackjackNumber => {
-            this._hubService.playCard( cardPlayed.id, pickedColor, null, null, null, null, blackjackNumber);
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, blackjackNumber);
             return;
           });
         } else if (cardPlayed.value === CardValue.discardNumber) {
           this._modalService.displayPickNumbersToDiscardModal().result.then((numbersToDiscard: number[]) => {
-            this._hubService.playCard( cardPlayed.id, pickedColor, null, null, null, null, 0, numbersToDiscard);
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, numbersToDiscard);
             return;
           });
         } else if (cardPlayed.value === CardValue.promiseKeeper) {
           var modalRef = this._modalService.displayPickPromiseKeeperCardModal();
           modalRef.componentInstance.cards = this.myCards.filter((card: Card) => card.color != CardColor.wild);
           modalRef.result.then((promisedCardId: string) => {
-            this._hubService.playCard( cardPlayed.id, pickedColor, null, null, null, null, 0, null, promisedCardId);
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, promisedCardId);
             return;
           });
         } else {
-          this._hubService.playCard( cardPlayed.id, pickedColor);
+          this._hubService.playCard(cardPlayed.id, pickedColor);
           return;
         }
       });

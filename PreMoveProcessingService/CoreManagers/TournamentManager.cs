@@ -47,7 +47,8 @@ namespace PreMoveProcessingService.CoreManagers
                         ReverseShouldSkipTurnInTwoPlayers = tournament.TournamentSetup.ReverseShouldSkipTurnInTwoPlayers,
                         WildCardCanBePlayedOnlyIfNoOtherOptions = tournament.TournamentSetup.WildCardCanBePlayedOnlyIfNoOtherOptions,
                         CanSeeTeammatesHandInTeamGame = false,
-                        DrawAutoPlay = tournament.TournamentSetup.DrawAutoPlay
+                        DrawAutoPlay = tournament.TournamentSetup.DrawAutoPlay,
+                        SpectatorsCanViewHands = false
                     }, tournament.Id);
                     _gameRepository.AddGame(game);
 

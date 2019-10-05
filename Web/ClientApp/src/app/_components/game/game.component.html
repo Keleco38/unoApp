@@ -63,7 +63,7 @@
           </div>
           <div class="d-flex align-items-center flex-column">
             <div class="mb-auto p-1">
-              <button class="btn btn-primary btn-md action-button"  (click)="callUno(true)">Uno!</button>
+              <button class="btn btn-primary btn-md action-button" (click)="callUno(true)">Uno!</button>
             </div>
             <div class="p-1" *ngIf="game.gameSetup.playersSetup == 2 && game.gameSetup.canSeeTeammatesHandInTeamGame && !isSpectator()">
               <button class="btn btn-success btn-md action-button" (click)="seeTeammatesCards()">Team cards</button>
@@ -75,19 +75,33 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="!isSpectator()">
       <div class="col-12 p5 text-center">
         <hr />
         <img
-          *ngFor="let card of myCards; let firstItem = first"
+          *ngFor="let card of myCards"
           (click)="playCard(card)"
-          [class.firstPlayedCard]="firstItem"
           [src]="card.imageUrl"
-          placement="top" 
+          placement="top"
           container="body"
           [disableTooltip]="!userSettings.showNewbieTips"
           [ngbTooltip]="card.description"
           class="player-hand-card animate"
+        />
+      </div>
+    </div>
+    <div class="row" *ngIf="isSpectator() && game.gameSetup.spectatorsCanViewHands">
+      <hr />
+      <div class="col-12 text-center" *ngFor="let cardsAndUser of spectatorsViewCardsAndUser">
+        <h6>{{ cardsAndUser.key }}</h6>
+        <img
+          *ngFor="let card of cardsAndUser.value"
+          [src]="card.imageUrl"
+          placement="top"
+          container="body"
+          [disableTooltip]="!userSettings.showNewbieTips"
+          [ngbTooltip]="card.description"
+          class="spectator-hand-card"
         />
       </div>
     </div>

@@ -10,6 +10,7 @@ using Common.Contants;
 using Common.Enums;
 using DomainObjects;
 using EntityObjects;
+using EntityObjects.Cards.Abstraction;
 using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 using Microsoft.AspNetCore.SignalR;
@@ -829,6 +830,17 @@ namespace Web.Hubs
                     await Clients.Client(connectionId).SendAsync("UpdateMyHand", myCardsDto);
                 }
                 await Clients.Client(game.PlayerToPlay.User.ConnectionId).SendAsync("BuzzMyTurnToPlay");
+                if (game.GameSetup.SpectatorsCanViewHands)
+                {
+                    var allSpectatorsInGame = GetSpectatorsFromGame(game);
+                    List<KeyValuePair<string, List<CardDto>>> spectatorsViewHandsAndUser = new List<KeyValuePair<string, List<CardDto>>>();
+                    game.Players.ForEach(x =>
+                    {
+                        spectatorsViewHandsAndUser.Add(new KeyValuePair<string, List<CardDto>>(x.User.Name, _mapper.Map<List<CardDto>>(x.Cards).OrderBy(c=>c.Color).ThenBy(c=>c.Value).ToList()));
+                    });
+                    await Clients.Clients(allSpectatorsInGame).SendAsync("UpdateSpectatorsViewHandsAndUser", spectatorsViewHandsAndUser);
+                }
+
             }
         }
 

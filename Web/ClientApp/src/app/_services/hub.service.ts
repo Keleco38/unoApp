@@ -39,6 +39,7 @@ export class HubService {
   private _updateActiveGameObservable = new Subject<Game>();
   private _updateActiveTournamentObservable = new Subject<Tournament>();
   private _updateMyHandObservable = new Subject<Card[]>();
+  private _updateSpectatorsViewHandsAndUserObservable = new Subject<KeyValue<string, Card[]>[]>();
   private _updateMustCallUnoObservable = new Subject();
   private _updateReconnectObservable = new Subject();
   private _updateGameStartedObservable = new Subject();
@@ -178,6 +179,10 @@ export class HubService {
       this._updateMyHandObservable.next(myCards);
     });
 
+    this._hubConnection.on('UpdateSpectatorsViewHandsAndUser', (spectatorsView: KeyValue<string,Card[]>[]) => {
+      this._updateSpectatorsViewHandsAndUserObservable.next(spectatorsView);
+    });
+
     this._hubConnection.on('BuzzMyTurnToPlay', () => {
       if (this._utilityService.userSettings.notifyUserWhenHisTurnToPlay) {
         this.buzzPlayer('ding', true);
@@ -290,6 +295,7 @@ export class HubService {
 
   joinGame(id: string, password: string): any {
     this._updateMyHandObservable.next(null);
+    this._updateSpectatorsViewHandsAndUserObservable.next(null);
     this._hubConnection.invoke('JoinGame', id, password);
   }
 
@@ -438,6 +444,11 @@ export class HubService {
   get updateMyHand() {
     return this._updateMyHandObservable.asObservable();
   }
+
+  get updateSpectatorsViewHandAndUser() {
+    return this._updateSpectatorsViewHandsAndUserObservable.asObservable();
+  }
+
   get updateMustCallUno() {
     return this._updateMustCallUnoObservable.asObservable();
   }

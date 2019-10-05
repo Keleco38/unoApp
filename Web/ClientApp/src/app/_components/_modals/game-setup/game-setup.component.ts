@@ -36,7 +36,8 @@ export class GameSetupComponent implements OnInit {
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
         playersSetup: PlayersSetup.individual,
         canSeeTeammatesHandInTeamGame: true,
-        drawAutoPlay: false
+        drawAutoPlay: false,
+        spectatorsCanViewHands:true
       };
     } else {
       this.gameSetup = this._game.gameSetup;
