@@ -4,7 +4,7 @@ import { GameStorageService } from './../../_services/storage-services/game-stor
 import { ChatDestination } from './../../_models/enums';
 import { SidebarSettings } from './../../_models/sidebarSettings';
 import { UtilityService } from './../../_services/utility.service';
-import { Component, OnInit, Output, EventEmitter, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ElementRef, ViewChild } from '@angular/core';
 import { ChatMessage } from 'src/app/_models/chatMessage';
 import { User } from 'src/app/_models/user';
 import { HubService } from 'src/app/_services/hub.service';
@@ -19,6 +19,7 @@ import { takeWhile, map } from 'rxjs/operators';
 })
 export class GameChatComponent implements OnInit, OnDestroy {
   @Input('heightClassString') heightClassString: string;
+  @ViewChild('messageInput', { static: false }) messageInput: ElementRef;
 
   private _isAlive: boolean = true;
   onlineUsers: string[];
@@ -28,7 +29,13 @@ export class GameChatComponent implements OnInit, OnDestroy {
   sidebarSettings: SidebarSettings;
   currentUser: User;
 
-  constructor(private _hubService: HubService,private _userStorageService:UserStorageService, private _utilityService: UtilityService,private _lobbyStorageService:LobbyStorageService, private _gameStorageService:GameStorageService) {}
+  constructor(
+    private _hubService: HubService,
+    private _userStorageService: UserStorageService,
+    private _utilityService: UtilityService,
+    private _lobbyStorageService: LobbyStorageService,
+    private _gameStorageService: GameStorageService
+  ) {}
 
   ngOnInit(): void {
     this._gameStorageService.gameChat.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
@@ -40,16 +47,23 @@ export class GameChatComponent implements OnInit, OnDestroy {
     this._gameStorageService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
       this.activeGame = game;
     });
-    this._lobbyStorageService.onlineUsers.pipe(takeWhile(() => this._isAlive)).pipe(
-      map(users => {
-        return users.map(user => {
-          return user.name;
-        });
-      })
-    ).subscribe((userNames:string[])=>{
-      this.onlineUsers=userNames;
-    });
+    this._lobbyStorageService.onlineUsers
+      .pipe(takeWhile(() => this._isAlive))
+      .pipe(
+        map(users => {
+          return users.map(user => {
+            return user.name;
+          });
+        })
+      )
+      .subscribe((userNames: string[]) => {
+        this.onlineUsers = userNames;
+      });
     this.sidebarSettings = this._utilityService.sidebarSettings;
+  }
+
+  addEmojiToChat(event) {
+    this.newMessage += event;
   }
 
   sendMessageToGameChat() {
@@ -75,6 +89,7 @@ export class GameChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.newMessage += event;
     this._isAlive = false;
   }
 }

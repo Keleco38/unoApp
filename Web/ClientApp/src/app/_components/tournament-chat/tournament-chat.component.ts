@@ -3,14 +3,13 @@ import { HubService } from 'src/app/_services/hub.service';
 import { Tournament } from './../../_models/tournament';
 import { User } from 'src/app/_models/user';
 import { ChatMessage } from 'src/app/_models/chatMessage';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { SidebarSettings } from '../../_models/sidebarSettings';
 import { UtilityService } from '../../_services/utility.service';
 import { takeWhile, map } from 'rxjs/operators';
 import { TypeOfMessage, ChatDestination } from '../../_models/enums';
 import { LobbyStorageService } from 'src/app/_services/storage-services/lobby-storage.service';
 import { UserStorageService } from 'src/app/_services/storage-services/user-storage.service';
-import { GameStorageService } from 'src/app/_services/storage-services/game-storage.service';
 
 @Component({
   selector: 'app-tournament-chat',
@@ -19,6 +18,7 @@ import { GameStorageService } from 'src/app/_services/storage-services/game-stor
 })
 export class TournamentChatComponent implements OnInit {
   @Input('heightClassString') heightClassString: string;
+  @ViewChild('messageInput', { static: false }) messageInput: ElementRef;
 
   private _isAlive: boolean = true;
   onlineUsers: string[];
@@ -33,7 +33,6 @@ export class TournamentChatComponent implements OnInit {
     private _userStorageService: UserStorageService,
     private _utilityService: UtilityService,
     private _lobbyStorageService: LobbyStorageService,
-    private _gameStorageService: GameStorageService,
     private _tournamentStorageService: TournamentStorageService
   ) {}
 
@@ -83,6 +82,12 @@ export class TournamentChatComponent implements OnInit {
     }
     return false;
   }
+
+  addEmojiToChat(event){ 
+    this.newMessage += event;
+    this.newMessage+=event;
+  }
+
 
   ngOnDestroy(): void {
     this._isAlive = false;

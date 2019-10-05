@@ -1,3 +1,4 @@
+import { EmoticonPickerComponent } from './_components/emoticon-picker/emoticon-picker.component';
 import { HighlightMentionsPipe } from './_pipes/highlight-mentions.pipe';
 import { ModalSubscribingService } from './_services/modal-subscribing.service';
 import { KickBanPlayerComponent } from './_components/_modals/kick-ban-player/kick-ban-player.component';
@@ -74,6 +75,8 @@ import { ModalService } from './_services/modal.service';
 import { GameStorageService } from './_services/storage-services/game-storage.service';
 import { InputPasswordComponent } from './_components/_modals/input-password/input-password.component';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
+import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+
 
 @NgModule({
   declarations: [
@@ -123,6 +126,7 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     RenameComponent,
     KickBanPlayerComponent,
     InputPasswordComponent,
+    EmoticonPickerComponent,
     TournamentComponent
   ],
   imports: [
@@ -143,6 +147,7 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     FormsModule,
     SidebarModule.forRoot(),
     NgbModule,
+    EmojiModule,
     MentionModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },

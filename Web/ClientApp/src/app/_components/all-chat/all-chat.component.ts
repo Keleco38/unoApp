@@ -1,9 +1,7 @@
 import { UserStorageService } from './../../_services/storage-services/user-storage.service';
-import { GameStorageService } from './../../_services/storage-services/game-storage.service';
-import { TournamentStorageService } from './../../_services/storage-services/tournament-storage.service';
 import { LobbyStorageService } from './../../_services/storage-services/lobby-storage.service';
 import { ModalService } from '../../_services/modal.service';
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
 import { ChatMessage } from 'src/app/_models/chatMessage';
 import { User } from 'src/app/_models/user';
 import { HubService } from 'src/app/_services/hub.service';
@@ -17,6 +15,7 @@ import { takeWhile, map, pluck } from 'rxjs/operators';
 })
 export class AllChatComponent implements OnInit, OnDestroy {
   @Input('heightClassString') heightClassString: string;
+  @ViewChild('messageInput', { static: false }) messageInput: ElementRef;
 
   private _isAlive: boolean = true;
   onlineUsers: string[] = [];
@@ -28,9 +27,7 @@ export class AllChatComponent implements OnInit, OnDestroy {
     private _hubService: HubService,
     private _modalService: ModalService,
     private _lobbyStorageService: LobbyStorageService,
-    private _tournamentStorageService: TournamentStorageService,
-    private _gameStorageService: GameStorageService,
-    private _userStorageService:UserStorageService
+    private _userStorageService: UserStorageService
   ) {}
   ngOnInit(): void {
     this._lobbyStorageService.allChatMessages.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
@@ -79,6 +76,11 @@ export class AllChatComponent implements OnInit, OnDestroy {
     if (message.typeOfMessage === TypeOfMessage.server) {
       return 'server-chat-message';
     }
+  }
+
+  addEmojiToChat(event) {
+    this.newMessage += event;
+    this.messageInput.nativeElement.focus();
   }
 
   ngOnDestroy(): void {
