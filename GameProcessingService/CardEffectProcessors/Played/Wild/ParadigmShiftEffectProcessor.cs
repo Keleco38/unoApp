@@ -42,13 +42,13 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
                 if (i != automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand.Count - 1)
                 {
-                    loopingPlayer.Cards = _gameManager.GetNextPlayer(game, loopingPlayer, automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand).Cards;
+                    loopingPlayer.Cards = _gameManager.GetNextPlayer(game, loopingPlayer, automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand, true).Cards;
                 }
                 else
                 {
                     loopingPlayer.Cards = firstCardsBackup;
                 }
-                loopingPlayer = _gameManager.GetNextPlayer(game, loopingPlayer, automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand);
+                loopingPlayer = _gameManager.GetNextPlayer(game, loopingPlayer, automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand, true);
             }
 
             messagesToLog.Add(messageToLog);

@@ -85,14 +85,22 @@ namespace GameProcessingService.CoreManagers
             }
         }
 
-        public Player GetNextPlayer(Game game, Player player, List<Player> listOfPlayers)
+        public Player GetNextPlayer(Game game, Player player, List<Player> listOfPlayers, bool flipDirection = false)
         {
+            var direction = game.Direction;
+
+            if (flipDirection)
+            {
+                direction = game.Direction == Direction.Right ? Direction.Left : Direction.Right;
+            }
+
+
             var indexOfCurrentPlayer = listOfPlayers.IndexOf(player);
             if (indexOfCurrentPlayer == -1)
             {
                 indexOfCurrentPlayer = 0;
             }
-            if (game.Direction == Direction.Right)
+            if (direction == Direction.Right)
             {
                 if (indexOfCurrentPlayer == listOfPlayers.Count - 1)
                 {
@@ -103,7 +111,7 @@ namespace GameProcessingService.CoreManagers
                     return listOfPlayers[indexOfCurrentPlayer + 1];
                 }
             }
-            if (game.Direction == Direction.Left)
+            if (direction == Direction.Left)
             {
                 if (indexOfCurrentPlayer == 0)
                 {
