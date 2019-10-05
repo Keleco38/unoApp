@@ -75,6 +75,20 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
     this._modalService.displayKickBanPlayerModal(true, contestant.user);
   }
 
+  
+  unbanPlayer(user:User){
+    this._hubService.unbanContestantFromTournament(user.name);
+  }
+
+  togglePopover(popover,user){
+    if (popover.isOpen()) {
+      popover.close();
+    } else {
+      popover.open({user});
+    }
+  }
+
+
   userIsSpectator() {
     const exists = this.activeTournament.spectators.find(spectator => {
       return spectator.name === this.currentUser.name;

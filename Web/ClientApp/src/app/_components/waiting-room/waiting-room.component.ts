@@ -131,6 +131,18 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     this._modalService.displayKickBanPlayerModal(false, player.user);
   }
 
+  togglePopover(popover,user){
+    if (popover.isOpen()) {
+      popover.close();
+    } else {
+      popover.open({user});
+    }
+  }
+
+  unbanPlayer(user:User){
+    this._hubService.unbanPlayerFromGame(user.name);
+  }
+
   updateGameSetup() {
     this._hubService.updateGameSetup(this.activeGame.gameSetup);
   }

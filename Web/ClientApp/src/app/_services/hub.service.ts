@@ -364,6 +364,14 @@ export class HubService {
     this._hubConnection.invoke('KickContestantFromTournament', isBan, name);
   }
 
+  unbanPlayerFromGame(name: string): any {
+    this._hubConnection.invoke('UnbanPlayerFromGame', name);
+  }
+
+  unbanContestantFromTournament(name: string): any {
+    this._hubConnection.invoke('UnbanContestantFromTournament', name);
+  }
+
   updateGameSetup(gameSetup: GameSetup) {
     this._hubConnection.invoke('UpdateGameSetup', gameSetup);
   }

@@ -10,11 +10,7 @@
       </div>
       <div class="col-6">
         <button class="btn btn-sm btn-danger btn-block" (click)="leaveWaitingRoom()">Leave Room</button>
-        <button
-          [style.opacity]="activeGame.players.length < 2 ? 0.5 : 1"
-          class="btn btn-block btn-sm btn-success"
-          (click)="startGame()"
-        >
+        <button [style.opacity]="activeGame.players.length < 2 ? 0.5 : 1" class="btn btn-block btn-sm btn-success" (click)="startGame()">
           Start Game
         </button>
       </div>
@@ -23,12 +19,7 @@
       <div class="col-12">
         <div class="btn-group special">
           <button class="btn btn-sm btn-danger" (click)="leaveWaitingRoom()">Leave room</button>
-          <button
-            class="btn btn-sm btn-primary"
-            [ngStyle]="getStyleJoinGameButton()"
-            [disabled]="!userIsSpectator()"
-            (click)="joinGame()"
-          >
+          <button class="btn btn-sm btn-primary" [ngStyle]="getStyleJoinGameButton()" [disabled]="!userIsSpectator()" (click)="joinGame()">
             Join Game
           </button>
         </div>
@@ -76,6 +67,17 @@
   </div>
   <div class="col-6" id="gameSetupInfo">
     <h6 class="text-info">Game setup</h6>
+    <div [hidden]="activeGame.bannedUsers.length == 0">
+      <strong>Banned users: </strong>
+      <ul>
+        <li *ngFor="let user of activeGame.bannedUsers">
+          {{ user.name }}
+          <span class="text-danger cursor-pointer" [ngbPopover]="popContent" triggers="manual" #p1="ngbPopover"  placement="left" (click)="togglePopover(p1, user)"
+            >[X]</span
+          >
+        </li>
+      </ul>
+    </div>
     <div [hidden]="activeGame.gameSetup.bannedCards.length == 0">
       <strong>Banned cards: </strong>
       <ul>
@@ -102,3 +104,8 @@
     <app-game-tabs [heightClassString]="'fill-viewport-max-70'"></app-game-tabs>
   </div>
 </div>
+
+<ng-template #popContent let-user="user">
+  <p>Really unban {{ user.name }}?</p>
+  <button (click)="unbanPlayer(user)" class="btn btn-info btn-block btn-sm" btn-block>Confirm</button>
+</ng-template>

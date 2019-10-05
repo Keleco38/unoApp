@@ -308,7 +308,7 @@ namespace Web.Hubs
         {
             var user = GetCurrentUser();
             var game = _gameRepository.GetGameByGameId(user.ActiveGameId);
-            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId))
+            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId) || game.GameStarted)
             {
                 return;
             }
@@ -326,11 +326,28 @@ namespace Web.Hubs
             await Clients.Client(playerToKick.User.ConnectionId).SendAsync("SendToTheLobby");
             await ExitGame(playerToKick.User);
         }
+
+        public async Task UnbanPlayerFromGame(string name)
+        {
+            var user = GetCurrentUser();
+            var game = _gameRepository.GetGameByGameId(user.ActiveGameId);
+            if (!Context.ConnectionId.Equals(game.Players.First().User.ConnectionId) || game.GameStarted)
+            {
+                return;
+            }
+            var userToUnban = game.BannedUsers.First(y => y.Name == name);
+            game.BannedUsers.Remove(userToUnban);
+            await SendMessage($"Player {userToUnban.Name} was unbanned from the game.", TypeOfMessage.Server, ChatDestination.Game);
+            await UpdateGame(game);
+        }
+
+
+
         public async Task KickContestantFromTournament(bool isBan, string name)
         {
             var user = GetCurrentUser();
             var tournament = _tournamentRepository.GetTournament(user.ActiveTournamentId);
-            if (!Context.ConnectionId.Equals(tournament.Contestants.First().User.ConnectionId))
+            if (!Context.ConnectionId.Equals(tournament.Contestants.First().User.ConnectionId) || tournament.TournamentStarted)
             {
                 return;
             }
@@ -347,6 +364,20 @@ namespace Web.Hubs
             await SendMessage($"Player {playerToKick.User.Name} was {action} from the tournament.", TypeOfMessage.Server, ChatDestination.Tournament);
             await Clients.Client(playerToKick.User.ConnectionId).SendAsync("SendToTheLobby");
             await ExitTournament(playerToKick.User);
+        }
+
+        public async Task UnbanContestantFromTournament(string name)
+        {
+            var user = GetCurrentUser();
+            var tournament = _tournamentRepository.GetTournament(user.ActiveTournamentId);
+            if (!Context.ConnectionId.Equals(tournament.Contestants.First().User.ConnectionId) || tournament.TournamentStarted)
+            {
+                return;
+            }
+            var userToUnban = tournament.BannedUsers.First(y => y.Name == name);
+            tournament.BannedUsers.Remove(userToUnban);
+            await SendMessage($"Player {userToUnban.Name} was unbanned from the tournament.", TypeOfMessage.Server, ChatDestination.Tournament);
+            await UpdateTournament(tournament);
         }
 
         public async Task UpdateGameSetup(GameSetupDto gameSetupDto)
@@ -582,7 +613,7 @@ namespace Web.Hubs
                     {
                         game.BannedUsers.Remove(bannedUser);
                     }
-                }         
+                }
                 if (!string.IsNullOrEmpty(user.ActiveTournamentId))
                 {
                     var tournament = _tournamentRepository.GetTournament(user.ActiveTournamentId);

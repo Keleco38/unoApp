@@ -5,11 +5,13 @@ import { Spectator } from './spectator';
 import { GameSetup } from './gameSetup';
 import { Deck } from './deck';
 import { Card } from './card';
+import { User } from './user';
 
 export interface Game {
   id: string;
   gameSetup: GameSetup;
   players: Player[];
+  bannedUsers: User[];
   spectators: Spectator[];
   playerToPlay: Player;
   gameEnded: boolean;

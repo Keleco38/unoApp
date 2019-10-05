@@ -13,4 +13,5 @@ export interface Tournament {
   tournamentRounds: TournamentRound[];
   readyPlayersLeft: string[];
   readyPhaseExpireUtc: Date;
+  bannedUsers: User[];
 }

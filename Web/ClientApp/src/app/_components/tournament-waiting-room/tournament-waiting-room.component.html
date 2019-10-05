@@ -60,6 +60,17 @@
   </div>
   <div class="col-6" id="tournamentSetupInfo">
     <h6 class="text-info">Tournament setup</h6>
+    <div [hidden]="activeTournament.bannedUsers.length == 0">
+      <strong>Banned users: </strong>
+      <ul>
+        <li *ngFor="let user of activeTournament.bannedUsers">
+          {{ user.name }}
+          <span class="text-danger cursor-pointer" [ngbPopover]="popContent" placement="left" triggers="manual" #p1="ngbPopover" (click)="togglePopover(p1, user)"
+            >[X]</span
+          >
+        </li>
+      </ul>
+    </div>
     <div [hidden]="activeTournament.tournamentSetup.bannedCards.length == 0">
       <strong>Banned cards: </strong>
       <ul>
@@ -90,3 +101,8 @@
     <app-game-tabs [heightClassString]="'fill-viewport-max-70'"></app-game-tabs>
   </div>
 </div>
+
+<ng-template #popContent let-user="user">
+  <p>Really unban {{ user.name }}?</p>
+  <button (click)="unbanPlayer(user)" class="btn btn-info btn-block btn-sm" btn-block>Confirm</button>
+</ng-template>

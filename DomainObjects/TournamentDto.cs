@@ -15,5 +15,6 @@ namespace DomainObjects
         public List<string> ReadyPlayersLeft { get; set; }
         public List<ContestantDto> Contestants { get; set; }
         public List<UserDto> Spectators { get; set; }
+        public List<UserDto> BannedUsers { get; set; }
     }
 }
