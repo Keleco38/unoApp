@@ -1,11 +1,28 @@
 <div class="modal-header">
   <h4 class="modal-title" id="modal-basic-title">Showing Cards</h4>
+  <button type="button" class="close" aria-describedby="modal-title" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 <div class="modal-body">
-  <div class="row" *ngFor="let cardsAndName of cardsAndNames">
-    <div class="col-12 p5">
-      <div class="alert alert-info text-center">{{cardsAndName.key}}</div>
+  <div class="row" *ngIf="!detailed">
+    <div class="col-12 p5" *ngFor="let cardsAndName of cardsAndNames">
+      <div class="alert alert-info text-center">{{ cardsAndName.key }}</div>
       <img *ngFor="let card of cardsAndName.value" [src]="card.imageUrl" />
+    </div>
+  </div>
+  <div class="row" *ngIf="detailed">
+    <div class="col-12" *ngFor="let cardsAndName of cardsAndNames">
+      <div class="alert alert-info text-center">{{ cardsAndName.key }}</div>
+      <ul class="list-unstyled">
+        <li class="media my-2" *ngFor="let card of cardsAndName.value">
+          <img [src]="card.imageUrl" class="mr-3" />
+          <div class="media-body">
+            <h5 class="mt-0 mb-1">{{ getCardName(card.value) }}</h5>
+            {{ card.description }}
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
   <div class="row">

@@ -27,6 +27,8 @@ import { ReadyPhaseSpectatorsComponent } from '../_components/_modals/ready-phas
 import { ShowCardsComponent } from '../_components/_modals/show-cards/show-cards.component';
 import { User } from '../_models/user';
 import { InputPasswordComponent } from '../_components/_modals/input-password/input-password.component';
+import { KeyValue } from '@angular/common';
+import { Card } from '../_models/card';
 
 @Injectable({
   providedIn: 'root'
@@ -129,9 +131,10 @@ export class ModalService {
     return this._modalService.open(PickColorComponent);
   }
 
-  displayShowCardsModal(cardsAndNames) {
-    const modalRef = this._modalService.open(ShowCardsComponent, { backdrop: 'static' });
+  displayShowCardsModal(cardsAndNames: KeyValue<string, Card[]>[], detailed: boolean) {
+    const modalRef = this._modalService.open(ShowCardsComponent, { backdrop: 'static', keyboard: false });
     modalRef.componentInstance.cardsAndNames = cardsAndNames;
+    modalRef.componentInstance.detailed = detailed;
     return modalRef;
   }
 

@@ -1,3 +1,5 @@
+import { KeyValue } from '@angular/common';
+import { ModalService } from './../../_services/modal.service';
 import { UserStorageService } from './../../_services/storage-services/user-storage.service';
 import { LobbyStorageService } from './../../_services/storage-services/lobby-storage.service';
 import { GameStorageService } from './../../_services/storage-services/game-storage.service';
@@ -12,6 +14,7 @@ import { TypeOfMessage } from 'src/app/_models/enums';
 import { Game } from 'src/app/_models/game';
 import { takeWhile, map } from 'rxjs/operators';
 import { UserSettings } from 'src/app/_models/userSettings';
+import { Card } from 'src/app/_models/card';
 
 @Component({
   selector: 'app-game-chat',
@@ -23,10 +26,11 @@ export class GameChatComponent implements OnInit, OnDestroy {
   @ViewChild('messageInput', { static: false }) messageInput: ElementRef;
 
   private _isAlive: boolean = true;
+  private _myHand: Card[];
+
   onlineUsers: string[];
   messages: ChatMessage[];
   newMessage = '';
-  activeGame: Game;
   sidebarSettings: SidebarSettings;
   currentUser: User;
   userSettings: UserSettings;
@@ -34,6 +38,7 @@ export class GameChatComponent implements OnInit, OnDestroy {
   constructor(
     private _hubService: HubService,
     private _userStorageService: UserStorageService,
+    private _modalService: ModalService,
     private _utilityService: UtilityService,
     private _lobbyStorageService: LobbyStorageService,
     private _gameStorageService: GameStorageService
@@ -47,8 +52,8 @@ export class GameChatComponent implements OnInit, OnDestroy {
     this._userStorageService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
-    this._gameStorageService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(game => {
-      this.activeGame = game;
+    this._gameStorageService.myHand.pipe(takeWhile(() => this._isAlive)).subscribe(cards => {
+      this._myHand = cards;
     });
     this._lobbyStorageService.onlineUsers
       .pipe(takeWhile(() => this._isAlive))
@@ -70,7 +75,15 @@ export class GameChatComponent implements OnInit, OnDestroy {
     this.messageInput.nativeElement.focus();
   }
 
-  sendMessageToGameChat() {
+  sendMessageToGameChat(event) {
+    if (this.newMessage == '/hand') {
+      this.newMessage = '';
+      event.target.children[0].blur();
+      var cardsAndUser: KeyValue<string, Card[]>[] = [{ key: 'My Cards', value: this._myHand }];
+      this._modalService.displayShowCardsModal(cardsAndUser, true);
+      return;
+    }
+
     this._hubService.sendMessage(this.newMessage, ChatDestination.game);
     this.newMessage = '';
   }
