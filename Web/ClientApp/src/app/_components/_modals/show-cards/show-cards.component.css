@@ -1,3 +1,6 @@
-img {
+img.no-details {
   width: 20%;
+}
+img.detailed {
+  width: 10%;
 }

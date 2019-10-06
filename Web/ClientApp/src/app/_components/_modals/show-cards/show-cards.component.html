@@ -8,7 +8,15 @@
   <div class="row" *ngIf="!detailed">
     <div class="col-12 p5" *ngFor="let cardsAndName of cardsAndNames">
       <div class="alert alert-info text-center">{{ cardsAndName.key }}</div>
-      <img *ngFor="let card of cardsAndName.value" [src]="card.imageUrl" />
+      <img
+        *ngFor="let card of cardsAndName.value"
+        placement="top"
+        container="body"
+        class="no-details"
+        [disableTooltip]="!userSettings.showNewbieTips"
+        [ngbTooltip]="card.description"
+        [src]="card.imageUrl"
+      />
     </div>
   </div>
   <div class="row" *ngIf="detailed">
@@ -16,7 +24,7 @@
       <div class="alert alert-info text-center">{{ cardsAndName.key }}</div>
       <ul class="list-unstyled">
         <li class="media my-2" *ngFor="let card of cardsAndName.value">
-          <img [src]="card.imageUrl" class="mr-3" />
+          <img [src]="card.imageUrl" class="mr-3 detailed" />
           <div class="media-body">
             <h5 class="mt-0 mb-1">{{ getCardName(card.value) }}</h5>
             {{ card.description }}
