@@ -168,7 +168,7 @@ namespace Web.Hubs
 
             var chatMsgs = tournament.ChatMessages.ToList();
             chatMsgs.Reverse();
-            await Clients.Caller.SendAsync("RetrieveFullTournamentChat", _mapper.Map<List<ChatMessageDto>>(chatMsgs));
+            await Clients.Caller.SendAsync("RetrieveFullChat", _mapper.Map<List<ChatMessageDto>>(chatMsgs), ChatDestination.Tournament);
             await UpdateTournament(tournament);
             await GetAllTournaments();
         }
@@ -323,9 +323,9 @@ namespace Web.Hubs
             var action = isBan ? "banned" : "kicked";
 
             await DisplayToastMessageToUser(playerToKick.User.ConnectionId, $"You have been {action} from the game.", "error");
-            await SendMessage($"Player {playerToKick.User.Name} was {action} from the game.", TypeOfMessage.Server, ChatDestination.Game);
             await Clients.Client(playerToKick.User.ConnectionId).SendAsync("SendToTheLobby");
             await ExitGame(playerToKick.User);
+            await SendMessage($"Player {playerToKick.User.Name} was {action} from the game.", TypeOfMessage.Server, ChatDestination.Game);
         }
 
         public async Task UnbanPlayerFromGame(string name)
@@ -362,9 +362,9 @@ namespace Web.Hubs
             var action = isBan ? "banned" : "kicked";
 
             await DisplayToastMessageToUser(playerToKick.User.ConnectionId, $"You have been {action} from the tournament.", "error");
-            await SendMessage($"Player {playerToKick.User.Name} was {action} from the tournament.", TypeOfMessage.Server, ChatDestination.Tournament);
             await Clients.Client(playerToKick.User.ConnectionId).SendAsync("SendToTheLobby");
             await ExitTournament(playerToKick.User);
+            await SendMessage($"Player {playerToKick.User.Name} was {action} from the tournament.", TypeOfMessage.Server, ChatDestination.Tournament);
         }
 
         public async Task UnbanContestantFromTournament(string name)
@@ -558,7 +558,7 @@ namespace Web.Hubs
             var logs = game.GameLog.ToList();
             logs.Reverse();
 
-            await Clients.Caller.SendAsync("RetrieveFullGameChat", _mapper.Map<List<ChatMessageDto>>(chatMsgs));
+            await Clients.Caller.SendAsync("RetrieveFullChat", _mapper.Map<List<ChatMessageDto>>(chatMsgs), ChatDestination.Game);
             await Clients.Caller.SendAsync("RetrieveFullGameLog", logs);
             await UpdateHands(game);
             await UpdateGame(game);
@@ -631,7 +631,7 @@ namespace Web.Hubs
                 user = new User(Context.ConnectionId, name);
                 _userRepository.AddUser(user);
                 ChatMessageDto msg = new ChatMessageDto() { CreatedUtc = DateTime.Now, Text = "If you need to create a tournament please contact one of the moderators (discord link in the navbar)", TypeOfMessage = TypeOfMessage.Server, Username = "Server" };
-                await Clients.Caller.SendAsync("PostNewMessageInAllChat", msg);
+                await Clients.Caller.SendAsync("PostNewMessage", msg, ChatDestination.All);
             }
 
             await SendMessage(message, TypeOfMessage.Server, ChatDestination.All);
@@ -736,7 +736,8 @@ namespace Web.Hubs
             }
             moveResult.MoveResultCallbackParams.ForEach(async callbackParam =>
             {
-                await Clients.Client(callbackParam.ConnectionId).SendAsync(callbackParam.Command, callbackParam.Object);
+                if (!game.GameEnded)
+                    await Clients.Client(callbackParam.ConnectionId).SendAsync(callbackParam.Command, callbackParam.Object);
             });
             moveResult.MessagesToLog.ForEach(async x => await AddToGameLog(game.Id, x));
             await UpdateGame(game);
@@ -836,7 +837,7 @@ namespace Web.Hubs
                     List<KeyValuePair<string, List<CardDto>>> spectatorsViewHandsAndUser = new List<KeyValuePair<string, List<CardDto>>>();
                     game.Players.ForEach(x =>
                     {
-                        spectatorsViewHandsAndUser.Add(new KeyValuePair<string, List<CardDto>>(x.User.Name, _mapper.Map<List<CardDto>>(x.Cards).OrderBy(c=>c.Color).ThenBy(c=>c.Value).ToList()));
+                        spectatorsViewHandsAndUser.Add(new KeyValuePair<string, List<CardDto>>(x.User.Name, _mapper.Map<List<CardDto>>(x.Cards).OrderBy(c => c.Color).ThenBy(c => c.Value).ToList()));
                     });
                     await Clients.Clients(allSpectatorsInGame).SendAsync("UpdateSpectatorsViewHandsAndUser", spectatorsViewHandsAndUser);
                 }
@@ -928,28 +929,28 @@ namespace Web.Hubs
                 if (buzzFailed)
                 {
                     if (!string.IsNullOrEmpty(user.ActiveGameId))
-                        await Clients.Caller.SendAsync("PostNewMessageInGameChat", msgDto);
+                        await Clients.Caller.SendAsync("PostNewMessage", msgDto, ChatDestination.Game);
                     if (!string.IsNullOrEmpty(user.ActiveTournamentId))
-                        await Clients.Caller.SendAsync("PostNewMessageInTournamentChat", msgDto);
-                    await Clients.Caller.SendAsync("PostNewMessageInAllChat", msgDto);
+                        await Clients.Caller.SendAsync("PostNewMessage", msgDto, ChatDestination.Tournament);
+                    await Clients.Caller.SendAsync("PostNewMessage", msgDto, ChatDestination.All);
                 }
                 else
                 {
-                    await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
-                    await Clients.Clients(allUsersInTournament).SendAsync("PostNewMessageInTournamentChat", msgDto);
-                    await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
+                    await Clients.Clients(allUsersInGame).SendAsync("PostNewMessage", msgDto, ChatDestination.Game);
+                    await Clients.Clients(allUsersInTournament).SendAsync("PostNewMessage", msgDto, ChatDestination.Tournament);
+                    await Clients.All.SendAsync("PostNewMessage", msgDto, ChatDestination.All);
                     if (!string.IsNullOrEmpty(targetedUser.ActiveGameId) && user.ActiveGameId != targetedUser.ActiveGameId)
                     {
                         var targetedPlayersGame = _gameRepository.GetGameByGameId(targetedUser.ActiveGameId);
                         var allUsersInTargetedUsersGame = GetPlayersAndSpectatorsFromGame(targetedPlayersGame);
-                        await Clients.Clients(allUsersInTargetedUsersGame).SendAsync("PostNewMessageInGameChat", msgDto);
+                        await Clients.Clients(allUsersInTargetedUsersGame).SendAsync("PostNewMessage", msgDto, ChatDestination.Game);
 
                     }
                     if (!string.IsNullOrEmpty(targetedUser.ActiveTournamentId) && user.ActiveTournamentId != targetedUser.ActiveTournamentId)
                     {
                         var targetedPlayersTournament = _tournamentRepository.GetTournament(targetedUser.ActiveTournamentId);
                         var allUsersInTargetedUsersTournament = GetContestantsAndSpectatorsFromTournament(targetedPlayersTournament);
-                        await Clients.Clients(allUsersInTargetedUsersTournament).SendAsync("PostNewMessageInTournamentChat", msgDto);
+                        await Clients.Clients(allUsersInTargetedUsersTournament).SendAsync("PostNewMessage", msgDto, ChatDestination.Tournament);
                     }
                 }
 
@@ -961,16 +962,16 @@ namespace Web.Hubs
                 if (chatDestination == ChatDestination.Game)
                 {
                     game.ChatMessages.Add(msg);
-                    await Clients.Clients(allUsersInGame).SendAsync("PostNewMessageInGameChat", msgDto);
+                    await Clients.Clients(allUsersInGame).SendAsync("PostNewMessage", msgDto, ChatDestination.Game);
                 }
                 else if (chatDestination == ChatDestination.Tournament)
                 {
                     tournament.ChatMessages.Add(msg);
-                    await Clients.Clients(allUsersInTournament).SendAsync("PostNewMessageInTournamentChat", msgDto);
+                    await Clients.Clients(allUsersInTournament).SendAsync("PostNewMessage", msgDto, ChatDestination.Tournament);
                 }
                 else
                 {
-                    await Clients.All.SendAsync("PostNewMessageInAllChat", msgDto);
+                    await Clients.All.SendAsync("PostNewMessage", msgDto, ChatDestination.All);
                 }
 
                 chatMessageIntentionResult.MentionedUsers.ForEach(async targetedUser =>

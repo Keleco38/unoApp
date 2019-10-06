@@ -29,12 +29,7 @@ export class HubService {
   private _updateOnlineUsersObservable = new Subject<User[]>();
   private _updateAvailableGamesObservable = new Subject<GameList[]>();
   private _updateAvailableTournamentsObservable = new Subject<TournamentList[]>();
-  private _updateGameChatMessagesObservable = new Subject<ChatMessage>();
-  private _updateRetrieveFullGameChatMessagesObservable = new Subject<ChatMessage[]>();
-  private _updateRetrieveFullTournamentChatMessagesObservable = new Subject<ChatMessage[]>();
   private _updateRetrieveFullGameLogObservable = new Subject<string[]>();
-  private _updateTournamentChatMessagesObservable = new Subject<ChatMessage>();
-  private _updateAllChatMessagesObservable = new Subject<ChatMessage>();
   private _updateGameLogObservable = new Subject<string>();
   private _updateActiveGameObservable = new Subject<Game>();
   private _updateActiveTournamentObservable = new Subject<Tournament>();
@@ -51,6 +46,11 @@ export class HubService {
   private _updateShowReadyPhasePlayersObservable = new Subject<boolean>();
   private _updateShowReadyPhaseSpectatorsObservable = new Subject<boolean>();
   private _updateGameEndedObservable = new Subject<GameEndedResult>();
+  private _updateRetrieveFullGameChatMessagesObservable = new Subject<ChatMessage[]>();
+  private _updateRetrieveFullTournamentChatMessagesObservable = new Subject<ChatMessage[]>();
+  private _updateGameChatMessagesObservable = new Subject<ChatMessage>();
+  private _updateAllChatMessagesObservable = new Subject<ChatMessage>();
+  private _updateTournamentChatMessagesObservable = new Subject<ChatMessage>();
 
   constructor(private _router: Router, private _toastrService: ToastrService, private _utilityService: UtilityService) {
     this._hubConnection = new signalR.HubConnectionBuilder().withUrl('/gamehub').build();
@@ -107,28 +107,26 @@ export class HubService {
       this._updateRenameUserObservable.next();
     });
 
-    this._hubConnection.on('PostNewMessageInAllChat', (message: ChatMessage) => {
-      this._updateAllChatMessagesObservable.next(message);
+    this._hubConnection.on('PostNewMessage', (message: ChatMessage, chatDestination: ChatDestination) => {
+      if (chatDestination == ChatDestination.all) {
+        this._updateAllChatMessagesObservable.next(message);
+      } else if (chatDestination == ChatDestination.tournament) {
+        this._updateTournamentChatMessagesObservable.next(message);
+      } else {
+        this._updateGameChatMessagesObservable.next(message);
+      }
     });
-
-    this._hubConnection.on('PostNewMessageInTournamentChat', (message: ChatMessage) => {
-      this._updateTournamentChatMessagesObservable.next(message);
-    });
-
-    this._hubConnection.on('PostNewMessageInGameChat', (message: ChatMessage) => {
-      this._updateGameChatMessagesObservable.next(message);
-    });
-
-    this._hubConnection.on('RetrieveFullGameChat', (messages: ChatMessage[]) => {
+ 
+    this._hubConnection.on('RetrieveFullChat', (messages: ChatMessage[],chatDestination: ChatDestination) => {
+      if (chatDestination == ChatDestination.tournament) {
+      this._updateRetrieveFullTournamentChatMessagesObservable.next(messages);
+      } else if (chatDestination == ChatDestination.game) {
       this._updateRetrieveFullGameChatMessagesObservable.next(messages);
+      } 
     });
 
     this._hubConnection.on('RetrieveFullGameLog', (log: string[]) => {
       this._updateRetrieveFullGameLogObservable.next(log);
-    });
-
-    this._hubConnection.on('RetrieveFullTournamentChat', (messages: ChatMessage[]) => {
-      this._updateRetrieveFullTournamentChatMessagesObservable.next(messages);
     });
 
     this._hubConnection.on('AddToGameLog', (message: string) => {

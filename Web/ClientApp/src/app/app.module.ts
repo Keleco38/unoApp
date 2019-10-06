@@ -1,3 +1,4 @@
+import { ChatComponent } from './_components/chat/chat.component';
 import { EmoticonPickerComponent } from './_components/emoticon-picker/emoticon-picker.component';
 import { HighlightMentionsPipe } from './_pipes/highlight-mentions.pipe';
 import { ModalSubscribingService } from './_services/modal-subscribing.service';
@@ -12,7 +13,6 @@ import { TournamentWinnersComponent } from './_components/tournament-winners/tou
 import { AdminSectionComponent } from './_components/_modals/admin-section/admin-section.component';
 import { ContactFormComponent } from './_components/_modals/contact-form/contact-form.component';
 import { TournamentSetupComponent } from './_components/_modals/tournament-setup/tournament-setup.component';
-import { TournamentChatComponent } from './_components/tournament-chat/tournament-chat.component';
 import { TournamentSpectatorsComponent } from './_components/tournament-spectators/tournament-spectators.component';
 import { HttpService } from './_services/http.service';
 import { HallOfFameComponent } from './_components/hall-of-fame/hall-of-fame.component';
@@ -31,13 +31,11 @@ import { PickPlayerComponent } from './_components/_modals/pick-player/pick-play
 import { GameDeactivateGuard } from './_guards/game-deactivate.guard';
 import { GameGuard } from './_guards/game.guard';
 import { GameComponent } from './_components/game/game.component';
-import { GameChatComponent } from './_components/game-chat/game-chat.component';
 import { GameSpectatorsComponent } from './_components/game-spectators/game-spectators.component';
 import { GameTabsComponent } from './_components/game-tabs/game-tabs.component';
 import { WaitingRoomComponent } from './_components/waiting-room/waiting-room.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AvailableGamesComponent } from './_components/available-games/available-games.component';
-import { AllChatComponent } from './_components/all-chat/all-chat.component';
 import { HubService } from './_services/hub.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -84,11 +82,9 @@ import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
     HomeComponent,
     AvailableGamesComponent,
     OnlinePlayersComponent,
-    AllChatComponent,
     WaitingRoomComponent,
     GameTabsComponent,
     GameSpectatorsComponent,
-    GameChatComponent,
     PickColorComponent,
     GameComponent,
     PickPlayerComponent,
@@ -109,7 +105,6 @@ import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
     DividePerCapitalPipe,
     HighlightMentionsPipe,
     TournamentSpectatorsComponent,
-    TournamentChatComponent,
     HallOfFameComponent,
     GuessOddEvenNumberComponent,
     GameEndedResultComponent,
@@ -127,6 +122,7 @@ import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
     KickBanPlayerComponent,
     InputPasswordComponent,
     EmoticonPickerComponent,
+    ChatComponent,
     TournamentComponent
   ],
   imports: [

@@ -6,18 +6,18 @@
           <div class="col-12">
             <h6 class="ml-2">
               Hello, <strong>{{ currentUser.name }}</strong>
-              <span *ngIf="userSettings.showEmoji" class="d-block float-right">
+              <span *ngIf="userSettings.showEmoji" class="d-block" [ngClass]="getEmojiFloatClass()">
                 <app-emoticon-picker (emoji)="addEmojiToChat($event)"></app-emoticon-picker>
               </span>
             </h6>
           </div>
         </div>
-        <form novalidate name="newMessageForm" (ngSubmit)="sendMessageToTournamentChat()">
+        <form novalidate name="newMessageForm" (ngSubmit)="sendMessage($event)">
           <input
             type="text"
             name="newMessage"
-            [mention]="onlineUsers"
             #messageInput
+            [mention]="onlineUsers"
             autocomplete="off"
             class="form-control"
             placeholder="New Message"
@@ -33,7 +33,7 @@
           [ngClass]="getChatMessageClass(message)"
           *ngFor="let message of messages"
         >
-          <strong> [{{ message.createdUtc | date: 'shortTime' }} | {{ message.username }}]: </strong>
+          <strong>[{{ message.createdUtc | date: 'shortTime' }} | {{ message.username }}]: </strong>
           <span [innerHTML]="message.text | linkify | highlightMentions"></span>
         </p>
       </div>

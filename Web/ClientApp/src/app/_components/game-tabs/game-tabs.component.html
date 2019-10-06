@@ -1,19 +1,19 @@
 <div class="row">
   <div class="col-12">
-    <ngb-tabset>
+    <ngb-tabset [destroyOnHide]="false">
       <ngb-tab title="Game chat" *ngIf="activeGame != null">
         <ng-template ngbTabContent>
-          <app-game-chat [heightClassString]="heightClassString"></app-game-chat>
+          <app-chat [chatDestination]="3" [heightClassString]="heightClassString"></app-chat>
         </ng-template>
       </ngb-tab>
       <ngb-tab title="Tour. chat" *ngIf="activeTournament != null">
         <ng-template ngbTabContent>
-          <app-tournament-chat [heightClassString]="heightClassString"></app-tournament-chat>
+          <app-chat [chatDestination]="2" [heightClassString]="heightClassString"></app-chat>
         </ng-template>
       </ngb-tab>
       <ngb-tab title="All chat">
         <ng-template ngbTabContent>
-          <app-all-chat [heightClassString]="heightClassString"></app-all-chat>
+          <app-chat [chatDestination]="1" [heightClassString]="heightClassString"></app-chat>
         </ng-template>
       </ngb-tab>
       <ngb-tab title="Misc.">
