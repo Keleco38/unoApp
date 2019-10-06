@@ -61,7 +61,7 @@ export class HubService {
 
     this._hubConnection.onclose(async () => {
       if (this._wasKicked) return;
-      this.startConnection(true);
+      await this.startConnection(true);
     });
 
     this._hubConnection.on('GameEnded', (gameEndedResult: GameEndedResult) => {
@@ -244,7 +244,7 @@ export class HubService {
 
   async startConnection(isReconnect: Boolean) {
     try {
-      this._hubConnection.start().then(() => {
+      await this._hubConnection.start().then(() => {
         var name = localStorage.getItem('name');
         if (!environment.production) {
           const myArray = ['Ante', 'Mate', 'Jure', 'Ivica', 'John', 'Bruno', 'Mike', 'David', 'Mokki'];
