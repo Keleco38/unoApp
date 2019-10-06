@@ -93,7 +93,9 @@
     <div class="row" *ngIf="isSpectator() && game.gameSetup.spectatorsCanViewHands">
       <hr />
       <div class="col-12 text-center" *ngFor="let cardsAndUser of spectatorsViewCardsAndUser">
-        <h6>{{ cardsAndUser.key }}</h6>
+        <h6 [ngClass]="{ 'text-primary font-weight-bold': cardsAndUser.key == game.playerToPlay.user.name }">
+          {{ cardsAndUser.key }}
+        </h6>
         <img
           *ngFor="let card of cardsAndUser.value"
           [src]="card.imageUrl"
