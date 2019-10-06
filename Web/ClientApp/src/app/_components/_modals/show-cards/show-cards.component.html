@@ -26,7 +26,7 @@
         <li class="media my-2" *ngFor="let card of cardsAndName.value">
           <img [src]="card.imageUrl" class="mr-3 detailed" />
           <div class="media-body">
-            <h5 class="mt-0 mb-1">{{ getCardName(card.value) }}</h5>
+            <h5 class="mt-0 mb-1">{{ getCardName(card.value) | dividePerCapital }}</h5>
             {{ card.description }}
           </div>
         </li>

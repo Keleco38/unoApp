@@ -95,7 +95,7 @@ namespace PreMoveProcessingService.CoreManagers
 
             if (cardPlayed.Color == CardColor.Wild && game.GameSetup.WildCardCanBePlayedOnlyIfNoOtherOptions)
             {
-                if (playerPlayed.Cards.Any(x => x.Color == game.LastCardPlayed.Color) || playerPlayed.Cards.Any(x => x.Value == game.LastCardPlayed.Value))
+                if (playerPlayed.Cards.Any(x => x.Color == game.LastCardPlayed.Color) || (playerPlayed.Cards.Any(x => x.Value == game.LastCardPlayed.Value) && !game.LastCardPlayed.WasWildCard))
                 {
                     return false;
                 }

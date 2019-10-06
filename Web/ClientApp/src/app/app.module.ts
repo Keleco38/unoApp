@@ -1,3 +1,4 @@
+import { PlayCardService } from './_services/play-card.service';
 import { ChatComponent } from './_components/chat/chat.component';
 import { EmoticonPickerComponent } from './_components/emoticon-picker/emoticon-picker.component';
 import { HighlightMentionsPipe } from './_pipes/highlight-mentions.pipe';
@@ -185,6 +186,7 @@ import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
     LobbyStorageService,
     TournamentStorageService,
     UserStorageService,
+    PlayCardService,
     HttpService
   ],
   bootstrap: [AppComponent],
