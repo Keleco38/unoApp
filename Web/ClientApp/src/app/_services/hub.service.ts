@@ -179,7 +179,7 @@ export class HubService {
       this._updateMyHandObservable.next(myCards);
     });
 
-    this._hubConnection.on('UpdateSpectatorsViewHandsAndUser', (spectatorsView: KeyValue<string,Card[]>[]) => {
+    this._hubConnection.on('UpdateSpectatorsViewHandsAndUser', (spectatorsView: KeyValue<string, Card[]>[]) => {
       this._updateSpectatorsViewHandsAndUserObservable.next(spectatorsView);
     });
 
@@ -242,7 +242,7 @@ export class HubService {
     }
   }
 
-  startConnection(isReconnect: Boolean) {
+  async startConnection(isReconnect: Boolean) {
     try {
       this._hubConnection.start().then(() => {
         var name = localStorage.getItem('name');
