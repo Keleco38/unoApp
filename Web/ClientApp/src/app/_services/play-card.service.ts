@@ -43,7 +43,10 @@ export class PlayCardService {
     }
 
     if (cardPlayed.color == CardColor.wild && game.gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions) {
-      if (myCards.some(x => x.color == game.lastCardPlayed.color) || myCards.some(x => x.value == game.lastCardPlayed.value)) {
+      if (
+        myCards.some(x => x.color == game.lastCardPlayed.color) ||
+        (myCards.some(x => x.value == game.lastCardPlayed.value) && !game.lastCardPlayed.wasWildCard)
+      ) {
         this._toastrService.info("You can play a wildcard only as the last option (can't play anything else).");
         return;
       }
