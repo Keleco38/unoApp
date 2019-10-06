@@ -11,7 +11,9 @@ export class ModalSubscribingService implements OnDestroy {
 
   constructor(private _hubService: HubService, private _modalService: ModalService) {
     this._hubService.updateGameEnded.pipe(takeWhile(() => this._isAlive)).subscribe(gameEndedResult => {
-      this._modalService.displayGameEndedResultModal(gameEndedResult);
+      setTimeout(() => {
+        this._modalService.displayGameEndedResultModal(gameEndedResult);
+      });
     });
     this._hubService.updateShowReadyPhasePlayers.pipe(takeWhile(() => this._isAlive)).subscribe(isTournament => {
       this._modalService.displayReadyPhasePlayersModal(isTournament);
@@ -33,7 +35,7 @@ export class ModalSubscribingService implements OnDestroy {
     });
   }
 
-  something(){
+  something() {
     return null;
   }
 

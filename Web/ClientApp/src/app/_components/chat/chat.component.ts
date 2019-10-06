@@ -67,6 +67,10 @@ export class ChatComponent implements OnInit, OnDestroy {
       });
     }
 
+    this._hubService.updateGameEnded.pipe(takeWhile(() => this._isAlive)).subscribe(gameEndedResult => {
+      this.messageInput.nativeElement.blur();
+    });
+
     this._userStorageService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });

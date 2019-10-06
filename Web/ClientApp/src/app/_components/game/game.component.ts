@@ -57,6 +57,10 @@ export class GameComponent implements OnInit, OnDestroy {
       this.game = game;
     });
 
+    this._hubService.updateGameEnded.pipe(takeWhile(() => this._isAlive)).subscribe(gameEndedResult => {
+      this.isSidebarOpen=false;
+    });
+
     this._gameStorageService.gameLog.pipe(takeWhile(() => this._isAlive)).subscribe(gameLog => {
       this.gameLog = gameLog;
     });
