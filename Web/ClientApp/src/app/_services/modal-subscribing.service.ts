@@ -20,7 +20,7 @@ export class ModalSubscribingService implements OnDestroy {
       this._modalService.displayReadyPhaseSpectatorsModal(isTournament);
     });
     this._hubService.updateShowCards.pipe(takeWhile(() => this._isAlive)).subscribe(cardsAndNames => {
-      this._modalService.displayShowCardsModal(cardsAndNames);
+      this._modalService.displayShowCardsModal(cardsAndNames, false);
     });
     this._hubService.updateRenameUser.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
       this._modalService.displayRenameModal();
