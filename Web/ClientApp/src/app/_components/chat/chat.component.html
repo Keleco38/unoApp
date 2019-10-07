@@ -1,4 +1,4 @@
-<div class="row scrollable-div-y" [ngClass]="heightClassString">
+<div class="row">
   <div class="col-12">
     <div class="card">
       <div class="card-header sticky-top bg-light border-top border-light">
@@ -32,7 +32,7 @@
           />
         </form>
       </div>
-      <div class="card-body">
+      <div class="card-body scrollable-div-y" [ngClass]="heightClassString">
         <p class="card-text" [hidden]="messages.length > 0">No messages</p>
         <p
           class="card-text"
