@@ -67,7 +67,7 @@ namespace PreMoveProcessingService.CoreManagers
                 {
                     tournament.TournamentRounds[0].TournamentRoundGames[i].Game.Players.Add(new Player(tournament.Contestants[tournament.TournamentRounds[0].TournamentRoundGames.Count + i].User, 2) { LeftGame = true });
 
-                    tournament.TournamentRounds[0].TournamentRoundGames[i].Game.GameLog.Add("Game started.");
+                    tournament.TournamentRounds[0].TournamentRoundGames[i].Game.GameLog.Add("Game started. (type /hand in chat for newbie tips)");
                     tournament.TournamentRounds[0].TournamentRoundGames[i].Game.GameLog.Add("If you need more detailed log info, press the 'Game info' button.");
                     tournament.TournamentRounds[0].TournamentRoundGames[i].Game.GameLog.Add("This is the game log summary. We will display the last 3 entries here.");
 
@@ -120,7 +120,7 @@ namespace PreMoveProcessingService.CoreManagers
                 gameInTournament.Players.Add(new Player(playerWon.User, placeInNewGame) { LeftGame = true });
                 if (gameInTournament.Players.Count == 2)
                 {
-                    gameInTournament.GameLog.Add("Game started.");
+                    gameInTournament.GameLog.Add("Game started. (type /hand in chat for newbie tips)");
                     gameInTournament.GameLog.Add("If you need more detailed log info, press the 'Game info' button.");
                     gameInTournament.GameLog.Add("This is the game log summary. We will display the last 3 entries here.");
                     _gameManager.StartNewGame(gameInTournament);

@@ -7,13 +7,12 @@
   margin-bottom: 0.5rem;
 }
 .log-entry {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
 }
 #button-top-container button {
   font-size: 0.75rem;
 }
 .player-hand-card {
-  /* set width here */
   width: 10%;
 }
 .spectator-hand-card {
@@ -30,9 +29,6 @@
   margin-top: -2%;
 }
 
-.first-played-card {
-  margin-left: 0;
-}
 
 @media (max-width: 768px) {
   .action-button {

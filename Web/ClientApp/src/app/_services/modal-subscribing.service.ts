@@ -13,7 +13,7 @@ export class ModalSubscribingService implements OnDestroy {
     this._hubService.updateGameEnded.pipe(takeWhile(() => this._isAlive)).subscribe(gameEndedResult => {
       setTimeout(() => {
         this._modalService.displayGameEndedResultModal(gameEndedResult);
-      });
+      },500);
     });
     this._hubService.updateShowReadyPhasePlayers.pipe(takeWhile(() => this._isAlive)).subscribe(isTournament => {
       this._modalService.displayReadyPhasePlayersModal(isTournament);

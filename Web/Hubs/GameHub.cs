@@ -468,7 +468,7 @@ namespace Web.Hubs
                 await UpdateHands(game);
                 await GetAllGames();
                 await Clients.Clients(GetPlayersAndSpectatorsFromGame(game)).SendAsync("GameStarted");
-                await AddToGameLog(gameId, "Game started!");
+                await AddToGameLog(gameId, "Game started! (type /hand in chat for newbie tips)");
                 await AddToGameLog(gameId, "If you need more detailed log info, press the 'Game info' button.");
                 await AddToGameLog(gameId, "This is the game log summary. We will display the last 3 entries here.");
             }
