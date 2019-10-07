@@ -6,9 +6,16 @@
           <div class="col-12">
             <h6 class="ml-2">
               Hello, <strong>{{ currentUser.name }}</strong>
-              <span *ngIf="userSettings.showEmoji" class="d-block" [ngClass]="getEmojiFloatClass()">
-                <app-emoticon-picker (emoji)="addEmojiToChat($event)"></app-emoticon-picker>
-              </span>
+              <div
+                *ngIf="userSettings.showEmoji"
+                class="d-block float-right cursor-pointer"
+                [ngbPopover]="emojiContent"
+                autoClose="outside"
+                [container]="emojiContainer"
+                [placement]="emojiPlacement"
+              >
+             <span id="lol"> 😊</span>
+              </div>
             </h6>
           </div>
         </div>
@@ -40,3 +47,7 @@
     </div>
   </div>
 </div>
+
+<ng-template #emojiContent>
+  <app-emoticon-picker (emoji)="addEmojiToChat($event)"></app-emoticon-picker>
+</ng-template>

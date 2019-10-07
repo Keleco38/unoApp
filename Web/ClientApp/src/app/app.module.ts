@@ -74,7 +74,6 @@ import { ModalService } from './_services/modal.service';
 import { GameStorageService } from './_services/storage-services/game-storage.service';
 import { InputPasswordComponent } from './_components/_modals/input-password/input-password.component';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
-import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 
 
 @NgModule({
@@ -144,7 +143,6 @@ import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
     FormsModule,
     SidebarModule.forRoot(),
     NgbModule,
-    EmojiModule,
     MentionModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },

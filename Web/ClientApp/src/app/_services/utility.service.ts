@@ -50,8 +50,8 @@ export class UtilityService {
           showNewbieTips: true
         };
       }
-      this._userSettings.showEmoji = this._userSettings.showEmoji || true;
-      this._userSettings.showNewbieTips = this._userSettings.showNewbieTips || true;
+      if(this._userSettings.showEmoji==null)this._userSettings.showEmoji=true;
+      if(this._userSettings.showNewbieTips==null)this._userSettings.showNewbieTips=true;
       this.saveUserSettings();
     }
     return this._userSettings;

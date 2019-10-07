@@ -12,8 +12,8 @@ export class EmoticonPickerComponent implements OnInit {
   ngOnInit() {
   }
 
-  addEmoji(event){
-    this.emoji.emit(event.emoji.native);
+  addEmoji(emoji){
+    this.emoji.emit(emoji);
   }
 
 }

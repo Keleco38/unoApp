@@ -23,6 +23,8 @@ import { SidebarSettings } from 'src/app/_models/sidebarSettings';
 export class ChatComponent implements OnInit, OnDestroy {
   @Input('heightClassString') heightClassString: string;
   @Input('chatDestination') chatDestination: ChatDestination;
+  @Input('emojiPlacement') emojiPlacement: string = 'left';
+  @Input('emojiContainer') emojiContainer: string = '';
   @ViewChild('messageInput', { static: false }) messageInput: ElementRef;
 
   private _isAlive: boolean = true;
@@ -107,7 +109,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.newMessage == '/hand' && this.chatDestination == ChatDestination.game) {
+    if (this.newMessage == '/hand' && this._myHand.length > 0) {
       this.newMessage = '';
       event.target.children[0].blur();
       var cardsAndUser: KeyValue<string, Card[]>[] = [{ key: 'My Cards', value: this._myHand }];
@@ -130,13 +132,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   addEmojiToChat(event) {
     this.newMessage += event;
     this.messageInput.nativeElement.focus();
-  }
-  getEmojiFloatClass() {
-    if (this.chatDestination == ChatDestination.all) {
-      return 'float-left float-sm-right';
-    } else {
-      return 'float-right';
-    }
   }
 
   getChatMessageHidden(message: ChatMessage) {

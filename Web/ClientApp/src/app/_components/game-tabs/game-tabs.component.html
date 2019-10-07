@@ -22,7 +22,7 @@
             <div class="col-6">
               <app-game-spectators *ngIf="activeGame != null"></app-game-spectators>
               <app-tournament-spectators *ngIf="activeTournament != null"></app-tournament-spectators>
-              <app-online-players></app-online-players>
+              <app-online-players [buzzPlacement]="'bottom'"></app-online-players>
             </div>
             <div class="col-6">
               <app-sidebar-settings></app-sidebar-settings>

@@ -145,7 +145,7 @@ body {
 
 .spectators-chat-message {
   color: lightskyblue;
-  font-style: italic;
+  /* font-style: italic; */
 }
 
 .btn-group.special {

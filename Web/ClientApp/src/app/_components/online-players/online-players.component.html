@@ -4,7 +4,7 @@
       <span>Online Users ({{ onlineUsers.length }}):</span>
     </div>
     <ul class="list-group">
-      <li class="list-group-item" *ngFor="let user of onlineUsers" container="body" ngbDropdown>
+      <li class="list-group-item" *ngFor="let user of onlineUsers" [placement]="buzzPlacement" [container]="buzzContainer" ngbDropdown>
         {{ user.name }} <span ngbDropdownToggle class="cursor-pointer">&#x260A;</span>
         <div ngbDropdownMenu class="my-dropdown">
           <button (click)="buzzUser(user, 'alert')" ngbDropdownItem>Alert</button>
