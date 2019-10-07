@@ -3,22 +3,22 @@
     <ngb-tabset [destroyOnHide]="false">
       <ngb-tab title="Game chat" *ngIf="activeGame != null">
         <ng-template ngbTabContent>
-          <app-chat [chatDestination]="3" [heightClassString]="heightClassString"></app-chat>
+          <app-chat [chatDestination]="3" [sidebarChatHeight]="sidebarChatHeight"></app-chat>
         </ng-template>
       </ngb-tab>
       <ngb-tab title="Tour. chat" *ngIf="activeTournament != null">
         <ng-template ngbTabContent>
-          <app-chat [chatDestination]="2" [heightClassString]="heightClassString"></app-chat>
+          <app-chat [chatDestination]="2" [sidebarChatHeight]="sidebarChatHeight"></app-chat>
         </ng-template>
       </ngb-tab>
       <ngb-tab title="All chat">
         <ng-template ngbTabContent>
-          <app-chat [chatDestination]="1" [heightClassString]="heightClassString"></app-chat>
+          <app-chat [chatDestination]="1" [sidebarChatHeight]="sidebarChatHeight"></app-chat>
         </ng-template>
       </ngb-tab>
       <ngb-tab title="Misc.">
         <ng-template ngbTabContent>
-          <div class="row scrollable-div-y" [ngClass]="heightClassString">
+          <div class="row scrollable-div-y" [style.height]="getMiscHeight() + 'vh'">
             <div class="col-6">
               <app-game-spectators *ngIf="activeGame != null"></app-game-spectators>
               <app-tournament-spectators *ngIf="activeTournament != null"></app-tournament-spectators>

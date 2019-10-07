@@ -11,7 +11,7 @@ import { ChatDestination } from 'src/app/_models/enums';
   styleUrls: ['./online-players.component.css']
 })
 export class OnlinePlayersComponent implements OnInit, OnDestroy {
-  @Input('buzzContainer') buzzContainer: string = '';
+  @Input('buzzContainer') buzzContainer: string = '-';
   @Input('buzzPlacement') buzzPlacement: string = 'auto';
 
   private _isAlive: boolean = true;

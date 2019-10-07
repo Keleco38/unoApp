@@ -21,7 +21,7 @@ import { SidebarSettings } from 'src/app/_models/sidebarSettings';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit, OnDestroy {
-  @Input('heightClassString') heightClassString: string;
+  @Input('sidebarChatHeight') sidebarChatHeight: number;
   @Input('chatDestination') chatDestination: ChatDestination;
   @Input('emojiPlacement') emojiPlacement: string = 'left';
   @Input('emojiContainer') emojiContainer: string = '';
@@ -47,8 +47,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     private _utilityService: UtilityService
   ) {}
   ngOnInit(): void {
-    this.checkRequiredFields(this.heightClassString, 'heightClassString');
-    this.checkRequiredFields(this.chatDestination, 'chatDestination');
     this.userSettings = this._utilityService.userSettings;
     this.sidebarSettings = this._utilityService.sidebarSettings;
 
@@ -122,6 +120,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.newMessage = '';
   }
 
+
   getChatMessageClass(message: ChatMessage) {
     if (message.typeOfMessage === TypeOfMessage.server) {
       return 'server-chat-message';
@@ -145,11 +144,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  private checkRequiredFields(input, name) {
-    if (input === null) {
-      throw new Error('Attribute ' + name + ' is required');
-    }
-  }
   ngOnDestroy(): void {
     this._isAlive = false;
   }

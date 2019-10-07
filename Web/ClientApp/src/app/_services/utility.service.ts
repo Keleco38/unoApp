@@ -100,11 +100,4 @@ export class UtilityService {
       }
     });
   }
-
-  getSidebarBackgroundColor() {
-    if (this.userSettings.useDarkTheme) {
-      return '#222';
-    }
-    return '#fff';
-  }
 }

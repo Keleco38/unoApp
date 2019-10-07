@@ -14,7 +14,7 @@
                 [container]="emojiContainer"
                 [placement]="emojiPlacement"
               >
-             <span id="emojiContainer"> 😊</span>
+                <span id="emojiContainer"> 😊</span>
               </div>
             </h6>
           </div>
@@ -32,7 +32,7 @@
           />
         </form>
       </div>
-      <div class="card-body scrollable-div-y" [ngClass]="heightClassString">
+      <div class="card-body scrollable-div-y" [style.height]="sidebarChatHeight + 'vh'">
         <p class="card-text" [hidden]="messages.length > 0">No messages</p>
         <p
           class="card-text"

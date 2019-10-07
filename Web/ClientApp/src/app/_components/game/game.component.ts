@@ -58,7 +58,7 @@ export class GameComponent implements OnInit, OnDestroy {
     });
 
     this._hubService.updateGameEnded.pipe(takeWhile(() => this._isAlive)).subscribe(gameEndedResult => {
-      this.isSidebarOpen=false;
+      this.isSidebarOpen = false;
     });
 
     this._gameStorageService.gameLog.pipe(takeWhile(() => this._isAlive)).subscribe(gameLog => {
@@ -134,14 +134,11 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
-  getSidebarClass() {
-    var classes = [];
-    classes.push(`fill-viewport-${this.sidebarSettings.sidebarSize}`);
-    return classes;
-  }
-
-  getSidebarBackgroundColor() {
-    return this._utilityService.getSidebarBackgroundColor();
+  getSidebarBackgroundClass() {
+    if (this.userSettings.useDarkTheme) {
+      return 'bg-secondary';
+    }
+    return 'bg-white';
   }
 
   drawCard() {
