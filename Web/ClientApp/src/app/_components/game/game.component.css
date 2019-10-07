@@ -58,6 +58,15 @@
   border: 2px solid red;
 }
 
+@media (min-width: 768px) {
+  .spectator-hand-card {
+    width: 5%;
+  }
+}
+.left-game {
+  border: 2px solid red;
+}
+
 .animation-block-shine {
   animation-name: greenPulseBlock;
   animation-duration: 2s;
@@ -86,14 +95,14 @@
 @keyframes greenPulseText {
   from {
     color: #c0ff02;
-    border: 1px solid #c0ff02;
+    /* text-shadow: 2px 1px 3px #c0ff02; */
   }
   50% {
     color: #4b610b;
-    border: 1px solid #4b610b;
+    /* text-shadow: 2px 1px 3px #4b610b; */
   }
   to {
     color: #c0ff02;
-    border: 1px solid #c0ff02;
+    /* text-shadow: 2px 1px 3px #c0ff02; */
   }
 }

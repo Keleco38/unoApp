@@ -61,13 +61,14 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.messages = messages;
       });
     } else {
-      this._gameStorageService.myHand.pipe(takeWhile(() => this._isAlive)).subscribe(cards => {
-        this._myHand = cards;
-      });
       this._gameStorageService.gameChat.pipe(takeWhile(() => this._isAlive)).subscribe(messages => {
         this.messages = messages;
       });
     }
+
+    this._gameStorageService.myHand.pipe(takeWhile(() => this._isAlive)).subscribe(cards => {
+      this._myHand = cards;
+    });
 
     this._hubService.updateGameEnded.pipe(takeWhile(() => this._isAlive)).subscribe(gameEndedResult => {
       this.messageInput.nativeElement.blur();

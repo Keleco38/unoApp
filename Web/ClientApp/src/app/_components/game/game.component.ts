@@ -174,7 +174,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   getDirectionStringFromGame() {
-    return this.game.direction === Direction.right ? '-->' : '<--';
+    return this.game.direction === Direction.right ? '->' : '<-';
   }
 
   ngOnDestroy(): void {

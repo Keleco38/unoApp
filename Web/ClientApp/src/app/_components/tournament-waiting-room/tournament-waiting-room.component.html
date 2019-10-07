@@ -65,7 +65,13 @@
       <ul>
         <li *ngFor="let user of activeTournament.bannedUsers">
           {{ user.name }}
-          <span class="text-danger cursor-pointer" [ngbPopover]="popContent" placement="left" triggers="manual" #p1="ngbPopover" (click)="togglePopover(p1, user)"
+          <span
+            class="text-danger cursor-pointer"
+            [ngbPopover]="popContent"
+            placement="left"
+            triggers="manual"
+            #p1="ngbPopover"
+            (click)="togglePopover(p1, user)"
             >[X]</span
           >
         </li>
@@ -80,13 +86,14 @@
       </ul>
     </div>
     <p [hidden]="activeTournament.tournamentSetup.bannedCards.length > 0"><strong>Banned cards: </strong> None</p>
-    <p><strong>Player setup: </strong> Individual</p>
+    <p><strong>Name: </strong> {{ activeTournament.tournamentSetup.name | titlecase}}</p>
     <p><strong>Game type: </strong> {{ getGameTypePlaceholder() }}</p>
     <p><strong>Play until: </strong> {{ activeTournament.tournamentSetup.roundsToWin }}</p>
     <p><strong>Tournament size: </strong> {{ activeTournament.tournamentSetup.numberOfPlayers }}</p>
     <p><strong>+2/+4 skipping turn: </strong> {{ activeTournament.tournamentSetup.drawFourDrawTwoShouldSkipTurn }}</p>
     <p><strong>Matching card steals turn: </strong> {{ activeTournament.tournamentSetup.matchingCardStealsTurn }}</p>
     <p><strong>Draw auto play: </strong> {{ activeTournament.tournamentSetup.drawAutoPlay }}</p>
+    <p><strong>Spectators can view hands: </strong> {{ activeTournament.tournamentSetup.spectatorsCanViewHands }}</p>
     <p>
       <strong>Wild card playable only as last option: </strong>
       {{ activeTournament.tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}

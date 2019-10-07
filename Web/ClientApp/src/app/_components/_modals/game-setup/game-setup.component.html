@@ -108,7 +108,7 @@
           <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.drawAutoPlay" id="drawAutoPlay"></ui-switch>
         </div>
       </div>
-      <div class="form-group row">
+      <div class="form-group row" [hidden]="gameSetup.playersSetup != 2">
         <label for="name" for="canSeeTeammatesHandInTeamGame" class="col-8">Can see teammates cards:</label>
         <div class="col-4 ">
           <ui-switch

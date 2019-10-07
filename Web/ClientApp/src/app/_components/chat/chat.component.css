@@ -1,18 +1,24 @@
-.card-header{
-    padding:0.2rem;
+.card-header {
+  padding: 0.2rem;
+}
+.card-body {
+  padding: 0.5rem;
+}
+p {
+  margin-bottom: 0.1rem;
+}
+@media (max-width: 768px) {
+  p {
+    font-size: 0.75rem;
   }
-  .card-body{
-    padding:0.5rem;
+  h6 {
+    font-size: 0.75rem;
   }
-    p {
-      margin-bottom: 0.1rem;
-    }
-    @media (max-width: 768px) {
-      p {
-        font-size: 0.85rem;
-      }
-    }
-  
-    #lol:after{
-      content:'\25BE'
-    }
+  .form-control {
+    font-size: 0.75rem;
+  }
+}
+
+#emojiContainer:after {
+  content: '\25BE';
+}

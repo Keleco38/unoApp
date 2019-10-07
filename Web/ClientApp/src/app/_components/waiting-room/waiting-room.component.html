@@ -93,7 +93,7 @@
     <p><strong>Matching card steals turn: </strong> {{ activeGame.gameSetup.matchingCardStealsTurn }}</p>
     <p><strong>Draw autoplay: </strong> {{ activeGame.gameSetup.drawAutoPlay }}</p>
     <p><strong>Reverse skipping turn in 2p: </strong> {{ activeGame.gameSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
-    <p><strong>Can see teammate's cards: </strong> {{ activeGame.gameSetup.canSeeTeammatesHandInTeamGame }}</p>
+    <p [hidden]="activeGame.gameSetup.playersSetup != 2"><strong>Can see teammate's cards: </strong> {{ activeGame.gameSetup.canSeeTeammatesHandInTeamGame }}</p>
     <p><strong>Spectators can view hands: </strong> {{ activeGame.gameSetup.spectatorsCanViewHands }}</p>
     <p><strong>Wild card playable only as last option: </strong> {{ activeGame.gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}</p>
     <p><strong>Password set:</strong> {{ activeGame.gameSetup.password.length > 0 }}</p>

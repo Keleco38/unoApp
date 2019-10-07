@@ -23,7 +23,6 @@ namespace Web.Helpers
             CreateMap<Tournament, TournamentDto>();
             CreateMap<TournamentRound, TournamentRoundDto>();
             CreateMap<TournamentRoundGame, TournamentRoundGameDto>();
-            CreateMap<TournamentSetup, TournamentSetupDto>();
             CreateMap<Contestant, ContestantDto>();
 
 

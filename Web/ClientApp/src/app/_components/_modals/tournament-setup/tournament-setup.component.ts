@@ -19,7 +19,11 @@ export class TournamentSetupComponent implements OnInit {
   private _activeTournament: Tournament;
   tournamentSetup: TournamentSetup;
 
-  constructor(private _hubService: HubService, private _activeModal: NgbActiveModal, private _tournamentStorageService:TournamentStorageService) {}
+  constructor(
+    private _hubService: HubService,
+    private _activeModal: NgbActiveModal,
+    private _tournamentStorageService: TournamentStorageService
+  ) {}
 
   ngOnInit() {
     this._tournamentStorageService.activeTournament.pipe(first()).subscribe((tournament: Tournament) => {
@@ -37,8 +41,9 @@ export class TournamentSetupComponent implements OnInit {
         drawFourDrawTwoShouldSkipTurn: true,
         bannedCards: [],
         matchingCardStealsTurn: true,
+        spectatorsCanViewHands: false,
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
-        drawAutoPlay:false
+        drawAutoPlay: false
       };
     } else {
       this.hideAdminPasswordPart = true;
@@ -52,6 +57,8 @@ export class TournamentSetupComponent implements OnInit {
 
   confirm() {
     if (this._activeTournament === null) {
+      console.log(this.tournamentSetup);
+      
       this._hubService.createTournament(this.tournamentSetup, this.adminPassword);
     } else {
       this._hubService.updateTournamentSetup(this.tournamentSetup);

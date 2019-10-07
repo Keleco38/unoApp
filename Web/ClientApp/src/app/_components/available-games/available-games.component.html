@@ -7,7 +7,7 @@
         (click)="joinGame(availableGame)"
         *ngFor="let availableGame of availableGames"
       >
-        <div>
+        <div class="ellipsis-text">
           <span *ngIf="availableGame.isPasswordProtected">&#9919;</span>
           <span> {{ availableGame.host }} </span>
         </div>

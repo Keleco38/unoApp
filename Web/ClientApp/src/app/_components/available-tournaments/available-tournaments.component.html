@@ -7,9 +7,9 @@
         (click)="joinTournament(tournament)"
         *ngFor="let tournament of availableTournaments"
       >
-        <div>
+        <div class="ellipsis-text" [title]="tournament.name">
           <span *ngIf="tournament.isPasswordProtected">&#9919;</span>
-          <span> {{ tournament.name }} </span>
+          <span> {{ tournament.name | titlecase}} </span>
         </div>
         <span class="badge badge-pill" [ngClass]="getBadgeClass(tournament)">
           <span [hidden]="tournament.tournamentStarted">({{ tournament.numberOfPlayers }}/{{ tournament.requiredNumberOfPlayers }})</span>

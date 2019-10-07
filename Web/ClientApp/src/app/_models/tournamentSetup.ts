@@ -1,5 +1,4 @@
 import { GameType, CardValue } from './enums';
-import { Card } from "./card";
 
 export interface TournamentSetup{
     name:string;
@@ -13,4 +12,5 @@ export interface TournamentSetup{
     matchingCardStealsTurn:boolean;
     wildCardCanBePlayedOnlyIfNoOtherOptions:boolean;
     drawAutoPlay:boolean;
+    spectatorsCanViewHands: boolean;
 }

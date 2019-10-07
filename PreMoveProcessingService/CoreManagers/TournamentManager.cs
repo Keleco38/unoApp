@@ -48,7 +48,7 @@ namespace PreMoveProcessingService.CoreManagers
                         WildCardCanBePlayedOnlyIfNoOtherOptions = tournament.TournamentSetup.WildCardCanBePlayedOnlyIfNoOtherOptions,
                         CanSeeTeammatesHandInTeamGame = false,
                         DrawAutoPlay = tournament.TournamentSetup.DrawAutoPlay,
-                        SpectatorsCanViewHands = false
+                        SpectatorsCanViewHands = tournament.TournamentSetup.SpectatorsCanViewHands
                     }, tournament.Id);
                     _gameRepository.AddGame(game);
 
@@ -81,7 +81,7 @@ namespace PreMoveProcessingService.CoreManagers
                 }
 
             }
-            
+
             tournament.TournamentStarted = true;
 
         }

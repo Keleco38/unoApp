@@ -1,13 +1,15 @@
 <app-navbar [hidden]="!sidebarSettings.showNavbar"></app-navbar>
 <div class="row">
   <div class="col-12">
-    <h4 class="text-primary d-none d-sm-block">
-      Tournament: <b>{{ activeTournament.tournamentSetup.name }}</b>
-      <button (click)="exitTournament()" class="btn btn-sm btn-danger mx-2">
-        Exit tournament
-      </button>
-    </h4>
-    <button (click)="exitTournament()" class="btn d-sm-none d-block btn-sm btn-block btn-danger">Exit tournament</button>
+    <div class="jumbotron">
+      <h1 class="display-4">{{ activeTournament.tournamentSetup.name | titlecase }}</h1>
+      <p class="lead">
+        Tournament prize: Extra <b>{{ getExtraPointsWon() }}</b> points
+      </p>
+      <hr />
+      <p>Tournament brackets are displayed below, followed by the chat.</p>
+      <button (click)="exitTournament()" class="btn  btn-danger">Exit Tournament</button>
+    </div>
     <div id="tournament" class="scrollable-div-x">
       <ul class="round" *ngFor="let round of activeTournament.tournamentRounds">
         <ng-container *ngFor="let roundGame of round.tournamentRoundGames">
@@ -29,7 +31,6 @@
               >{{ getPlayerFromTheGameAtPosition(roundGame.game, 1)?.user.name }}</span
             >
             <span *ngIf="!getPlayerFromTheGameAtPosition(roundGame.game, 1)?.user.name">&nbsp;</span>
-
             <span class="score">{{ getPlayerFromTheGameAtPosition(roundGame.game, 1)?.roundsWonCount }}</span>
           </li>
           <li class="game game-spacer d-flex  align-items-center">

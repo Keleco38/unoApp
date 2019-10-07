@@ -186,9 +186,9 @@ namespace Web.Hubs
                 tournamentSetup.Name = "tour.";
             }
 
-            else if (tournamentSetup.Name.Length > 10)
+            else if (tournamentSetup.Name.Length > 25)
             {
-                tournamentSetup.Name = tournamentSetup.Name.Substring(0, 10);
+                tournamentSetup.Name = tournamentSetup.Name.Substring(0, 25);
             }
             var tournament = new Tournament(tournamentSetup);
             tournament.Contestants.Add(new Contestant(GetCurrentUser()));
@@ -411,9 +411,9 @@ namespace Web.Hubs
                 tournamentSetup.Name = "unnamed";
             }
 
-            else if (tournamentSetup.Name.Length > 10)
+            else if (tournamentSetup.Name.Length > 25)
             {
-                tournamentSetup.Name = tournamentSetup.Name.Substring(0, 10);
+                tournamentSetup.Name = tournamentSetup.Name.Substring(0, 25);
 
             }
 
