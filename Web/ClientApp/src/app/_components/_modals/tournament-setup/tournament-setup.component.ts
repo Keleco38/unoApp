@@ -57,8 +57,6 @@ export class TournamentSetupComponent implements OnInit {
 
   confirm() {
     if (this._activeTournament === null) {
-      console.log(this.tournamentSetup);
-      
       this._hubService.createTournament(this.tournamentSetup, this.adminPassword);
     } else {
       this._hubService.updateTournamentSetup(this.tournamentSetup);

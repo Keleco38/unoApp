@@ -19,7 +19,6 @@ namespace EntityObjects
         }
 
         public string Id { get; set; }
-        public string Name { get; set; }
         public bool TournamentStarted { get; set; }
         public string TournamentWinner { get; set; }
         public bool TournamentEnded { get; set; }

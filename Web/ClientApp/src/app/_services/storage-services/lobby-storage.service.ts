@@ -48,7 +48,7 @@ export class LobbyStorageService implements OnDestroy {
     return this._availableGamesObservable.asObservable();
   }
 
-  get availableTournament() {
+  get availableTournaments() {
     return this._availableTournamentsObservable.asObservable();
   }
 

@@ -116,13 +116,13 @@ export class HubService {
         this._updateGameChatMessagesObservable.next(message);
       }
     });
- 
-    this._hubConnection.on('RetrieveFullChat', (messages: ChatMessage[],chatDestination: ChatDestination) => {
+
+    this._hubConnection.on('RetrieveFullChat', (messages: ChatMessage[], chatDestination: ChatDestination) => {
       if (chatDestination == ChatDestination.tournament) {
-      this._updateRetrieveFullTournamentChatMessagesObservable.next(messages);
+        this._updateRetrieveFullTournamentChatMessagesObservable.next(messages);
       } else if (chatDestination == ChatDestination.game) {
-      this._updateRetrieveFullGameChatMessagesObservable.next(messages);
-      } 
+        this._updateRetrieveFullGameChatMessagesObservable.next(messages);
+      }
     });
 
     this._hubConnection.on('RetrieveFullGameLog', (log: string[]) => {
@@ -151,6 +151,9 @@ export class HubService {
 
     this._hubConnection.on('SendToTheLobby', () => {
       this._router.navigateByUrl('/');
+    });
+    this._hubConnection.on('SendToTheTournament', () => {
+      this._router.navigateByUrl('/tournament');
     });
 
     this._hubConnection.on('StartModalPhasePlayers', (isTournament: boolean) => {
@@ -271,6 +274,12 @@ export class HubService {
     this._hubConnection.invoke('AdminKickUser', user.name, password);
   }
 
+  adminCleanupGame(gameId: string, password: string) {
+    this._hubConnection.invoke('AdminCleanupGame', gameId, password);
+  }
+  adminCleanupTournament(tournamentId: string, password: string) {
+    this._hubConnection.invoke('AdminCleanupTournament', tournamentId, password);
+  }
   sendIsReadyForGame() {
     this._hubConnection.invoke('ReadyForGame');
   }

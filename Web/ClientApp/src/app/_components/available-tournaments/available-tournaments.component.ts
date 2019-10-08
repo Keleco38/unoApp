@@ -22,7 +22,7 @@ export class AvailableTournamentsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this._lobbyStorageService.availableTournament.pipe(takeWhile(() => this._isAlive)).subscribe(tournaments => {
+    this._lobbyStorageService.availableTournaments.pipe(takeWhile(() => this._isAlive)).subscribe(tournaments => {
       this.availableTournaments = tournaments;
     });
   }

@@ -36,4 +36,54 @@
       </table>
     </div>
   </div>
+  <div class="row" [hidden]="!password || availableTournaments.length == 0">
+    <div class="col-12">
+      <h5 class="text-primary">Cleanup tournaments</h5>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Tournament</th>
+            <th>Cleanup</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tournament of availableTournaments; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ tournament.name }}</td>
+            <td><span class="text-danger cursor-pointer" (click)="cleanupTournament(tournament)">[CLEANUP]</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <div class="row" [hidden]="!password || availableGames.length == 0">
+    <div class="col-12">
+      <h5 class="text-primary">Cleanup games</h5>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Game</th>
+            <th>Cleanup</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let game of availableGames; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ game.host }}</td>
+            <td><span class="text-danger cursor-pointer" (click)="cleanupGame(game)">[CLEANUP]</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+
+
 </div>
