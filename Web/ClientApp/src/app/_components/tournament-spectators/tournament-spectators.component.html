@@ -3,7 +3,18 @@
     <div class="alert alert-primary">Tour. Specs. ({{ activeTournament.spectators.length }}):</div>
     <ul class="list-group">
       <li class="list-group-item" *ngFor="let spectator of activeTournament.spectators">
-        {{ spectator.name }}
+        <div class="d-flex w-100 justify-content-between align-items-center">
+          <span>
+            {{ spectator.name }}
+          </span>
+          <span
+            class="badge badge-pill badge-danger cursor-pointer"
+            (click)="openKickBanUserModal(spectator)"
+            *ngIf="!activeTournament.tournamentStarted && currentUser.connectionId == activeTournament.contestants[0]?.user.connectionId"
+          >
+            [X]
+          </span>
+        </div>
       </li>
     </ul>
   </div>

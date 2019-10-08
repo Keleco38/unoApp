@@ -3,7 +3,18 @@
     <div class="alert alert-primary">Game Specs. ({{ game.spectators.length }}):</div>
     <ul class="list-group">
       <li class="list-group-item" *ngFor="let spectator of game.spectators">
-        {{ spectator.user.name }}
+        <div class="d-flex w-100 justify-content-between align-items-center">
+          <span>
+            {{ spectator.user.name }}
+          </span>
+          <span
+            class="badge badge-pill badge-danger cursor-pointer"
+            (click)="openKickBanUserModal(spectator.user)"
+            *ngIf="!game.gameStarted && currentUser.connectionId == game.players[0]?.user.connectionId"
+          >
+            [X]
+          </span>
+        </div>
       </li>
     </ul>
   </div>

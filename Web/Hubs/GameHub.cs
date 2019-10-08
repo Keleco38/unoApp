@@ -386,18 +386,22 @@ namespace Web.Hubs
                 return;
             }
 
-            var playerToKick = game.Players.First(y => y.User.Name == name);
+            var isPlayer = game.Players.FirstOrDefault(x => x.User.Name == name);
+
+            //check if spectator or a player
+            var userToKick = isPlayer != null ? isPlayer.User : game.Spectators.First(x => x.User.Name == name).User;
+
             if (isBan)
             {
-                game.BannedUsers.Add(playerToKick.User);
+                game.BannedUsers.Add(userToKick);
             }
 
             var action = isBan ? "banned" : "kicked";
 
-            await DisplayToastMessageToUser(playerToKick.User.ConnectionId, $"You have been {action} from the game.", "error");
-            await Clients.Client(playerToKick.User.ConnectionId).SendAsync("SendToTheLobby");
-            await ExitGame(playerToKick.User);
-            await SendMessage($"Player {playerToKick.User.Name} was {action} from the game.", TypeOfMessage.Server, ChatDestination.Game, user);
+            await DisplayToastMessageToUser(userToKick.ConnectionId, $"You have been {action} from the game.", "error");
+            await Clients.Client(userToKick.ConnectionId).SendAsync("SendToTheLobby");
+            await ExitGame(userToKick);
+            await SendMessage($"Player {userToKick.Name} was {action} from the game.", TypeOfMessage.Server, ChatDestination.Game, user);
         }
 
         public async Task UnbanPlayerFromGame(string name)
@@ -425,18 +429,22 @@ namespace Web.Hubs
                 return;
             }
 
-            var playerToKick = tournament.Contestants.First(y => y.User.Name == name);
+            var isPlayer = tournament.Contestants.FirstOrDefault(x => x.User.Name == name);
+
+            //check if spectator or a player
+            var userToKick = isPlayer != null ? isPlayer.User : tournament.Spectators.First(x => x.Name == name);
+
             if (isBan)
             {
-                tournament.BannedUsers.Add(playerToKick.User);
+                tournament.BannedUsers.Add(userToKick);
             }
 
             var action = isBan ? "banned" : "kicked";
 
-            await DisplayToastMessageToUser(playerToKick.User.ConnectionId, $"You have been {action} from the tournament.", "error");
-            await Clients.Client(playerToKick.User.ConnectionId).SendAsync("SendToTheLobby");
-            await ExitTournament(playerToKick.User);
-            await SendMessage($"Player {playerToKick.User.Name} was {action} from the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, user);
+            await DisplayToastMessageToUser(userToKick.ConnectionId, $"You have been {action} from the tournament.", "error");
+            await Clients.Client(userToKick.ConnectionId).SendAsync("SendToTheLobby");
+            await ExitTournament(userToKick);
+            await SendMessage($"Player {userToKick.Name} was {action} from the tournament.", TypeOfMessage.Server, ChatDestination.Tournament, user);
         }
 
         public async Task UnbanContestantFromTournament(string name)
