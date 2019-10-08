@@ -11,6 +11,7 @@ import { takeWhile } from 'rxjs/operators';
   styleUrls: ['./game-tabs.component.css']
 })
 export class GameTabsComponent implements OnInit {
+  @Output('dropdownOpenChange') dropdownOpenChange = new EventEmitter();
   @Input('sidebarChatHeight') sidebarChatHeight: number;
 
   private _isAlive: boolean = true;

@@ -7,11 +7,11 @@
     [(opened)]="isSidebarOpen"
     [sidebarClass]="getSidebarBackgroundClass()"
     [position]="'bottom'"
-    [closeOnClickOutside]="!sidebarSettings.keepSidebarOpen"
+    [closeOnClickOutside]="closeOnClickOutside && !sidebarSettings.keepSidebarOpen"
   >
     <div class="row">
       <div class="col-12">
-        <app-game-tabs [sidebarChatHeight]="sidebarSettings.sidebarSize"></app-game-tabs>
+        <app-game-tabs [sidebarChatHeight]="sidebarSettings.sidebarSize" (dropdownOpenChange)="dropdownOpenChange($event)"></app-game-tabs>
       </div>
     </div>
   </ng-sidebar>

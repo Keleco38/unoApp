@@ -28,6 +28,7 @@ export class GameComponent implements OnInit, OnDestroy {
   private _isAlive: boolean = true;
 
   isSidebarOpen = false;
+  closeOnClickOutside = true;
   currentUser: User;
   game: Game;
   numberUnreadMessages = 0;
@@ -124,6 +125,10 @@ export class GameComponent implements OnInit, OnDestroy {
       return;
     }
     this._playCardService.playCard(cardPlayed, this.game, this.currentUser, this.myCards);
+  }
+
+  dropdownOpenChange(event) {
+    this.closeOnClickOutside = !event;
   }
 
   exitGame() {
