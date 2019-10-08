@@ -9,13 +9,13 @@ p {
 }
 @media (max-width: 768px) {
   p {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
   }
   h6 {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
   }
   .form-control {
-    font-size: 0.75rem;
+    font-size: 0.8r5em;
   }
 }
 
