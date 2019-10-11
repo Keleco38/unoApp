@@ -26,7 +26,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} inspected top 5 cards from the deck";
             messagesToLog.Add(messageToLog);
 
-            if (game.PlayerToPlay.Cards.Any())
+            if (game.PlayerToPlay.Cards.Any() || game.Players.Any(x=>x.Cards.Any(c=>c.Value==CardValue.TheLastStand)))
             {
                 List<KeyValuePair<string, List<ICard>>> result = new List<KeyValuePair<string, List<ICard>>>();
                 result.Add(new KeyValuePair<string, List<ICard>>("Deck's' top 5 cards", game.Deck.Cards.Take(5).ToList()));

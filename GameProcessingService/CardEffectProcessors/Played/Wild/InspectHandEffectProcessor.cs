@@ -35,7 +35,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             moveParams.PlayerTargeted = automaticallyTriggeredResultMagneticPolarity.MagneticPolaritySelectedPlayer;
             messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
 
-            if (game.PlayerToPlay.Cards.Any())
+            if (game.PlayerToPlay.Cards.Any() || game.Players.Any(x => x.Cards.Any(c => c.Value == CardValue.TheLastStand)))
             {
 
                 List<KeyValuePair<string, List<ICard>>> result = new List<KeyValuePair<string, List<ICard>>>
