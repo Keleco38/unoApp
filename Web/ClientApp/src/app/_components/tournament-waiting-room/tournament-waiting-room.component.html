@@ -86,11 +86,12 @@
       </ul>
     </div>
     <p [hidden]="activeTournament.tournamentSetup.bannedCards.length > 0"><strong>Banned cards: </strong> None</p>
-    <p><strong>Name: </strong> {{ activeTournament.tournamentSetup.name | titlecase}}</p>
+    <p><strong>Name: </strong> {{ activeTournament.tournamentSetup.name | titlecase }}</p>
     <p><strong>Game type: </strong> {{ getGameTypePlaceholder() }}</p>
     <p><strong>Play until: </strong> {{ activeTournament.tournamentSetup.roundsToWin }}</p>
     <p><strong>Tournament size: </strong> {{ activeTournament.tournamentSetup.numberOfPlayers }}</p>
     <p><strong>+2/+4 skipping turn: </strong> {{ activeTournament.tournamentSetup.drawFourDrawTwoShouldSkipTurn }}</p>
+    <p><strong>Reverse skipping turn in 2p: </strong> {{ activeTournament.tournamentSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
     <p><strong>Matching card steals turn: </strong> {{ activeTournament.tournamentSetup.matchingCardStealsTurn }}</p>
     <p><strong>Draw auto play: </strong> {{ activeTournament.tournamentSetup.drawAutoPlay }}</p>
     <p><strong>Spectators can view hands: </strong> {{ activeTournament.tournamentSetup.spectatorsCanViewHands }}</p>
@@ -98,7 +99,7 @@
       <strong>Wild card playable only as last option: </strong>
       {{ activeTournament.tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}
     </p>
-    <p><strong>Reverse skipping turn in 2p: </strong> {{ activeTournament.tournamentSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
+    <p><strong>Limit color changing cards: </strong> {{ activeTournament.tournamentSetup.limitColorChangingCards }}</p>
     <p><strong>Password set:</strong> {{ activeTournament.tournamentSetup.password.length > 0 }}</p>
   </div>
 </div>

@@ -47,11 +47,13 @@ export class UtilityService {
           notifyWhenMentionedToast: true,
           useDarkTheme: false,
           showEmoji: true,
-          showNewbieTips: true
+          showNewbieTips: true,
+          notifyWhenGameStarting: true
         };
       }
-      if(this._userSettings.showEmoji==null)this._userSettings.showEmoji=true;
-      if(this._userSettings.showNewbieTips==null)this._userSettings.showNewbieTips=true;
+      if (this._userSettings.showEmoji == null) this._userSettings.showEmoji = true;
+      if (this._userSettings.showNewbieTips == null) this._userSettings.showNewbieTips = true;
+      if (this._userSettings.notifyWhenGameStarting == null) this._userSettings.notifyWhenGameStarting = true;
       this.saveUserSettings();
     }
     return this._userSettings;

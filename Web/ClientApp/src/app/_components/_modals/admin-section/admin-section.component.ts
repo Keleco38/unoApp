@@ -44,6 +44,13 @@ export class AdminSectionComponent implements OnInit, OnDestroy {
     }
   }
 
+  buzzAll() {
+    var cmfr = confirm(`Really buzz all players?`);
+    if (cmfr) {
+      this._hubService.adminBuzzAll(this.password);
+    }
+  }
+
   cleanupGame(game: GameList) {
     var cmfr = confirm(`Really cleanup game ${game.host}?`);
     if (cmfr) {

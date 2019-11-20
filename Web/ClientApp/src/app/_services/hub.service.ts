@@ -158,10 +158,16 @@ export class HubService {
 
     this._hubConnection.on('StartModalPhasePlayers', (isTournament: boolean) => {
       this._updateShowReadyPhasePlayersObservable.next(isTournament);
+      if (this._utilityService.userSettings.notifyWhenGameStarting) {
+        this.buzzPlayer('ding', true);
+      }
     });
 
     this._hubConnection.on('StartModalPhaseSpectators', (isTournament: boolean) => {
       this._updateShowReadyPhaseSpectatorsObservable.next(isTournament);
+      if (this._utilityService.userSettings.notifyWhenGameStarting) {
+        this.buzzPlayer('ding', true);
+      }
     });
 
     this._hubConnection.on('DisplayToastMessage', (message: string, toastrType: string) => {
@@ -272,6 +278,10 @@ export class HubService {
 
   adminKickUser(user: User, password: string) {
     this._hubConnection.invoke('AdminKickUser', user.name, password);
+  }
+
+  adminBuzzAll(password: string) {
+    this._hubConnection.invoke('AdminBuzzAll', password);
   }
 
   adminCleanupGame(gameId: string, password: string) {

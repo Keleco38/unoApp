@@ -36,15 +36,15 @@ namespace GameProcessingService.UnitTests
             _game = new Game(_gameSetup);
             _game.Direction = Direction.Left;
             _game.Deck = new Deck(_gameSetup);
-            _game.DiscardedPile = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack() };
+            _game.DiscardedPile = new List<ICard>() { new Charity(false), new BlackHole(false), new Blackjack(false) };
             _game.LastCardPlayed = new LastCardPlayed(CardColor.Blue, CardValue.Five, "", "", false);
             var player = new Player(new User("123", "john"),1);
             var player2 = new Player(new User("456", "andrew"),2);
-            player.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack(), new Charity(), new BlackHole(), new Blackjack() };
-            player2.Cards = new List<ICard>() { new Charity(), new BlackHole(), new Blackjack(), new Charity(), new BlackHole(), new Blackjack() };
+            player.Cards = new List<ICard>() { new Charity(false), new BlackHole(false), new Blackjack(false), new Charity(false), new BlackHole(false), new Blackjack(false) };
+            player2.Cards = new List<ICard>() { new Charity(false), new BlackHole(false), new Blackjack(false), new Charity(false), new BlackHole(false), new Blackjack(false) };
             _game.Players = new List<Player>() { player, player2 };
             _game.PlayerToPlay = player;
-            _moveParams = new MoveParams(player, player.Cards.First(), player, CardColor.Blue, _game.DiscardedPile.First(), new List<int>() { 1, 2, 3 }, new List<ICard>() { new Charity() }, 10, new List<int>() { 0, 1 }, new BlackHole(), "odd");
+            _moveParams = new MoveParams(player, player.Cards.First(), player, CardColor.Blue, _game.DiscardedPile.First(), new List<int>() { 1, 2, 3 }, new List<ICard>() { new Charity(false) }, 10, new List<int>() { 0, 1 }, new BlackHole(false), "odd");
 
         }
 

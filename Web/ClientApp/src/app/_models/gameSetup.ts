@@ -14,4 +14,5 @@ export interface GameSetup {
   canSeeTeammatesHandInTeamGame: boolean;
   drawAutoPlay: boolean;
   spectatorsCanViewHands: boolean;
+  limitColorChangingCards: boolean;
 }

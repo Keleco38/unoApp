@@ -8,15 +8,17 @@ namespace EntityObjects.Cards.Wild
 {
     public class DiscardWildCards : ICard
     {
-        public DiscardWildCards()
+        public DiscardWildCards(bool limitColorChangingCards)
         {
             Id = Guid.NewGuid().ToString();
+            ImageUrl = $"/images/cards/small/{(int)Color}/{Convert.ToInt32(limitColorChangingCards)}/{(int)Value}.png";
+            RequirePickColor = !limitColorChangingCards;
         }
         public string Id { get; }
         public CardColor Color => CardColor.Wild;
         public CardValue Value => CardValue.DiscardWildCards;
-        public string ImageUrl => $"/images/cards/small/{(int)Color}/{(int)Value}.png";
-        public bool RequirePickColor => true;
+        public string ImageUrl { get; }
+        public bool RequirePickColor { get; }
         public bool RequireTargetPlayer => false;
         public string Description => "At the cost of drawing one card every player will discard all wildcards from their hand.";
 

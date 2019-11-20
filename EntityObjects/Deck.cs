@@ -29,7 +29,7 @@ namespace EntityObjects
             Cards = new List<ICard>();
 
             AddNormalGameNormalCards();
-            AddNormalGameWildCards();
+            AddNormalGameWildCards(gameSetup.LimitColorChangingCards);
 
             if (gameSetup.GameType == GameType.SpecialWildCards)
             {
@@ -40,7 +40,7 @@ namespace EntityObjects
                 AddStealTurnCards();
                 AddStealTurnCards();
 
-                AddSpecialWildCards();
+                AddSpecialWildCards(gameSetup.LimitColorChangingCards);
             }
 
 
@@ -64,52 +64,52 @@ namespace EntityObjects
             Cards.RemoveAll(x => bannedCards.Contains(x.Value));
         }
 
-        private void AddSpecialWildCards()
+        private void AddSpecialWildCards(bool limitColorChangingCards)
         {
             for (int i = 1; i <= 4; i++)
             {
-                Cards.Add(new BlackHole());
-                Cards.Add(new DiscardWildCards());
-                Cards.Add(new SwapHands());
-                Cards.Add(new DoubleEdge());
-                Cards.Add(new DiscardColor());
-                Cards.Add(new HandOfGod());
-                Cards.Add(new Judgement());
-                Cards.Add(new UnitedWeFall());
-                Cards.Add(new ParadigmShift());
-                Cards.Add(new InspectHand());
-                Cards.Add(new GraveDigger());
-                Cards.Add(new RussianRoulette());
-                Cards.Add(new Roulette());
-                Cards.Add(new Duel());
-                Cards.Add(new FairPlay());
-                Cards.Add(new TheLastStand());
-                Cards.Add(new Charity());
-                Cards.Add(new TricksOfTheTrade());
-                Cards.Add(new Blackjack());
-                Cards.Add(new DiscardNumber());
-                Cards.Add(new MagneticPolarity());
-                Cards.Add(new FortuneTeller());
-                Cards.Add(new DoubleDraw());
-                Cards.Add(new Poison());
-                Cards.Add(new RandomColor());
-                Cards.Add(new PromiseKeeper());
-                Cards.Add(new Gambling());
+                Cards.Add(new BlackHole(limitColorChangingCards));
+                Cards.Add(new DiscardWildCards(limitColorChangingCards));
+                Cards.Add(new SwapHands(limitColorChangingCards));
+                Cards.Add(new DoubleEdge(limitColorChangingCards));
+                Cards.Add(new DiscardColor(limitColorChangingCards));
+                Cards.Add(new HandOfGod(limitColorChangingCards));
+                Cards.Add(new Judgement(limitColorChangingCards));
+                Cards.Add(new UnitedWeFall(limitColorChangingCards));
+                Cards.Add(new ParadigmShift(limitColorChangingCards));
+                Cards.Add(new InspectHand(limitColorChangingCards));
+                Cards.Add(new GraveDigger(limitColorChangingCards));
+                Cards.Add(new RussianRoulette(limitColorChangingCards));
+                Cards.Add(new Roulette(limitColorChangingCards));
+                Cards.Add(new Duel(limitColorChangingCards));
+                Cards.Add(new FairPlay(limitColorChangingCards));
+                Cards.Add(new TheLastStand(limitColorChangingCards));
+                Cards.Add(new Charity(limitColorChangingCards));
+                Cards.Add(new TricksOfTheTrade(limitColorChangingCards));
+                Cards.Add(new Blackjack(limitColorChangingCards));
+                Cards.Add(new DiscardNumber(limitColorChangingCards));
+                Cards.Add(new MagneticPolarity(limitColorChangingCards));
+                Cards.Add(new FortuneTeller(limitColorChangingCards));
+                Cards.Add(new DoubleDraw(limitColorChangingCards));
+                Cards.Add(new Poison(limitColorChangingCards));
+                Cards.Add(new RandomColor(limitColorChangingCards));
+                Cards.Add(new PromiseKeeper(limitColorChangingCards));
+                Cards.Add(new Gambling(limitColorChangingCards));
                 //cads added 2 times
-                Cards.Add(new KeepMyHand());
-                Cards.Add(new KeepMyHand());
-                Cards.Add(new Deflect());
-                Cards.Add(new Deflect());
+                Cards.Add(new KeepMyHand(limitColorChangingCards));
+                Cards.Add(new KeepMyHand(limitColorChangingCards));
+                Cards.Add(new Deflect(limitColorChangingCards));
+                Cards.Add(new Deflect(limitColorChangingCards));
             }
 
         }
 
-        private void AddNormalGameWildCards()
+        private void AddNormalGameWildCards(bool limitColorChangingCards)
         {
             for (int i = 1; i <= 4; i++)
             {
-                Cards.Add(new ChangeColor());
-                Cards.Add(new DrawFour());
+                Cards.Add(new ChangeColor(limitColorChangingCards));
+                Cards.Add(new DrawFour(limitColorChangingCards));
             }
         }
 

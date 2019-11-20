@@ -13,6 +13,15 @@
           <input type="password" class="form-control" [(ngModel)]="password" />
         </div>
       </div>
+      <hr>
+    </div>
+  </div>
+  <div class="row" [hidden]="!password">
+    <div class="col-6">
+      <h5 class="text-primary">Buzz all!</h5>
+    </div>
+    <div class="col-6">
+      <button (click)="buzzAll()" class="btn btn-block btn-sm btn-outline-primary">Ding!</button>
     </div>
   </div>
   <div class="row" [hidden]="!password">
@@ -57,8 +66,6 @@
       </table>
     </div>
   </div>
-
-
   <div class="row" [hidden]="!password || availableGames.length == 0">
     <div class="col-12">
       <h5 class="text-primary">Cleanup games</h5>
@@ -80,10 +87,4 @@
       </table>
     </div>
   </div>
-
-
-
-
-
-
 </div>

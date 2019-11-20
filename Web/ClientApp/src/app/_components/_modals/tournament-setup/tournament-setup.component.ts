@@ -43,7 +43,8 @@ export class TournamentSetupComponent implements OnInit {
         matchingCardStealsTurn: true,
         spectatorsCanViewHands: false,
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
-        drawAutoPlay: false
+        drawAutoPlay: false,
+        limitColorChangingCards:true
       };
     } else {
       this.hideAdminPasswordPart = true;

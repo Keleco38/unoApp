@@ -37,7 +37,8 @@ export class GameSetupComponent implements OnInit {
         playersSetup: PlayersSetup.individual,
         canSeeTeammatesHandInTeamGame: true,
         drawAutoPlay: false,
-        spectatorsCanViewHands:true
+        spectatorsCanViewHands:true,
+        limitColorChangingCards:true
       };
     } else {
       this.gameSetup = this._game.gameSetup;

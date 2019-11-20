@@ -55,7 +55,7 @@
           <label for="gameType" class="col-4 col-form-label">Game type</label>
           <div class="col-8">
             <select [(ngModel)]="tournamentSetup.gameType" class="form-control form-control-sm" name="gameType" id="gameType">
-              <option value="1">Normal</option>
+              <option value="1">Classic</option>
               <option value="2">Special Wild Cards</option>
             </select>
           </div>
@@ -182,6 +182,17 @@
               [(ngModel)]="tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions"
               name="wildCardCanBePlayedOnlyIfNoOtherOptions"
               id="wildCardCanBePlayedOnlyIfNoOtherOptions"
+            ></ui-switch>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="name" for="limitColorChangingCards" class="col-8">Limit color changing cards:</label>
+          <div class="col-4 ">
+            <ui-switch
+              class="form-check-input"
+              size="small"
+              [(ngModel)]="tournamentSetup.limitColorChangingCards"
+              id="limitColorChangingCards"
             ></ui-switch>
           </div>
         </div>

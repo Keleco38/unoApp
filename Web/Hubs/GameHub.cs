@@ -1,23 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Common.Contants;
 using Common.Enums;
 using DomainObjects;
 using EntityObjects;
-using EntityObjects.Cards.Abstraction;
 using GameProcessingService.CoreManagers;
-using GameProcessingService.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using PreMoveProcessingService.CoreManagers;
 using Repository;
-using Web.Helpers;
 using Web.Models;
 
 namespace Web.Hubs
@@ -266,6 +261,34 @@ namespace Web.Hubs
             await SendMessage($"User {user.Name} has created new game", TypeOfMessage.Server, ChatDestination.All, user);
         }
 
+        public async Task AdminBuzzAll(string password)
+        {
+            if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))
+            {
+                await DisplayToastMessageToUser(Context.ConnectionId, "Unauthorized", "error");
+                return;
+            }
+
+            var allPlayers = _userRepository.GetAllUsers();
+
+            var msgDto = _mapper.Map<ChatMessageDto>(new ChatMessage("Server", $"Moderator has dinged all the users!", TypeOfMessage.Server));
+
+
+            foreach (var player in allPlayers)
+            {
+                await Clients.Client(player.ConnectionId).SendAsync("BuzzPlayer", "ding");
+                if (!string.IsNullOrEmpty(player.ActiveGameId))
+                {
+                    await Clients.Client(player.ConnectionId).SendAsync("PostNewMessage", msgDto, ChatDestination.Game);
+                }
+                if (!string.IsNullOrEmpty(player.ActiveTournamentId))
+                {
+                    await Clients.Client(player.ConnectionId).SendAsync("PostNewMessage", msgDto, ChatDestination.Tournament);
+                }
+                await Clients.Client(player.ConnectionId).SendAsync("PostNewMessage", msgDto, ChatDestination.All);
+            }
+
+        }
         public async Task AdminKickUser(string name, string password)
         {
             if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))

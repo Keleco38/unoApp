@@ -17,5 +17,6 @@ namespace EntityObjects
         public int NumberOfPlayers { get; set; }
         public bool DrawAutoPlay { get; set; }
         public bool SpectatorsCanViewHands { get; set; }
+        public bool LimitColorChangingCards { get; set; }
     }
 }

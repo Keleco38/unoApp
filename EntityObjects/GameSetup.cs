@@ -18,5 +18,6 @@ namespace EntityObjects
         public bool CanSeeTeammatesHandInTeamGame { get; set; }
         public bool DrawAutoPlay { get; set; }
         public bool SpectatorsCanViewHands { get; set; }
+        public bool LimitColorChangingCards { get; set; }
     }
 }

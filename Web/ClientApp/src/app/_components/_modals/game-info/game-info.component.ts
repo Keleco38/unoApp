@@ -34,7 +34,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
   }
 
   getGameTypePlaceholder() {
-    return this.game.gameSetup.gameType == GameType.normal ? 'Normal' : 'Special Wild Cards';
+    return this.game.gameSetup.gameType == GameType.normal ? 'Classic' : 'Special Wild Cards';
   }
   
   getPlayerSetupPlaceholder() {
