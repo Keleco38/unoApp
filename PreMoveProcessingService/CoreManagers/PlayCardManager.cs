@@ -44,6 +44,11 @@ namespace PreMoveProcessingService.CoreManagers
             var playerTargeted = string.IsNullOrEmpty(playerTargetedId) ? _gameManager.GetNextPlayer(game, playerPlayed, game.Players) : game.Players.First(x => x.Id == playerTargetedId);
             var colorForLastCard = targetedCardColor == 0 ? cardPlayed.Color : targetedCardColor;
 
+            if (colorForLastCard == CardColor.Wild)
+            {
+                colorForLastCard = game.LastCardPlayed.Color;
+            }
+
             game.LastCardPlayed = new LastCardPlayed(colorForLastCard, cardPlayed.Value, cardPlayed.ImageUrl, playerPlayed.User.Name, cardPlayed.Color == CardColor.Wild);
 
             var cardToDig = string.IsNullOrEmpty(cardToDigId) ? null : game.DiscardedPile.First(x => x.Id == cardToDigId);
