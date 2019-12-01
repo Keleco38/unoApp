@@ -1,20 +1,20 @@
-import { TournamentStorageService } from './../../../_services/storage-services/tournament-storage.service';
-import { TournamentSetup } from './../../../_models/tournamentSetup';
-import { Tournament } from 'src/app/_models/tournament';
-import { Component, OnInit } from '@angular/core';
-import { HubService } from '../../../_services/hub.service';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { first } from 'rxjs/operators';
-import { PlayersSetup, GameType } from '../../../_models/enums';
+import { TournamentStorageService } from "./../../../_services/storage-services/tournament-storage.service";
+import { TournamentSetup } from "./../../../_models/tournamentSetup";
+import { Tournament } from "src/app/_models/tournament";
+import { Component, OnInit } from "@angular/core";
+import { HubService } from "../../../_services/hub.service";
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { first } from "rxjs/operators";
+import { PlayersSetup, GameType } from "../../../_models/enums";
 
 @Component({
-  selector: 'app-tournament-setup',
-  templateUrl: './tournament-setup.component.html',
-  styleUrls: ['./tournament-setup.component.css']
+  selector: "app-tournament-setup",
+  templateUrl: "./tournament-setup.component.html",
+  styleUrls: ["./tournament-setup.component.css"]
 })
 export class TournamentSetupComponent implements OnInit {
   hideAdminPasswordPart = false;
-  adminPassword = '';
+  adminPassword = "";
 
   private _activeTournament: Tournament;
   tournamentSetup: TournamentSetup;
@@ -26,25 +26,27 @@ export class TournamentSetupComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this._tournamentStorageService.activeTournament.pipe(first()).subscribe((tournament: Tournament) => {
-      this._activeTournament = JSON.parse(JSON.stringify(tournament));
-    });
+    this._tournamentStorageService.activeTournament
+      .pipe(first())
+      .subscribe((tournament: Tournament) => {
+        this._activeTournament = JSON.parse(JSON.stringify(tournament));
+      });
 
     if (this._activeTournament === null) {
       this.tournamentSetup = {
         roundsToWin: 5,
         numberOfPlayers: 8,
         reverseShouldSkipTurnInTwoPlayers: true,
-        password: '',
-        name: '',
+        password: "",
+        name: "",
         gameType: GameType.specialWildCards,
         drawFourDrawTwoShouldSkipTurn: true,
         bannedCards: [],
         matchingCardStealsTurn: true,
-        spectatorsCanViewHands: false,
+        spectatorsCanViewHands: true,
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
         drawAutoPlay: false,
-        limitColorChangingCards:true
+        limitColorChangingCards: true
       };
     } else {
       this.hideAdminPasswordPart = true;
@@ -58,7 +60,10 @@ export class TournamentSetupComponent implements OnInit {
 
   confirm() {
     if (this._activeTournament === null) {
-      this._hubService.createTournament(this.tournamentSetup, this.adminPassword);
+      this._hubService.createTournament(
+        this.tournamentSetup,
+        this.adminPassword
+      );
     } else {
       this._hubService.updateTournamentSetup(this.tournamentSetup);
     }

@@ -168,7 +168,7 @@ namespace Web.Hubs
             await GetAllTournaments();
         }
 
-        public async Task CreateTournament(TournamentSetup tournamentSetup, string password)
+        public async Task CreateTournament(TournamentSetupDto tournamentSetupDto, string password)
         {
             if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))
             {
@@ -176,15 +176,16 @@ namespace Web.Hubs
                 return;
             }
 
-            if (string.IsNullOrEmpty(tournamentSetup.Name))
+            if (string.IsNullOrEmpty(tournamentSetupDto.Name))
             {
-                tournamentSetup.Name = "tour.";
+                tournamentSetupDto.Name = "tour.";
             }
 
-            else if (tournamentSetup.Name.Length > 25)
+            else if (tournamentSetupDto.Name.Length > 25)
             {
-                tournamentSetup.Name = tournamentSetup.Name.Substring(0, 25);
+                tournamentSetupDto.Name = tournamentSetupDto.Name.Substring(0, 25);
             }
+            var tournamentSetup = _mapper.Map<TournamentSetup>(tournamentSetupDto);
             var tournament = new Tournament(tournamentSetup);
             tournament.Contestants.Add(new Contestant(GetCurrentUser()));
             _tournamentRepository.AddTournament(tournament);
