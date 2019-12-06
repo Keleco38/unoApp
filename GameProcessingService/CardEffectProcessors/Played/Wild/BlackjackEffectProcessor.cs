@@ -30,21 +30,26 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 
                 _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
-                messageToLog += $"They went over 21. They will draw {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} cards.";
+                messageToLog += $"They went over 21. They will draw {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s).";
             }
             else if (moveParams.BlackjackNumber == 21)
             {
-                var numberToDiscard = moveParams.PlayerPlayed.Cards.Count < 3 ? moveParams.PlayerPlayed.Cards.Count : 3;
+                var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerPlayed, 3, moveParams.TargetedCardColor) });
+                messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
+
+                var numberToDiscard = moveParams.PlayerPlayed.Cards.Count < automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw ? moveParams.PlayerPlayed.Cards.Count : automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw;
                 moveParams.PlayerPlayed.Cards.RemoveRange(0, numberToDiscard);
-                messageToLog += $"They hit the blackjack. They will discard 3 cards.";
+                messageToLog += $"They hit the blackjack. They will discard {numberToDiscard} cards.";
 
             }
             else if (moveParams.BlackjackNumber < 21 && moveParams.BlackjackNumber > 17)
             {
+                var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerPlayed, 1, moveParams.TargetedCardColor) });
+                messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 
-                var numberToDiscard = moveParams.PlayerPlayed.Cards.Count < 1 ? moveParams.PlayerPlayed.Cards.Count : 1;
+                var numberToDiscard = moveParams.PlayerPlayed.Cards.Count < automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw ? moveParams.PlayerPlayed.Cards.Count : automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw;
                 moveParams.PlayerPlayed.Cards.RemoveRange(0, numberToDiscard);
-                messageToLog += $"They beat the dealer. They will discard 1 card.";
+                messageToLog += $"They beat the dealer. They will discard {numberToDiscard} card(s).";
             }
             else if (moveParams.BlackjackNumber == 17)
             {
@@ -61,7 +66,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 
                 _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
-                messageToLog += $"They pulled out. They will draw {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} cards.";
+                messageToLog += $"They pulled out. They will draw {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s).";
             }
             messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);

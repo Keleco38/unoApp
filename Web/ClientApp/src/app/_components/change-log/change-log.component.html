@@ -4,39 +4,85 @@
     <h2 class="text-primary">Changelog:</h2>
     <ul class="list-group">
       <li class="list-group-item">
+        <strong>06-12-2019:</strong>
+        <ul>
+            <li>
+                If there are only 2 players in game then the opponent will be
+                automatically selected when playing a card thar requires to target
+                another player
+              </li>
+          <li>
+            Duel card changed - the winner of the duel will now discard one
+            card. Duel cannot be deflected. If the player holds double draw in
+            his hands, he will either draw 6 or discard 2 (now  doubles the discard number).
+          </li>
+          <li>
+            Gambling card changed - If the player holds double draw in his
+            hands, he will either draw 6 or discard 2 (now  doubles the discard number).
+          </li>
+          <li>
+              Blackjack card changed - If the player holds double draw in his
+              hands, he will double the discard or draw effect.
+            </li>
+          <li>Roulette card is not affected by double draw (draw nor discard).</li>
+          <li>Russian Roulette card is not affected by double draw.</li>
+        </ul>
+      </li>
+      <li class="list-group-item">
         <strong>20-11-2019:</strong>
         <ul>
-            <li>Added limitation to the cards that can change color (can be changed during the game setup)</li>
-            <li>Added buzz when the game is starting (ready windows).</li>
-            <li>Moderators can use buzz all command (for the tournaments purposes).</li>
+          <li>
+            Added limitation to the cards that can change color (can be changed
+            during the game setup)
+          </li>
+          <li>Added buzz when the game is starting (ready windows).</li>
+          <li>
+            Moderators can use buzz all command (for the tournaments purposes).
+          </li>
         </ul>
       </li>
       <li class="list-group-item">
         <strong>07-10-2019:</strong>
         <ul>
-          <li>Moderators can cleanup the games and tournaments (in the admin section)</li>
+          <li>
+            Moderators can cleanup the games and tournaments (in the admin
+            section)
+          </li>
         </ul>
       </li>
       <li class="list-group-item">
         <strong>06-10-2019:</strong>
         <ul>
-          <li>Added /hand command that displays detailed card description (newbie tips phone optimized).</li>
+          <li>
+            Added /hand command that displays detailed card description (newbie
+            tips phone optimized).
+          </li>
         </ul>
       </li>
       <li class="list-group-item">
         <strong>05-10-2019:</strong>
         <ul>
-          <li>Added newbie tips, showing card description on hover. (configurable in user settings)</li>
-          <li>Spectators can view hands. (can be disabled in the game setup, disabled for the tournaments)</li>
+          <li>
+            Added newbie tips, showing card description on hover. (configurable
+            in user settings)
+          </li>
+          <li>
+            Spectators can view hands. (can be disabled in the game setup,
+            disabled for the tournaments)
+          </li>
           <li>Links can be pasted in chat (and clicked).</li>
           <li>@Mentions are now highlighted in chat</li>
           <li>Fixed direction of the paradigm shift.</li>
           <li>Players are now shuffled at the beginning of the game.</li>
           <li>
-            Teams are now setup up correctly (player's team order is correct), it will never happen that 2 players from the same team play
-            one after another.
+            Teams are now setup up correctly (player's team order is correct),
+            it will never happen that 2 players from the same team play one
+            after another.
           </li>
-          <li>Added few emoticons - simply click & insert. (configurable in user settings)</li>
+          <li>
+            Added few emoticons - simply click & insert. (configurable in user
+            settings)
+          </li>
         </ul>
       </li>
       <li class="list-group-item">
@@ -51,13 +97,19 @@
       <li class="list-group-item">
         <strong>29-09-2019:</strong>
         <ul>
-          <li>Maximum number of cards to draw from blackjack reduced to 5 (even if pulled out at 0)</li>
+          <li>
+            Maximum number of cards to draw from blackjack reduced to 5 (even if
+            pulled out at 0)
+          </li>
         </ul>
       </li>
       <li class="list-group-item">
         <strong>28-09-2019:</strong>
         <ul>
-          <li>Added draw autoplay (automatically play after draw - if not wild and if it can be played).</li>
+          <li>
+            Added draw autoplay (automatically play after draw - if not wild and
+            if it can be played).
+          </li>
           <li>Added not ready button to the ready phase</li>
           <li>**technical** updated to .net core 3.</li>
           <li>**technical** using https protocol instead of http.</li>
@@ -83,21 +135,28 @@
           <li>Added dark mode!</li>
           <li>Added retrieving of game chat and game log when reconnecting.</li>
           <li>Added tournament winners page.</li>
-          <li>Only moderators can create a tournament (contact them through discord - link in the navbar).</li>
+          <li>
+            Only moderators can create a tournament (contact them through
+            discord - link in the navbar).
+          </li>
         </ul>
       </li>
       <li class="list-group-item">
         <strong>17-09-2019:</strong>
         <ul>
-          <li>Added tournaments with the graphical interface (tournament brackets.).</li>
+          <li>
+            Added tournaments with the graphical interface (tournament
+            brackets.).
+          </li>
         </ul>
       </li>
       <li class="list-group-item">
         <strong>11-09-2019:</strong>
         <ul>
           <li>
-            Added teams. Host can pick if the player setup should be teams or individual. (ally players still auto play last stand, even if
-            the winning player was on their team.)
+            Added teams. Host can pick if the player setup should be teams or
+            individual. (ally players still auto play last stand, even if the
+            winning player was on their team.)
           </li>
         </ul>
       </li>
@@ -110,8 +169,14 @@
       <li class="list-group-item">
         <strong>07-09-2019:</strong>
         <ul>
-          <li>Host can setup if the matching card (as the last played card) steals turn. (can be played anytime)</li>
-          <li>Host can setup if the Wild card can be played only as the last option.</li>
+          <li>
+            Host can setup if the matching card (as the last played card) steals
+            turn. (can be played anytime)
+          </li>
+          <li>
+            Host can setup if the Wild card can be played only as the last
+            option.
+          </li>
         </ul>
       </li>
       <li class="list-group-item">
@@ -126,8 +191,10 @@
         <strong>04-09-2019:</strong>
         <ul>
           <li>
-            Double edge changed from 3/3 to 4/2. Also both sides can deflect double edge now. (max cards one person can draw is 6, if the
-            opposite player deflects, and the player playing doesn't have deflect card)
+            Double edge changed from 3/3 to 4/2. Also both sides can deflect
+            double edge now. (max cards one person can draw is 6, if the
+            opposite player deflects, and the player playing doesn't have
+            deflect card)
           </li>
         </ul>
       </li>
@@ -135,8 +202,8 @@
         <strong>02-09-2019:</strong>
         <ul>
           <li>
-            Fixed must call uno bug where the player would draw 2 cards even if the round ended (if he forgot to call uno from the previous
-            round).
+            Fixed must call uno bug where the player would draw 2 cards even if
+            the round ended (if he forgot to call uno from the previous round).
           </li>
         </ul>
       </li>
@@ -145,8 +212,12 @@
         <ul>
           <li>Host can now define game setup before creating the game.</li>
           <li>Added possibility to play normal uno (without wild cards).</li>
-          <li>Host can setup if the draw two/four should skip next player's turn</li>
-          <li>Host can setup if the reverse should skip next player's turn in 2p</li>
+          <li>
+            Host can setup if the draw two/four should skip next player's turn
+          </li>
+          <li>
+            Host can setup if the reverse should skip next player's turn in 2p
+          </li>
           <li>Host can setup max number of players</li>
         </ul>
       </li>
@@ -156,8 +227,9 @@
           <li>Roulette, Russian Roulette and Duel can now all be deflected.</li>
           <li>Double edge changed from 5/2 to 3/3.</li>
           <li>
-            Swap hands - if the player playing swap hands has keep my hand card, their hands will remain intact (previously was only
-            checking for targeted player if he has keep my hand).
+            Swap hands - if the player playing swap hands has keep my hand card,
+            their hands will remain intact (previously was only checking for
+            targeted player if he has keep my hand).
           </li>
         </ul>
       </li>
@@ -170,7 +242,9 @@
       <li class="list-group-item">
         <strong>23-08-2019:</strong>
         <ul>
-          <li>Fixed bug where poison resulted in drawing 5 cards instead of 2.</li>
+          <li>
+            Fixed bug where poison resulted in drawing 5 cards instead of 2.
+          </li>
           <li>Blackjack changed from 2/4/6 to 1/3/5</li>
           <li>Styling fix where x-scrolling was available</li>
         </ul>
@@ -178,23 +252,38 @@
       <li class="list-group-item">
         <strong>21-08-2019:</strong>
         <ul>
-          <li>Fixed bug where roulette and double draw didn't combine effects.</li>
+          <li>
+            Fixed bug where roulette and double draw didn't combine effects.
+          </li>
           <li>Added promise keeper card (look the help page).</li>
           <li>Added poison card (look the help page).</li>
           <li>Added random color card (look the help page).</li>
           <li>Added gambling card (look the help page).</li>
-          <li>Nerfed tricks of trade: Now maximum number of cards to trade is 2 (previously 3).</li>
+          <li>
+            Nerfed tricks of trade: Now maximum number of cards to trade is 2
+            (previously 3).
+          </li>
           <li>Charity card can now gift other charity cards.</li>
-          <li>Added one extra deck of normal cards on top of current setup (fixed ratio wild:normal).</li>
+          <li>
+            Added one extra deck of normal cards on top of current setup (fixed
+            ratio wild:normal).
+          </li>
         </ul>
       </li>
       <li class="list-group-item">
         <strong>19-08-2019:</strong>
         <ul>
-          <li>Fixed bug where you couldn't join the game if the password has been removed.</li>
-          <li>Player can show top navigation bar in game (to access settings and help page), this is located under MISC tab.</li>
           <li>
-            Decreased number of standard uno decks from 4 to 3, decreased number of special wild cards from 8 to 4.(fix ratio wild:normal).
+            Fixed bug where you couldn't join the game if the password has been
+            removed.
+          </li>
+          <li>
+            Player can show top navigation bar in game (to access settings and
+            help page), this is located under MISC tab.
+          </li>
+          <li>
+            Decreased number of standard uno decks from 4 to 3, decreased number
+            of special wild cards from 8 to 4.(fix ratio wild:normal).
           </li>
           <li>Small tweaks.</li>
         </ul>
@@ -202,19 +291,36 @@
       <li class="list-group-item">
         <strong>18-08-2019 (patch 2):</strong>
         <ul>
-          <li>Added double draw card. Please read the card effect under the help page.</li>
+          <li>
+            Added double draw card. Please read the card effect under the help
+            page.
+          </li>
           <li>Fixed bug where the sidebar's settings were not saved.</li>
-          <li>Fixed bug where steal turn could not be played if the previous card was also steal turn.</li>
-          <li>Reduced the number of magnetic polarities in deck from 16 to 8.</li>
+          <li>
+            Fixed bug where steal turn could not be played if the previous card
+            was also steal turn.
+          </li>
+          <li>
+            Reduced the number of magnetic polarities in deck from 16 to 8.
+          </li>
         </ul>
       </li>
       <li class="list-group-item">
         <strong>18-08-2019 (patch 1):</strong>
         <ul>
-          <li>Added extra set of normal cards on top of the current deck (fix ratio wild:normal).</li>
+          <li>
+            Added extra set of normal cards on top of the current deck (fix
+            ratio wild:normal).
+          </li>
           <li>Added navbar.</li>
-          <li>Added user settings page (users can mute buzz notifications, turn on notify when my turn to play...)</li>
-          <li>Sidebar settings and user settings are now saved per browser (will stay the same after page refresh)</li>
+          <li>
+            Added user settings page (users can mute buzz notifications, turn on
+            notify when my turn to play...)
+          </li>
+          <li>
+            Sidebar settings and user settings are now saved per browser (will
+            stay the same after page refresh)
+          </li>
           <li>Bug fix.</li>
           <li>Max number of cards to ban increased to 5.</li>
         </ul>
@@ -223,22 +329,37 @@
         <strong>17-08-2019:</strong>
         <ul>
           <li>Added new help page</li>
-          <li>Nerfed charity. In order to play this card you must draw a card.</li>
-          <li>Nerfed discard color. In order to play this card you must draw a card.</li>
-          <li>Nerfed discard wildcards. In order to play this card you must draw a card.</li>
-          <li>Nerfed discard numbers. In order to play this card you must draw a card. Now can discard 2 numbers instead of 3.</li>
+          <li>
+            Nerfed charity. In order to play this card you must draw a card.
+          </li>
+          <li>
+            Nerfed discard color. In order to play this card you must draw a
+            card.
+          </li>
+          <li>
+            Nerfed discard wildcards. In order to play this card you must draw a
+            card.
+          </li>
+          <li>
+            Nerfed discard numbers. In order to play this card you must draw a
+            card. Now can discard 2 numbers instead of 3.
+          </li>
           <li>Duel card always results in drawing 3 cards.</li>
           <li>Russian Roulette now results in drawing 3 cards, not 6.</li>
           <li>
-            Blackjack changed. If the player hits blackjack he will discard 4 cards (previously 5). If the player hits number higher than 21
-            he will draw 6 cards (previously 7)
+            Blackjack changed. If the player hits blackjack he will discard 4
+            cards (previously 5). If the player hits number higher than 21 he
+            will draw 6 cards (previously 7)
           </li>
         </ul>
       </li>
       <li class="list-group-item">
         <strong>16-08-2019:</strong>
         <ul>
-          <li>Fixed bug where you couldn't play a wildcard, but instead you had to draw a card.</li>
+          <li>
+            Fixed bug where you couldn't play a wildcard, but instead you had to
+            draw a card.
+          </li>
         </ul>
       </li>
       <li class="list-group-item">
@@ -257,7 +378,10 @@
       <li class="list-group-item">
         <strong>13-08-2019:</strong>
         <ul>
-          <li>Added "Uno" button which is required to press when you have 1 card left. Otherwise draw 2 cards.</li>
+          <li>
+            Added "Uno" button which is required to press when you have 1 card
+            left. Otherwise draw 2 cards.
+          </li>
         </ul>
       </li>
     </ul>

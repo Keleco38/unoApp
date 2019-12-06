@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Common.Enums;
 using EntityObjects;
-using GameProcessingService.CardEffectProcessors.AutomaticallyTriggered;
 using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
@@ -13,13 +11,11 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
     {
 
         private readonly IGameManager _gameManager;
-        private readonly IEnumerable<IAutomaticallyTriggeredCardEffectProcessor> _automaticallyTriggeredCardEffectProcessors;
         public CardValue CardAffected => CardValue.Roulette;
 
-        public RouletteEffectProcessor(IGameManager gameManager, IEnumerable<IAutomaticallyTriggeredCardEffectProcessor> automaticallyTriggeredCardEffectProcessors)
+        public RouletteEffectProcessor(IGameManager gameManager)
         {
             _gameManager = gameManager;
-            _automaticallyTriggeredCardEffectProcessors = automaticallyTriggeredCardEffectProcessors;
         }
 
 
@@ -42,18 +38,14 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 else
                 {
                     moveParams.PlayerTargeted.Cards.RemoveRange(0, numberOfCardsToDiscard);
-                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} is a lucky winner! They will discard {numberOfCardsToDiscard} cards. ";
+                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} is a lucky winner! They will discard {numberOfCardsToDiscard} card(s). ";
                 }
             }
             else
             {
                 //draw   
                 var numberOfCardsToDraw = random.Next(1, 5);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't have any luck! They must draw {numberOfCardsToDraw} cards. ";
-
-                var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerTargeted, numberOfCardsToDraw, moveParams.TargetedCardColor) });
-                messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
-
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't have any luck! They must draw {numberOfCardsToDraw} card(s). ";
                 _gameManager.DrawCard(game, moveParams.PlayerTargeted, numberOfCardsToDraw, false);
 
             }

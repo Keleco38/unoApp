@@ -29,25 +29,25 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             var callerWon = moveParams.DuelNumbers.Contains(numberRolled);
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} targeted {moveParams.PlayerTargeted.User.Name} with Duel. Numbers they picked: {String.Join(' ', moveParams.DuelNumbers)}. Number rolled: {numberRolled}. ";
 
-            var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { MagneticPolarityParams = new AutomaticallyTriggeredMagneticPolarityParams(moveParams.TargetedCardColor,moveParams.PlayerPlayed,moveParams.PlayerTargeted) });
+            var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { MagneticPolarityParams = new AutomaticallyTriggeredMagneticPolarityParams(moveParams.TargetedCardColor, moveParams.PlayerPlayed, moveParams.PlayerTargeted) });
             moveParams.PlayerTargeted = automaticallyTriggeredResultMagneticPolarity.MagneticPolaritySelectedPlayer;
             messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
 
             var playerLost = callerWon ? moveParams.PlayerTargeted : moveParams.PlayerPlayed;
             var playerWon = callerWon ? moveParams.PlayerPlayed : moveParams.PlayerTargeted;
 
-
-            messageToLog += $"{playerWon.User.Name} won! ";
-            if (playerLost == moveParams.PlayerPlayed)
-            {
-                moveParams.PlayerTargeted = moveParams.PlayerPlayed;
-            }
-
-            var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(playerLost, 3, moveParams.TargetedCardColor) });
+            //player won will discard 1 or 2 cards
+            var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(playerWon, 1, moveParams.TargetedCardColor) });
             messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
+            messageToLog += $"{playerWon.User.Name} won so they will discard {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s). ";
+            var numberOfCardsToDiscard = playerWon.Cards.Count < automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw ? playerWon.Cards.Count : automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw;
+            playerWon.Cards.RemoveRange(0, numberOfCardsToDiscard);
 
-            var automaticallyTriggeredResultDeflect = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.Deflect).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DeflectParams = new AutomaticallyTriggeredDeflectParams(moveParams.PlayerPlayed, moveParams.PlayerTargeted, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, moveParams.CardPlayed, moveParams.TargetedCardColor) });
-            messageToLog = automaticallyTriggeredResultDeflect.MessageToLog;
+            //player lost will draw 3 or 6 cards
+            automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(playerLost, 3, moveParams.TargetedCardColor) });
+            messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
+            messageToLog += $"{playerLost.User.Name} lost so they will draw {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s). ";
+            _gameManager.DrawCard(game, playerLost, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
 
             messagesToLog.Add(messageToLog);
 
