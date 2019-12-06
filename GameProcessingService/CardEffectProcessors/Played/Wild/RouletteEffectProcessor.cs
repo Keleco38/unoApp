@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Common.Enums;
 using EntityObjects;
+using GameProcessingService.CardEffectProcessors.AutomaticallyTriggered;
 using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
 
@@ -11,11 +13,13 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
     {
 
         private readonly IGameManager _gameManager;
+        private readonly IEnumerable<IAutomaticallyTriggeredCardEffectProcessor> _automaticallyTriggeredCardEffectProcessors;
         public CardValue CardAffected => CardValue.Roulette;
 
-        public RouletteEffectProcessor(IGameManager gameManager)
+        public RouletteEffectProcessor(IGameManager gameManager, IEnumerable<IAutomaticallyTriggeredCardEffectProcessor> automaticallyTriggeredCardEffectProcessors)
         {
             _gameManager = gameManager;
+            _automaticallyTriggeredCardEffectProcessors = automaticallyTriggeredCardEffectProcessors;
         }
 
 
@@ -29,24 +33,32 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             if (drawOrDiscard == 0)
             {
                 //discard   
-                var maxNumberToDiscard = moveParams.PlayerTargeted.Cards.Count < 3 ? moveParams.PlayerTargeted.Cards.Count + 1 : 3;
-                var numberOfCardsToDiscard = random.Next(0, maxNumberToDiscard);
+                var numberOfCardsToDiscard = random.Next(0, 3);
                 if (numberOfCardsToDiscard == 0)
                 {
                     messageToLog += $"{moveParams.PlayerTargeted.User.Name} was selected, but nothing happened. ";
                 }
                 else
                 {
+                    var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerTargeted, numberOfCardsToDiscard, moveParams.TargetedCardColor) });
+                    messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
+
+                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} is a lucky winner! They will discard {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} cards. ";
+
+                    numberOfCardsToDiscard = moveParams.PlayerTargeted.Cards.Count < automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw ? moveParams.PlayerTargeted.Cards.Count  : automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw;
                     moveParams.PlayerTargeted.Cards.RemoveRange(0, numberOfCardsToDiscard);
-                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} is a lucky winner! They will discard {numberOfCardsToDiscard} card(s). ";
                 }
             }
             else
             {
                 //draw   
                 var numberOfCardsToDraw = random.Next(1, 5);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't have any luck! They must draw {numberOfCardsToDraw} card(s). ";
-                _gameManager.DrawCard(game, moveParams.PlayerTargeted, numberOfCardsToDraw, false);
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't have any luck! They must draw {numberOfCardsToDraw} cards. ";
+
+                var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerTargeted, numberOfCardsToDraw, moveParams.TargetedCardColor) });
+                messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
+
+                _gameManager.DrawCard(game, moveParams.PlayerTargeted, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
 
             }
 
