@@ -56,6 +56,7 @@ namespace Common.Enums
         RandomColor = 42,
         PromiseKeeper = 43,
         Gambling = 44,
+        CopyCat = 45
 
     }
 
@@ -81,7 +82,7 @@ namespace Common.Enums
         Server = 2,
         Spectators = 3
     }
-  public enum ChatDestination
+    public enum ChatDestination
     {
         All = 1,
         Tournament = 2,
