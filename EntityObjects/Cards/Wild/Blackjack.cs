@@ -19,7 +19,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor { get; }
         public bool RequireTargetPlayer => false;
-        public string Description => "Player can hit the \"HIT ME!\" button to get a random number from 1 to 10. If the player goes over 21, they draw 5 cards. If the player hits 21, they will discard 3 cards. If the player hits number bigger than 17 but less than 21 they will discard 1 cards. If the player hits the number lower than 17, they will draw the difference between 17 and the number they hit.";
+        public string Description => "Player can hit the 'HIT ME!' button to get a random number from 1 to 10. If the player goes over 21, they draw 5 cards. If the player hits 21, they will discard 3 cards. If the player hits number bigger than 17 but less than 21 they will discard 1 cards. If the player hits the number lower than 17, they will draw the difference between 17 and the number they hit. (capped at 5). If the player holds double draw in his hands, he will double the discard or draw effect.";
 
     }
 }

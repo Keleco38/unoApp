@@ -19,6 +19,6 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor { get; }
         public bool RequireTargetPlayer => false;
-        public string Description => "Based on the direction of the game, players roll a dice. The first player that rolls 1 must draw 3 cards. Cannot be deflected.";
+        public string Description => "Based on the direction of the game, players roll a dice. The first player that rolls 1 must draw 3 cards. Cannot be deflected. Can be affected by double draw";
     }
 }
