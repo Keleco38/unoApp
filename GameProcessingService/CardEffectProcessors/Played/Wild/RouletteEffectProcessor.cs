@@ -43,7 +43,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                     var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerTargeted, numberOfCardsToDiscard, moveParams.TargetedCardColor) });
                     messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 
-                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} is a lucky winner! They will discard {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} cards. ";
+                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} is a lucky winner! They will discard {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s). ";
 
                     numberOfCardsToDiscard = moveParams.PlayerTargeted.Cards.Count < automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw ? moveParams.PlayerTargeted.Cards.Count  : automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw;
                     moveParams.PlayerTargeted.Cards.RemoveRange(0, numberOfCardsToDiscard);
@@ -53,7 +53,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             {
                 //draw   
                 var numberOfCardsToDraw = random.Next(1, 5);
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't have any luck! They must draw {numberOfCardsToDraw} cards. ";
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't have any luck! They must draw {numberOfCardsToDraw} card(s). ";
 
                 var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerTargeted, numberOfCardsToDraw, moveParams.TargetedCardColor) });
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
