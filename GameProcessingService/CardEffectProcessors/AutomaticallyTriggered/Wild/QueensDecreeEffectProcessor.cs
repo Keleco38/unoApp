@@ -24,7 +24,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
             {
                 if (player.Cards.Count <= 5 && player.Cards.FirstOrDefault(x => x.Value == CardValue.QueensDecree) != null)
                 {
-                    messageToLog += $"{player.User.Name} had less than 5 cards and queen's decree, auto effect is activated. ";
+                    messageToLog += $"{player.User.Name} had less than 5 or less cards and queen's decree, auto effect is activated. ";
                     if (game.Players.Count == 2)
                     {
                         var nextPlayer = _gameManager.GetNextPlayer(game, player, game.Players, false);
@@ -76,7 +76,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                 if (player.Cards.Count > 4 && player.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
                 {
                     activatedKingsDecree = true;
-                    messageToLog += $"{player.User.Name} is not affected by the draw. He has more than 4 cards and king's decree in hand (auto effect is activated).";
+                    messageToLog += $"{player.User.Name} is not affected by the draw. They have more than 4 cards and king's decree in hand (auto effect is activated).";
                 }
             }
 
