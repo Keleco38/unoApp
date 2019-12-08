@@ -8,7 +8,9 @@ using Common.Contants;
 using Common.Enums;
 using DomainObjects;
 using EntityObjects;
+using GameProcessingService.CardEffectProcessors.AutomaticallyTriggered;
 using GameProcessingService.CoreManagers;
+using GameProcessingService.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using PreMoveProcessingService.CoreManagers;
@@ -27,9 +29,10 @@ namespace Web.Hubs
         private readonly IHallOfFameRepository _hallOfFameRepository;
         private readonly ITournamentRepository _tournamentRepository;
         private readonly ITournamentManager _tournamentManager;
+        private readonly IEnumerable<IAutomaticallyTriggeredCardEffectProcessor> _automaticallyTriggeredCardEffectProcessors;
         private readonly AppSettings _appSettings;
 
-        public GameHub(IMapper mapper, IGameManager gameManager, IPlayCardManager playCardManager, IUserRepository userRepository, IGameRepository gameRepository, IHallOfFameRepository hallOfFameRepository, ITournamentRepository tournamentRepository, ITournamentManager tournamentManager, IOptions<AppSettings> appSettings)
+        public GameHub(IMapper mapper, IGameManager gameManager, IPlayCardManager playCardManager, IUserRepository userRepository, IGameRepository gameRepository, IHallOfFameRepository hallOfFameRepository, ITournamentRepository tournamentRepository, ITournamentManager tournamentManager, IOptions<AppSettings> appSettings, IEnumerable<IAutomaticallyTriggeredCardEffectProcessor> automaticallyTriggeredCardEffectProcessors)
         {
             _gameManager = gameManager;
             _playCardManager = playCardManager;
@@ -38,6 +41,7 @@ namespace Web.Hubs
             _hallOfFameRepository = hallOfFameRepository;
             _tournamentRepository = tournamentRepository;
             _tournamentManager = tournamentManager;
+            _automaticallyTriggeredCardEffectProcessors = automaticallyTriggeredCardEffectProcessors;
             _appSettings = appSettings.Value;
             _mapper = mapper;
         }
@@ -758,6 +762,11 @@ namespace Web.Hubs
                 game.PlayerToPlay.CardPromisedToDiscard = null;
                 var nextPlayer = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players, false);
                 game.PlayerToPlay = nextPlayer;
+
+                var automaticallyTriggeredResultQueensDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams() { PlayerAffected = game.PlayerToPlay } });
+                if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
+                    await AddToGameLog(gameId, automaticallyTriggeredResultQueensDecree.MessageToLog);
+
                 await UpdateGame(game);
                 await UpdateHands(game);
                 return;
@@ -778,11 +787,16 @@ namespace Web.Hubs
                 _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
                 await AddToGameLog(gameId, $"{user.Name} drew and autoplayed a card.");
                 await PlayCard(cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty, null, false);
-                return;
+                      return;
             }
 
             _gameManager.DrawCard(game, game.PlayerToPlay, 1, true);
             await AddToGameLog(gameId, $"{user.Name} drew a card (normal draw)");
+
+            var automaticallyTriggeredResultQueensDecree2 = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams() { PlayerAffected = game.PlayerToPlay } });
+            if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree2.MessageToLog))
+                await AddToGameLog(gameId, automaticallyTriggeredResultQueensDecree2.MessageToLog);
+
             await UpdateGame(game);
             await UpdateHands(game);
 

@@ -93,18 +93,23 @@ namespace PreMoveProcessingService.CoreManagers
 
             game.PlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
 
-            if (game.HandCuffedPlayers.Contains(game.PlayerToPlay))
+
+            if (game.SilenceTurnsRemaining <= 0)
             {
-                var nextPlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
-                moveResult.MessagesToLog.Add($"{game.PlayerToPlay.User.Name} was handcuffed so he will skip this turn. Player to play: {nextPlayerToPlay.User.Name}.");
-                game.HandCuffedPlayers.Remove(game.PlayerToPlay);
-                game.PlayerToPlay = nextPlayerToPlay;
+                if (game.HandCuffedPlayers.Contains(game.PlayerToPlay))
+                {
+                    var nextPlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
+                    moveResult.MessagesToLog.Add($"{game.PlayerToPlay.User.Name} was handcuffed so he will skip this turn. Player to play: {nextPlayerToPlay.User.Name}.");
+                    game.HandCuffedPlayers.Remove(game.PlayerToPlay);
+                    game.PlayerToPlay = nextPlayerToPlay;
+                }
             }
+
 
 
             var automaticallyTriggeredResultQueensDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams() { PlayerAffected = game.PlayerToPlay } });
             if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
-                messagesToLog.Add(automaticallyTriggeredResultQueensDecree.MessageToLog);
+                moveResult.MessagesToLog.Add(automaticallyTriggeredResultQueensDecree.MessageToLog);
 
 
             if (game.SilenceTurnsRemaining > 0)
