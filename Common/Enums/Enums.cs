@@ -64,7 +64,8 @@ namespace Common.Enums
         SummonWildcard=50,
         DevilsDeal=51,
         KingsDecree=52,
-        QueensDecree=53
+        QueensDecree=53,
+        Surprise=54
 
     }
 

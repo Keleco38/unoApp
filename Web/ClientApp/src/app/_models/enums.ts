@@ -71,7 +71,8 @@ export enum CardValue {
   summonWildcard = 50,
   devilsDeal = 51,
   kingsDecree = 52,
-  queensDecree = 53
+  queensDecree = 53,
+  surprise = 54
 }
 
 export enum Direction {
