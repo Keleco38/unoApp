@@ -31,7 +31,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                 var magneticCard = loopingPlayer.Cards.FirstOrDefault(c => c.Value == CardValue.MagneticPolarity);
                 if (magneticCard != null)
                 {
-                    game.LastCardPlayed = new LastCardPlayed(autoParams.MagneticPolarityParams.TargetedCardColor, magneticCard.Value, magneticCard.ImageUrl, loopingPlayer.User.Name, true);
+                    game.LastCardPlayed = new LastCardPlayed(autoParams.MagneticPolarityParams.TargetedCardColor, magneticCard.Value, magneticCard.ImageUrl, loopingPlayer.User.Name, true, magneticCard);
                     loopingPlayer.Cards.Remove(magneticCard);
                     game.DiscardedPile.Add(magneticCard);
                     messageToLog += ($"{loopingPlayer.User.Name} intercepted the attack (magnetic polarity). ");
