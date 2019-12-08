@@ -35,6 +35,7 @@ namespace EntityObjects
             {
                 AddNormalGameNormalCards();
                 AddNormalGameNormalCards();
+                AddNormalGameNormalCards();
 
                 AddStealTurnCards();
                 AddStealTurnCards();
@@ -99,6 +100,7 @@ namespace EntityObjects
                 Cards.Add(new RobinHood(limitColorChangingCards));
                 Cards.Add(new Handcuff(limitColorChangingCards));
                 Cards.Add(new Silence(limitColorChangingCards));
+                Cards.Add(new Assassinate(limitColorChangingCards));
                 //cads added 2 times
                 Cards.Add(new KeepMyHand(limitColorChangingCards));
                 Cards.Add(new KeepMyHand(limitColorChangingCards));

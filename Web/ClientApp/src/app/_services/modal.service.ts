@@ -1,3 +1,4 @@
+import { PickAnyCardComponent } from './../_components/_modals/pick-any-card/pick-any-card.component';
 import { KickBanPlayerComponent } from './../_components/_modals/kick-ban-player/kick-ban-player.component';
 import { HubService } from 'src/app/_services/hub.service';
 import { GameEndedResult } from 'src/app/_models/gameEndedResult';
@@ -166,6 +167,10 @@ export class ModalService {
 
   displayPickDuelNumbers() {
     return this._modalService.open(PickDuelNumbersComponent);
+  }
+
+  displayPickAnyCardModal() {
+    return this._modalService.open(PickAnyCardComponent);
   }
 
   displayPickNumbersToDiscardModal() {

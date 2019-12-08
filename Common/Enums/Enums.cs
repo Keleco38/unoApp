@@ -59,7 +59,8 @@ namespace Common.Enums
         CopyCat = 45,
         RobinHood= 46,
         Handcuff=47,
-        Silence=48
+        Silence=48,
+        Assassinate=49
     }
 
     public enum Direction

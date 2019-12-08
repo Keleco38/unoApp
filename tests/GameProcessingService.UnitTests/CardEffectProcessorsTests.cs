@@ -44,7 +44,7 @@ namespace GameProcessingService.UnitTests
             player2.Cards = new List<ICard>() { new Charity(false), new BlackHole(false), new Blackjack(false), new Charity(false), new BlackHole(false), new Blackjack(false) };
             _game.Players = new List<Player>() { player, player2 };
             _game.PlayerToPlay = player;
-            _moveParams = new MoveParams(player, player.Cards.First(), player, CardColor.Blue, _game.DiscardedPile.First(), new List<int>() { 1, 2, 3 }, new List<ICard>() { new Charity(false) }, 10, new List<int>() { 0, 1 }, new BlackHole(false), "odd", _game.LastCardPlayed);
+            _moveParams = new MoveParams(player, player.Cards.First(), player, CardColor.Blue, _game.DiscardedPile.First(), new List<int>() { 1, 2, 3 }, new List<ICard>() { new Charity(false) }, 10, new List<int>() { 0, 1 }, new BlackHole(false), "odd", _game.LastCardPlayed, CardValue.Assassinate);
 
         }
 

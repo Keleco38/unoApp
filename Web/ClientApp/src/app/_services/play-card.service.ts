@@ -100,6 +100,12 @@ export class PlayCardService {
                 this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, duelNumbers);
                 return;
               });
+            }   else if (cardPlayed.value == CardValue.assassinate) {
+              this._modalService.displayPickAnyCardModal().result.then((selectedCard:CardValue) => {
+                console.log(selectedCard);
+                this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null,null,0,null,null,null,selectedCard);
+                return;
+              });
             } else if (cardPlayed.value == CardValue.charity) {
               const modalRef = this._modalService.displayPickCharityCardsModal();
               modalRef.componentInstance.cards = myCards.filter((card: Card) => card.id != cardPlayed.id);

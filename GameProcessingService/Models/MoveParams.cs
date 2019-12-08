@@ -8,7 +8,7 @@ namespace GameProcessingService.Models
     public class MoveParams
     {
         public MoveParams(Player playerPlayed, ICard cardPlayed, Player playerTargeted, CardColor targetedCardColor, ICard cardToDig, List<int> duelNumbers, List<ICard> charityCards, int blackjackNumber,
-            List<int> numbersToDiscard, ICard cardPromisedToDiscard, string oddOrEvenGuess, LastCardPlayed previousLastCardPlayed)
+            List<int> numbersToDiscard, ICard cardPromisedToDiscard, string oddOrEvenGuess, LastCardPlayed previousLastCardPlayed, CardValue? targetedCardValue)
         {
             PlayerPlayed = playerPlayed;
             CardPlayed = cardPlayed;
@@ -22,6 +22,7 @@ namespace GameProcessingService.Models
             CardPromisedToDiscard = cardPromisedToDiscard;
             OddOrEvenGuess = oddOrEvenGuess;
             PreviousLastCardPlayed = previousLastCardPlayed;
+            TargetedCardValue = targetedCardValue;
         }
 
         public Player PlayerPlayed { get; set; }
@@ -35,6 +36,7 @@ namespace GameProcessingService.Models
         public int BlackjackNumber { get; set; }
         public string OddOrEvenGuess { get; set; }
         public LastCardPlayed PreviousLastCardPlayed { get; }
+        public CardValue? TargetedCardValue { get; }
         public List<int> NumbersToDiscard { get; set; }
 
     }

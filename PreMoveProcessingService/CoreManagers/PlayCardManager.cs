@@ -26,7 +26,7 @@ namespace PreMoveProcessingService.CoreManagers
         }
 
         public MoveResult PlayCard(Game game, Player playerPlayed, string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers,
-           List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess)
+            List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess, CardValue? targetedCardValue)
         {
             var cardPlayed = playerPlayed.Cards.FirstOrDefault(x => x.Id == cardPlayedId);
             if (cardPlayed == null)
@@ -66,7 +66,7 @@ namespace PreMoveProcessingService.CoreManagers
                 messagesToLog.Add(automaticallyTriggeredResultPromiseKeeper.MessageToLog);
 
             //play card effect
-            var moveParams = new MoveParams(playerPlayed, cardPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess, previousLastCardPlayed);
+            var moveParams = new MoveParams(playerPlayed, cardPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess, previousLastCardPlayed, targetedCardValue);
             MoveResult moveResult;
             if (game.SilenceTurnsRemaining > 0 && cardPlayed.Color==CardColor.Wild)
             {
