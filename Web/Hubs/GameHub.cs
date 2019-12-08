@@ -765,7 +765,7 @@ namespace Web.Hubs
             {
                 _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
                 await AddToGameLog(gameId, $"{user.Name} drew and autoplayed a card.");
-                await PlayCard(cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty, null);
+                await PlayCard(cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty, null, false);
                 return;
             }
 
@@ -838,7 +838,7 @@ namespace Web.Hubs
 
         }
 
-        public async Task PlayCard(string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess, CardValue? targetedCardValue)
+        public async Task PlayCard(string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess, CardValue? targetedCardValue, bool activateSpecialCardEffect)
         {
             var user = GetCurrentUser();
             var gameId = user.ActiveGameId;
@@ -846,7 +846,7 @@ namespace Web.Hubs
             if (game.GameEnded || !game.GameStarted)
                 return;
             var player = game.Players.First(x => x.User.Name == user.Name);
-            var moveResult = _playCardManager.PlayCard(game, player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard, cardPromisedToDiscardId, oddOrEvenGuess, targetedCardValue);
+            var moveResult = _playCardManager.PlayCard(game, player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard, cardPromisedToDiscardId, oddOrEvenGuess, targetedCardValue, activateSpecialCardEffect);
             if (moveResult == null)
             {
                 return;

@@ -8,7 +8,7 @@ namespace GameProcessingService.Models
     public class MoveParams
     {
         public MoveParams(Player playerPlayed, ICard cardPlayed, Player playerTargeted, CardColor targetedCardColor, ICard cardToDig, List<int> duelNumbers, List<ICard> charityCards, int blackjackNumber,
-            List<int> numbersToDiscard, ICard cardPromisedToDiscard, string oddOrEvenGuess, LastCardPlayed previousLastCardPlayed, CardValue? targetedCardValue)
+            List<int> numbersToDiscard, ICard cardPromisedToDiscard, string oddOrEvenGuess, LastCardPlayed previousLastCardPlayed, CardValue? targetedCardValue, bool activateSpecialCardEffect)
         {
             PlayerPlayed = playerPlayed;
             CardPlayed = cardPlayed;
@@ -23,6 +23,7 @@ namespace GameProcessingService.Models
             OddOrEvenGuess = oddOrEvenGuess;
             PreviousLastCardPlayed = previousLastCardPlayed;
             TargetedCardValue = targetedCardValue;
+            ActivateSpecialCardEffect = activateSpecialCardEffect;
         }
 
         public Player PlayerPlayed { get; set; }
@@ -37,6 +38,7 @@ namespace GameProcessingService.Models
         public string OddOrEvenGuess { get; set; }
         public LastCardPlayed PreviousLastCardPlayed { get; }
         public CardValue? TargetedCardValue { get; }
+        public bool ActivateSpecialCardEffect { get; }
         public List<int> NumbersToDiscard { get; set; }
 
     }

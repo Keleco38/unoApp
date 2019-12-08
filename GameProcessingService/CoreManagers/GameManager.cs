@@ -66,19 +66,13 @@ namespace GameProcessingService.CoreManagers
 
         public void DrawCard(Game game, Player player, int count, bool normalDraw)
         {
-            var deckCount = game.Deck.Cards.Count;
-            if (deckCount < count)
+            if (game.Deck.Cards.Count < count)
             {
-                player.Cards.AddRange(game.Deck.Draw(deckCount));
-                game.Deck.Cards = game.DiscardedPile.ToList();
+                game.Deck = new Deck(game.GameSetup);
                 game.Deck.Cards.Shuffle();
-                game.DiscardedPile.RemoveRange(0, game.DiscardedPile.Count - 1);
-                player.Cards.AddRange(game.Deck.Draw(count - deckCount));
             }
-            else
-            {
-                player.Cards.AddRange(game.Deck.Draw(count));
-            }
+
+            player.Cards.AddRange(game.Deck.Draw(count));
 
             if (normalDraw)
             {

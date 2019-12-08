@@ -131,6 +131,12 @@ export class PlayCardService {
               return;
             }
           });
+        }else if (cardPlayed.value === CardValue.devilsDeal) {
+          const digModal = this._modalService.displayActivateSpecialEffect();
+          digModal.result.then((activateEffect: boolean) => {
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null,null,0,null,null,null,null,activateEffect);
+            return;
+          });
         } else if (cardPlayed.value === CardValue.graveDigger) {
           const digModal = this._modalService.displayDigCardModal();
           digModal.componentInstance.discardedPile = game.discardedPile;

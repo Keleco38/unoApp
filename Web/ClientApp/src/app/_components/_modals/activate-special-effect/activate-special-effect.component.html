@@ -1,0 +1,17 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Activate special effect?</h4>
+    <button type="button" class="close" aria-describedby="modal-title" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-6">
+        <button class="btn btn-block btn-lg btn-primary"(click)="selectResult(true)">YES</button>
+      </div>
+      <div class="col-6">
+        <button class="btn btn-block btn-lg btn-primary"(click)="selectResult(false)">NO</button>
+      </div>
+    </div>
+  </div>
+  

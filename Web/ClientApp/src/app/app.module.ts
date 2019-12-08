@@ -1,3 +1,4 @@
+import { ActivateSpecialEffectComponent } from './_components/_modals/activate-special-effect/activate-special-effect.component';
 import { PickWildCardComponent } from './_components/_modals/pick-wild-card/pick-wild-card.component';
 import { PickAnyCardComponent } from './_components/_modals/pick-any-card/pick-any-card.component';
 import { PlayCardService } from './_services/play-card.service';
@@ -127,7 +128,8 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     ChatComponent,
     TournamentComponent,
     PickAnyCardComponent,
-    PickWildCardComponent
+    PickWildCardComponent,
+    ActivateSpecialEffectComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -219,7 +221,8 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     InputPasswordComponent,
     AdminSectionComponent,
     PickAnyCardComponent,
-    PickWildCardComponent
+    PickWildCardComponent,
+    ActivateSpecialEffectComponent
   ]
 })
 export class AppModule {}

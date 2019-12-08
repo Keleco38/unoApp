@@ -430,7 +430,8 @@ export class HubService {
     numbersToDiscard: number[] = null,
     cardPromisedToDiscardId: string = "",
     oddOrEvenGuess: string = "",
-    targetedCardValue: CardValue = null
+    targetedCardValue: CardValue = null,
+    activateSpecialCardEffect: boolean = false
   ) {
     this._hubConnection.invoke(
       "PlayCard",
@@ -444,7 +445,8 @@ export class HubService {
       numbersToDiscard,
       cardPromisedToDiscardId,
       oddOrEvenGuess,
-      targetedCardValue
+      targetedCardValue,
+      activateSpecialCardEffect
     );
   }
 

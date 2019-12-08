@@ -1,3 +1,4 @@
+import { ActivateSpecialEffectComponent } from './../_components/_modals/activate-special-effect/activate-special-effect.component';
 import { PickWildCardComponent } from './../_components/_modals/pick-wild-card/pick-wild-card.component';
 import { PickAnyCardComponent } from './../_components/_modals/pick-any-card/pick-any-card.component';
 import { KickBanPlayerComponent } from './../_components/_modals/kick-ban-player/kick-ban-player.component';
@@ -176,6 +177,10 @@ export class ModalService {
 
   displayPickWildCardModal() {
     return this._modalService.open(PickWildCardComponent);
+  }
+
+  displayActivateSpecialEffect() {
+    return this._modalService.open(ActivateSpecialEffectComponent);
   }
 
   displayPickNumbersToDiscardModal() {

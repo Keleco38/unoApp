@@ -61,7 +61,9 @@ namespace Common.Enums
         Handcuff=47,
         Silence=48,
         Assassinate=49,
-        SummonWildcard=50
+        SummonWildcard=50,
+        DevilsDeal=51,
+
     }
 
     public enum Direction
