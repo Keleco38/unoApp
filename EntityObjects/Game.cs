@@ -11,6 +11,7 @@ namespace EntityObjects
         public string Id { get; set; }
         public Deck Deck { get; set; }
         public List<Player> Players { get; set; }
+        public List<Player> HandCuffedPlayers { get; set; }
         public List<Spectator> Spectators { get; set; }
         public List<ICard> DiscardedPile { get; set; }
         public GameSetup GameSetup { get; set; }
@@ -35,6 +36,7 @@ namespace EntityObjects
             Players = new List<Player>();
             Spectators = new List<Spectator>();
             ChatMessages=new List<ChatMessage>();
+            HandCuffedPlayers=new List<Player>();
             GameLog=new List<string>();
             ReadyPlayersLeft=new List<string>();
             ReadyPhaseExpireUtc=DateTime.Now;

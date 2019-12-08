@@ -773,6 +773,14 @@ namespace Web.Hubs
             await AddToGameLog(gameId, $"{user.Name} drew a card (normal draw)");
             await UpdateGame(game);
             await UpdateHands(game);
+
+            if (game.HandCuffedPlayers.Contains(game.PlayerToPlay))
+            {
+                var nextPlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
+                var messageToLog = $"{game.PlayerToPlay.User.Name} was handcuffed so he will skip this turn. Player to play: {nextPlayerToPlay.User.Name}";
+                game.HandCuffedPlayers.Remove(game.PlayerToPlay);
+                game.PlayerToPlay = nextPlayerToPlay;
+            }
         }
 
         public async Task CheckUnoCall(bool unoCalled)

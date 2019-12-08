@@ -27,7 +27,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                 if (firstPlayerWithTheLastStand != null)
                 {
                     var theLastStandCard = firstPlayerWithTheLastStand.Cards.First(x => x.Value == CardValue.TheLastStand);
-                    game.LastCardPlayed = new LastCardPlayed(game.LastCardPlayed.Color, theLastStandCard.Value, theLastStandCard.ImageUrl, game.PlayerToPlay.User.Name, true);
+                    game.LastCardPlayed = new LastCardPlayed(game.LastCardPlayed.Color, theLastStandCard.Value, theLastStandCard.ImageUrl, game.PlayerToPlay.User.Name, true, theLastStandCard);
                     firstPlayerWithTheLastStand.Cards.Remove(theLastStandCard);
                     game.DiscardedPile.Add(theLastStandCard);
                     messageToLog = $"{firstPlayerWithTheLastStand.User.Name} saved the day! They played The Last Stand. Every player that had 0 cards will draw 2 cards.";

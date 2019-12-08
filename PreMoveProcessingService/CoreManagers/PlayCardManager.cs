@@ -49,7 +49,9 @@ namespace PreMoveProcessingService.CoreManagers
                 colorForLastCard = game.LastCardPlayed.Color;
             }
 
-            game.LastCardPlayed = new LastCardPlayed(colorForLastCard, cardPlayed.Value, cardPlayed.ImageUrl, playerPlayed.User.Name, cardPlayed.Color == CardColor.Wild);
+            var previousLastCardPlayed = game.LastCardPlayed;
+
+            game.LastCardPlayed = new LastCardPlayed(colorForLastCard, cardPlayed.Value, cardPlayed.ImageUrl, playerPlayed.User.Name, cardPlayed.Color == CardColor.Wild, cardPlayed);
 
             var cardToDig = string.IsNullOrEmpty(cardToDigId) ? null : game.DiscardedPile.First(x => x.Id == cardToDigId);
             var cardPromisedToDiscard = string.IsNullOrEmpty(cardPromisedToDiscardId) ? null : playerPlayed.Cards.First(x => x.Id == cardPromisedToDiscardId);
@@ -63,7 +65,7 @@ namespace PreMoveProcessingService.CoreManagers
                 messagesToLog.Add(automaticallyTriggeredResultPromiseKeeper.MessageToLog);
 
             //play card effect
-            var moveParams = new MoveParams(playerPlayed, cardPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess);
+            var moveParams = new MoveParams(playerPlayed, cardPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess, previousLastCardPlayed);
             var moveResult = _playableCardEffectProcessors.First(x => x.CardAffected == cardPlayed.Value).ProcessCardEffect(game, moveParams);
 
             //post play check last stand
@@ -78,6 +80,15 @@ namespace PreMoveProcessingService.CoreManagers
             moveResult.MessagesToLog.AddRange(messagesToLog);
 
             game.PlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
+
+            if (game.HandCuffedPlayers.Contains(game.PlayerToPlay))
+            {
+                var nextPlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
+                moveResult.MessagesToLog.Add($"{game.PlayerToPlay.User.Name} was handcuffed so he will skip this turn. Player to play: {nextPlayerToPlay.User.Name}");
+                game.HandCuffedPlayers.Remove(game.PlayerToPlay);
+                game.PlayerToPlay = nextPlayerToPlay;
+            }
+
             return moveResult;
         }
 

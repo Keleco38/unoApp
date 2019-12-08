@@ -26,7 +26,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                 var keepMyHandCard = p.Cards.FirstOrDefault(y => y.Value == CardValue.KeepMyHand);
                 if (keepMyHandCard != null)
                 {
-                    game.LastCardPlayed = new LastCardPlayed(autoParams.KeepMyHandParams.TargetedCardColor, keepMyHandCard.Value, keepMyHandCard.ImageUrl, p.User.Name, true);
+                    game.LastCardPlayed = new LastCardPlayed(autoParams.KeepMyHandParams.TargetedCardColor, keepMyHandCard.Value, keepMyHandCard.ImageUrl, p.User.Name, true, keepMyHandCard);
                     p.Cards.Remove(keepMyHandCard);
                     game.DiscardedPile.Add(keepMyHandCard);
                     messageToLog += $"{p.User.Name} kept their hand safe. ";

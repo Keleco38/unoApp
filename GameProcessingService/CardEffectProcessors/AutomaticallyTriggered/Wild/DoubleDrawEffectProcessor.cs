@@ -22,7 +22,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
             if (doubleDrawCard != null)
             {
                 autoParams.DoubleDrawParams.NumberOfCardsToDraw = autoParams.DoubleDrawParams.NumberOfCardsToDraw * 2;
-                game.LastCardPlayed = new LastCardPlayed(autoParams.DoubleDrawParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, autoParams.DoubleDrawParams.PlayerAffected.User.Name, true);
+                game.LastCardPlayed = new LastCardPlayed(autoParams.DoubleDrawParams.TargetedCardColor, doubleDrawCard.Value, doubleDrawCard.ImageUrl, autoParams.DoubleDrawParams.PlayerAffected.User.Name, true, doubleDrawCard);
                 autoParams.DoubleDrawParams.PlayerAffected.Cards.Remove(doubleDrawCard);
                 game.DiscardedPile.Add(doubleDrawCard);
                 messageToLog += $"{autoParams.DoubleDrawParams.PlayerAffected.User.Name} doubled the draw/discard effect. ";

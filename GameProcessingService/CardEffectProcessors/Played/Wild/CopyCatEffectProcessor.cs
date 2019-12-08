@@ -19,7 +19,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var cardToCopy = game.DiscardedPile[^2];
+            var cardToCopy = moveParams.PreviousLastCardPlayed.OriginalCardPlayer;
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played copycat. He copied {cardToCopy.Value.ToString()} and kept his turn.";
             moveParams.PlayerPlayed.Cards.Add(cardToCopy);
             var previousPlayer = _gameManager.GetNextPlayer(game, moveParams.PlayerPlayed, game.Players, true);

@@ -97,6 +97,7 @@ namespace EntityObjects
                 Cards.Add(new Gambling(limitColorChangingCards));
                 Cards.Add(new CopyCat(limitColorChangingCards));
                 Cards.Add(new RobinHood(limitColorChangingCards));
+                Cards.Add(new Handcuff(limitColorChangingCards));
                 //cads added 2 times
                 Cards.Add(new KeepMyHand(limitColorChangingCards));
                 Cards.Add(new KeepMyHand(limitColorChangingCards));

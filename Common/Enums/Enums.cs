@@ -57,7 +57,8 @@ namespace Common.Enums
         PromiseKeeper = 43,
         Gambling = 44,
         CopyCat = 45,
-        RobinHood= 46
+        RobinHood= 46,
+        Handcuff=47
     }
 
     public enum Direction

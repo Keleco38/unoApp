@@ -57,15 +57,15 @@ export enum CardValue {
   discardNumber = 36,
   theLastStand = 37,
   magneticPolarity = 38,
-  fortuneTeller=39,
-  doubleDraw=40,
-  poison=41,
-  randomColor=42,
-  promiseKeeper=43,
+  fortuneTeller = 39,
+  doubleDraw = 40,
+  poison = 41,
+  randomColor = 42,
+  promiseKeeper = 43,
   gambling = 44,
   copyCat = 45,
-  robinHood= 46
-
+  robinHood = 46,
+  handcuff = 47
 }
 
 export enum Direction {
@@ -81,4 +81,3 @@ export enum PlayersSetup {
   individual = 1,
   teams = 2
 }
-

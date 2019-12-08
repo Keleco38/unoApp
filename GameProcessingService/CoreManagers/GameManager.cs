@@ -47,6 +47,7 @@ namespace GameProcessingService.CoreManagers
 
         public void StartNewRound(Game game)
         {
+            game.HandCuffedPlayers.Clear();
             game.Players.ForEach(x => x.CardPromisedToDiscard = null);
             game.Players.ForEach(x => x.MustCallUno = false);
             game.DiscardedPile.Clear();
@@ -58,7 +59,7 @@ namespace GameProcessingService.CoreManagers
                 lastCardDrew = game.Deck.Draw(1).First();
                 game.DiscardedPile.Add(lastCardDrew);
             } while (lastCardDrew.Color == CardColor.Wild);
-            game.LastCardPlayed = new LastCardPlayed(lastCardDrew.Color, lastCardDrew.Value, lastCardDrew.ImageUrl, string.Empty, false);
+            game.LastCardPlayed = new LastCardPlayed(lastCardDrew.Color, lastCardDrew.Value, lastCardDrew.ImageUrl, string.Empty, false, lastCardDrew);
             game.Players.ForEach(x => x.Cards = game.Deck.Draw(7));
         }
 

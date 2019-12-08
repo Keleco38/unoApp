@@ -33,7 +33,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                 }
                 else
                 {
-                    game.LastCardPlayed = new LastCardPlayed(autoParams.DeflectParams.TargetedCardColor, deflectCard.Value, deflectCard.ImageUrl, autoParams.DeflectParams.PlayerTargeted.User.Name, true);
+                    game.LastCardPlayed = new LastCardPlayed(autoParams.DeflectParams.TargetedCardColor, deflectCard.Value, deflectCard.ImageUrl, autoParams.DeflectParams.PlayerTargeted.User.Name, true, deflectCard);
                     autoParams.DeflectParams.PlayerTargeted.Cards.Remove(deflectCard);
                     game.DiscardedPile.Add(deflectCard);
                     _gameManager.DrawCard(game, autoParams.DeflectParams.PlayerPlayed, autoParams.DeflectParams.NumberOfCardsToDraw, false);
