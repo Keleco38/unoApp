@@ -127,7 +127,7 @@ export class ModalService {
   }
 
   displayPickCardsToBanModal() {
-    return this._modalService.open(PickBannedCardsComponent, { backdrop: 'static', keyboard: false });
+    return this._modalService.open(PickBannedCardsComponent, { backdrop: 'static', keyboard: false, size: 'lg'});
   }
 
   displayPickColorModal() {

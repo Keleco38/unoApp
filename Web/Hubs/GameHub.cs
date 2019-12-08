@@ -754,10 +754,12 @@ namespace Web.Hubs
 
             if (game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
             {
-                await AddToGameLog(game.Id, $"{game.PlayerToPlay.User.Name} is not affected by the draw. He has more than 4 cards and king's decree in hand.");
+                await AddToGameLog(game.Id, $"{game.PlayerToPlay.User.Name} is not affected by the draw. He has more than 4 cards and king's decree in hand (auto effect is activated).");
                 game.PlayerToPlay.CardPromisedToDiscard = null;
                 var nextPlayer = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players, false);
                 game.PlayerToPlay = nextPlayer;
+                await UpdateGame(game);
+                await UpdateHands(game);
                 return;
             }
 

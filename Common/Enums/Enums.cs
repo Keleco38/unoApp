@@ -63,7 +63,8 @@ namespace Common.Enums
         Assassinate=49,
         SummonWildcard=50,
         DevilsDeal=51,
-        KingsDecree=52
+        KingsDecree=52,
+        QueensDecree=53
 
     }
 

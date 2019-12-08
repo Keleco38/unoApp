@@ -69,7 +69,7 @@ namespace PreMoveProcessingService.CoreManagers
             //play card effect
             var moveParams = new MoveParams(playerPlayed, cardPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess, previousLastCardPlayed, targetedCardValue, activateSpecialCardEffect);
             MoveResult moveResult;
-            if (game.SilenceTurnsRemaining > 0 && cardPlayed.Color==CardColor.Wild)
+            if (game.SilenceTurnsRemaining > 0 && cardPlayed.Color == CardColor.Wild)
             {
                 moveResult = new MoveResult(new List<string>() { $"Game is silenced for {game.SilenceTurnsRemaining} moves. {cardPlayed.Value.ToString()} had no effect." });
             }
@@ -107,6 +107,10 @@ namespace PreMoveProcessingService.CoreManagers
                 game.SilenceTurnsRemaining--;
                 moveResult.MessagesToLog.Add($"{game.SilenceTurnsRemaining} silenced turns remaining. ");
             }
+
+            var automaticallyTriggeredResultQueensDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams(){PlayerAffected = game.PlayerToPlay}});
+            if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
+                messagesToLog.Add(automaticallyTriggeredResultQueensDecree.MessageToLog);
 
             return moveResult;
         }

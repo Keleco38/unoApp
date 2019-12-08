@@ -14,6 +14,7 @@ namespace GameProcessingService.Models
         public AutomaticallyTriggeredPromiseKeeperParams PromiseKeeperParams { get; set; }
         public AutomaticallyTriggeredTheLastStandParams TheLastStandParams { get; set; }
         public AutomaticallyTriggeredKingsDecreeParams KingsDecreeParams { get; set; }
+        public AutomaticallyTriggeredQueensDecreeParams QueensDecreeParams { get; set; }
     }
 
     public class AutomaticallyTriggeredDoubleDrawParams
@@ -91,6 +92,11 @@ namespace GameProcessingService.Models
     }
     
     public class AutomaticallyTriggeredKingsDecreeParams
+    {
+        public Player PlayerAffected { get; set; }
+    }
+
+   public class AutomaticallyTriggeredQueensDecreeParams
     {
         public Player PlayerAffected { get; set; }
     }
