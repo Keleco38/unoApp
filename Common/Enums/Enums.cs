@@ -60,7 +60,8 @@ namespace Common.Enums
         RobinHood= 46,
         Handcuff=47,
         Silence=48,
-        Assassinate=49
+        Assassinate=49,
+        SummonWildcard=50
     }
 
     public enum Direction

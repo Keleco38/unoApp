@@ -22,7 +22,7 @@ export class UtilityService {
         }
       }
     }
-    return this._allCards;
+    return this._allCards.sort((a, b) => (a.key > b.key) ? 1 : -1)
   }
 
   get sidebarSettings(): SidebarSettings {

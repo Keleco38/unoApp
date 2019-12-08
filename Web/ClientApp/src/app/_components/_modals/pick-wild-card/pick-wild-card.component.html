@@ -13,7 +13,7 @@
 </div>
 <div class="modal-body">
   <div class="row">
-    <div class="col-6" *ngFor="let card of allCards">
+    <div class="col-6" *ngFor="let card of allWildCards">
       <button
         class="btn btn-block btn-sm"
         [ngClass]="getBtnClass(card.value)"
@@ -26,7 +26,11 @@
   <div class="row">
     <div class="col-12">
       <hr />
-      <button class="btn btn-info btn-block btn-lg" [disabled]="selectedCardToReturn==null" (click)="confirm()">
+      <button
+        class="btn btn-info btn-block btn-lg"
+        [disabled]="selectedCardToReturn == null"
+        (click)="confirm()"
+      >
         Confirm
       </button>
     </div>

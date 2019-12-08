@@ -67,7 +67,8 @@ export enum CardValue {
   robinHood = 46,
   handcuff = 47,
   silence = 48,
-  assassinate = 49
+  assassinate = 49,
+  summonWildcard = 50
 }
 
 export enum Direction {

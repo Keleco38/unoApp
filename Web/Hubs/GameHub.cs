@@ -84,7 +84,7 @@ namespace Web.Hubs
         public async Task GetAllOnlineUsers()
         {
             var usersDto = _mapper.Map<List<UserDto>>(_userRepository.GetAllUsers());
-            await Clients.All.SendAsync("RefreshOnlineUsersList", usersDto);
+            await Clients.All.SendAsync("RefreshOnlineUsersList", usersDto.OrderBy(x=>x.Name));
         }
 
         public async Task GetAllGames()

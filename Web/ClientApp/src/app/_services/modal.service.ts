@@ -1,3 +1,4 @@
+import { PickWildCardComponent } from './../_components/_modals/pick-wild-card/pick-wild-card.component';
 import { PickAnyCardComponent } from './../_components/_modals/pick-any-card/pick-any-card.component';
 import { KickBanPlayerComponent } from './../_components/_modals/kick-ban-player/kick-ban-player.component';
 import { HubService } from 'src/app/_services/hub.service';
@@ -171,6 +172,10 @@ export class ModalService {
 
   displayPickAnyCardModal() {
     return this._modalService.open(PickAnyCardComponent);
+  }
+
+  displayPickWildCardModal() {
+    return this._modalService.open(PickWildCardComponent);
   }
 
   displayPickNumbersToDiscardModal() {

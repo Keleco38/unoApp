@@ -100,9 +100,8 @@ export class PlayCardService {
                 this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, duelNumbers);
                 return;
               });
-            }   else if (cardPlayed.value == CardValue.assassinate) {
+            } else if (cardPlayed.value == CardValue.assassinate) {
               this._modalService.displayPickAnyCardModal().result.then((selectedCard:CardValue) => {
-                console.log(selectedCard);
                 this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null,null,0,null,null,null,selectedCard);
                 return;
               });
@@ -113,7 +112,7 @@ export class PlayCardService {
                 this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null, charityCardsIds);
                 return;
               });
-            } else if (cardPlayed.value == CardValue.gambling) {
+            }else if (cardPlayed.value == CardValue.gambling) {
               if (game.gameSetup.playersSetup == PlayersSetup.teams) {
                 var targetedPlayerTeam = game.players.find(x => x.id == playerId).teamNumber;
                 var myTeam = game.players.find(x => x.user.name == currentUser.name).teamNumber;
@@ -137,6 +136,13 @@ export class PlayCardService {
           digModal.componentInstance.discardedPile = game.discardedPile;
           digModal.result.then((cardToDigId: string) => {
             this._hubService.playCard(cardPlayed.id, pickedColor, null, cardToDigId);
+            return;
+          });
+        } else if (cardPlayed.value == CardValue.summonWildcard) {
+          var modalRef= this._modalService.displayPickWildCardModal();
+          modalRef.componentInstance.bannedCards = game.gameSetup.bannedCards;
+          modalRef.result.then((selectedCard:CardValue) => {
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null,null,0,null,null,null,selectedCard);
             return;
           });
         } else if (cardPlayed.value === CardValue.blackjack) {

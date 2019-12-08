@@ -32,7 +32,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             if (moveParams.PlayerTargeted.Cards.Any(x => x.Color == CardColor.Wild))
             {
-                messageToLog += "They had a wildcard. ";
+                messageToLog += $"They had {moveParams.PlayerTargeted.Cards.Count(x => x.Color == CardColor.Wild)} wildcard(s). ";
                 var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerTargeted, 3, moveParams.TargetedCardColor) });
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 

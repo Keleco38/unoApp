@@ -1,3 +1,4 @@
+import { PickWildCardComponent } from './_components/_modals/pick-wild-card/pick-wild-card.component';
 import { PickAnyCardComponent } from './_components/_modals/pick-any-card/pick-any-card.component';
 import { PlayCardService } from './_services/play-card.service';
 import { ChatComponent } from './_components/chat/chat.component';
@@ -125,7 +126,8 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     EmoticonPickerComponent,
     ChatComponent,
     TournamentComponent,
-    PickAnyCardComponent
+    PickAnyCardComponent,
+    PickWildCardComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -216,7 +218,8 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     KickBanPlayerComponent,
     InputPasswordComponent,
     AdminSectionComponent,
-    PickAnyCardComponent
+    PickAnyCardComponent,
+    PickWildCardComponent
   ]
 })
 export class AppModule {}
