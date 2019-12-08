@@ -65,7 +65,8 @@ export enum CardValue {
   gambling = 44,
   copyCat = 45,
   robinHood = 46,
-  handcuff = 47
+  handcuff = 47,
+  silence=48
 }
 
 export enum Direction {

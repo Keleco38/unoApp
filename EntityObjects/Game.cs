@@ -23,6 +23,7 @@ namespace EntityObjects
         public LastCardPlayed LastCardPlayed { get; set; }
         public Player PlayerToPlay { get; set; }
         public bool GameStarted { get; set; }
+        public int SilenceTurnsRemaining { get; set; }
         public DateTime ReadyPhaseExpireUtc { get; set; }
         public List<string> ReadyPlayersLeft { get; set; }
         public bool RoundEnded { get; set; }
@@ -35,13 +36,14 @@ namespace EntityObjects
             TournamentId = tournamentId;
             Players = new List<Player>();
             Spectators = new List<Spectator>();
-            ChatMessages=new List<ChatMessage>();
-            HandCuffedPlayers=new List<Player>();
-            GameLog=new List<string>();
-            ReadyPlayersLeft=new List<string>();
-            ReadyPhaseExpireUtc=DateTime.Now;
-            BannedUsers=new List<User>();
-            DiscardedPile=new List<ICard>();
+            ChatMessages = new List<ChatMessage>();
+            HandCuffedPlayers = new List<Player>();
+            GameLog = new List<string>();
+            ReadyPlayersLeft = new List<string>();
+            ReadyPhaseExpireUtc = DateTime.Now;
+            BannedUsers = new List<User>();
+            DiscardedPile = new List<ICard>();
+            SilenceTurnsRemaining = 0;
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Common.Enums;
 using Common.Extensions;
 using EntityObjects;
@@ -66,12 +67,23 @@ namespace PreMoveProcessingService.CoreManagers
 
             //play card effect
             var moveParams = new MoveParams(playerPlayed, cardPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess, previousLastCardPlayed);
-            var moveResult = _playableCardEffectProcessors.First(x => x.CardAffected == cardPlayed.Value).ProcessCardEffect(game, moveParams);
+            MoveResult moveResult;
+            if (game.SilenceTurnsRemaining > 0)
+            {
+                moveResult = new MoveResult(new List<string>() { $"Game is silenced for {game.SilenceTurnsRemaining} moves. {cardPlayed.Value.ToString()} had no effect." });
+            }
+            else
+            {
+                moveResult = _playableCardEffectProcessors.First(x => x.CardAffected == cardPlayed.Value).ProcessCardEffect(game, moveParams);
+            }
 
             //post play check last stand
-            var automaticallyTriggeredResultTheLastStand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.TheLastStand).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { TheLastStandParams = new AutomaticallyTriggeredTheLastStandParams() });
-            if (!string.IsNullOrEmpty(automaticallyTriggeredResultTheLastStand.MessageToLog))
-                messagesToLog.Add(automaticallyTriggeredResultTheLastStand.MessageToLog);
+            if (game.SilenceTurnsRemaining <= 0)
+            {
+                var automaticallyTriggeredResultTheLastStand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.TheLastStand).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { TheLastStandParams = new AutomaticallyTriggeredTheLastStandParams() });
+                if (!string.IsNullOrEmpty(automaticallyTriggeredResultTheLastStand.MessageToLog))
+                    messagesToLog.Add(automaticallyTriggeredResultTheLastStand.MessageToLog);
+            }
 
             //add messages for the end game/round
             messagesToLog.AddRange(_gameManager.UpdateGameAndRoundStatus(game));
@@ -84,9 +96,15 @@ namespace PreMoveProcessingService.CoreManagers
             if (game.HandCuffedPlayers.Contains(game.PlayerToPlay))
             {
                 var nextPlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
-                moveResult.MessagesToLog.Add($"{game.PlayerToPlay.User.Name} was handcuffed so he will skip this turn. Player to play: {nextPlayerToPlay.User.Name}");
+                moveResult.MessagesToLog.Add($"{game.PlayerToPlay.User.Name} was handcuffed so he will skip this turn. Player to play: {nextPlayerToPlay.User.Name}.");
                 game.HandCuffedPlayers.Remove(game.PlayerToPlay);
                 game.PlayerToPlay = nextPlayerToPlay;
+            }
+
+            if (game.SilenceTurnsRemaining > 0)
+            {
+                game.SilenceTurnsRemaining--;
+                moveResult.MessagesToLog.Add($"{game.SilenceTurnsRemaining} silenced turns remaining. ");
             }
 
             return moveResult;

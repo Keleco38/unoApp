@@ -58,7 +58,8 @@ namespace Common.Enums
         Gambling = 44,
         CopyCat = 45,
         RobinHood= 46,
-        Handcuff=47
+        Handcuff=47,
+        Silence=48
     }
 
     public enum Direction

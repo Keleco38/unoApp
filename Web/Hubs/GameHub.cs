@@ -780,6 +780,13 @@ namespace Web.Hubs
                 var messageToLog = $"{game.PlayerToPlay.User.Name} was handcuffed so he will skip this turn. Player to play: {nextPlayerToPlay.User.Name}";
                 game.HandCuffedPlayers.Remove(game.PlayerToPlay);
                 game.PlayerToPlay = nextPlayerToPlay;
+                await AddToGameLog(game.Id, messageToLog);
+            }
+            if (game.SilenceTurnsRemaining > 0)
+            {
+                game.SilenceTurnsRemaining--;
+                var messageToLog = $"{game.SilenceTurnsRemaining} silenced turns remaining. ";
+                await AddToGameLog(game.Id, messageToLog);
             }
         }
 

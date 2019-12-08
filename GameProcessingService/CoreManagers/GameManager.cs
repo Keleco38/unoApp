@@ -48,6 +48,7 @@ namespace GameProcessingService.CoreManagers
         public void StartNewRound(Game game)
         {
             game.HandCuffedPlayers.Clear();
+            game.SilenceTurnsRemaining = 0;
             game.Players.ForEach(x => x.CardPromisedToDiscard = null);
             game.Players.ForEach(x => x.MustCallUno = false);
             game.DiscardedPile.Clear();
