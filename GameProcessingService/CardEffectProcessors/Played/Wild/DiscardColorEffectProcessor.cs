@@ -32,6 +32,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             var colorIds = new int[] { 1, 2, 3, 4 };
             int randomColor = colorIds[(random.Next(4))];
             game.LastCardPlayed.Color = (CardColor)randomColor;
+
             _gameManager.DrawCard(game, moveParams.PlayerPlayed, 1, false);
             messagesToLog.Add($"{moveParams.PlayerPlayed.User.Name} played discard color. All players discarded {moveParams.TargetedCardColor} and a random color has been assigned.");
             return new MoveResult(messagesToLog);

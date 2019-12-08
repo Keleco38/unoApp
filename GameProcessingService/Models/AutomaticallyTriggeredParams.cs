@@ -13,6 +13,7 @@ namespace GameProcessingService.Models
         public AutomaticallyTriggeredMagneticPolarityParams MagneticPolarityParams { get; set; }
         public AutomaticallyTriggeredPromiseKeeperParams PromiseKeeperParams { get; set; }
         public AutomaticallyTriggeredTheLastStandParams TheLastStandParams { get; set; }
+        public AutomaticallyTriggeredKingsDecreeParams KingsDecreeParams { get; set; }
     }
 
     public class AutomaticallyTriggeredDoubleDrawParams
@@ -87,6 +88,11 @@ namespace GameProcessingService.Models
 
     public class AutomaticallyTriggeredTheLastStandParams
     {
+    }
+    
+    public class AutomaticallyTriggeredKingsDecreeParams
+    {
+        public Player PlayerAffected { get; set; }
     }
 
 

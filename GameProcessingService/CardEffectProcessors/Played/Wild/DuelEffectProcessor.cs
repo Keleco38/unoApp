@@ -49,7 +49,13 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(playerLost, 3, moveParams.TargetedCardColor) });
             messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
             messageToLog += $"{playerLost.User.Name} lost so they will draw {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s). ";
-            _gameManager.DrawCard(game, playerLost, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
+
+            var automaticallyTriggeredResultKingsDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KingsDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KingsDecreeParams = new AutomaticallyTriggeredKingsDecreeParams() { PlayerAffected = playerLost } });
+            messageToLog = automaticallyTriggeredResultKingsDecree.MessageToLog;
+            if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
+            {
+                _gameManager.DrawCard(game, playerLost, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
+            }
 
             messagesToLog.Add(messageToLog);
 

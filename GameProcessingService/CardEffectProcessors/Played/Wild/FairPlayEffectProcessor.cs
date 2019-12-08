@@ -50,8 +50,14 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 else
                 {
                     var numberInPositiveValue = cardDifference * -1;
-                    _gameManager.DrawCard(game, moveParams.PlayerTargeted, numberInPositiveValue, false);
                     messageToLog += $"{moveParams.PlayerTargeted.User.Name} must draw {numberInPositiveValue} cards. They had less cards.";
+
+                    var automaticallyTriggeredResultKingsDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KingsDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KingsDecreeParams = new AutomaticallyTriggeredKingsDecreeParams() { PlayerAffected = moveParams.PlayerTargeted } });
+                    messageToLog = automaticallyTriggeredResultKingsDecree.MessageToLog;
+                    if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
+                    {
+                        _gameManager.DrawCard(game, moveParams.PlayerTargeted, numberInPositiveValue, false);
+                    }
                 }
             }
 

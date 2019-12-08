@@ -84,7 +84,7 @@ namespace Web.Hubs
         public async Task GetAllOnlineUsers()
         {
             var usersDto = _mapper.Map<List<UserDto>>(_userRepository.GetAllUsers());
-            await Clients.All.SendAsync("RefreshOnlineUsersList", usersDto.OrderBy(x=>x.Name));
+            await Clients.All.SendAsync("RefreshOnlineUsersList", usersDto.OrderBy(x => x.Name));
         }
 
         public async Task GetAllGames()
@@ -751,6 +751,16 @@ namespace Web.Hubs
             {
                 return;
             }
+
+            if (game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
+            {
+                await AddToGameLog(game.Id, $"{game.PlayerToPlay.User.Name} is not affected by the draw. He has more than 4 cards and king's decree in hand.");
+                game.PlayerToPlay.CardPromisedToDiscard = null;
+                var nextPlayer = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players, false);
+                game.PlayerToPlay = nextPlayer;
+                return;
+            }
+
 
             if (game.PlayerToPlay.CardPromisedToDiscard != null)
             {

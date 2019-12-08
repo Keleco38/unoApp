@@ -9,5 +9,6 @@ namespace GameProcessingService.Models
         public int NumberOfCardsToDraw { get; set; }
         public List<Player> PlayersWithoutKeepMyHand { get; set; }
         public Player MagneticPolaritySelectedPlayer { get; set; }
+        public bool ActivatedKingsDecree { get; set; }
     }
 }

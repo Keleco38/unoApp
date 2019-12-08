@@ -28,8 +28,15 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             var messageToLog = $"{moveParams.PlayerPlayed.User.Name} changed color to {moveParams.TargetedCardColor} (poison card). ";
             var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerPlayed, 2, moveParams.TargetedCardColor) });
             messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
-            _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
             messageToLog += $" {moveParams.PlayerPlayed.User.Name} drew {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} cards. ";
+
+
+            var automaticallyTriggeredResultKingsDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KingsDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KingsDecreeParams = new AutomaticallyTriggeredKingsDecreeParams() { PlayerAffected = moveParams.PlayerPlayed } });
+            messageToLog = automaticallyTriggeredResultKingsDecree.MessageToLog;
+            if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
+            {
+                _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
+            }
 
             messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);

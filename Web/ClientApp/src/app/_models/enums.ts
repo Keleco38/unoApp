@@ -69,7 +69,8 @@ export enum CardValue {
   silence = 48,
   assassinate = 49,
   summonWildcard = 50,
-  devilsDeal = 51
+  devilsDeal = 51,
+  kingsDecree = 52
 }
 
 export enum Direction {

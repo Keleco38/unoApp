@@ -6,7 +6,7 @@ using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
 {
-    public class DeflectEffectProcessor: IAutomaticallyTriggeredCardEffectProcessor
+    public class DeflectEffectProcessor : IAutomaticallyTriggeredCardEffectProcessor
     {
         private readonly IGameManager _gameManager;
         public CardValue CardAffected => CardValue.Deflect;
@@ -16,12 +16,18 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
             _gameManager = gameManager;
         }
 
-        public AutomaticallyTriggeredResult ProcessCardEffect(Game game,  string messageToLog, AutomaticallyTriggeredParams autoParams)
+        public AutomaticallyTriggeredResult ProcessCardEffect(Game game, string messageToLog, AutomaticallyTriggeredParams autoParams)
         {
             if (autoParams.DeflectParams.PlayerPlayed == autoParams.DeflectParams.PlayerTargeted)
             {
                 messageToLog += $"{autoParams.DeflectParams.PlayerTargeted.User.Name} drew {autoParams.DeflectParams.NumberOfCardsToDraw} cards. ";
-                _gameManager.DrawCard(game, autoParams.DeflectParams.PlayerTargeted, autoParams.DeflectParams.NumberOfCardsToDraw, false);
+
+                var kingsDecreeResult = BlockedByKingsDecree(messageToLog, autoParams.DeflectParams.PlayerTargeted);
+                if (!kingsDecreeResult.ActivatedKingsDecree)
+                {
+                    messageToLog = kingsDecreeResult.MessageToLog;
+                    _gameManager.DrawCard(game, autoParams.DeflectParams.PlayerTargeted, autoParams.DeflectParams.NumberOfCardsToDraw, false);
+                }
             }
             else
             {
@@ -29,20 +35,48 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                 if (deflectCard == null)
                 {
                     messageToLog += $"{autoParams.DeflectParams.PlayerTargeted.User.Name} drew {autoParams.DeflectParams.NumberOfCardsToDraw} cards. ";
-                    _gameManager.DrawCard(game, autoParams.DeflectParams.PlayerTargeted, autoParams.DeflectParams.NumberOfCardsToDraw, false);
+
+                    var kingsDecreeResult = BlockedByKingsDecree(messageToLog, autoParams.DeflectParams.PlayerTargeted);
+                    if (!kingsDecreeResult.ActivatedKingsDecree)
+                    {
+                        messageToLog = kingsDecreeResult.MessageToLog;
+                        _gameManager.DrawCard(game, autoParams.DeflectParams.PlayerTargeted, autoParams.DeflectParams.NumberOfCardsToDraw, false);
+                    }
                 }
                 else
                 {
                     game.LastCardPlayed = new LastCardPlayed(autoParams.DeflectParams.TargetedCardColor, deflectCard.Value, deflectCard.ImageUrl, autoParams.DeflectParams.PlayerTargeted.User.Name, true, deflectCard);
                     autoParams.DeflectParams.PlayerTargeted.Cards.Remove(deflectCard);
                     game.DiscardedPile.Add(deflectCard);
-                    _gameManager.DrawCard(game, autoParams.DeflectParams.PlayerPlayed, autoParams.DeflectParams.NumberOfCardsToDraw, false);
                     messageToLog += $"{autoParams.DeflectParams.PlayerTargeted.User.Name} deflected {autoParams.DeflectParams.CardPlayed.Value.ToString()}. {autoParams.DeflectParams.PlayerPlayed.User.Name} must draw {autoParams.DeflectParams.NumberOfCardsToDraw} cards.";
+
+                    var kingsDecreeResult = BlockedByKingsDecree(messageToLog, autoParams.DeflectParams.PlayerPlayed);
+                    if (!kingsDecreeResult.ActivatedKingsDecree)
+                    {
+                        messageToLog = kingsDecreeResult.MessageToLog;
+                        _gameManager.DrawCard(game, autoParams.DeflectParams.PlayerPlayed, autoParams.DeflectParams.NumberOfCardsToDraw, false);
+                    }
+
+
                 }
             }
 
 
-            return new AutomaticallyTriggeredResult(){MessageToLog = messageToLog};
+            return new AutomaticallyTriggeredResult() { MessageToLog = messageToLog };
+        }
+
+
+        public AutomaticallyTriggeredResult BlockedByKingsDecree(string messageToLog, Player player)
+        {
+            var activatedKingsDecree = false;
+
+            if (player.Cards.Count > 4 && player.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
+            {
+                activatedKingsDecree = true;
+                messageToLog += $"{player.User.Name} is not affected by the draw. He has more than 4 cards and king's decree in hand.";
+            }
+
+            return new AutomaticallyTriggeredResult() { MessageToLog = messageToLog, ActivatedKingsDecree = activatedKingsDecree };
         }
     }
 }

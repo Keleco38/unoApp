@@ -40,7 +40,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
                 messageToLog += $"Player guessed correctly. {moveParams.PlayerTargeted.User.Name} had {correctGuess} number of numbered (0-9) cards. They will discard {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s)";
                 var numberOfCardsToDiscard = moveParams.PlayerPlayed.Cards.Count < automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw ? moveParams.PlayerPlayed.Cards.Count : automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw;
-               var cardsToDiscard= moveParams.PlayerPlayed.Cards.GetAndRemove(0, numberOfCardsToDiscard);
+                var cardsToDiscard = moveParams.PlayerPlayed.Cards.GetAndRemove(0, numberOfCardsToDiscard);
                 game.DiscardedPile.AddRange(cardsToDiscard);
 
             }
@@ -51,7 +51,15 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 
                 messageToLog += $"Player guessed wrongly. {moveParams.PlayerTargeted.User.Name} had {correctGuess} number of numbered (0-9) cards. They will draw {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s)";
-                _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
+
+                var automaticallyTriggeredResultKingsDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KingsDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KingsDecreeParams = new AutomaticallyTriggeredKingsDecreeParams() { PlayerAffected = moveParams.PlayerPlayed } });
+                messageToLog = automaticallyTriggeredResultKingsDecree.MessageToLog;
+                if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
+                {
+                    _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
+                }
+
+
             }
 
             messagesToLog.Add(messageToLog);

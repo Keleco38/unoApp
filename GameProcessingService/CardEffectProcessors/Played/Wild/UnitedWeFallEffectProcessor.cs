@@ -30,7 +30,14 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             {
                 var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(p, 2, moveParams.TargetedCardColor) });
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
-                _gameManager.DrawCard(game, p, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
+
+                var automaticallyTriggeredResultKingsDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KingsDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KingsDecreeParams = new AutomaticallyTriggeredKingsDecreeParams() { PlayerAffected = p } });
+                messageToLog = automaticallyTriggeredResultKingsDecree.MessageToLog;
+                if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
+                {
+                    _gameManager.DrawCard(game, p, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
+                }
+
             });
 
             messagesToLog.Add(messageToLog);

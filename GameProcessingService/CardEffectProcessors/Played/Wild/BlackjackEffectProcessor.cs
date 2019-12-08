@@ -30,8 +30,15 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerPlayed, 5, moveParams.TargetedCardColor) });
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 
-                _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
                 messageToLog += $"They went over 21. They will draw {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s).";
+
+                var automaticallyTriggeredResultKingsDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KingsDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KingsDecreeParams = new AutomaticallyTriggeredKingsDecreeParams() { PlayerAffected = moveParams.PlayerPlayed } });
+                messageToLog = automaticallyTriggeredResultKingsDecree.MessageToLog;
+                if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
+                {
+                    _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
+                }
+
             }
             else if (moveParams.BlackjackNumber == 21)
             {
@@ -69,8 +76,16 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerPlayed, numberOfCardsToDraw, moveParams.TargetedCardColor) });
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 
-                _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
                 messageToLog += $"They pulled out. They will draw {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s).";
+
+
+                var automaticallyTriggeredResultKingsDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KingsDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KingsDecreeParams = new AutomaticallyTriggeredKingsDecreeParams() { PlayerAffected = moveParams.PlayerPlayed } });
+                messageToLog = automaticallyTriggeredResultKingsDecree.MessageToLog;
+                if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
+                {
+                    _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
+                }
+
             }
             messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);
