@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Common.Enums;
+using Common.Extensions;
 using EntityObjects;
 using GameProcessingService.CardEffectProcessors.AutomaticallyTriggered;
 using GameProcessingService.CoreManagers;
@@ -39,7 +40,9 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
                 messageToLog += $"Player guessed correctly. {moveParams.PlayerTargeted.User.Name} had {correctGuess} number of numbered (0-9) cards. They will discard {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s)";
                 var numberOfCardsToDiscard = moveParams.PlayerPlayed.Cards.Count < automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw ? moveParams.PlayerPlayed.Cards.Count : automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw;
-                moveParams.PlayerPlayed.Cards.RemoveRange(0, numberOfCardsToDiscard);
+               var cardsToDiscard= moveParams.PlayerPlayed.Cards.GetAndRemove(0, numberOfCardsToDiscard);
+                game.DiscardedPile.AddRange(cardsToDiscard);
+
             }
             else
             {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Common.Enums;
+using Common.Extensions;
 using EntityObjects;
 using GameProcessingService.CardEffectProcessors.AutomaticallyTriggered;
 using GameProcessingService.CoreManagers;
@@ -38,7 +39,8 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 
                 var numberToDiscard = moveParams.PlayerPlayed.Cards.Count < automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw ? moveParams.PlayerPlayed.Cards.Count : automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw;
-                moveParams.PlayerPlayed.Cards.RemoveRange(0, numberToDiscard);
+                var cardsRemoved = moveParams.PlayerPlayed.Cards.GetAndRemove(0, numberToDiscard);
+                game.DiscardedPile.AddRange(cardsRemoved);
                 messageToLog += $"They hit the blackjack. They will discard {numberToDiscard} cards.";
 
             }
@@ -48,7 +50,9 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
 
                 var numberToDiscard = moveParams.PlayerPlayed.Cards.Count < automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw ? moveParams.PlayerPlayed.Cards.Count : automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw;
-                moveParams.PlayerPlayed.Cards.RemoveRange(0, numberToDiscard);
+                var cardsRemoved = moveParams.PlayerPlayed.Cards.GetAndRemove(0, numberToDiscard);
+                game.DiscardedPile.AddRange(cardsRemoved);
+
                 messageToLog += $"They beat the dealer. They will discard {numberToDiscard} card(s).";
             }
             else if (moveParams.BlackjackNumber == 17)

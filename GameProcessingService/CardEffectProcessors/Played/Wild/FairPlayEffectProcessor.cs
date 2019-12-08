@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Common.Enums;
+using Common.Extensions;
 using EntityObjects;
 using GameProcessingService.CardEffectProcessors.AutomaticallyTriggered;
 using GameProcessingService.CoreManagers;
@@ -42,8 +43,9 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 }
                 else if (cardDifference > 0)
                 {
-                    moveParams.PlayerTargeted.Cards.RemoveRange(0, cardDifference);
+                    var cardsToDiscard = moveParams.PlayerTargeted.Cards.GetAndRemove(0, cardDifference);
                     messageToLog += $"{moveParams.PlayerTargeted.User.Name} discarded {cardDifference} cards. They had more cards.";
+                    game.DiscardedPile.AddRange(cardsToDiscard);
                 }
                 else
                 {

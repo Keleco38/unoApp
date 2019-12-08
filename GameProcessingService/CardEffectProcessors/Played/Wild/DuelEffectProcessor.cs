@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Common.Enums;
+using Common.Extensions;
 using EntityObjects;
 using GameProcessingService.CardEffectProcessors.AutomaticallyTriggered;
 using GameProcessingService.CoreManagers;
@@ -41,7 +42,8 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
             messageToLog += $"{playerWon.User.Name} won so they will discard {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s). ";
             var numberOfCardsToDiscard = playerWon.Cards.Count < automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw ? playerWon.Cards.Count : automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw;
-            playerWon.Cards.RemoveRange(0, numberOfCardsToDiscard);
+            var cardsToDiscard = playerWon.Cards.GetAndRemove(0, numberOfCardsToDiscard);
+            game.DiscardedPile.AddRange(cardsToDiscard);
 
             //player lost will draw 3 or 6 cards
             automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(playerLost, 3, moveParams.TargetedCardColor) });

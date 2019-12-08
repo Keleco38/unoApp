@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Common.Enums;
+using Common.Extensions;
 using EntityObjects;
 using GameProcessingService.CardEffectProcessors.AutomaticallyTriggered;
 using GameProcessingService.CoreManagers;
@@ -45,8 +46,10 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
                     messageToLog += $"{moveParams.PlayerTargeted.User.Name} is a lucky winner! They will discard {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s). ";
 
-                    numberOfCardsToDiscard = moveParams.PlayerTargeted.Cards.Count < automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw ? moveParams.PlayerTargeted.Cards.Count  : automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw;
-                    moveParams.PlayerTargeted.Cards.RemoveRange(0, numberOfCardsToDiscard);
+                    numberOfCardsToDiscard = moveParams.PlayerTargeted.Cards.Count < automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw ? moveParams.PlayerTargeted.Cards.Count : automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw;
+                    var cardsToDiscard = moveParams.PlayerTargeted.Cards.GetAndRemove(0, numberOfCardsToDiscard);
+                    game.DiscardedPile.AddRange(cardsToDiscard);
+
                 }
             }
             else

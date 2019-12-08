@@ -56,8 +56,8 @@ namespace Common.Enums
         RandomColor = 42,
         PromiseKeeper = 43,
         Gambling = 44,
-        CopyCat = 45
-
+        CopyCat = 45,
+        RobinHood= 46
     }
 
     public enum Direction

@@ -1,4 +1,6 @@
-﻿using Common.Enums;
+﻿using System.Linq;
+using Common.Enums;
+using Common.Extensions;
 using EntityObjects;
 using GameProcessingService.CoreManagers;
 using GameProcessingService.Models;
@@ -25,7 +27,8 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                     messageToLog = $"{autoParams.PromiseKeeperParams.PlayerPlayed.User.Name} fulfilled their promise, they will discard one card. ";
                     if (autoParams.PromiseKeeperParams.PlayerPlayed.Cards.Count > 0)
                     {
-                        autoParams.PromiseKeeperParams.PlayerPlayed.Cards.RemoveRange(0, 1);
+                        var cardsToDiscard = autoParams.PromiseKeeperParams.PlayerPlayed.Cards.GetAndRemove(0, 1);
+                        game.DiscardedPile.Add(cardsToDiscard.First());
                     }
                 }
                 else

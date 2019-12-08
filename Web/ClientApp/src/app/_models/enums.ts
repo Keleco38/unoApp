@@ -63,7 +63,9 @@ export enum CardValue {
   randomColor=42,
   promiseKeeper=43,
   gambling = 44,
-  copyCat = 45
+  copyCat = 45,
+  robinHood= 46
+
 }
 
 export enum Direction {

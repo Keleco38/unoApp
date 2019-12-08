@@ -6,6 +6,15 @@ namespace Common.Extensions
     public static class ListExtensions
     {
         private static Random rng = new Random();
+        public static List<T> GetAndRemove<T>(this List<T> list, int start, int end)
+        {
+            lock (list)
+            {
+                List<T> values = list.GetRange(start, end);
+                list.RemoveRange(start, end);
+                return values;
+            }
+        }
 
         public static void Shuffle<T>(this IList<T> list)
         {

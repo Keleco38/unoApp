@@ -26,6 +26,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             {
                 var cardsToDiscard = p.Cards.Where(c => moveParams.NumbersToDiscard.Contains((int)c.Value)).ToList();
                 cardsToDiscard.ForEach(x => p.Cards.Remove(x));
+                game.DiscardedPile.AddRange(cardsToDiscard);
             });
             _gameManager.DrawCard(game, moveParams.PlayerPlayed, 1, false);
             messagesToLog.Add(messageToLog);
