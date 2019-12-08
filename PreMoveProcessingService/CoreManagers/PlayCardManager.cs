@@ -68,7 +68,7 @@ namespace PreMoveProcessingService.CoreManagers
             //play card effect
             var moveParams = new MoveParams(playerPlayed, cardPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess, previousLastCardPlayed);
             MoveResult moveResult;
-            if (game.SilenceTurnsRemaining > 0)
+            if (game.SilenceTurnsRemaining > 0 && cardPlayed.Color==CardColor.Wild)
             {
                 moveResult = new MoveResult(new List<string>() { $"Game is silenced for {game.SilenceTurnsRemaining} moves. {cardPlayed.Value.ToString()} had no effect." });
             }
