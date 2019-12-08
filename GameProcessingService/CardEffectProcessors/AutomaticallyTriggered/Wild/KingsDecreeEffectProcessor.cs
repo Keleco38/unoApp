@@ -6,7 +6,7 @@ using GameProcessingService.Models;
 
 namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
 {
-    public class KingsDecreeEffectProcessor: IAutomaticallyTriggeredCardEffectProcessor
+    public class KingsDecreeEffectProcessor : IAutomaticallyTriggeredCardEffectProcessor
     {
         private readonly IGameManager _gameManager;
         public CardValue CardAffected => CardValue.KingsDecree;
@@ -16,18 +16,21 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
             _gameManager = gameManager;
         }
 
-        public AutomaticallyTriggeredResult ProcessCardEffect(Game game,  string messageToLog, AutomaticallyTriggeredParams autoParams)
+        public AutomaticallyTriggeredResult ProcessCardEffect(Game game, string messageToLog, AutomaticallyTriggeredParams autoParams)
         {
             var player = autoParams.KingsDecreeParams.PlayerAffected;
             var activatedKingsDecree = false;
 
-            if (player.Cards.Count > 4 && player.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree)!=null)
+            if (game.SilenceTurnsRemaining <= 0)
             {
-                activatedKingsDecree = true;
-                messageToLog += $"{player.User.Name} is not affected by the draw. He has more than 4 cards and king's decree in hand (auto effect is activated).";
+                if (player.Cards.Count > 4 && player.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
+                {
+                    activatedKingsDecree = true;
+                    messageToLog += $"{player.User.Name} is not affected by the draw. He has more than 4 cards and king's decree in hand (auto effect is activated).";
+                }
             }
 
-            return new AutomaticallyTriggeredResult(){MessageToLog = messageToLog, ActivatedKingsDecree = activatedKingsDecree };
+            return new AutomaticallyTriggeredResult() { MessageToLog = messageToLog, ActivatedKingsDecree = activatedKingsDecree };
         }
     }
 }

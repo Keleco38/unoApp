@@ -22,7 +22,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
             {
                 messageToLog += $"{autoParams.DeflectParams.PlayerTargeted.User.Name} drew {autoParams.DeflectParams.NumberOfCardsToDraw} cards. ";
 
-                var kingsDecreeResult = BlockedByKingsDecree(messageToLog, autoParams.DeflectParams.PlayerTargeted);
+                var kingsDecreeResult = BlockedByKingsDecree(messageToLog, autoParams.DeflectParams.PlayerTargeted,game);
                 messageToLog = kingsDecreeResult.MessageToLog;
                 if (!kingsDecreeResult.ActivatedKingsDecree)
                 {
@@ -36,7 +36,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                 {
                     messageToLog += $"{autoParams.DeflectParams.PlayerTargeted.User.Name} drew {autoParams.DeflectParams.NumberOfCardsToDraw} cards. ";
 
-                    var kingsDecreeResult = BlockedByKingsDecree(messageToLog, autoParams.DeflectParams.PlayerTargeted);
+                    var kingsDecreeResult = BlockedByKingsDecree(messageToLog, autoParams.DeflectParams.PlayerTargeted,game);
                     messageToLog = kingsDecreeResult.MessageToLog;
                     if (!kingsDecreeResult.ActivatedKingsDecree)
                     {
@@ -50,7 +50,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                     game.DiscardedPile.Add(deflectCard);
                     messageToLog += $"{autoParams.DeflectParams.PlayerTargeted.User.Name} deflected {autoParams.DeflectParams.CardPlayed.Value.ToString()}. {autoParams.DeflectParams.PlayerPlayed.User.Name} must draw {autoParams.DeflectParams.NumberOfCardsToDraw} cards.";
 
-                    var kingsDecreeResult = BlockedByKingsDecree(messageToLog, autoParams.DeflectParams.PlayerPlayed);
+                    var kingsDecreeResult = BlockedByKingsDecree(messageToLog, autoParams.DeflectParams.PlayerPlayed,game);
                     messageToLog = kingsDecreeResult.MessageToLog;
                     if (!kingsDecreeResult.ActivatedKingsDecree)
                     {
@@ -63,14 +63,17 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
         }
 
 
-        private AutomaticallyTriggeredResult BlockedByKingsDecree(string messageToLog, Player player)
+        private AutomaticallyTriggeredResult BlockedByKingsDecree(string messageToLog, Player player, Game game)
         {
             var activatedKingsDecree = false;
 
-            if (player.Cards.Count > 4 && player.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
+            if (game.SilenceTurnsRemaining <= 0)
             {
-                activatedKingsDecree = true;
-                messageToLog += $"{player.User.Name} is not affected by the draw. He has more than 4 cards and king's decree in hand (auto effect is activated).";
+                if (player.Cards.Count > 4 && player.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
+                {
+                    activatedKingsDecree = true;
+                    messageToLog += $"{player.User.Name} is not affected by the draw. He has more than 4 cards and king's decree in hand (auto effect is activated).";
+                }
             }
 
             return new AutomaticallyTriggeredResult() { MessageToLog = messageToLog, ActivatedKingsDecree = activatedKingsDecree };

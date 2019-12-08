@@ -79,12 +79,11 @@ namespace PreMoveProcessingService.CoreManagers
             }
 
             //post play check last stand
-            if (game.SilenceTurnsRemaining <= 0)
-            {
-                var automaticallyTriggeredResultTheLastStand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.TheLastStand).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { TheLastStandParams = new AutomaticallyTriggeredTheLastStandParams() });
-                if (!string.IsNullOrEmpty(automaticallyTriggeredResultTheLastStand.MessageToLog))
-                    messagesToLog.Add(automaticallyTriggeredResultTheLastStand.MessageToLog);
-            }
+
+            var automaticallyTriggeredResultTheLastStand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.TheLastStand).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { TheLastStandParams = new AutomaticallyTriggeredTheLastStandParams() });
+            if (!string.IsNullOrEmpty(automaticallyTriggeredResultTheLastStand.MessageToLog))
+                messagesToLog.Add(automaticallyTriggeredResultTheLastStand.MessageToLog);
+
 
             //add messages for the end game/round
             messagesToLog.AddRange(_gameManager.UpdateGameAndRoundStatus(game));
@@ -102,15 +101,18 @@ namespace PreMoveProcessingService.CoreManagers
                 game.PlayerToPlay = nextPlayerToPlay;
             }
 
+
+            var automaticallyTriggeredResultQueensDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams() { PlayerAffected = game.PlayerToPlay } });
+            if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
+                messagesToLog.Add(automaticallyTriggeredResultQueensDecree.MessageToLog);
+
+
             if (game.SilenceTurnsRemaining > 0)
             {
                 game.SilenceTurnsRemaining--;
                 moveResult.MessagesToLog.Add($"{game.SilenceTurnsRemaining} silenced turns remaining. ");
             }
 
-            var automaticallyTriggeredResultQueensDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams(){PlayerAffected = game.PlayerToPlay}});
-            if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
-                messagesToLog.Add(automaticallyTriggeredResultQueensDecree.MessageToLog);
 
             return moveResult;
         }
