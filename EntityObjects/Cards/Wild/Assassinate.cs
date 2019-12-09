@@ -18,7 +18,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor { get; }
         public bool RequireTargetPlayer => true;
-        public string Description => "Target a player and name a card, if that player has that card in their hand, they immediately discard it (and all the instances) and draws 3 cards. If the target doesn't have a wild card, nothing happens.";
+        public string Description => "Target a player and name a card, if that player has that card in their hand, they immediately discard it (and all the instances) and draws 3 cards. If the target doesn't have that card, nothing happens.";
 
     }
 }

@@ -24,13 +24,13 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
             {
                 if (player.Cards.Count <= 5 && player.Cards.FirstOrDefault(x => x.Value == CardValue.QueensDecree) != null)
                 {
-                    messageToLog += $"{player.User.Name} had 5 or less cards and queen's decree, auto effect is activated. ";
                     if (game.Players.Count == 2)
                     {
                         var nextPlayer = _gameManager.GetNextPlayer(game, player, game.Players, false);
 
                         if (nextPlayer.Cards.Count < player.Cards.Count)
                         {
+                            messageToLog += $"{player.User.Name} had 5 or less cards and queen's decree, auto effect is activated. ";
                             messageToLog += $"Next player ({nextPlayer.User.Name}) will draw a card. ";
                             var kingsDecreeResult = BlockedByKingsDecree(messageToLog, nextPlayer, game);
                             messageToLog = kingsDecreeResult.MessageToLog;
@@ -39,40 +39,37 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                                 _gameManager.DrawCard(game, nextPlayer, 1, false);
                             }
                         }
-
-
                     }
                     else
                     {
-                        var previousPlayer = _gameManager.GetNextPlayer(game, player, game.Players, false);
+                        var previousPlayer = _gameManager.GetNextPlayer(game, player, game.Players, true);
                         var nextPlayer = _gameManager.GetNextPlayer(game, player, game.Players, false);
 
-
-                        if (nextPlayer.Cards.Count < player.Cards.Count)
+                        if (nextPlayer.Cards.Count < player.Cards.Count || previousPlayer.Cards.Count < player.Cards.Count)
                         {
-                            messageToLog += $"Next player ({nextPlayer.User.Name}) will draw a card. ";
-                            var kingsDecreeResult = BlockedByKingsDecree(messageToLog, nextPlayer, game);
-                            messageToLog = kingsDecreeResult.MessageToLog;
-                            if (!kingsDecreeResult.ActivatedKingsDecree)
+                            messageToLog += $"{player.User.Name} had 5 or less cards and queen's decree, auto effect is activated. ";
+                            if (nextPlayer.Cards.Count < player.Cards.Count)
                             {
-                                _gameManager.DrawCard(game, nextPlayer, 1, false);
+                                messageToLog += $"Next player ({nextPlayer.User.Name}) will draw a card. ";
+                                var kingsDecreeResult = BlockedByKingsDecree(messageToLog, nextPlayer, game);
+                                messageToLog = kingsDecreeResult.MessageToLog;
+                                if (!kingsDecreeResult.ActivatedKingsDecree)
+                                {
+                                    _gameManager.DrawCard(game, nextPlayer, 1, false);
+                                }
+                            }
+
+                            if (previousPlayer.Cards.Count < player.Cards.Count)
+                            {
+                                messageToLog += $"Previous player player ({previousPlayer.User.Name}) will draw a card. ";
+                                var kingsDecreeResult = BlockedByKingsDecree(messageToLog, previousPlayer, game);
+                                messageToLog = kingsDecreeResult.MessageToLog;
+                                if (!kingsDecreeResult.ActivatedKingsDecree)
+                                {
+                                    _gameManager.DrawCard(game, previousPlayer, 1, false);
+                                }
                             }
                         }
-
-                        if (previousPlayer.Cards.Count < player.Cards.Count)
-                        {
-                            messageToLog += $"Previous player player ({previousPlayer.User.Name}) will draw a card. ";
-                            var kingsDecreeResult = BlockedByKingsDecree(messageToLog, previousPlayer, game);
-                            messageToLog = kingsDecreeResult.MessageToLog;
-                            if (!kingsDecreeResult.ActivatedKingsDecree)
-                            {
-                                _gameManager.DrawCard(game, previousPlayer, 1, false);
-                            }
-                        }
-
-
-
-
                     }
                 }
             }
@@ -89,7 +86,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                 if (player.Cards.Count > 4 && player.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
                 {
                     activatedKingsDecree = true;
-                    messageToLog += $"{player.User.Name} is not affected by the draw. They have more than 4 cards and king's decree in hand (auto effect is activated).";
+                    messageToLog += $"{player.User.Name} is not affected by the draw. They have 5 or more cards and king's decree in hand (auto effect is activated).";
                 }
             }
 

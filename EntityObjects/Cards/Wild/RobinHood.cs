@@ -17,6 +17,6 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => false;
-        public string Description => "Steals 3 cards from the person with the most cards on the table (counter after this card is played). Keeps 1 for themselves and give 2 to the player with the least cards. If the number of cards stolen is less than 3 then saves 1 for themselves and give 1 away or just give 1 away.";
+        public string Description => "  Steals 2 cards from the person with the most cards on the table (counter after this card is played)  and give them to the player with the least cards.   If more than 1 player has max/min number of cards, a random player is selected";
     }
 }

@@ -24,7 +24,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             if (moveParams.ActivateSpecialCardEffect)
             {
-                messageToLog += $"{moveParams.PlayerPlayed.User.Name} activated the special effect. He will draw 2 cards and every player that has 1 card will draw 1 card. This card has been returned to the owner's hands";
+                messageToLog += $"{moveParams.PlayerPlayed.User.Name} activated the special effect. they will draw 2 cards and every player that has 1 card will draw 1 card. This card has been returned to the owner's hands";
                 var playersAffected = game.Players.Where(x => x.Cards.Count == 1);
                 foreach (var player in playersAffected)
                 {

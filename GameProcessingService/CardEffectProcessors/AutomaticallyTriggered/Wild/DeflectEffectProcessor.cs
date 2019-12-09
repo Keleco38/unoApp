@@ -72,7 +72,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                 if (player.Cards.Count > 4 && player.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
                 {
                     activatedKingsDecree = true;
-                    messageToLog += $"{player.User.Name} is not affected by the draw. They have more than 4 cards and king's decree in hand (auto effect is activated).";
+                    messageToLog += $"{player.User.Name} is not affected by the draw. They have 5 or more cards and king's decree in hand (auto effect is activated).";
                 }
             }
 

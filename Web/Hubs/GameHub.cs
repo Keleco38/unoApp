@@ -758,62 +758,47 @@ namespace Web.Hubs
 
             if (game.SilenceTurnsRemaining <= 0 && game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
             {
-                await AddToGameLog(game.Id, $"{game.PlayerToPlay.User.Name} is not affected by the draw. They have more than 4 cards and king's decree in hand (auto effect is activated).");
+                await AddToGameLog(game.Id, $"{game.PlayerToPlay.User.Name} is not affected by the draw. They have 5 or more cards and king's decree in hand (auto effect is activated).");
                 game.PlayerToPlay.CardPromisedToDiscard = null;
                 var nextPlayer = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players, false);
                 game.PlayerToPlay = nextPlayer;
-
-                var automaticallyTriggeredResultQueensDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams() { PlayerAffected = game.PlayerToPlay } });
-                if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
-                    await AddToGameLog(gameId, automaticallyTriggeredResultQueensDecree.MessageToLog);
-
-                await UpdateGame(game);
-                await UpdateHands(game);
-                return;
             }
-
-
-            if (game.PlayerToPlay.CardPromisedToDiscard != null)
+            else
             {
-                _gameManager.DrawCard(game, game.PlayerToPlay, 2, false);
-                game.PlayerToPlay.CardPromisedToDiscard = null;
-                await AddToGameLog(gameId, $"Player didn't fulfill their promise, they will draw 2 cards. ");
+                if (game.PlayerToPlay.CardPromisedToDiscard != null)
+                {
+                    _gameManager.DrawCard(game, game.PlayerToPlay, 2, false);
+                    game.PlayerToPlay.CardPromisedToDiscard = null;
+                    await AddToGameLog(gameId, $"Player didn't fulfill their promise, they will draw 2 cards. ");
+                }
+
+                var cardToDraw = game.Deck.Cards.Take(1).First();
+
+                if (game.GameSetup.DrawAutoPlay && (cardToDraw.Color == game.LastCardPlayed.Color || (cardToDraw.Value == game.LastCardPlayed.Value && !game.LastCardPlayed.WasWildCard)))
+                {
+                    _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
+                    await AddToGameLog(gameId, $"{user.Name} drew and autoplayed a card.");
+                    await PlayCard(cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty, null, false);
+                    return;
+                }
+
+                _gameManager.DrawCard(game, game.PlayerToPlay, 1, true);
+                await AddToGameLog(gameId, $"{user.Name} drew a card (normal draw)");
+
+                if (game.SilenceTurnsRemaining > 0)
+                {
+                    game.SilenceTurnsRemaining--;
+                    var messageToLog = $"{game.SilenceTurnsRemaining} silenced turns remaining. ";
+                    await AddToGameLog(game.Id, messageToLog);
+                }
             }
 
-            var cardToDraw = game.Deck.Cards.Take(1).First();
-
-            if (game.GameSetup.DrawAutoPlay && (cardToDraw.Color == game.LastCardPlayed.Color || (cardToDraw.Value == game.LastCardPlayed.Value && !game.LastCardPlayed.WasWildCard)))
-            {
-                _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
-                await AddToGameLog(gameId, $"{user.Name} drew and autoplayed a card.");
-                await PlayCard(cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty, null, false);
-                      return;
-            }
-
-            _gameManager.DrawCard(game, game.PlayerToPlay, 1, true);
-            await AddToGameLog(gameId, $"{user.Name} drew a card (normal draw)");
-
-            var automaticallyTriggeredResultQueensDecree2 = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams() { PlayerAffected = game.PlayerToPlay } });
-            if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree2.MessageToLog))
-                await AddToGameLog(gameId, automaticallyTriggeredResultQueensDecree2.MessageToLog);
+            var automaticallyTriggeredResultQueensDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams() { PlayerAffected = game.PlayerToPlay } });
+            if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
+                await AddToGameLog(gameId, automaticallyTriggeredResultQueensDecree.MessageToLog);
 
             await UpdateGame(game);
             await UpdateHands(game);
-
-            if (game.HandCuffedPlayers.Contains(game.PlayerToPlay))
-            {
-                var nextPlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
-                var messageToLog = $"{game.PlayerToPlay.User.Name} was handcuffed so he will skip this turn. Player to play: {nextPlayerToPlay.User.Name}";
-                game.HandCuffedPlayers.Remove(game.PlayerToPlay);
-                game.PlayerToPlay = nextPlayerToPlay;
-                await AddToGameLog(game.Id, messageToLog);
-            }
-            if (game.SilenceTurnsRemaining > 0)
-            {
-                game.SilenceTurnsRemaining--;
-                var messageToLog = $"{game.SilenceTurnsRemaining} silenced turns remaining. ";
-                await AddToGameLog(game.Id, messageToLog);
-            }
         }
 
         public async Task CheckUnoCall(bool unoCalled)
@@ -966,6 +951,20 @@ namespace Web.Hubs
         {
             if (game.GameStarted)
             {
+                if (game.HandCuffedPlayers.Contains(game.PlayerToPlay))
+                {
+                    if (game.SilenceTurnsRemaining <= 0)
+                    {
+                        var nextPlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
+                        var messageToLog = $"{game.PlayerToPlay.User.Name} was handcuffed so they will skip this turn. Player to play: {nextPlayerToPlay.User.Name}";
+                        game.PlayerToPlay = nextPlayerToPlay;
+                        await AddToGameLog(game.Id, messageToLog);
+                    }
+                    game.HandCuffedPlayers.Remove(game.PlayerToPlay);
+                    await UpdateHands(game);
+                    await UpdateGame(game);
+                    return;
+                }
                 var allPlayersInTheGame = GetPlayersFromGame(game);
                 foreach (var connectionId in allPlayersInTheGame)
                 {
