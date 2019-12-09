@@ -953,6 +953,7 @@ namespace Web.Hubs
             {
                 if (game.HandCuffedPlayers.Contains(game.PlayerToPlay))
                 {
+                    var originallyHandcuffedPlayer=game.PlayerToPlay;
                     if (game.SilenceTurnsRemaining <= 0)
                     {
                         var nextPlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
@@ -960,7 +961,7 @@ namespace Web.Hubs
                         game.PlayerToPlay = nextPlayerToPlay;
                         await AddToGameLog(game.Id, messageToLog);
                     }
-                    game.HandCuffedPlayers.Remove(game.PlayerToPlay);
+                    game.HandCuffedPlayers.Remove(originallyHandcuffedPlayer);
                     await UpdateHands(game);
                     await UpdateGame(game);
                     return;
