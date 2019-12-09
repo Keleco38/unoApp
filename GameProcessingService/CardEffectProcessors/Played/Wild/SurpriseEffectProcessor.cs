@@ -23,30 +23,39 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var messageToLog=($"{moveParams.PlayerPlayed.User.Name} played surprise. Every player drew a wild card.");
+            var messageToLog = ($"{moveParams.PlayerPlayed.User.Name} played surprise. Every player drew a wild card.");
 
-            game.Players.ForEach(player =>
+            foreach (var player in game.Players)
             {
                 var wildCardToAdd = game.Deck.Cards.FirstOrDefault(x => x.Color == CardColor.Wild);
-                if (wildCardToAdd == null)
-                {
-                    wildCardToAdd = game.DiscardedPile.FirstOrDefault(x => x.Color == CardColor.Wild);
-                    game.DiscardedPile.Remove(wildCardToAdd);
-                }
-                else
+                if (wildCardToAdd != null)
                 {
                     game.Deck.Cards.Remove(wildCardToAdd);
                 }
-
-
-                var automaticallyTriggeredResultKingsDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KingsDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KingsDecreeParams = new AutomaticallyTriggeredKingsDecreeParams() { PlayerAffected = player } });
-                messageToLog = automaticallyTriggeredResultKingsDecree.MessageToLog;
-                if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
+                else
                 {
-                    player.Cards.Add(wildCardToAdd);
+                    wildCardToAdd = game.DiscardedPile.FirstOrDefault(x => x.Color == CardColor.Wild);
+                    if (wildCardToAdd != null)
+                    {
+                        game.DiscardedPile.Remove(wildCardToAdd);
+                    }
                 }
 
-            });
+                if (wildCardToAdd != null)
+                {
+                    var automaticallyTriggeredResultKingsDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KingsDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KingsDecreeParams = new AutomaticallyTriggeredKingsDecreeParams() { PlayerAffected = player } });
+                    messageToLog = automaticallyTriggeredResultKingsDecree.MessageToLog;
+                    if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
+                    {
+                        player.Cards.Add(wildCardToAdd);
+                    }
+                }
+                else
+                {
+                    messageToLog += "Surprise card had no effect. No wild card found in the deck or the discarded pile. ";
+                    break;
+                }
+            }
 
             messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);
