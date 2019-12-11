@@ -23,7 +23,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var messageToLog = ($"{moveParams.PlayerPlayed.User.Name} played surprise. Every player drew a wild card.");
+            var messageToLog = ($"{moveParams.PlayerPlayed.User.Name} played surprise. Every player drew a wild card. ");
 
             foreach (var player in game.Players)
             {
@@ -47,12 +47,13 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                     messageToLog = automaticallyTriggeredResultKingsDecree.MessageToLog;
                     if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
                     {
+                        messageToLog += $" {player.User.Name}: {wildCardToAdd.Value.ToString()} ;";
                         player.Cards.Add(wildCardToAdd);
                     }
                 }
                 else
                 {
-                    messageToLog += "Surprise card had no effect. No wild card found in the deck or the discarded pile. ";
+                    messageToLog += "Other player's didn't draw a card. No wild card found in the deck or the discarded pile. ";
                     break;
                 }
             }

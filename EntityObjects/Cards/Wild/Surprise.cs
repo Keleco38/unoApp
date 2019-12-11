@@ -19,7 +19,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor { get; }
         public bool RequireTargetPlayer => false;
-        public string Description => " Every player will draw a random wild card from the deck.";
+        public string Description => " Every player will draw a random wild card from the deck. Card's value will be revealed.";
 
     }
 }
