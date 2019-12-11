@@ -35,12 +35,12 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             if (!result || greedTurns==0)
             {
                 messageToLog += $"{moveParams.PlayerTargeted.User.Name} will draw one card for the next 3 turns. ";
-                game.GreedAffectedPlayers.Add(moveParams.PlayerTargeted, 2);
+                game.GreedAffectedPlayers.Add(moveParams.PlayerTargeted, 3);
             }
             else
             {
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} has been stacked with 2 more greed turns. ";
-                game.GreedAffectedPlayers[moveParams.PlayerTargeted] = greedTurns + 2;
+                messageToLog += $"{moveParams.PlayerTargeted.User.Name} has been stacked with 3 more greed turns. ";
+                game.GreedAffectedPlayers[moveParams.PlayerTargeted] = greedTurns + 3;
             }
 
             messagesToLog.Add(messageToLog);
