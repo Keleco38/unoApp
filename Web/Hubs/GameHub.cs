@@ -778,7 +778,7 @@ namespace Web.Hubs
                 {
                     _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
                     await AddToGameLog(gameId, $"{user.Name} drew and autoplayed a card.");
-                    await PlayCard(cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty, null, false);
+                    await PlayCard(cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty,  false, CardValue.ChangeColor);
                     return;
                 }
 
@@ -849,7 +849,7 @@ namespace Web.Hubs
 
         }
 
-        public async Task PlayCard(string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess, CardValue? targetedCardValue, bool activateSpecialCardEffect)
+        public async Task PlayCard(string cardPlayedId, CardColor targetedCardColor, string playerTargetedId, string cardToDigId, List<int> duelNumbers, List<string> charityCardsIds, int blackjackNumber, List<int> numbersToDiscard, string cardPromisedToDiscardId, string oddOrEvenGuess, bool activateSpecialCardEffect, CardValue targetedCardValue)
         {
             var user = GetCurrentUser();
             var gameId = user.ActiveGameId;

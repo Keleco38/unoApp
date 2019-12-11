@@ -47,7 +47,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                     messageToLog = automaticallyTriggeredResultKingsDecree.MessageToLog;
                     if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
                     {
-                        messageToLog += $" {player.User.Name}: {wildCardToAdd.Value.ToString()} ;";
+                        messageToLog += $" {player.User.Name}: {wildCardToAdd.Value.ToString()},";
                         player.Cards.Add(wildCardToAdd);
                     }
                 }

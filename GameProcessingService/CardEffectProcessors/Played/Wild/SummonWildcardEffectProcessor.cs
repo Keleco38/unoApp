@@ -20,7 +20,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played SummonWildcard. He drew 2 cards, summoned {moveParams.TargetedCardValue.ToString()} to his hand and kept his turn. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played SummonWildcard. He drew 2 cards, summoned {moveParams.TargetedCardValue.ToString()} to their hand and kept their turn. ";
 
             var card = game.Deck.Cards.FirstOrDefault(x => x.Value == moveParams.TargetedCardValue);
             if (card != null)
@@ -41,9 +41,8 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 }
                 else
                 {
-                    messageToLog += "Summoning failed. That card does not exists in the deck or the discarded pile (all instances are in player's hands).";
+                    messageToLog += "Summoning failed. That card does not exists in the deck or the discarded pile.";
                 }
-
             }
 
             _gameManager.DrawCard(game, moveParams.PlayerPlayed, 2, false);

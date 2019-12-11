@@ -57,15 +57,16 @@ namespace Common.Enums
         PromiseKeeper = 43,
         Gambling = 44,
         CopyCat = 45,
-        RobinHood= 46,
-        Handcuff=47,
-        Silence=48,
-        Assassinate=49,
-        SummonWildcard=50,
-        DevilsDeal=51,
-        KingsDecree=52,
-        QueensDecree=53,
-        Surprise=54
+        RobinHood = 46,
+        Handcuff = 47,
+        Silence = 48,
+        Assassinate = 49,
+        SummonWildcard = 50,
+        DevilsDeal = 51,
+        KingsDecree = 52,
+        QueensDecree = 53,
+        Surprise = 54,
+        DeathSentence = 55
 
     }
 

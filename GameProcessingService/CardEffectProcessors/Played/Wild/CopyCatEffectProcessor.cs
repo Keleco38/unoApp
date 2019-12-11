@@ -20,8 +20,15 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         {
             var messagesToLog = new List<string>();
             var cardToCopy = moveParams.PreviousLastCardPlayed.OriginalCardPlayer;
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played copycat. He copied {cardToCopy.Value.ToString()} and kept his turn.";
-            moveParams.PlayerPlayed.Cards.Add(cardToCopy);
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played copycat. He copied {cardToCopy.Value.ToString()} and kept their turn.";
+            if (game.CardValuesRemovedFromTheRound.Contains(cardToCopy.Value))
+            {
+                messageToLog += "Card was not copied, it was removed from the game by the death sentence.";
+            }
+            else
+            {
+                moveParams.PlayerPlayed.Cards.Add(cardToCopy);
+            }
             var previousPlayer = _gameManager.GetNextPlayer(game, moveParams.PlayerPlayed, game.Players, true);
             game.PlayerToPlay = previousPlayer;
             messagesToLog.Add(messageToLog);

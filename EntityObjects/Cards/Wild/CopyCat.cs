@@ -18,7 +18,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor { get; }
         public bool RequireTargetPlayer => false;
-        public string Description => "Copies the last card placed but the player is not forced to play it immediately. Player keeps his turn after playing this card..";
+        public string Description => "Copies the last card placed but the player is not forced to play it immediately. Player keeps their turn after playing this card..";
 
     }
 }

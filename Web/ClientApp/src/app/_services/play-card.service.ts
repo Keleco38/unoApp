@@ -102,7 +102,7 @@ export class PlayCardService {
               });
             } else if (cardPlayed.value == CardValue.assassinate) {
               this._modalService.displayPickAnyCardModal().result.then((selectedCard:CardValue) => {
-                this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null,null,0,null,null,null,selectedCard);
+                this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null,null,0,null,null,null,false,selectedCard);
                 return;
               });
             } else if (cardPlayed.value == CardValue.charity) {
@@ -132,10 +132,22 @@ export class PlayCardService {
             }
           });
         }else if (cardPlayed.value === CardValue.devilsDeal) {
-          const digModal = this._modalService.displayActivateSpecialEffect();
-          digModal.result.then((activateEffect: boolean) => {
-            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null,null,0,null,null,null,null,activateEffect);
+          const specialEffectModal = this._modalService.displayActivateSpecialEffect();
+          specialEffectModal.result.then((activateEffect: boolean) => {
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null,null,0,null,null,null,activateEffect);
             return;
+          });
+        }else if (cardPlayed.value === CardValue.deathSentence) {
+          this._modalService.displayActivateSpecialEffect().result.then((activateEffect: boolean) => {
+            if(activateEffect){
+              this._modalService.displayPickWildCardModal().result.then((selectedCard:CardValue)=>{
+                this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null,null,0,null,null,null,activateEffect, selectedCard);
+                return;
+              });
+            }else{
+              this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null,null,0,null,null,null,activateEffect);
+              return;
+            }
           });
         } else if (cardPlayed.value === CardValue.graveDigger) {
           const digModal = this._modalService.displayDigCardModal();
@@ -148,7 +160,7 @@ export class PlayCardService {
           var modalRef= this._modalService.displayPickWildCardModal();
           modalRef.componentInstance.bannedCards = game.gameSetup.bannedCards;
           modalRef.result.then((selectedCard:CardValue) => {
-            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null,null,0,null,null,null,selectedCard);
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null,null,0,null,null,null,false,selectedCard);
             return;
           });
         } else if (cardPlayed.value === CardValue.blackjack) {

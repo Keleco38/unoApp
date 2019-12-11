@@ -47,6 +47,7 @@ namespace GameProcessingService.CoreManagers
 
         public void StartNewRound(Game game)
         {
+            game.CardValuesRemovedFromTheRound.Clear();
             game.HandCuffedPlayers.Clear();
             game.SilenceTurnsRemaining = 0;
             game.Players.ForEach(x => x.CardPromisedToDiscard = null);
@@ -70,6 +71,13 @@ namespace GameProcessingService.CoreManagers
             {
                 game.Deck = new Deck(game.GameSetup);
                 game.Deck.Cards.Shuffle();
+                if (game.CardValuesRemovedFromTheRound.Any())
+                {
+                    foreach (var cardValue in game.CardValuesRemovedFromTheRound)
+                    {
+                        game.Deck.Cards.RemoveAll(x => x.Value == cardValue);
+                    }
+                }
             }
 
             player.Cards.AddRange(game.Deck.Draw(count));

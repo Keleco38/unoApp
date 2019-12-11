@@ -12,6 +12,7 @@ namespace EntityObjects
         public Deck Deck { get; set; }
         public List<Player> Players { get; set; }
         public List<Player> HandCuffedPlayers { get; set; }
+        public List<CardValue> CardValuesRemovedFromTheRound { get; set; }
         public List<Spectator> Spectators { get; set; }
         public List<ICard> DiscardedPile { get; set; }
         public GameSetup GameSetup { get; set; }
@@ -44,6 +45,7 @@ namespace EntityObjects
             BannedUsers = new List<User>();
             DiscardedPile = new List<ICard>();
             SilenceTurnsRemaining = 0;
+            CardValuesRemovedFromTheRound=new List<CardValue>();
         }
 
     }

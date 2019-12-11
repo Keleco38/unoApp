@@ -29,7 +29,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             moveParams.PlayerTargeted = automaticallyTriggeredResultMagneticPolarity.MagneticPolaritySelectedPlayer;
             messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
 
-            messageToLog +=$"{moveParams.PlayerTargeted.User.Name} will skip his next turn.";
+            messageToLog +=$"{moveParams.PlayerTargeted.User.Name} will skip their next turn.";
 
             game.HandCuffedPlayers.Add(moveParams.PlayerTargeted);
             messagesToLog.Add(messageToLog);
