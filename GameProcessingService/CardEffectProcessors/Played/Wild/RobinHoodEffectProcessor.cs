@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Common.Enums;
 using Common.Extensions;
@@ -21,8 +22,13 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var playerWithMostCards = game.Players.First(y => y.Cards.Count == game.Players.Max(p => p.Cards.Count));
-            var playerWIthLeastCards = game.Players.First(y => y.Cards.Count == game.Players.Min(p => p.Cards.Count));
+            var playersWithMostCards = game.Players.Where(y => y.Cards.Count == game.Players.Max(p => p.Cards.Count)).ToList();
+            var playersWIthLeastCards = game.Players.Where(y => y.Cards.Count == game.Players.Min(p => p.Cards.Count)).ToList();
+
+
+            Random rng=new Random();
+            var playerWithMostCards = playersWithMostCards[rng.Next(playersWithMostCards.Count)];
+            var playerWIthLeastCards = playersWIthLeastCards[rng.Next(playersWIthLeastCards.Count)];
 
             var numberOfCardsToTake = playerWithMostCards.Cards.Count < 2 ? playerWithMostCards.Cards.Count : 2;
 

@@ -67,8 +67,8 @@ namespace Common.Enums
         QueensDecree = 53,
         Surprise = 54,
         DeathSentence = 55,
-        Cyclone = 56
-
+        Cyclone = 56,
+        Intervention = 57
     }
 
     public enum Direction

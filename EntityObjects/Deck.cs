@@ -108,6 +108,7 @@ namespace EntityObjects
                 Cards.Add(new Surprise(limitColorChangingCards));
                 Cards.Add(new DeathSentence(limitColorChangingCards));
                 Cards.Add(new Cyclone(limitColorChangingCards));
+                Cards.Add(new Intervention(limitColorChangingCards));
                 //cads added 2 times
                 Cards.Add(new KeepMyHand(limitColorChangingCards));
                 Cards.Add(new KeepMyHand(limitColorChangingCards));
