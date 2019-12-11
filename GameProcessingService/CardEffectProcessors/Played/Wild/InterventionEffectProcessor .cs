@@ -40,6 +40,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
                 {
                     _gameManager.DrawCard(game, player, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
+                    messageToLog += $" {player.User.Name} drew {automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw} card(s). ";
                 }
             }
 
