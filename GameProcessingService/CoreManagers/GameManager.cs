@@ -47,6 +47,7 @@ namespace GameProcessingService.CoreManagers
 
         public void StartNewRound(Game game)
         {
+            game.GreedAffectedPlayers.Clear();
             game.CardValuesRemovedFromTheRound.Clear();
             game.HandCuffedPlayers.Clear();
             game.SilenceTurnsRemaining = 0;

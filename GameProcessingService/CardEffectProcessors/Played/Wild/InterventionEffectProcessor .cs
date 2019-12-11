@@ -27,7 +27,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             var playersWithLeastCards = game.Players.Where(x => x.Cards.Count == game.Players.Min(p => p.Cards.Count)).ToList();
 
-            messageToLog += $" Players handcuffed: {string.Join(",", playersWithLeastCards.Select(x => x.User.Name))}";
+            messageToLog += $" Players handcuffed: {string.Join(",", playersWithLeastCards.Select(x => x.User.Name))}. ";
 
             foreach (var player in playersWithLeastCards)
             {

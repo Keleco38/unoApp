@@ -24,6 +24,7 @@ namespace EntityObjects
         public LastCardPlayed LastCardPlayed { get; set; }
         public Player PlayerToPlay { get; set; }
         public bool GameStarted { get; set; }
+        public Dictionary<Player,int> GreedAffectedPlayers { get; set; }
         public int SilenceTurnsRemaining { get; set; }
         public DateTime ReadyPhaseExpireUtc { get; set; }
         public List<string> ReadyPlayersLeft { get; set; }
@@ -46,6 +47,7 @@ namespace EntityObjects
             DiscardedPile = new List<ICard>();
             SilenceTurnsRemaining = 0;
             CardValuesRemovedFromTheRound=new List<CardValue>();
+            GreedAffectedPlayers=new Dictionary<Player, int>();
         }
 
     }

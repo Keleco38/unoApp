@@ -778,7 +778,7 @@ namespace Web.Hubs
                 {
                     _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
                     await AddToGameLog(gameId, $"{user.Name} drew and autoplayed a card.");
-                    await PlayCard(cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty,  false, CardValue.ChangeColor);
+                    await PlayCard(cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty, false, CardValue.ChangeColor);
                     return;
                 }
 
@@ -953,7 +953,7 @@ namespace Web.Hubs
             {
                 if (game.HandCuffedPlayers.Contains(game.PlayerToPlay))
                 {
-                    var originallyHandcuffedPlayer=game.PlayerToPlay;
+                    var originallyHandcuffedPlayer = game.PlayerToPlay;
                     if (game.SilenceTurnsRemaining <= 0)
                     {
                         var nextPlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
@@ -966,6 +966,21 @@ namespace Web.Hubs
                     await UpdateGame(game);
                     return;
                 }
+
+                var result = game.GreedAffectedPlayers.TryGetValue(game.PlayerToPlay, out var greedTurns);
+                if (result && greedTurns>0)
+                {
+                    if (game.SilenceTurnsRemaining <= 0)
+                    {
+                        var messageToLog = $"{game.PlayerToPlay.User.Name} was affected by greed so they will draw one card. Greed turns remaining: {greedTurns}";
+                        _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
+                        await AddToGameLog(game.Id, messageToLog);
+                    }
+                    game.GreedAffectedPlayers[game.PlayerToPlay] = greedTurns - 1;
+                    await UpdateHands(game);
+                    await UpdateGame(game);
+                }
+
                 var allPlayersInTheGame = GetPlayersFromGame(game);
                 foreach (var connectionId in allPlayersInTheGame)
                 {
