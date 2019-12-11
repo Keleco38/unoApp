@@ -105,6 +105,27 @@ namespace PreMoveProcessingService.CoreManagers
             }
 
 
+            var result = game.GreedAffectedPlayers.TryGetValue(game.PlayerToPlay, out var greedTurns);
+            if (result && greedTurns > 0)
+            {
+                if (game.SilenceTurnsRemaining <= 0)
+                {
+                    var messageToLog = $"{game.PlayerToPlay.User.Name} was affected by greed so they will draw one card. Greed turns remaining: {greedTurns}. ";
+
+                    if (game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
+                    {
+                        messageToLog += $"{game.PlayerToPlay.User.Name} is not affected by the draw (king's decree).";
+                    }
+                    else
+                    {
+                        _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
+                    }
+                    moveResult.MessagesToLog.Add(messageToLog);
+                }
+                game.GreedAffectedPlayers[game.PlayerToPlay] = greedTurns - 1;
+            }
+
+
             return moveResult;
         }
 

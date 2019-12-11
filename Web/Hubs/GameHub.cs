@@ -797,6 +797,26 @@ namespace Web.Hubs
             if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
                 await AddToGameLog(gameId, automaticallyTriggeredResultQueensDecree.MessageToLog);
 
+            var result = game.GreedAffectedPlayers.TryGetValue(game.PlayerToPlay, out var greedTurns);
+            if (result && greedTurns > 0)
+            {
+                if (game.SilenceTurnsRemaining <= 0)
+                {
+                    var messageToLog = $"{game.PlayerToPlay.User.Name} was affected by greed so they will draw one card. Greed turns remaining: {greedTurns}";
+                    await AddToGameLog(game.Id, messageToLog);
+
+                    if (game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
+                    {
+                        await AddToGameLog(game.Id, $"{game.PlayerToPlay.User.Name} is not affected by the draw (king's decree).");
+                    }
+                    else
+                    {
+                        _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
+                    }
+                }
+                game.GreedAffectedPlayers[game.PlayerToPlay] = greedTurns - 1;
+            }
+
             await UpdateGame(game);
             await UpdateHands(game);
         }
@@ -967,27 +987,6 @@ namespace Web.Hubs
                     return;
                 }
 
-                var result = game.GreedAffectedPlayers.TryGetValue(game.PlayerToPlay, out var greedTurns);
-                if (result && greedTurns>0)
-                {
-                    if (game.SilenceTurnsRemaining <= 0)
-                    {
-                        var messageToLog = $"{game.PlayerToPlay.User.Name} was affected by greed so they will draw one card. Greed turns remaining: {greedTurns}";
-                        await AddToGameLog(game.Id, messageToLog);
-
-                        if (game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
-                        {
-                            await AddToGameLog(game.Id, $"{game.PlayerToPlay.User.Name} is not affected by the draw (king's decree).");
-                        }
-                        else
-                        {
-                            _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
-                        }
-                    }
-                    game.GreedAffectedPlayers[game.PlayerToPlay] = greedTurns - 1;
-                    await UpdateHands(game);
-                    await UpdateGame(game);
-                }
 
                 var allPlayersInTheGame = GetPlayersFromGame(game);
                 foreach (var connectionId in allPlayersInTheGame)
