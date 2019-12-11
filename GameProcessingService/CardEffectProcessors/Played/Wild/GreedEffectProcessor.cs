@@ -32,7 +32,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
 
             var result = game.GreedAffectedPlayers.TryGetValue(moveParams.PlayerTargeted, out var greedTurns);
-            if (result && greedTurns>0)
+            if (!result || greedTurns==0)
             {
                 messageToLog += $"{moveParams.PlayerTargeted.User.Name} will draw one card for the next 3 turns. ";
                 game.GreedAffectedPlayers.Add(moveParams.PlayerTargeted, 2);
