@@ -19,6 +19,6 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => true;
-        public string Description => "Select a player, for the next 3 turns they are forced to draw 1 card from deck. Multiple greed can stack.";
+        public string Description => "Select a player, for the next 3 turns they are forced to draw 1 card from deck. Multiple greed can stack. Double draw does not affect greed.";
     }
 }
