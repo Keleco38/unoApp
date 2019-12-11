@@ -68,7 +68,8 @@ namespace Common.Enums
         Surprise = 54,
         DeathSentence = 55,
         Cyclone = 56,
-        Intervention = 57
+        Intervention = 57,
+        BadgeCollector = 58
     }
 
     public enum Direction

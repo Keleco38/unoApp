@@ -75,7 +75,8 @@ export enum CardValue {
   surprise = 54,
   deathSentence = 55,
   cyclone = 56,
-  intervention = 57
+  intervention = 57,
+  badgeCollector = 58
 }
 
 export enum Direction {

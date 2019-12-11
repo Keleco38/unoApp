@@ -758,7 +758,7 @@ namespace Web.Hubs
 
             if (game.SilenceTurnsRemaining <= 0 && game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
             {
-                await AddToGameLog(game.Id, $"{game.PlayerToPlay.User.Name} is not affected by the draw. They have 5 or more cards and king's decree in hand (auto effect is activated).");
+                await AddToGameLog(game.Id, $"{game.PlayerToPlay.User.Name} is not affected by the draw (king's decree).");
                 game.PlayerToPlay.CardPromisedToDiscard = null;
                 var nextPlayer = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players, false);
                 game.PlayerToPlay = nextPlayer;
