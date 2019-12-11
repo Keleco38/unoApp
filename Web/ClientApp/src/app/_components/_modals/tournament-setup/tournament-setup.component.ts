@@ -5,7 +5,7 @@ import { Component, OnInit } from "@angular/core";
 import { HubService } from "../../../_services/hub.service";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { first } from "rxjs/operators";
-import { PlayersSetup, GameType } from "../../../_models/enums";
+import { PlayersSetup, GameType, CardValue } from "../../../_models/enums";
 
 @Component({
   selector: "app-tournament-setup",
@@ -23,7 +23,7 @@ export class TournamentSetupComponent implements OnInit {
     private _hubService: HubService,
     private _activeModal: NgbActiveModal,
     private _tournamentStorageService: TournamentStorageService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this._tournamentStorageService.activeTournament
@@ -41,7 +41,7 @@ export class TournamentSetupComponent implements OnInit {
         name: "",
         gameType: GameType.specialWildCards,
         drawFourDrawTwoShouldSkipTurn: true,
-        bannedCards: [],
+        bannedCards: [CardValue.swapHands, CardValue.magneticPolarity],
         matchingCardStealsTurn: true,
         spectatorsCanViewHands: true,
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,

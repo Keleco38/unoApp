@@ -1,6 +1,6 @@
 import { GameStorageService } from './../../../_services/storage-services/game-storage.service';
 import { first } from 'rxjs/operators';
-import { GameType, PlayersSetup } from './../../../_models/enums';
+import { GameType, PlayersSetup, CardValue } from './../../../_models/enums';
 import { GameSetup } from './../../../_models/gameSetup';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HubService } from './../../../_services/hub.service';
@@ -31,7 +31,7 @@ export class GameSetupComponent implements OnInit {
         password: '',
         gameType: GameType.specialWildCards,
         drawFourDrawTwoShouldSkipTurn: true,
-        bannedCards: [],
+        bannedCards: [CardValue.swapHands, CardValue.paradigmShift],
         matchingCardStealsTurn: true,
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
         playersSetup: PlayersSetup.individual,

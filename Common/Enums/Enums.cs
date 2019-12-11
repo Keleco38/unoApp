@@ -66,7 +66,8 @@ namespace Common.Enums
         KingsDecree = 52,
         QueensDecree = 53,
         Surprise = 54,
-        DeathSentence = 55
+        DeathSentence = 55,
+        Cyclone = 56
 
     }
 

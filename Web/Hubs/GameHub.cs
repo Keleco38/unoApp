@@ -216,7 +216,7 @@ namespace Web.Hubs
                 return;
             }
 
-            tournament.ReadyPhaseExpireUtc = DateTime.Now.AddSeconds(10);
+            tournament.ReadyPhaseExpireUtc = DateTime.Now.AddSeconds(20);
             tournament.ReadyPlayersLeft = tournament.Contestants.Select(x => x.User.Name).ToList();
             await UpdateTournament(tournament);
             await Clients.Clients(GetContestantsFromTournament(tournament)).SendAsync("StartModalPhasePlayers", true);

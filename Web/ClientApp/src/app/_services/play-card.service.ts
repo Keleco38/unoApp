@@ -140,7 +140,9 @@ export class PlayCardService {
         }else if (cardPlayed.value === CardValue.deathSentence) {
           this._modalService.displayActivateSpecialEffect().result.then((activateEffect: boolean) => {
             if(activateEffect){
-              this._modalService.displayPickWildCardModal().result.then((selectedCard:CardValue)=>{
+              var modalRef= this._modalService.displayPickWildCardModal();
+              modalRef.componentInstance.bannedCards = game.gameSetup.bannedCards;
+              modalRef.result.then((selectedCard:CardValue) => {
                 this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null,null,0,null,null,null,activateEffect, selectedCard);
                 return;
               });

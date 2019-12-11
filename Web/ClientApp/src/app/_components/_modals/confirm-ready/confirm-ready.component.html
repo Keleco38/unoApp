@@ -16,14 +16,21 @@
       <h1 class="text-primary">{{ timer }}</h1>
     </div>
     <div class="col-12" [hidden]="isReady">
-      <h3 class="text-warning">{{ isTournament ? 'Tournament' : 'Game' }} is starting. Please confirm that you are ready.</h3>
+      <h3 class="text-warning">
+        {{ isTournament ? "Tournament" : "Game" }} is starting. Please confirm
+        that you are ready.
+      </h3>
     </div>
     <div class="col-12" [hidden]="!isReady">
       <h1 class="text-success">You are ready!</h1>
     </div>
     <div class="col-12">
       <p>
-        <ngb-progressbar type="success" [value]="getProgressBarValue()" [striped]="true" [animated]="true"
+        <ngb-progressbar
+          type="success"
+          [value]="getProgressBarValue()"
+          [striped]="true"
+          [animated]="true"
           ><i>{{ getProgressBarValue() }}%</i></ngb-progressbar
         >
       </p>
@@ -33,16 +40,46 @@
           ><i>[{{ player }}]</i></small
         >
       </div>
-    </div>
-    <div class="col-12" [hidden]="isReady">
-      <hr />
-      <div class="row">
-        <div class="col-6">
-          <button (click)="ready()" class="btn btn-block btn-lg btn-info">I'm ready!</button>
+      <div class="col-12" [hidden]="isReady">
+        <hr />
+        <div class="row">
+          <div class="col-6">
+            <button (click)="ready()" class="btn btn-block btn-lg btn-info">
+              I'm ready!
+            </button>
+          </div>
+          <div class="col-6">
+            <button
+              (click)="notReady()"
+              class="btn btn-block btn-lg btn-secondary"
+            >
+              Not ready!
+            </button>
+          </div>
         </div>
-        <div class="col-6">
-          <button (click)="notReady()" class="btn btn-block btn-lg btn-secondary">Not ready!</button>
-        </div>
+      </div>
+      <div [hidden]="isReady">
+        <hr>
+        <p [hidden]="bannedCards.length == 0">
+          <strong>Banned cards: </strong>
+          <small *ngFor="let bannedCard of bannedCards"
+            ><i
+              >[{{ getBannedCardName(bannedCard) | dividePerCapital }}]</i
+            ></small
+          >
+        </p>
+        <p [hidden]="bannedCards.length > 0">
+          <strong>Banned cards: </strong> None
+        </p>
+        <p>
+          <strong>Rounds to win: </strong> {{roundsToWin}}
+        </p>
+        <p><strong>Matching card steals turn: </strong> {{ matchingCardStealsTurn }}</p>
+        <p><strong>Reverse skipping turn in 2p: </strong> {{ reverseShouldSkipTurnInTwoPlayers }}</p>
+        <p><strong>Draw autoplay: </strong> {{ drawAutoPlay }}</p>
+        <p><strong>Spectators can view hands: </strong> {{ spectatorsCanViewHands }}</p>
+        <p><strong>Wild card playable only as last option: </strong> {{ wildCardCanBePlayedOnlyIfNoOtherOptions }}</p>
+        <p><strong>Limit color changing cards: </strong> {{ limitColorChangingCards }}</p>
       </div>
     </div>
   </div>

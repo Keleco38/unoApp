@@ -30,7 +30,7 @@ export class PickBannedCardsComponent implements OnInit {
   selectOrUnselect(bannedCard: CardValue) {
     var index = this.bannedCards.indexOf(bannedCard);
     if (index === -1) {
-      if (this.bannedCards.length == 10) {
+      if (this.bannedCards.length == 15) {
         return;
       }
       this.bannedCards.push(bannedCard);

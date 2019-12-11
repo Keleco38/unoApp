@@ -73,7 +73,8 @@ export enum CardValue {
   kingsDecree = 52,
   queensDecree = 53,
   surprise = 54,
-  deathSentence=55
+  deathSentence = 55,
+  cyclone = 56
 }
 
 export enum Direction {
