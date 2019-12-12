@@ -17,7 +17,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => false;
-        public string Description => "At the cost of drawing 2 cards, you can summon any wildcard to your hand if it exists in the deck or the discarded pile.  If the card does not exist in the deck or the discarded pile (all instances are in player's hands or the card is removed from the game), then the card is not summoned, but you still pay the price. Player keeps their turn after playing this card. Amount of cards required to summon is not affected by double draw.";
+        public string Description => "If the player activates the special effect of the card, they must draw 3 cards (not affected by double draw or king's decree), and can summon any wildcard to their hand if the card exists in the deck or the discarded pile.Player also keeps their turn if they activate the effect. If the player doesn't activate the effect, they must draw 1 card and they lose their turn.";
 
     }
 }

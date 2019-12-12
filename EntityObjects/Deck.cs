@@ -12,6 +12,7 @@ namespace EntityObjects
     {
         public Deck(GameSetup gameSetup)
         {
+            Cards = new List<ICard>();
             InitializeCards(gameSetup);
         }
 
@@ -26,8 +27,6 @@ namespace EntityObjects
 
         private void InitializeCards(GameSetup gameSetup)
         {
-            Cards = new List<ICard>();
-
             AddNormalGameNormalCards();
             AddNormalGameWildCards(gameSetup.LimitColorChangingCards);
 
@@ -44,8 +43,24 @@ namespace EntityObjects
                 AddSpecialWildCards(gameSetup.LimitColorChangingCards);
             }
 
-
             FilterBannedCards(gameSetup.BannedCards);
+
+            var totalCards = Cards.Count;
+            if (totalCards == 0)
+            {
+                AddNormalGameNormalCards();
+                AddNormalGameWildCards(gameSetup.LimitColorChangingCards);
+            }
+            else
+            {
+                var minimumCardsRequired = gameSetup.MaxNumberOfPlayers * 7;
+                if (totalCards < minimumCardsRequired)
+                {
+                    InitializeCards(gameSetup);
+                }
+            }
+
+
         }
 
         private void AddStealTurnCards()

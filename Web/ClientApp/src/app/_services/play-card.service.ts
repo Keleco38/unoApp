@@ -132,14 +132,12 @@ export class PlayCardService {
           }
         });
       } else if (cardPlayed.value === CardValue.devilsDeal) {
-        const specialEffectModal = this._modalService.displayActivateSpecialEffect();
-        specialEffectModal.result.then((activateEffect: boolean) => {
+        this._modalService.displayActivateSpecialEffect().result.then((activateEffect: boolean) => {
           this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, null, null, activateEffect);
           return;
         });
       } else if (cardPlayed.value === CardValue.freshStart) {
-        const specialEffectModal = this._modalService.displayActivateSpecialEffect();
-        specialEffectModal.result.then((activateEffect: boolean) => {
+        this._modalService.displayActivateSpecialEffect().result.then((activateEffect: boolean) => {
           this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, null, null, activateEffect);
           return;
         });
@@ -158,11 +156,18 @@ export class PlayCardService {
           return;
         });
       } else if (cardPlayed.value == CardValue.summonWildcard) {
-        var modalRef = this._modalService.displayPickWildCardModal();
-        modalRef.componentInstance.bannedCards = game.gameSetup.bannedCards;
-        modalRef.result.then((selectedCard: CardValue) => {
-          this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, null, null, false, selectedCard);
-          return;
+        this._modalService.displayActivateSpecialEffect().result.then((activateEffect: boolean) => {
+          if (activateEffect) {
+            var modalRef = this._modalService.displayPickWildCardModal();
+            modalRef.componentInstance.bannedCards = game.gameSetup.bannedCards;
+            modalRef.result.then((selectedCard: CardValue) => {
+              this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, null, null, activateEffect, selectedCard);
+              return;
+            });
+          } else {
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, null, null, activateEffect);
+            return;
+          }
         });
       } else if (cardPlayed.value === CardValue.blackjack) {
         this._modalService.displayBlackjackModal().result.then(blackjackNumber => {
