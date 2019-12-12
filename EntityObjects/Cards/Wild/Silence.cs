@@ -18,7 +18,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor { get; }
         public bool RequireTargetPlayer => false;
-        public string Description => "All wildcards have no effect for the next 4 moves. Playing another Silence in that interval will also have no effect. Passive wildcards like Last stand, Deflect and KeepMyHand don't work within this period. Effects from special cards also cannot be activated. ";
+        public string Description => "All wildcards have no effect for the next 4 moves. Playing another Silence in that interval will will stack the effect (+4 turns). Passive wildcards like Last stand, Deflect and KeepMyHand don't work within this period. Effects from special cards also cannot be activated. ";
 
     }
 }

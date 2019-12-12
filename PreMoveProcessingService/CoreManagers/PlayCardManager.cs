@@ -69,7 +69,7 @@ namespace PreMoveProcessingService.CoreManagers
             //play card effect
             var moveParams = new MoveParams(playerPlayed, cardPlayed, playerTargeted, colorForLastCard, cardToDig, duelNumbers, charityCards, blackjackNumber, numbersToDiscard, cardPromisedToDiscard, oddOrEvenGuess, previousLastCardPlayed, targetedCardValue, activateSpecialCardEffect);
             MoveResult moveResult;
-            if (game.SilenceTurnsRemaining > 0 && cardPlayed.Color == CardColor.Wild)
+            if (game.SilenceTurnsRemaining > 0 && cardPlayed.Color == CardColor.Wild && cardPlayed.Value != CardValue.Silence)
             {
                 moveResult = new MoveResult(new List<string>() { $"Game is silenced for {game.SilenceTurnsRemaining} moves. {cardPlayed.Value.ToString()} had no effect." });
             }
@@ -110,7 +110,7 @@ namespace PreMoveProcessingService.CoreManagers
             {
                 if (game.SilenceTurnsRemaining <= 0)
                 {
-                    var messageToLog = $"{game.PlayerToPlay.User.Name} was affected by greed so they will draw one card. Greed turns remaining: {greedTurns-1}. ";
+                    var messageToLog = $"{game.PlayerToPlay.User.Name} was affected by greed so they will draw one card. Greed turns remaining: {greedTurns - 1}. ";
 
                     if (game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
                     {
