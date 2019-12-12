@@ -44,7 +44,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             }
             else
             {
-                messageToLog += "They didn't draw a wildcard, the card is discarded";
+                messageToLog += $"They didn't draw a wildcard ({cardDrew.Color.ToString()} {cardDrew.Value.ToString()}), the card is discarded. ";
                 game.DiscardedPile.Add(cardDrew);
             }
 
