@@ -40,6 +40,13 @@ namespace EntityObjects
                 AddStealTurnCards();
                 AddStealTurnCards();
 
+                if (!gameSetup.LimitColorChangingCards)
+                {
+                    AddNormalGameNormalCards();
+
+                    AddStealTurnCards();
+                }
+
                 AddSpecialWildCards(gameSetup.LimitColorChangingCards);
             }
 
@@ -127,6 +134,7 @@ namespace EntityObjects
                 Cards.Add(new BadgeCollector(limitColorChangingCards));
                 Cards.Add(new Greed(limitColorChangingCards));
                 Cards.Add(new FreshStart(limitColorChangingCards));
+                Cards.Add(new Hope(limitColorChangingCards));
                 //cads added 2 times
                 Cards.Add(new KeepMyHand(limitColorChangingCards));
                 Cards.Add(new KeepMyHand(limitColorChangingCards));

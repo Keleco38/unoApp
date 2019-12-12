@@ -71,7 +71,8 @@ namespace Common.Enums
         Intervention = 57,
         BadgeCollector = 58,
         Greed = 59,
-        FreshStart = 60
+        FreshStart = 60,
+        Hope = 61
     }
 
     public enum Direction
