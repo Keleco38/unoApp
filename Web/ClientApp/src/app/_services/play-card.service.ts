@@ -156,24 +156,6 @@ export class PlayCardService {
           return;
         });
       } else if (cardPlayed.value == CardValue.summonWildcard) {
-          this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, null, null, activateEffect);
-          return;
-        });
-      } else if (cardPlayed.value === CardValue.deathSentence) {
-        var modalRef = this._modalService.displayPickWildCardModal();
-        modalRef.componentInstance.bannedCards = game.gameSetup.bannedCards;
-        modalRef.result.then((selectedCard: CardValue) => {
-          this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, null, null, false, selectedCard);
-          return;
-        });
-      } else if (cardPlayed.value === CardValue.graveDigger) {
-        const digModal = this._modalService.displayDigCardModal();
-        digModal.componentInstance.discardedPile = game.discardedPile;
-        digModal.result.then((cardToDigId: string) => {
-          this._hubService.playCard(cardPlayed.id, pickedColor, null, cardToDigId);
-          return;
-        });
-      } else if (cardPlayed.value == CardValue.summonWildcard) {
         this._modalService.displayActivateSpecialEffect().result.then((activateEffect: boolean) => {
           if (activateEffect) {
             var modalRef = this._modalService.displayPickWildCardModal();
@@ -184,7 +166,7 @@ export class PlayCardService {
             });
           } else {
             this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, null, null, activateEffect);
-          return;
+            return;
           }
         });
       } else if (cardPlayed.value === CardValue.blackjack) {
