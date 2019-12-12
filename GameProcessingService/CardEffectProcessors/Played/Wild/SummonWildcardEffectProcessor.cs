@@ -20,7 +20,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played SummonWildcard. He drew 2 cards, summoned {moveParams.TargetedCardValue.ToString()} to their hand and kept their turn. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played SummonWildcard. They drew 2 cards, summoned {moveParams.TargetedCardValue.ToString()} to their hand and kept their turn. ";
 
             var card = game.Deck.Cards.FirstOrDefault(x => x.Value == moveParams.TargetedCardValue);
             if (card != null)

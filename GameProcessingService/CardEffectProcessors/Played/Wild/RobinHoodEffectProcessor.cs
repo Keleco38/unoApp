@@ -34,7 +34,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             var cards = playerWithMostCards.Cards.GetAndRemove(0, numberOfCardsToTake);
 
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played RobinHood. They stole {numberOfCardsToTake} cards from {playerWithMostCards.User.Name}, and gave them to {playerWIthLeastCards.User.Name}";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played RobinHood. They stole {string.Join(";", cards.Select(x=>$"{x.Color.ToString()} {x.Value.ToString()}"))} cards from {playerWithMostCards.User.Name}, and gave them to {playerWIthLeastCards.User.Name}. ";
 
             playerWIthLeastCards.Cards.AddRange(cards);
 

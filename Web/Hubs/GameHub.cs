@@ -802,7 +802,7 @@ namespace Web.Hubs
             {
                 if (game.SilenceTurnsRemaining <= 0)
                 {
-                    var messageToLog = $"{game.PlayerToPlay.User.Name} was affected by greed so they will draw one card. Greed turns remaining: {greedTurns}";
+                    var messageToLog = $"{game.PlayerToPlay.User.Name} was affected by greed so they will draw one card. Greed turns remaining: {greedTurns-1}";
                     await AddToGameLog(game.Id, messageToLog);
 
                     if (game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
