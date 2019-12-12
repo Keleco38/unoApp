@@ -17,7 +17,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => false;
-        public string Description => "Player can choose to activate the special effect or not. If yes, he can pick a wild card that will be completely removed from the game (only for that round), the card also cannot be summoned by the summon wild card card. Acts as normal wild card otherwise.";
+        public string Description => "After choosing a wild card, that card will be completely removed from the game (only for that round), the card also cannot be summoned by the summon wild card card.";
 
     }
 }

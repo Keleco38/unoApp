@@ -36,7 +36,8 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             }
             else
             {
-                messageToLog += $"{moveParams.PlayerPlayed.User.Name} did not activate the special effect of the card.";
+                messageToLog += $"{moveParams.PlayerPlayed.User.Name} did not activate the special effect of the card. They must draw one card";
+                _gameManager.DrawCard(game, moveParams.PlayerPlayed, 1, false);
             }
 
             messagesToLog.Add(messageToLog);
