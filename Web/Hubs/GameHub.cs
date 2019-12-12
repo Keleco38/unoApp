@@ -802,17 +802,27 @@ namespace Web.Hubs
             {
                 if (game.SilenceTurnsRemaining <= 0)
                 {
-                    var messageToLog = $"{game.PlayerToPlay.User.Name} was affected by greed so they will draw one card. Greed turns remaining: {greedTurns-1}";
-                    await AddToGameLog(game.Id, messageToLog);
+                    var messageToLog = $"{game.PlayerToPlay.User.Name} was affected by greed so they will draw one card. Greed turns remaining: {greedTurns - 1}. ";
 
                     if (game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
                     {
-                        await AddToGameLog(game.Id, $"{game.PlayerToPlay.User.Name} is not affected by the draw (king's decree).");
+                        messageToLog+=$"{game.PlayerToPlay.User.Name} is not affected by the draw (king's decree). ";
                     }
                     else
                     {
-                        _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
+                        var cardsToDraw = 1;
+                        var doubleDrawCard = game.PlayerToPlay.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+                        if (doubleDrawCard != null)
+                        {
+                            game.LastCardPlayed = new LastCardPlayed(game.LastCardPlayed.Color, doubleDrawCard.Value, doubleDrawCard.ImageUrl, game.PlayerToPlay.User.Name, true, doubleDrawCard);
+                            game.PlayerToPlay.Cards.Remove(doubleDrawCard);
+                            game.DiscardedPile.Add(doubleDrawCard);
+                            messageToLog += $"{game.PlayerToPlay.User.Name} doubled the draw/discard effect. ";
+                            cardsToDraw = 2;
+                        }
+                        _gameManager.DrawCard(game, game.PlayerToPlay, cardsToDraw, false);
                     }
+                    await AddToGameLog(game.Id, messageToLog);
                 }
                 game.GreedAffectedPlayers[game.PlayerToPlay] = greedTurns - 1;
             }

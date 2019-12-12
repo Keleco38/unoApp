@@ -17,7 +17,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => false;
-        public string Description => "As long as the owner’s number of cards in hand does not exceed 5, the person to the left and right must draw a card if they have a lesser hand on each turn of the owner. If the game consists of 2 players then only the next player will draw a card.Acts as normal wild card if played. Draw is not affected by double draw card.";
+        public string Description => "As long as the owner’s number of cards in hand does not exceed 5, the person to the left and right must draw one card (not affected by double draw or king's decree) if they have a lesser hand on each turn of the owner. If the game consists of 2 players then only the next player will draw a card.Acts as normal wild card if played. Draw is not affected by double draw card.";
 
     }
 }

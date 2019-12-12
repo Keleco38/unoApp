@@ -111,6 +111,7 @@ namespace EntityObjects
                 Cards.Add(new Intervention(limitColorChangingCards));
                 Cards.Add(new BadgeCollector(limitColorChangingCards));
                 Cards.Add(new Greed(limitColorChangingCards));
+                Cards.Add(new FreshStart(limitColorChangingCards));
                 //cads added 2 times
                 Cards.Add(new KeepMyHand(limitColorChangingCards));
                 Cards.Add(new KeepMyHand(limitColorChangingCards));

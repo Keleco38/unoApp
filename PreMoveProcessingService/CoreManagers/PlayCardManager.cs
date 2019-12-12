@@ -118,7 +118,17 @@ namespace PreMoveProcessingService.CoreManagers
                     }
                     else
                     {
-                        _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
+                        var cardsToDraw = 1;
+                        var doubleDrawCard = game.PlayerToPlay.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+                        if (doubleDrawCard != null)
+                        {
+                            game.LastCardPlayed = new LastCardPlayed(game.LastCardPlayed.Color, doubleDrawCard.Value, doubleDrawCard.ImageUrl, game.PlayerToPlay.User.Name, true, doubleDrawCard);
+                            game.PlayerToPlay.Cards.Remove(doubleDrawCard);
+                            game.DiscardedPile.Add(doubleDrawCard);
+                            messageToLog += $"{game.PlayerToPlay.User.Name} doubled the draw/discard effect. ";
+                            cardsToDraw = 2;
+                        }
+                        _gameManager.DrawCard(game, game.PlayerToPlay, cardsToDraw, false);
                     }
                     moveResult.MessagesToLog.Add(messageToLog);
                 }

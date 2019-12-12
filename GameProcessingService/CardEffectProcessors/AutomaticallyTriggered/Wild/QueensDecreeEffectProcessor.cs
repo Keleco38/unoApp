@@ -32,12 +32,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                         {
                             messageToLog += $"{player.User.Name} auto activated queen's decree. ";
                             messageToLog += $"Next player ({nextPlayer.User.Name}) will draw a card. ";
-                            var kingsDecreeResult = BlockedByKingsDecree(messageToLog, nextPlayer, game);
-                            messageToLog = kingsDecreeResult.MessageToLog;
-                            if (!kingsDecreeResult.ActivatedKingsDecree)
-                            {
-                                _gameManager.DrawCard(game, nextPlayer, 1, false);
-                            }
+                            _gameManager.DrawCard(game, nextPlayer, 1, false);
                         }
                     }
                     else
@@ -51,23 +46,13 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                             if (nextPlayer.Cards.Count < player.Cards.Count)
                             {
                                 messageToLog += $"Next player ({nextPlayer.User.Name}) will draw a card. ";
-                                var kingsDecreeResult = BlockedByKingsDecree(messageToLog, nextPlayer, game);
-                                messageToLog = kingsDecreeResult.MessageToLog;
-                                if (!kingsDecreeResult.ActivatedKingsDecree)
-                                {
-                                    _gameManager.DrawCard(game, nextPlayer, 1, false);
-                                }
+                                _gameManager.DrawCard(game, nextPlayer, 1, false);
                             }
 
                             if (previousPlayer.Cards.Count < player.Cards.Count)
                             {
                                 messageToLog += $"Previous player player ({previousPlayer.User.Name}) will draw a card. ";
-                                var kingsDecreeResult = BlockedByKingsDecree(messageToLog, previousPlayer, game);
-                                messageToLog = kingsDecreeResult.MessageToLog;
-                                if (!kingsDecreeResult.ActivatedKingsDecree)
-                                {
-                                    _gameManager.DrawCard(game, previousPlayer, 1, false);
-                                }
+                                _gameManager.DrawCard(game, previousPlayer, 1, false);
                             }
                         }
                     }
@@ -75,22 +60,6 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
             }
 
             return new AutomaticallyTriggeredResult() { MessageToLog = messageToLog };
-        }
-
-        private AutomaticallyTriggeredResult BlockedByKingsDecree(string messageToLog, Player player, Game game)
-        {
-            var activatedKingsDecree = false;
-
-            if (game.SilenceTurnsRemaining <= 0)
-            {
-                if (player.Cards.Count > 4 && player.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
-                {
-                    activatedKingsDecree = true;
-                    messageToLog += $"{player.User.Name} is not affected by the draw (king's decree).";
-                }
-            }
-
-            return new AutomaticallyTriggeredResult() { MessageToLog = messageToLog, ActivatedKingsDecree = activatedKingsDecree };
         }
     }
 }

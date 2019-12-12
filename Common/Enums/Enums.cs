@@ -70,7 +70,8 @@ namespace Common.Enums
         Cyclone = 56,
         Intervention = 57,
         BadgeCollector = 58,
-        Greed = 59
+        Greed = 59,
+        FreshStart = 60
     }
 
     public enum Direction

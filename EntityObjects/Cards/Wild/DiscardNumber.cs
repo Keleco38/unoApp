@@ -20,7 +20,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor { get; }
         public bool RequireTargetPlayer => false;
-        public string Description => "At the cost of drawing one card player selects 2 numbers (from 0-9) every player will discard these numbers from their hand, regardless the color.";
+        public string Description => "At the cost of drawing one card (not affected by double draw or king's decree) player selects 2 numbers (from 0-9) every player will discard these numbers from their hand, regardless the color.";
 
     }
 }

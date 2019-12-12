@@ -137,6 +137,12 @@ export class PlayCardService {
             this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null,null,0,null,null,null,activateEffect);
             return;
           });
+        }else if (cardPlayed.value === CardValue.freshStart) {
+          const specialEffectModal = this._modalService.displayActivateSpecialEffect();
+          specialEffectModal.result.then((activateEffect: boolean) => {
+            this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null,null,0,null,null,null,activateEffect);
+            return;
+          });
         }else if (cardPlayed.value === CardValue.deathSentence) {
           this._modalService.displayActivateSpecialEffect().result.then((activateEffect: boolean) => {
             if(activateEffect){
