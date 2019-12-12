@@ -11,12 +11,17 @@ import { KeyValue } from '@angular/common';
 })
 export class PickBannedCardsComponent implements OnInit {
   @Input() bannedCards: CardValue[];
-  allCards: KeyValue<string, number>[];
+  private _allCards: KeyValue<string, number>[];
 
-  constructor(private _activeModal: NgbActiveModal, private _utilityService: UtilityService) {}
+  standardCards: KeyValue<string, number>[];
+  specialCards: KeyValue<string, number>[];
+
+  constructor(private _activeModal: NgbActiveModal, private _utilityService: UtilityService) { }
 
   ngOnInit() {
-    this.allCards = this._utilityService.allCards;
+    this._allCards = this._utilityService.allCards;
+    this.standardCards = this._allCards.filter(x => x.value < 15);
+    this.specialCards = this._allCards.filter(x => x.value > 14);
   }
 
   closeModal() {
@@ -24,7 +29,7 @@ export class PickBannedCardsComponent implements OnInit {
   }
 
   getBannedCardName(bannedCard: CardValue) {
-    return this.allCards.find(c => c.value == bannedCard).key;
+    return this._allCards.find(c => c.value == bannedCard).key;
   }
 
   selectOrUnselect(bannedCard: CardValue) {

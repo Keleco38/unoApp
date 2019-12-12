@@ -40,7 +40,7 @@ export class ModalService {
   private _readyPhaseModalPlayers: any;
   private _readyPhaseModalSpectators: any;
 
-  constructor(private _modalService: NgbModal) {}
+  constructor(private _modalService: NgbModal) { }
 
   hideReadyPhaseDialogs() {
     setTimeout(() => {
@@ -127,7 +127,7 @@ export class ModalService {
   }
 
   displayPickCardsToBanModal() {
-    return this._modalService.open(PickBannedCardsComponent, { backdrop: 'static', keyboard: false, size: 'lg'});
+    return this._modalService.open(PickBannedCardsComponent, { backdrop: 'static', keyboard: false, size: 'lg' });
   }
 
   displayPickColorModal() {
@@ -172,11 +172,11 @@ export class ModalService {
   }
 
   displayPickAnyCardModal() {
-    return this._modalService.open(PickAnyCardComponent);
+    return this._modalService.open(PickAnyCardComponent, { size: 'lg' });
   }
 
   displayPickWildCardModal() {
-    return this._modalService.open(PickWildCardComponent);
+    return this._modalService.open(PickWildCardComponent, { size: 'lg' });
   }
 
   displayActivateSpecialEffect() {
