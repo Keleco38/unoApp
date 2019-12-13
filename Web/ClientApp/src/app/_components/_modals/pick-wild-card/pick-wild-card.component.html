@@ -2,23 +2,14 @@
   <h4 class="modal-title" id="modal-basic-title">
     Pick a card:
   </h4>
-  <button
-    type="button"
-    class="close"
-    aria-describedby="modal-title"
-    (click)="closeModal()"
-  >
+  <button type="button" class="close" aria-describedby="modal-title" (click)="closeModal()">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
   <div class="row">
-    <div class="col-6" *ngFor="let card of allWildCards">
-      <button
-        class="btn btn-block btn-sm"
-        [ngClass]="getBtnClass(card.value)"
-        (click)="selectOrUnselect(card.value)"
-      >
+    <div class="col-6 col-md-4 col-lg-3" *ngFor="let card of allWildCards">
+      <button class="btn btn-block btn-sm" [ngClass]="getBtnClass(card.value)" (click)="selectOrUnselect(card.value)">
         {{ card.key | dividePerCapital | titlecase}}
       </button>
     </div>
@@ -26,11 +17,7 @@
   <div class="row">
     <div class="col-12">
       <hr />
-      <button
-        class="btn btn-info btn-block btn-lg"
-        [disabled]="selectedCardToReturn == null"
-        (click)="confirm()"
-      >
+      <button class="btn btn-info btn-block btn-lg" [disabled]="selectedCardToReturn == null" (click)="confirm()">
         Confirm
       </button>
     </div>
