@@ -3,6 +3,7 @@
 
 /Web/logs/*.txt
 /Web/hall-of-fame/*
+/Web/sticky-tournaments/*
 
 # User-specific files
 *.suo

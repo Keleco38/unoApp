@@ -2,8 +2,8 @@
   <div class="col-12">
     <div class="alert alert-primary">Sticky tournaments ({{ stickyTournaments.length }}):</div>
     <div class="list-group">
-      <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" *ngFor="let tournament of stickyTournaments">
-        <div class="ellipsis-text" (click)="openStickyTournament(tournament)" [title]="tournament.name">
+      <button (click)="openStickyTournament(tournament)" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" *ngFor="let tournament of stickyTournaments">
+        <div class="ellipsis-text"  [title]="tournament.name">
           <span> {{ tournament.name | titlecase}} </span>
         </div>
       </button>
