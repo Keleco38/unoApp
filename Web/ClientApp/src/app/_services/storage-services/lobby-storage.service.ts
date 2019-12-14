@@ -1,3 +1,4 @@
+import { StickyTournament } from './../../_models/stickyTournament';
 import { HubService } from 'src/app/_services/hub.service';
 import { Injectable, OnDestroy } from '@angular/core';
 import { ChatMessage } from 'src/app/_models/chatMessage';
@@ -19,6 +20,7 @@ export class LobbyStorageService implements OnDestroy {
   private _availableGamesObservable = new BehaviorSubject<GameList[]>([]);
   private _availableTournamentsObservable = new BehaviorSubject<TournamentList[]>([]);
   private _allChatMessagesObservable = new BehaviorSubject<ChatMessage[]>([]);
+  private _stickyTournaments = new BehaviorSubject<StickyTournament[]>([]);
   private _reconnectObservable = new Subject();
 
   constructor(private _hubService:HubService) {
@@ -38,10 +40,17 @@ export class LobbyStorageService implements OnDestroy {
     this._hubService.updateOnReconnect.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
       this._reconnectObservable.next();
     });
+    this._hubService.updateStickyTournaments.pipe(takeWhile(() => this._isAlive)).subscribe((stickyTournaments) => {
+      this._stickyTournaments.next(stickyTournaments);
+    });
   }
 
   get onlineUsers() {
     return this._onlineUsersObservable.asObservable();
+  }
+  
+  get stickyTournaments() {
+    return this._stickyTournaments.asObservable();
   }
 
   get availableGames() {

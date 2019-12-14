@@ -1,3 +1,4 @@
+import { StickyTournamentsComponent } from './_components/sticky-tournaments/sticky-tournaments.component';
 import { ActivateSpecialEffectComponent } from './_components/_modals/activate-special-effect/activate-special-effect.component';
 import { PickWildCardComponent } from './_components/_modals/pick-wild-card/pick-wild-card.component';
 import { PickAnyCardComponent } from './_components/_modals/pick-any-card/pick-any-card.component';
@@ -83,6 +84,7 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
   declarations: [
     AppComponent,
     HomeComponent,
+    StickyTournamentsComponent,
     AvailableGamesComponent,
     OnlinePlayersComponent,
     WaitingRoomComponent,

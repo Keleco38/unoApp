@@ -36,7 +36,7 @@ namespace Repository
                 }
             }
 
-            WriteRankingsToFIle(records);
+            WriteRankingsToFile(records);
         }
 
 
@@ -73,7 +73,7 @@ namespace Repository
         }
 
 
-        private void WriteRankingsToFIle(List<HallOfFame> records)
+        private void WriteRankingsToFile(List<HallOfFame> records)
         {
             Directory.CreateDirectory(FolderPath);
 

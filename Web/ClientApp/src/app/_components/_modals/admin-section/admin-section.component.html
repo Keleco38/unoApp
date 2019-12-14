@@ -24,6 +24,14 @@
       <button (click)="buzzAll()" class="btn btn-block btn-sm btn-outline-primary">Ding!</button>
     </div>
   </div>
+  <div class="row" [hidden]="!password">
+    <div class="col-6">
+      <h5 class="text-primary">Sticky tournament!</h5>
+    </div>
+    <div class="col-6">
+      <button class="btn btn-block btn-sm btn-outline-primary" [ngbPopover]="popContent" autoClose="outside" placement="left">Add new!</button>
+    </div>
+  </div>
   <div class="row" [hidden]="!password" *ngIf="currentGame!=null">
     <div class="col-12">
       <h5 class="text-primary">Force win for player</h5>
@@ -108,4 +116,40 @@
       </table>
     </div>
   </div>
+
+  <div class="row" [hidden]="!password || stickyTournaments.length == 0">
+    <div class="col-12">
+      <h5 class="text-primary">Sticky Tournaments</h5>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stickyTournament of stickyTournaments; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ stickyTournament.name }}</td>
+            <td><span class="text-danger cursor-pointer" (click)="deleteStickyTournament(stickyTournament)">[DELETE]</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
+
+
+<ng-template #popContent let-user="user">
+  <div class="form-group">
+    <label>Name</label>
+    <input type="text" [(ngModel)]="stickyTournamentName" class="form-control" autocomplete="off" placeholder="(name)" />
+  </div>
+  <div class="form-group">
+    <label>Url</label>
+    <input type="text" [(ngModel)]="stickyTournamentUrl" class="form-control" autocomplete="off" placeholder="(url)" />
+  </div>
+  <button (click)="addStickyTournament()" class="btn btn-info btn-block btn-sm" btn-block>Confirm</button>
+</ng-template>

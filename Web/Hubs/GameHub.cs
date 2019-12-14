@@ -30,9 +30,10 @@ namespace Web.Hubs
         private readonly ITournamentRepository _tournamentRepository;
         private readonly ITournamentManager _tournamentManager;
         private readonly IEnumerable<IAutomaticallyTriggeredCardEffectProcessor> _automaticallyTriggeredCardEffectProcessors;
+        private readonly IStickyTournamentRepository _stickyTournamentRepository;
         private readonly AppSettings _appSettings;
 
-        public GameHub(IMapper mapper, IGameManager gameManager, IPlayCardManager playCardManager, IUserRepository userRepository, IGameRepository gameRepository, IHallOfFameRepository hallOfFameRepository, ITournamentRepository tournamentRepository, ITournamentManager tournamentManager, IOptions<AppSettings> appSettings, IEnumerable<IAutomaticallyTriggeredCardEffectProcessor> automaticallyTriggeredCardEffectProcessors)
+        public GameHub(IMapper mapper, IGameManager gameManager, IPlayCardManager playCardManager, IUserRepository userRepository, IGameRepository gameRepository, IHallOfFameRepository hallOfFameRepository, ITournamentRepository tournamentRepository, ITournamentManager tournamentManager, IOptions<AppSettings> appSettings, IEnumerable<IAutomaticallyTriggeredCardEffectProcessor> automaticallyTriggeredCardEffectProcessors, IStickyTournamentRepository stickyTournamentRepository)
         {
             _gameManager = gameManager;
             _playCardManager = playCardManager;
@@ -42,6 +43,7 @@ namespace Web.Hubs
             _tournamentRepository = tournamentRepository;
             _tournamentManager = tournamentManager;
             _automaticallyTriggeredCardEffectProcessors = automaticallyTriggeredCardEffectProcessors;
+            _stickyTournamentRepository = stickyTournamentRepository;
             _appSettings = appSettings.Value;
             _mapper = mapper;
         }
@@ -89,6 +91,12 @@ namespace Web.Hubs
         {
             var usersDto = _mapper.Map<List<UserDto>>(_userRepository.GetAllUsers());
             await Clients.All.SendAsync("RefreshOnlineUsersList", usersDto.OrderBy(x => x.Name));
+        }
+
+        public async Task GetAllStickyTournaments()
+        {
+            var stickyTournamentsDto = _mapper.Map<List<StickyTournamentDto>>(_stickyTournamentRepository.GetAllStickyTournaments());
+            await Clients.All.SendAsync("RefreshStickyTournaments", stickyTournamentsDto);
         }
 
         public async Task GetAllGames()
@@ -316,6 +324,27 @@ namespace Web.Hubs
             await DisplayToastMessageToGame(gameId, $"Moderator forced win. Player won: {player.User.Name}", "info");
             await AddToGameLog(gameId, $"Moderator forced win. Player won: {player.User.Name}");
 
+        }
+
+        public async Task AdminEditStickyTournament(string password, string name, string url, bool isDelete)
+        {
+            if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))
+            {
+                await DisplayToastMessageToUser(Context.ConnectionId, "Unauthorized", "error");
+                return;
+            }
+            if (isDelete)
+            {
+                _stickyTournamentRepository.DeleteStickyTournament(name);
+                await DisplayToastMessageToUser(Context.ConnectionId, "Stick tournaments deleted.", "error");
+            }
+            else
+            {
+                _stickyTournamentRepository.AddOrUpdateStickyTournament(name, url);
+                await DisplayToastMessageToUser(Context.ConnectionId, "Stick tournaments updated.", "info");
+            }
+
+            await GetAllStickyTournaments();
         }
 
         public async Task AdminBuzzAll(string password)
@@ -796,6 +825,7 @@ namespace Web.Hubs
             var userDto = _mapper.Map<UserDto>(user);
             await Clients.Client(Context.ConnectionId).SendAsync("UpdateCurrentUser", userDto);
             await GetAllOnlineUsers();
+            await GetAllStickyTournaments();
         }
 
         public async Task DrawCard()

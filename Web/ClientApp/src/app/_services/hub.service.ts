@@ -18,6 +18,7 @@ import { GameList } from "../_models/gameList";
 import { Tournament } from "../_models/tournament";
 import { TournamentList } from "../_models/tournamentList";
 import { KeyValue } from "@angular/common";
+import { StickyTournament } from "../_models/stickyTournament";
 
 @Injectable({
   providedIn: "root"
@@ -28,6 +29,7 @@ export class HubService {
 
   private _updateCurrentUserObservable = new Subject<User>();
   private _updateOnlineUsersObservable = new Subject<User[]>();
+  private _updateStickyTournamentsObservable = new Subject<StickyTournament[]>();
   private _updateAvailableGamesObservable = new Subject<GameList[]>();
   private _updateAvailableTournamentsObservable = new Subject<
     TournamentList[]
@@ -109,6 +111,10 @@ export class HubService {
 
     this._hubConnection.on("RefreshOnlineUsersList", (onlineUsers: User[]) => {
       this._updateOnlineUsersObservable.next(onlineUsers);
+    });
+
+    this._hubConnection.on("RefreshStickyTournaments", (stickyTournaments: StickyTournament[]) => {
+      this._updateStickyTournamentsObservable.next(stickyTournaments);
     });
 
     this._hubConnection.on("UpdateCurrentUser", (user: User) => {
@@ -361,6 +367,9 @@ export class HubService {
   adminCleanupGame(gameId: string, password: string) {
     this._hubConnection.invoke("AdminCleanupGame", gameId, password);
   }
+  adminEditStickyTournament(password: string, name: string, url: string, isDelete: boolean) {
+    this._hubConnection.invoke("AdminEditStickyTournament", password, name, url, isDelete);
+  }
   adminCleanupTournament(tournamentId: string, password: string) {
     this._hubConnection.invoke(
       "AdminCleanupTournament",
@@ -499,6 +508,10 @@ export class HubService {
 
   get updateOnlineUsers() {
     return this._updateOnlineUsersObservable.asObservable();
+  }
+
+  get updateStickyTournaments() {
+    return this._updateStickyTournamentsObservable.asObservable();
   }
 
   get updateCurrentUser() {

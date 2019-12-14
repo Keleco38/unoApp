@@ -39,6 +39,7 @@ namespace Web
             services.AddSingleton<ITournamentRepository, TournamentRepository>();
             services.AddSingleton<ITournamentManager, TournamentManager>();
             services.AddSingleton<IHallOfFameRepository, HallOfFameRepository>();
+            services.AddSingleton<IStickyTournamentRepository, StickyTournamentRepository>();
             services.RegisterAllTypes<IPlayedCardEffectProcessor>(new[] { typeof(IPlayedCardEffectProcessor).Assembly }, ServiceLifetime.Singleton);
             services.RegisterAllTypes<IAutomaticallyTriggeredCardEffectProcessor>(new[] { typeof(IAutomaticallyTriggeredCardEffectProcessor).Assembly }, ServiceLifetime.Singleton);
             services.Configure<AppSettings>(Configuration.GetSection("UnoAppSettings"));

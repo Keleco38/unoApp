@@ -9,6 +9,7 @@ import { TournamentList } from 'src/app/_models/tournamentList';
 import { GameList } from 'src/app/_models/gameList';
 import { Player } from 'src/app/_models/player';
 import { Game } from 'src/app/_models/game';
+import { StickyTournament } from 'src/app/_models/stickyTournament';
 
 @Component({
   selector: 'app-admin-section',
@@ -17,13 +18,16 @@ import { Game } from 'src/app/_models/game';
 })
 export class AdminSectionComponent implements OnInit, OnDestroy {
   private _isAlive = true;
+  stickyTournamentUrl:'';
+  stickyTournamentName:'';
   password: string;
   onlineUsers: User[];
   availableTournaments: TournamentList[];
   availableGames: GameList[];
   currentGame: Game;
+  stickyTournaments: StickyTournament[];
 
-  constructor(private _activeModal: NgbActiveModal, private _lobbyStorageService: LobbyStorageService, private _hubService: HubService, private _gameStorageService:GameStorageService) { }
+  constructor(private _activeModal: NgbActiveModal, private _lobbyStorageService: LobbyStorageService, private _hubService: HubService, private _gameStorageService: GameStorageService) { }
 
   ngOnInit() {
     this._lobbyStorageService.onlineUsers.pipe(takeWhile(() => this._isAlive)).subscribe(onlinePlayers => {
@@ -34,6 +38,9 @@ export class AdminSectionComponent implements OnInit, OnDestroy {
     });
     this._lobbyStorageService.availableGames.pipe(takeWhile(() => this._isAlive)).subscribe(availableGames => {
       this.availableGames = availableGames;
+    });
+    this._lobbyStorageService.stickyTournaments.pipe(takeWhile(() => this._isAlive)).subscribe(stickyTournaments => {
+      this.stickyTournaments = stickyTournaments;
     });
     this._gameStorageService.activeGame.pipe(takeWhile(() => this._isAlive)).subscribe(currentGame => {
       this.currentGame = currentGame;
@@ -76,6 +83,22 @@ export class AdminSectionComponent implements OnInit, OnDestroy {
     var cmfr = confirm(`Really cleanup tournament ${tournament.name}?`);
     if (cmfr) {
       this._hubService.adminCleanupTournament(tournament.id, this.password);
+    }
+  }
+
+  deleteStickyTournament(tournament: StickyTournament) {
+    var cmfr = confirm(`Really delete sticky tournament ${tournament.name}?`);
+    if (cmfr) {
+      this._hubService.adminEditStickyTournament(this.password, tournament.name, tournament.url, true);
+    }
+  }
+
+  addStickyTournament() {
+    var cmfr = confirm(`Really create sticky tournament ${this.stickyTournamentName}?`);
+    if (cmfr && this.stickyTournamentName && this.stickyTournamentUrl) {
+      this._hubService.adminEditStickyTournament(this.password, this.stickyTournamentName, this.stickyTournamentUrl, false);
+      this.stickyTournamentName='';
+      this.stickyTournamentUrl='';
     }
   }
 
