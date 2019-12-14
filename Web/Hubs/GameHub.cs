@@ -732,7 +732,7 @@ namespace Web.Hubs
                 {
                     playerLeftWithThisName.User = user;
                     playerLeftWithThisName.LeftGame = false;
-                    await DisplayToastMessageToGame(gameId, $"{user.Name} has reconnected to the game.", "info");
+                    await DisplayToastMessageToGame(gameId, $"{user.Name} reconnected to the game.", "info");
                 }
                 else if (spectator == null)
                 {
@@ -1373,7 +1373,7 @@ namespace Web.Hubs
                 if (game.GameStarted)
                 {
                     player.LeftGame = true;
-                    await DisplayToastMessageToGame(gameId, $"{player.User.Name} has left the game.", "info");
+                    await DisplayToastMessageToGame(gameId, $"{player.User.Name} left the game.", "info");
                 }
                 else
                 {
@@ -1386,7 +1386,7 @@ namespace Web.Hubs
             }
 
             await UpdateGame(game);
-            await SendMessage($"{user.Name} has left the game.", TypeOfMessage.Server, ChatDestination.Game, user);
+            await SendMessage($"{user.Name} left the game.", TypeOfMessage.Server, ChatDestination.Game, user);
 
             if (game.Players.All(x => x.LeftGame) && !game.Spectators.Any() && !game.IsTournamentGame)
             {

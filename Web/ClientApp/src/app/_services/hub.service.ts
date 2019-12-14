@@ -293,7 +293,7 @@ export class HubService {
       if (game.gameStarted) {
         if (this._router.url !== "/game") {
           if (this._utilityService.userSettings.showNewbieTips) {
-            this._toastrService.success("You can see the description of your current cards anytime by typing /hand in chat!", "", { timeOut: 7500 })
+            this._toastrService.success("You can see the description of your current cards anytime by typing /hand in chat!", "", { timeOut: 10000 })
           }
           this._router.navigateByUrl("/game");
         }
