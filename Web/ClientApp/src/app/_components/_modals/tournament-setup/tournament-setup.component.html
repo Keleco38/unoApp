@@ -8,8 +8,8 @@
   <div class="row" [hidden]="hideAdminPasswordPart">
     <div class="col-12">
       <div class="form-group row">
-        <label for="adminPassword" class="col-4 col-form-label">Admin Password</label>
-        <div class="col-8">
+        <label for="adminPassword" class="col-7 col-form-label">Admin Password</label>
+        <div class="col-5">
           <input
             type="password"
             [(ngModel)]="adminPassword"
@@ -33,8 +33,8 @@
         novalidate
       >
         <div class="form-group row">
-          <label for="text" class="col-4 col-form-label">Name</label>
-          <div class="col-8">
+          <label for="text" class="col-7 col-form-label">Name</label>
+          <div class="col-5">
             <input
               type="text"
               #name="ngModel"
@@ -52,8 +52,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="gameType" class="col-4 col-form-label">Game type</label>
-          <div class="col-8">
+          <label for="gameType" class="col-7 col-form-label">Game type</label>
+          <div class="col-5">
             <select [(ngModel)]="tournamentSetup.gameType" class="form-control form-control-sm" name="gameType" id="gameType">
               <option value="1">Classic</option>
               <option value="2">Special Wild Cards</option>
@@ -61,9 +61,9 @@
           </div>
         </div>
         <div class="form-group row" [hidden]="tournamentSetup.gameType==1">
-          <label for="numberOfStandardDecks" class="col-4 col-form-label">Number of standard uno decks</label>
-          <div class="col-8">
-            <select [(ngModel)]="tournamentSetup.numberOfStandardDecks" class="form-control form-control-sm" id="numberOfStandardDecks">
+          <label for="numberOfStandardDecks" class="col-7 col-form-label">Number of standard uno decks</label>
+          <div class="col-5">
+            <select [(ngModel)]="tournamentSetup.numberOfStandardDecks" class="form-control form-control-sm" name="numberOfStandardDecks" id="numberOfStandardDecks">
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -73,8 +73,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="maxNumberOfPlayers" class="col-4 col-form-label">Tournament size</label>
-          <div class="col-8">
+          <label for="maxNumberOfPlayers" class="col-7 col-form-label">Tournament size</label>
+          <div class="col-5">
             <select
               [(ngModel)]="tournamentSetup.numberOfPlayers"
               name="maxNumberOfPlayers"
@@ -89,8 +89,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="playUntil" class="col-4 col-form-label">Rounds to win</label>
-          <div class="col-8">
+          <label for="playUntil" class="col-7 col-form-label">Rounds to win</label>
+          <div class="col-5">
             <select
               [(ngModel)]="tournamentSetup.roundsToWin"
               name="playUntil"
@@ -109,8 +109,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="password" class="col-4 col-form-label">Password</label>
-          <div class="col-8">
+          <label for="password" class="col-9 col-form-label">Password</label>
+          <div class="col-4">
             <input
               type="text"
               [(ngModel)]="tournamentSetup.password"
@@ -123,8 +123,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="name" for="drawTwoFourShouldSkipTurn" class="col-8">Draw two/four should skip turn:</label>
-          <div class="col-4 ">
+          <label for="name" for="drawTwoFourShouldSkipTurn" class="col-9">Draw two/four skips:</label>
+          <div class="col-4 text-center">
             <ui-switch
               class="form-check-input"
               name="drawTwoFourShouldSkipTurn"
@@ -136,8 +136,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Reverse should skip turn in 2 players:</label>
-          <div class="col-4 ">
+          <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-9">Reverse skips in 2 players:</label>
+          <div class="col-4 text-center">
             <ui-switch
               class="form-check-input"
               size="small"
@@ -148,8 +148,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="name" for="drawAutoPlay" class="col-8">Draw auto play:</label>
-          <div class="col-4 ">
+          <label for="name" for="drawAutoPlay" class="col-9">Draw auto play:</label>
+          <div class="col-4 text-center">
             <ui-switch
               class="form-check-input"
               size="small"
@@ -160,8 +160,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="name" for="spectatorsCanViewHands" class="col-8">Spectator can view hands:</label>
-          <div class="col-4 ">
+          <label for="name" for="spectatorsCanViewHands" class="col-9">Spectator can view hands:</label>
+          <div class="col-4 text-center">
             <ui-switch
               class="form-check-input"
               size="small"
@@ -172,8 +172,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="name" for="matchingCardStealsTurn" class="col-8">Matching card steals turn:</label>
-          <div class="col-4 ">
+          <label for="name" for="matchingCardStealsTurn" class="col-9">Matching card steals turn:</label>
+          <div class="col-4 text-center">
             <ui-switch
               class="form-check-input"
               size="small"
@@ -184,10 +184,10 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="name" for="wildCardCanBePlayedOnlyIfNoOtherOptions" class="col-8"
-            >Wild card can be played only as the last option:</label
+          <label for="name" for="wildCardCanBePlayedOnlyIfNoOtherOptions" class="col-9"
+            >Wild card playable only as must:</label
           >
-          <div class="col-4 ">
+          <div class="col-4 text-center">
             <ui-switch
               class="form-check-input"
               size="small"
@@ -198,8 +198,8 @@
           </div>
         </div>
         <div class="form-group row" [hidden]="tournamentSetup.gameType==1">
-          <label for="name" for="limitColorChangingCards" class="col-8">Limit color changing cards:</label>
-          <div class="col-4 ">
+          <label for="name" for="limitColorChangingCards" class="col-9">Limit color changing cards:</label>
+          <div class="col-4 text-center">
             <ui-switch
               class="form-check-input"
               size="small"
