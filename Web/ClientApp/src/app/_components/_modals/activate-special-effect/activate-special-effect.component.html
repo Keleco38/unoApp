@@ -13,5 +13,14 @@
         <button class="btn btn-block btn-lg btn-primary"(click)="selectResult(false)">NO</button>
       </div>
     </div>
+    <div class="row" [hidden]="!userSettings.showNewbieTips">
+      <div class="col-12">
+        <hr>
+        <h6>Card & Effect description:</h6>
+        <p>
+          <small>{{description}}</small>
+        </p>
+      </div>
+    </div>
   </div>
   

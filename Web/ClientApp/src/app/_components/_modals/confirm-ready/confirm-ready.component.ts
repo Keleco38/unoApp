@@ -27,6 +27,7 @@ export class ConfirmReadyComponent implements OnInit, OnDestroy {
   originallyTotalPlayersCount: number = 0;
   bannedCards: CardValue[];
   roundsToWin: number;
+  numberOfStandardDecks: number;
   matchingCardStealsTurn: boolean;
   reverseShouldSkipTurnInTwoPlayers: boolean;
   drawAutoPlay: boolean;
@@ -73,6 +74,7 @@ export class ConfirmReadyComponent implements OnInit, OnDestroy {
             this.spectatorsCanViewHands = game.gameSetup.spectatorsCanViewHands;
             this.wildCardCanBePlayedOnlyIfNoOtherOptions = game.gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions;
             this.limitColorChangingCards = game.gameSetup.limitColorChangingCards;
+            this.numberOfStandardDecks = game.gameSetup.numberOfStandardDecks;
           }
         });
     } else {
@@ -90,6 +92,7 @@ export class ConfirmReadyComponent implements OnInit, OnDestroy {
             this.spectatorsCanViewHands = tournament.tournamentSetup.spectatorsCanViewHands;
             this.wildCardCanBePlayedOnlyIfNoOtherOptions = tournament.tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions;
             this.limitColorChangingCards = tournament.tournamentSetup.limitColorChangingCards;
+            this.numberOfStandardDecks = tournament.tournamentSetup.numberOfStandardDecks;
           }
         });
     }

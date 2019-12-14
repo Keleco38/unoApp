@@ -8,6 +8,7 @@ namespace DomainObjects
         public string Name { get; set; }
         public string Password { get; set; }
         public List<CardValue> BannedCards { get; set; }
+        public int NumberOfStandardDecks { get; set; }
         public int RoundsToWin { get; set; }
         public GameType GameType { get; set; }
         public bool DrawFourDrawTwoShouldSkipTurn { get; set; }

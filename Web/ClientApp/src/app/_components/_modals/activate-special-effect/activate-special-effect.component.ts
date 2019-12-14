@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { UtilityService } from './../../../_services/utility.service';
+import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserSettings } from 'src/app/_models/userSettings';
 
 @Component({
   selector: 'app-activate-special-effect',
@@ -7,15 +9,19 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./activate-special-effect.component.css']
 })
 export class ActivateSpecialEffectComponent implements OnInit {
-  constructor(private _activeModal: NgbActiveModal) {}
+  @Input() description: string;
+  userSettings: UserSettings;
+  constructor(private _activeModal: NgbActiveModal, private _utilityService: UtilityService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.userSettings = this._utilityService.userSettings;
+  }
 
   selectResult(result: boolean) {
     this._activeModal.close(result);
   }
 
-  closeModal(){
+  closeModal() {
     this._activeModal.dismiss();
   }
 }

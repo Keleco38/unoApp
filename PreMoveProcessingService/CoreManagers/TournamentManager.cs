@@ -49,7 +49,8 @@ namespace PreMoveProcessingService.CoreManagers
                         CanSeeTeammatesHandInTeamGame = false,
                         DrawAutoPlay = tournament.TournamentSetup.DrawAutoPlay,
                         SpectatorsCanViewHands = tournament.TournamentSetup.SpectatorsCanViewHands,
-                        LimitColorChangingCards = tournament.TournamentSetup.LimitColorChangingCards
+                        LimitColorChangingCards = tournament.TournamentSetup.LimitColorChangingCards,
+                        NumberOfStandardDecks = tournament.TournamentSetup.NumberOfStandardDecks
                     }, tournament.Id);
                     _gameRepository.AddGame(game);
 

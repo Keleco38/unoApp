@@ -101,9 +101,9 @@ export class PlayCardService {
               return;
             });
           } else if (cardPlayed.value == CardValue.assassinate) {
-           var anyCardModal= this._modalService.displayPickAnyCardModal();
-           anyCardModal.componentInstance.bannedCards = game.gameSetup.bannedCards;
-           anyCardModal.result.then((selectedCard: CardValue) => {
+            var anyCardModal = this._modalService.displayPickAnyCardModal();
+            anyCardModal.componentInstance.bannedCards = game.gameSetup.bannedCards;
+            anyCardModal.result.then((selectedCard: CardValue) => {
               this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null, null, 0, null, null, null, false, selectedCard);
               return;
             });
@@ -134,12 +134,16 @@ export class PlayCardService {
           }
         });
       } else if (cardPlayed.value === CardValue.devilsDeal) {
-        this._modalService.displayActivateSpecialEffect().result.then((activateEffect: boolean) => {
+        var activateEffectModal = this._modalService.displayActivateSpecialEffect();
+        activateEffectModal.componentInstance.description = cardPlayed.description;
+        activateEffectModal.result.then((activateEffect: boolean) => {
           this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, null, null, activateEffect);
           return;
         });
       } else if (cardPlayed.value === CardValue.freshStart) {
-        this._modalService.displayActivateSpecialEffect().result.then((activateEffect: boolean) => {
+        var activateEffectModal = this._modalService.displayActivateSpecialEffect();
+        activateEffectModal.componentInstance.description = cardPlayed.description;
+        activateEffectModal.result.then((activateEffect: boolean) => {
           this._hubService.playCard(cardPlayed.id, pickedColor, null, null, null, null, 0, null, null, null, activateEffect);
           return;
         });
@@ -158,7 +162,9 @@ export class PlayCardService {
           return;
         });
       } else if (cardPlayed.value == CardValue.summonWildcard) {
-        this._modalService.displayActivateSpecialEffect().result.then((activateEffect: boolean) => {
+        var activateEffectModal = this._modalService.displayActivateSpecialEffect();
+        activateEffectModal.componentInstance.description = cardPlayed.description;
+        activateEffectModal.result.then((activateEffect: boolean) => {
           if (activateEffect) {
             var modalRef = this._modalService.displayPickWildCardModal();
             modalRef.componentInstance.bannedCards = game.gameSetup.bannedCards;

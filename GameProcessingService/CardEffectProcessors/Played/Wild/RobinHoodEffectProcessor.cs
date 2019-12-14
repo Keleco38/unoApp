@@ -30,11 +30,13 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             var playerWithMostCards = playersWithMostCards[rng.Next(playersWithMostCards.Count)];
             var playerWIthLeastCards = playersWIthLeastCards[rng.Next(playersWIthLeastCards.Count)];
 
-            var numberOfCardsToTake = playerWithMostCards.Cards.Count < 2 ? playerWithMostCards.Cards.Count : 2;
+            var maxNoToTake = playerWithMostCards.Cards.Count < 5 ? 1 : 2;
+
+            var numberOfCardsToTake = playerWithMostCards.Cards.Count < maxNoToTake ? playerWithMostCards.Cards.Count : maxNoToTake;
 
             var cards = playerWithMostCards.Cards.GetAndRemove(0, numberOfCardsToTake);
 
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played RobinHood. They stole {string.Join(";", cards.Select(x=>$"{x.Color.ToString()} {x.Value.ToString()}"))} cards from {playerWithMostCards.User.Name}, and gave them to {playerWIthLeastCards.User.Name}. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played RobinHood. They stole {string.Join(", ", cards.Select(x=>$"{x.Color.ToString()} {x.Value.ToString()}"))} cards from {playerWithMostCards.User.Name}, and gave them to {playerWIthLeastCards.User.Name}. ";
 
             playerWIthLeastCards.Cards.AddRange(cards);
 

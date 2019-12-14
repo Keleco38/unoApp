@@ -27,26 +27,20 @@ namespace EntityObjects
 
         private void InitializeCards(GameSetup gameSetup)
         {
+
             AddNormalGameNormalCards();
             AddNormalGameWildCards(gameSetup.LimitColorChangingCards);
 
             if (gameSetup.GameType == GameType.SpecialWildCards)
             {
-                AddNormalGameNormalCards();
-                AddNormalGameNormalCards();
-                AddNormalGameNormalCards();
-
-                AddStealTurnCards();
-                AddStealTurnCards();
-                AddStealTurnCards();
-
-                if (!gameSetup.LimitColorChangingCards)
+                for (int i = 0; i < gameSetup.NumberOfStandardDecks; i++)
                 {
-                    AddNormalGameNormalCards();
-
                     AddStealTurnCards();
+                    if (i != gameSetup.NumberOfStandardDecks - 1)
+                    {
+                        AddNormalGameNormalCards();
+                    }
                 }
-
                 AddSpecialWildCards(gameSetup.LimitColorChangingCards);
             }
 
@@ -66,8 +60,6 @@ namespace EntityObjects
                     InitializeCards(gameSetup);
                 }
             }
-
-
         }
 
         private void AddStealTurnCards()

@@ -46,7 +46,8 @@ export class TournamentSetupComponent implements OnInit {
         spectatorsCanViewHands: true,
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
         drawAutoPlay: false,
-        limitColorChangingCards: true
+        limitColorChangingCards: true,
+        numberOfStandardDecks: 3
       };
     } else {
       this.hideAdminPasswordPart = true;

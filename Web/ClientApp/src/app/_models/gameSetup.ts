@@ -3,6 +3,7 @@ import { CardValue, GameType, PlayersSetup } from './enums';
 export interface GameSetup {
   password: string;
   bannedCards: CardValue[];
+  numberOfStandardDecks: number;
   roundsToWin: number;
   gameType: GameType;
   playersSetup: PlayersSetup;
