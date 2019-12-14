@@ -24,9 +24,30 @@
       <button (click)="buzzAll()" class="btn btn-block btn-sm btn-outline-primary">Ding!</button>
     </div>
   </div>
+  <div class="row" [hidden]="!password" *ngIf="currentGame!=null">
+    <div class="col-12">
+      <h5 class="text-primary">Force win for player</h5>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Force Win</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let player of currentGame.players; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ player.user.name }}</td>
+            <td><span class="text-danger cursor-pointer" (click)="forceWinGame(player)">[WIN]</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
   <div class="row" [hidden]="!password">
     <div class="col-12">
-      <h5 class="text-primary">Kick player</h5>
+      <h5 class="text-primary">Kick player from server</h5>
       <table class="table">
         <thead>
           <tr>

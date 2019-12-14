@@ -129,7 +129,7 @@ namespace PreMoveProcessingService.CoreManagers
             }
             else
             {
-                tournament.TournamentWinner = gameEnded.Players.First(x => !x.Cards.Any()).User.Name;
+                tournament.TournamentWinner = gameEnded.Players.First(x => x.RoundsWonCount==gameEnded.GameSetup.RoundsToWin).User.Name;
                 tournament.TournamentEnded = true;
             }
         }

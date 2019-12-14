@@ -266,6 +266,58 @@ namespace Web.Hubs
             await SendMessage($"User {user.Name} has created new game", TypeOfMessage.Server, ChatDestination.All, user);
         }
 
+        public async Task AdminForceWinGame(string password, string gameId, string playerId)
+        {
+            if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))
+            {
+                await DisplayToastMessageToUser(Context.ConnectionId, "Unauthorized", "error");
+                return;
+            }
+
+            var game = _gameRepository.GetGameByGameId(gameId);
+
+            if (game.GameEnded)
+            {
+                await DisplayToastMessageToUser(Context.ConnectionId, "Game already ended. Can't force a win.", "error");
+                return;
+            }
+
+            var player = game.Players.FirstOrDefault(x => x.Id == playerId);
+            if (player == null)
+                return;
+            player.RoundsWonCount = game.GameSetup.RoundsToWin;
+            game.RoundEnded = true;
+            game.GameEnded = true;
+
+            await UpdateGame(game);
+
+            int additionalPointsFromTournament = 0;
+            if (game.IsTournamentGame)
+            {
+                var tournament = _tournamentRepository.GetTournament(game.TournamentId);
+                _tournamentManager.UpdateTournament(tournament, game);
+                await UpdateTournament(tournament);
+                if (tournament.TournamentEnded)
+                {
+                    additionalPointsFromTournament = (int)(game.GameSetup.RoundsToWin * tournament.Contestants.Count);
+                }
+            }
+
+            var pointsWon = game.GameSetup.PlayersSetup == PlayersSetup.Individual ? (int)(game.GameSetup.RoundsToWin * (Math.Pow(game.Players.Count, 2))) : (int)(game.GameSetup.RoundsToWin * (Math.Pow(game.Players.Select(x => x.TeamNumber).Distinct().Count(), 2)));
+            pointsWon += additionalPointsFromTournament;
+            var playersWon = game.Players.Where(x => x.RoundsWonCount == game.GameSetup.RoundsToWin).Select(x => x.User.Name).ToList();
+
+            _hallOfFameRepository.AddPoints(playersWon, pointsWon);
+
+            var hallOfFameStatsDto = _mapper.Map<List<HallOfFameDto>>(_hallOfFameRepository.GetScoresForUsernames(game.Players.Select(x => x.User.Name).ToList()));
+            var gameEndedResultDto = new GameEndedResultDto(playersWon, pointsWon, hallOfFameStatsDto);
+
+            await Clients.Clients(GetPlayersAndSpectatorsFromGame(game)).SendAsync("GameEnded", gameEndedResultDto);
+            await DisplayToastMessageToGame(gameId, $"Moderator forced win. Player won: {player.User.Name}", "info");
+            await AddToGameLog(gameId, $"Moderator forced win. Player won: {player.User.Name}");
+
+        }
+
         public async Task AdminBuzzAll(string password)
         {
             if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))
@@ -806,7 +858,7 @@ namespace Web.Hubs
 
                     if (game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
                     {
-                        messageToLog+=$"{game.PlayerToPlay.User.Name} is not affected by the draw (king's decree). ";
+                        messageToLog += $"{game.PlayerToPlay.User.Name} is not affected by the draw (king's decree). ";
                     }
                     else
                     {

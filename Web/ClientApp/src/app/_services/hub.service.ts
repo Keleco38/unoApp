@@ -354,6 +354,9 @@ export class HubService {
   adminBuzzAll(password: string) {
     this._hubConnection.invoke("AdminBuzzAll", password);
   }
+  adminForceWinGame(password: string, gameId: string, playerId: string) {
+    this._hubConnection.invoke("AdminForceWinGame", password, gameId, playerId);
+  }
 
   adminCleanupGame(gameId: string, password: string) {
     this._hubConnection.invoke("AdminCleanupGame", gameId, password);
@@ -432,7 +435,7 @@ export class HubService {
     oddOrEvenGuess: string = "",
     activateSpecialCardEffect: boolean = false,
     targetedCardValue: CardValue = CardValue.zero
-    ) {
+  ) {
     this._hubConnection.invoke(
       "PlayCard",
       cardPlayedId,
