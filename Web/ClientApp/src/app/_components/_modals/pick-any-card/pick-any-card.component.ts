@@ -10,6 +10,8 @@ import { UtilityService } from "src/app/_services/utility.service";
   styleUrls: ["./pick-any-card.component.css"]
 })
 export class PickAnyCardComponent implements OnInit {
+  @Input() bannedCards: CardValue[];
+  
   selectedCardToReturn: CardValue = null;
 
   private _allCards: KeyValue<string, number>[];
@@ -24,8 +26,8 @@ export class PickAnyCardComponent implements OnInit {
 
   ngOnInit() {
     this._allCards = this._utilityService.allCards;
-    this.standardCards = this._allCards.filter(x => x.value < 15);
-    this.specialCards = this._allCards.filter(x => x.value > 14);
+    this.standardCards = this._allCards.filter(x => x.value < 15 && this.bannedCards.indexOf(x.value)==-1);
+    this.specialCards = this._allCards.filter(x => x.value > 14 && this.bannedCards.indexOf(x.value)==-1);
   }
 
   closeModal() {

@@ -101,7 +101,9 @@ export class PlayCardService {
               return;
             });
           } else if (cardPlayed.value == CardValue.assassinate) {
-            this._modalService.displayPickAnyCardModal().result.then((selectedCard: CardValue) => {
+           var anyCardModal= this._modalService.displayPickAnyCardModal();
+           anyCardModal.componentInstance.bannedCards = game.gameSetup.bannedCards;
+           anyCardModal.result.then((selectedCard: CardValue) => {
               this._hubService.playCard(cardPlayed.id, pickedColor, playerId, null, null, null, 0, null, null, null, false, selectedCard);
               return;
             });

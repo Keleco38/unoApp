@@ -17,7 +17,7 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => false;
-        public string Description => "If the player activates the special effect of the card, they must draw 3 cards (not affected by double draw or king's decree), and can summon any wildcard to their hand if the card exists in the deck or the discarded pile.Player also keeps their turn if they activate the effect. If the player doesn't activate the effect, they must draw 1 card and they lose their turn.";
+        public string Description => "If the player activates the special effect of the card, they must draw 3 cards (not affected by double draw or king's decree), and can summon any wildcard to their hand if the card exists in the deck or the discarded pile.Player also keeps their turn if they activate the effect. If the player doesn't activate the effect, they must draw 1 card but they will still keep their turn.";
 
     }
 }

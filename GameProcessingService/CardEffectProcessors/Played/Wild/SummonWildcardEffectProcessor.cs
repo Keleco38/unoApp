@@ -49,16 +49,16 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
                 }
 
                 _gameManager.DrawCard(game, moveParams.PlayerPlayed, 3, false);
-
-                var previousPlayer = _gameManager.GetNextPlayer(game, moveParams.PlayerPlayed, game.Players, true);
-                game.PlayerToPlay = previousPlayer;
             }
             else
             {
-                messageToLog += $"{moveParams.PlayerPlayed.User.Name} did not activate the effect of the card. They will draw 1 card. ";
+                messageToLog += $"{moveParams.PlayerPlayed.User.Name} did not activate the effect of the card. They will draw 1 card and keep their turn. ";
                 _gameManager.DrawCard(game, moveParams.PlayerPlayed, 1, false);
+       
             }
 
+            var previousPlayer = _gameManager.GetNextPlayer(game, moveParams.PlayerPlayed, game.Players, true);
+            game.PlayerToPlay = previousPlayer;
 
 
             messagesToLog.Add(messageToLog);

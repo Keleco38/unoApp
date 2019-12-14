@@ -23,7 +23,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
         public MoveResult ProcessCardEffect(Game game, MoveParams moveParams)
         {
             var messagesToLog = new List<string>();
-            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played Assassinate. He targeted {moveParams.PlayerTargeted.User.Name} and assassinated card {moveParams.TargetedCardValue.ToString()}. ";
+            var messageToLog = $"{moveParams.PlayerPlayed.User.Name} played Assassinate. They targeted {moveParams.PlayerTargeted.User.Name} and assassinated card {moveParams.TargetedCardValue.ToString()}. ";
 
 
             var automaticallyTriggeredResultMagneticPolarity = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.MagneticPolarity).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { MagneticPolarityParams = new AutomaticallyTriggeredMagneticPolarityParams(moveParams.TargetedCardColor, moveParams.PlayerPlayed, moveParams.PlayerTargeted) });
