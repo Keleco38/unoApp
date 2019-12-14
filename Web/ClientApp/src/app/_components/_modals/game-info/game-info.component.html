@@ -34,16 +34,16 @@
     <table class="table">
       <thead>
         <th>Name</th>
+        <th [hidden]="game.gameSetup.playersSetup != 2">Team</th>
         <th>Cards Left</th>
         <th>Rounds Won</th>
-        <th [hidden]="game.gameSetup.playersSetup != 2">Team</th>
       </thead>
       <tbody>
         <tr *ngFor="let player of game.players">
           <td>{{ player.user.name }}</td>
+          <td [hidden]="game.gameSetup.playersSetup != 2">{{ player.teamNumber }}</td>
           <td>{{ player.numberOfCards }}</td>
           <td>{{ player.roundsWonCount }}</td>
-          <td [hidden]="game.gameSetup.playersSetup != 2">{{ player.teamNumber }}</td>
         </tr>
       </tbody>
     </table>
