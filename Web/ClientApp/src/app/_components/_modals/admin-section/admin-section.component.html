@@ -23,13 +23,14 @@
     <div class="col-6">
       <button (click)="buzzAll()" class="btn btn-block btn-sm btn-outline-primary">Ding!</button>
     </div>
-  </div>
-  <div class="row" [hidden]="!password">
     <div class="col-6">
       <h5 class="text-primary">Sticky tournament!</h5>
     </div>
     <div class="col-6">
       <button class="btn btn-block btn-sm btn-outline-primary" [ngbPopover]="popContent" autoClose="outside" placement="left">Add new!</button>
+    </div>
+    <div class="col-12">
+      <hr>
     </div>
   </div>
   <div class="row" [hidden]="!password" *ngIf="currentGame!=null">
@@ -138,9 +139,7 @@
       </table>
     </div>
   </div>
-
 </div>
-
 
 <ng-template #popContent let-user="user">
   <div class="form-group">
