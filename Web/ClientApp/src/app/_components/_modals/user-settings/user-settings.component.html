@@ -22,121 +22,67 @@
         <label for="inputPassword" class="col-4 col-form-label">Block Buzz Commands:</label>
         <div class="col-8">
           <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              [checked]="shouldBeCheckedBuzzCommand('alert')"
-              (change)="updateBlockedBuzzCommands($event, 'alert')"
-              id="Alert"
-            />
+            <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('alert')" (change)="updateBlockedBuzzCommands($event, 'alert')" id="Alert" />
             <label class="form-check-label" for="Alert">
               Alert
             </label>
           </div>
           <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              [checked]="shouldBeCheckedBuzzCommand('ding')"
-              (change)="updateBlockedBuzzCommands($event, 'ding')"
-              id="Ding"
-            />
+            <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('baby')" (change)="updateBlockedBuzzCommands($event, 'baby')" id="baby" />
+            <label class="form-check-label" for="baby">
+              Baby
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('ding')" (change)="updateBlockedBuzzCommands($event, 'ding')" id="Ding" />
             <label class="form-check-label" for="Ding">
               Ding
             </label>
           </div>
           <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              [checked]="shouldBeCheckedBuzzCommand('lick')"
-              (change)="updateBlockedBuzzCommands($event, 'lick')"
-              id="Lick"
-            />
+            <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('lick')" (change)="updateBlockedBuzzCommands($event, 'lick')" id="Lick" />
             <label class="form-check-label" for="Lick">
               Lick
             </label>
           </div>
           <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              [checked]="shouldBeCheckedBuzzCommand('poke')"
-              (change)="updateBlockedBuzzCommands($event, 'poke')"
-              id="Poke"
-            />
+            <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('poke')" (change)="updateBlockedBuzzCommands($event, 'poke')" id="Poke" />
             <label class="form-check-label" for="Poke">
               Poke
             </label>
           </div>
           <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              [checked]="shouldBeCheckedBuzzCommand('punch')"
-              (change)="updateBlockedBuzzCommands($event, 'punch')"
-              id="Punch"
-            />
+            <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('punch')" (change)="updateBlockedBuzzCommands($event, 'punch')" id="Punch" />
             <label class="form-check-label" for="Punch">
               Punch
             </label>
           </div>
           <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              [checked]="shouldBeCheckedBuzzCommand('slap')"
-              (change)="updateBlockedBuzzCommands($event, 'slap')"
-              id="Slap"
-            />
+            <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('slap')" (change)="updateBlockedBuzzCommands($event, 'slap')" id="Slap" />
             <label class="form-check-label" for="Slap">
               Slap
             </label>
           </div>
           <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              [checked]="shouldBeCheckedBuzzCommand('shoot')"
-              (change)="updateBlockedBuzzCommands($event, 'shoot')"
-              id="Shoot"
-            />
+            <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('shoot')" (change)="updateBlockedBuzzCommands($event, 'shoot')" id="Shoot" />
             <label class="form-check-label" for="Shoot">
               Shoot
             </label>
           </div>
           <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              [checked]="shouldBeCheckedBuzzCommand('laugh')"
-              (change)="updateBlockedBuzzCommands($event, 'laugh')"
-              id="Laugh"
-            />
+            <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('laugh')" (change)="updateBlockedBuzzCommands($event, 'laugh')" id="Laugh" />
             <label class="form-check-label" for="Laugh">
               Laugh
             </label>
           </div>
           <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              [checked]="shouldBeCheckedBuzzCommand('scream')"
-              (change)="updateBlockedBuzzCommands($event, 'scream')"
-              id="Scream"
-            />
+            <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('scream')" (change)="updateBlockedBuzzCommands($event, 'scream')" id="Scream" />
             <label class="form-check-label" for="Scream">
               Scream
             </label>
           </div>
           <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              [checked]="shouldBeCheckedBuzzCommand('kiss')"
-              (change)="updateBlockedBuzzCommands($event, 'kiss')"
-              id="Kiss"
-            />
+            <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('kiss')" (change)="updateBlockedBuzzCommands($event, 'kiss')" id="Kiss" />
             <label class="form-check-label" for="Kiss">
               Kiss
             </label>
@@ -146,85 +92,43 @@
       <div class="form-group row">
         <label for="name" for="notifyWhenGameStarting" class="col-8">Sound notify me when the game is starting:</label>
         <div class="col-4 ">
-          <ui-switch
-            class="form-check-input"
-            size="small"
-            [(ngModel)]="userSettings.notifyWhenGameStarting"
-            (change)="saveUserSettings()"
-            id="notifyWhenGameStarting"
-          ></ui-switch>
+          <ui-switch class="form-check-input" size="small" [(ngModel)]="userSettings.notifyWhenGameStarting" (change)="saveUserSettings()" id="notifyWhenGameStarting"></ui-switch>
         </div>
       </div>
       <div class="form-group row">
         <label for="name" for="notifyMyTurnToPlay" class="col-8">Sound notify me when it's my turn to play:</label>
         <div class="col-4 ">
-          <ui-switch
-            class="form-check-input"
-            size="small"
-            [(ngModel)]="userSettings.notifyUserWhenHisTurnToPlay"
-            (change)="saveUserSettings()"
-            id="notifyMyTurnToPlay"
-          ></ui-switch>
+          <ui-switch class="form-check-input" size="small" [(ngModel)]="userSettings.notifyUserWhenHisTurnToPlay" (change)="saveUserSettings()" id="notifyMyTurnToPlay"></ui-switch>
         </div>
       </div>
       <div class="form-group row">
         <label for="name" for="textNotifyMentioned" class="col-8">Text notify me when I'm mentioned in chat:</label>
         <div class="col-4 ">
-          <ui-switch
-            size="small"
-            class="form-check-input"
-            [(ngModel)]="userSettings.notifyWhenMentionedToast"
-            (change)="saveUserSettings()"
-            id="textNotifyMentioned"
-          ></ui-switch>
+          <ui-switch size="small" class="form-check-input" [(ngModel)]="userSettings.notifyWhenMentionedToast" (change)="saveUserSettings()" id="textNotifyMentioned"></ui-switch>
         </div>
       </div>
       <div class="form-group row">
         <label for="name" for="soundNotifyMentioned" class="col-8">Sound notify me when I'm mentioned in chat:</label>
         <div class="col-4 ">
-          <ui-switch
-            size="small"
-            class="form-check-input"
-            [(ngModel)]="userSettings.notifyWhenMentionedBuzz"
-            (change)="saveUserSettings()"
-            id="soundNotifyMentioned"
-          ></ui-switch>
+          <ui-switch size="small" class="form-check-input" [(ngModel)]="userSettings.notifyWhenMentionedBuzz" (change)="saveUserSettings()" id="soundNotifyMentioned"></ui-switch>
         </div>
       </div>
       <div class="form-group row">
         <label for="name" for="showEmoji" class="col-8">Show emoji:</label>
         <div class="col-4 ">
-          <ui-switch
-            class="form-check-input"
-            size="small"
-            [(ngModel)]="userSettings.showEmoji"
-            (change)="saveUserSettings()"
-            id="showEmoji"
-          ></ui-switch>
+          <ui-switch class="form-check-input" size="small" [(ngModel)]="userSettings.showEmoji" (change)="saveUserSettings()" id="showEmoji"></ui-switch>
         </div>
       </div>
       <div class="form-group row">
         <label for="name" for="showNewbieTips" class="col-8">Show newbie tips:</label>
         <div class="col-4 ">
-          <ui-switch
-            class="form-check-input"
-            size="small"
-            [(ngModel)]="userSettings.showNewbieTips"
-            (change)="saveUserSettings()"
-            id="showNewbieTips"
-          ></ui-switch>
+          <ui-switch class="form-check-input" size="small" [(ngModel)]="userSettings.showNewbieTips" (change)="saveUserSettings()" id="showNewbieTips"></ui-switch>
         </div>
       </div>
       <div class="form-group row">
         <label for="name" for="darkMode" class="col-8">Dark mode:</label>
         <div class="col-4 ">
-          <ui-switch
-            class="form-check-input"
-            size="small"
-            [(ngModel)]="userSettings.useDarkTheme"
-            (change)="updateUseDarkTheme()"
-            id="darkMode"
-          ></ui-switch>
+          <ui-switch class="form-check-input" size="small" [(ngModel)]="userSettings.useDarkTheme" (change)="updateUseDarkTheme()" id="darkMode"></ui-switch>
         </div>
       </div>
       <hr />

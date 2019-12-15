@@ -1244,7 +1244,7 @@ namespace Web.Hubs
 
         private ChatMessageIntentionResult GetChatMessageIntention(string message)
         {
-            Regex regex = new Regex(@"^/(slap|ding|alert|lick|poke|punch|shoot|scream|laugh|kiss) @?([A-Za-z0-9\s]*)$");
+            Regex regex = new Regex(@"^/(slap|ding|alert|lick|poke|punch|shoot|scream|laugh|kiss|baby) @?([A-Za-z0-9\s]*)$");
             Match match = regex.Match(message);
             if (match.Success)
             {
@@ -1282,6 +1282,9 @@ namespace Web.Hubs
                         break;
                     case "kiss":
                         buzzTypeStringForChat = "kissed";
+                        break;  
+                    case "baby":
+                        buzzTypeStringForChat = "OhBabyATripleOhhhhYeahhhhed at";
                         break;
                 }
                 return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Buzz, TargetedUsername = targetedUsername, BuzzType = buzzType, BuzzTypeStringForChat = buzzTypeStringForChat };
