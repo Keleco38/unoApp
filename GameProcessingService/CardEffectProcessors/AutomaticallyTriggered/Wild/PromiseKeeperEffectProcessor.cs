@@ -39,6 +39,8 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                     }
                     autoParams.PromiseKeeperParams.PlayerPlayed.CardPromisedToDiscard = null;
                 }
+            }else{
+                    autoParams.PromiseKeeperParams.PlayerPlayed.CardPromisedToDiscard = null;
             }
 
 
