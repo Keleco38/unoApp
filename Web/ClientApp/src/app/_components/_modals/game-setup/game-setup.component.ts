@@ -38,8 +38,8 @@ export class GameSetupComponent implements OnInit {
         canSeeTeammatesHandInTeamGame: true,
         drawAutoPlay: false,
         spectatorsCanViewHands:true,
-        limitColorChangingCards:true,
-        numberOfStandardDecks:3
+        limitColorChangingCards:false,
+        numberOfStandardDecks:4
       };
     } else {
       this.gameSetup = this._game.gameSetup;

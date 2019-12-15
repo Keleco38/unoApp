@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="form-group row" [hidden]="gameSetup.gameType==1">
-        <label for="numberOfStandardDecks" class="col-7 col-form-label">Number of standard decks</label>
+        <label for="numberOfStandardDecks" class="col-7 col-form-label">No. of standard uno decks</label>
         <div class="col-5">
           <select [(ngModel)]="gameSetup.numberOfStandardDecks" class="form-control form-control-sm" id="numberOfStandardDecks">
             <option value="1">1</option>
@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="form-group row">
-        <label for="maxNumberOfPlayers" class="col-7 col-form-label">Max number of players</label>
+        <label for="maxNumberOfPlayers" class="col-7 col-form-label">Max No. of players</label>
         <div class="col-5">
           <select [(ngModel)]="gameSetup.maxNumberOfPlayers" class="form-control form-control-sm" id="maxNumberOfPlayers">
             <option value="2">2</option>
@@ -110,7 +110,7 @@
         </div>
       </div>
       <div class="form-group row">
-        <label for="name" for="wildCardCanBePlayedOnlyIfNoOtherOptions" class="col-8">Wild card playable only as must:</label>
+        <label for="name" for="wildCardCanBePlayedOnlyIfNoOtherOptions" class="col-8">Wilds playable only as must:</label>
         <div class="col-4 text-center">
           <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions" id="wildCardCanBePlayedOnlyIfNoOtherOptions"></ui-switch>
         </div>

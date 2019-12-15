@@ -56,12 +56,12 @@
           <div class="col-5">
             <select [(ngModel)]="tournamentSetup.gameType" class="form-control form-control-sm" name="gameType" id="gameType">
               <option value="1">Classic</option>
-              <option value="2">Special Wild Cards</option>
+              <option value="2">Special</option>
             </select>
           </div>
         </div>
         <div class="form-group row" [hidden]="tournamentSetup.gameType==1">
-          <label for="numberOfStandardDecks" class="col-7 col-form-label">Number of standard uno decks</label>
+          <label for="numberOfStandardDecks" class="col-7 col-form-label">No. of standard uno decks</label>
           <div class="col-5">
             <select [(ngModel)]="tournamentSetup.numberOfStandardDecks" class="form-control form-control-sm" name="numberOfStandardDecks" id="numberOfStandardDecks">
               <option value="1">1</option>
@@ -185,7 +185,7 @@
         </div>
         <div class="form-group row">
           <label for="name" for="wildCardCanBePlayedOnlyIfNoOtherOptions" class="col-8"
-            >Wild card playable only as must:</label
+            >Wilds playable only as must:</label
           >
           <div class="col-4 text-center">
             <ui-switch
