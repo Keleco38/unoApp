@@ -19,6 +19,6 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor => true;
         public bool RequireTargetPlayer => false;
-        public string Description => "Player can choose to activate the special effect or not. If they activate the special effect of the card, they will discard their whole hand and draw 7 cards (like in the beginning of the game). If they decides not to activate the special effect, he must draw 1 card (not affected by double draw or king's decree). Can be blocked by \"keep my hand\".";
+        public string Description => "Player can choose to activate the special effect or not. If they activate the special effect of the card, they will discard their whole hand and draw 7 cards (like in the beginning of the game). If they decides not to activate the special effect, they must draw 1 card (not affected by double draw or king's decree). Can be blocked by \"keep my hand\".";
     }
 }

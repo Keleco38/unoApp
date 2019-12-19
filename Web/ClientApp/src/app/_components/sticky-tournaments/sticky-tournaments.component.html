@@ -1,13 +1,16 @@
 <div class="row " *ngIf="stickyTournaments.length > 0">
   <div class="col-12">
-    <div class="alert alert-primary">Sticky tournaments ({{ stickyTournaments.length }}):</div>
+    <div class="alert alert-primary">Sticky tourneys ({{ stickyTournaments.length }}):</div>
     <div class="list-group">
       <button (click)="openStickyTournament(tournament)" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" *ngFor="let tournament of stickyTournaments">
         <div class="ellipsis-text"  [title]="tournament.name">
           <span> {{ tournament.name | titlecase}} </span>
         </div>
+        <div>
+          <span>&#x2197;</span>
+        </div>
       </button>
     </div>
     <hr>
   </div>
-</div>
+</div>  

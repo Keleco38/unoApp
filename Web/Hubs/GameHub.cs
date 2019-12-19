@@ -1071,6 +1071,11 @@ namespace Web.Hubs
                         var nextPlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
                         var messageToLog = $"{game.PlayerToPlay.User.Name} was handcuffed so they will skip this turn. Player to play: {nextPlayerToPlay.User.Name}";
                         game.PlayerToPlay = nextPlayerToPlay;
+                        if(!game.HandCuffedPlayers.Contains(nextPlayerToPlay)){
+                            var automaticallyTriggeredResultQueensDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams() { PlayerAffected = game.PlayerToPlay } });
+                            if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
+                                messageToLog=automaticallyTriggeredResultQueensDecree.MessageToLog;
+                        }
                         await AddToGameLog(game.Id, messageToLog);
                     }
                     game.HandCuffedPlayers.Remove(originallyHandcuffedPlayer);
