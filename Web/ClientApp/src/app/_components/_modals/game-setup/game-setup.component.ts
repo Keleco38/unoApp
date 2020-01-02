@@ -16,7 +16,7 @@ export class GameSetupComponent implements OnInit {
   private _game: Game;
   gameSetup: GameSetup;
 
-  constructor(private _hubService: HubService, private _activeModal: NgbActiveModal, private _gameStorageService: GameStorageService) {}
+  constructor(private _hubService: HubService, private _activeModal: NgbActiveModal, private _gameStorageService: GameStorageService) { }
 
   ngOnInit() {
     this._gameStorageService.activeGame.pipe(first()).subscribe((game: Game) => {
@@ -31,15 +31,15 @@ export class GameSetupComponent implements OnInit {
         password: '',
         gameType: GameType.specialWildCards,
         drawFourDrawTwoShouldSkipTurn: true,
-        bannedCards: [CardValue.swapHands, CardValue.paradigmShift],
+        bannedCards: [CardValue.swapHands, CardValue.paradigmShift, CardValue.magneticPolarity, CardValue.doubleDraw],
         matchingCardStealsTurn: true,
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
         playersSetup: PlayersSetup.individual,
         canSeeTeammatesHandInTeamGame: true,
         drawAutoPlay: false,
-        spectatorsCanViewHands:true,
-        limitColorChangingCards:false,
-        numberOfStandardDecks:4
+        spectatorsCanViewHands: true,
+        limitColorChangingCards: false,
+        numberOfStandardDecks: 4
       };
     } else {
       this.gameSetup = this._game.gameSetup;

@@ -10,11 +10,7 @@
       </div>
       <div class="col-6">
         <button class="btn btn-sm btn-danger btn-block" (click)="exitTournament()">Leave tournament</button>
-        <button
-          [style.opacity]="activeTournament.contestants.length < 3 ? 0.5 : 1"
-          class="btn btn-block btn-sm btn-success"
-          (click)="startTournament()"
-        >
+        <button [style.opacity]="activeTournament.contestants.length < 3 ? 0.5 : 1" class="btn btn-block btn-sm btn-success" (click)="startTournament()">
           Start Tournament
         </button>
       </div>
@@ -23,12 +19,7 @@
       <div class="col-12">
         <div class="btn-group special">
           <button class="btn btn-sm btn-danger" (click)="exitTournament()">Leave tournament</button>
-          <button
-            class="btn btn-sm btn-primary"
-            [ngStyle]="getStyleJoinTournamentButton()"
-            [disabled]="!userIsSpectator()"
-            (click)="joinTournament()"
-          >
+          <button class="btn btn-sm btn-primary" [ngStyle]="getStyleJoinTournamentButton()" [disabled]="!userIsSpectator()" (click)="joinTournament()">
             Join Tournament
           </button>
         </div>
@@ -40,19 +31,13 @@
   <div class="col-6">
     <h6 class="text-success">Players joined ({{ activeTournament.contestants.length }})</h6>
     <ul class="list-group">
-      <li
-        class="list-group-item d-flex justify-content-between "
-        *ngFor="let contestant of activeTournament.contestants; let first = first"
-      >
+      <li class="list-group-item d-flex justify-content-between " *ngFor="let contestant of activeTournament.contestants; let first = first">
         <div>
           <span [hidden]="!first">&#9734;</span>
           *{{ contestant.user.name }}
         </div>
-        <span
-          class="badge badge-pill badge-danger cursor-pointer"
-          (click)="kickContestantFromTournament(contestant)"
-          [hidden]="currentUser.connectionId != activeTournament.contestants[0].user.connectionId || first"
-        >
+        <span class="badge badge-pill badge-danger cursor-pointer" (click)="kickContestantFromTournament(contestant)"
+          [hidden]="currentUser.connectionId != activeTournament.contestants[0].user.connectionId || first">
           [X]
         </span>
       </li>
@@ -65,15 +50,7 @@
       <ul>
         <li *ngFor="let user of activeTournament.bannedUsers">
           {{ user.name }}
-          <span
-            class="text-danger cursor-pointer"
-            [ngbPopover]="popContent"
-            placement="left"
-            triggers="manual"
-            #p1="ngbPopover"
-            (click)="togglePopover(p1, user)"
-            >[X]</span
-          >
+          <span class="text-danger cursor-pointer" [ngbPopover]="popContent" placement="left" triggers="manual" #p1="ngbPopover" (click)="togglePopover(p1, user)">[X]</span>
         </li>
       </ul>
     </div>
@@ -81,7 +58,7 @@
       <strong>Banned cards: </strong>
       <ul>
         <li *ngFor="let bannedCard of activeTournament.tournamentSetup.bannedCards">
-          {{ getBannedCardName(bannedCard) | dividePerCapital }}
+          <small> {{ getBannedCardName(bannedCard) | dividePerCapital }}</small>
         </li>
       </ul>
     </div>

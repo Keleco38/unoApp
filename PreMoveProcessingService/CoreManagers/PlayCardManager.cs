@@ -104,38 +104,39 @@ namespace PreMoveProcessingService.CoreManagers
                 moveResult.MessagesToLog.Add($"{game.SilenceTurnsRemaining} silenced turns remaining. ");
             }
 
-
-            var result = game.GreedAffectedPlayers.TryGetValue(game.PlayerToPlay, out var greedTurns);
-            if (result && greedTurns > 0)
+            if (!game.GameEnded)
             {
-                if (game.SilenceTurnsRemaining <= 0)
+                var result = game.GreedAffectedPlayers.TryGetValue(game.PlayerToPlay, out var greedTurns);
+                if (result && greedTurns > 0)
                 {
-                    var messageToLog = $"{game.PlayerToPlay.User.Name} was affected by greed so they will draw one card. Greed turns remaining: {greedTurns - 1}. ";
+                    if (game.SilenceTurnsRemaining <= 0)
+                    {
+                        var messageToLog = $"{game.PlayerToPlay.User.Name} was affected by greed so they will draw one card. Greed turns remaining: {greedTurns - 1}. ";
 
-                    if (game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
-                    {
-                        messageToLog += $"{game.PlayerToPlay.User.Name} is not affected by the draw (king's decree).";
-                    }
-                    else
-                    {
-                        var cardsToDraw = 1;
-                        var doubleDrawCard = game.PlayerToPlay.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
-                        if (doubleDrawCard != null)
+                        if (game.PlayerToPlay.Cards.Count > 4 && game.PlayerToPlay.Cards.FirstOrDefault(x => x.Value == CardValue.KingsDecree) != null)
                         {
-                            game.LastCardPlayed = new LastCardPlayed(game.LastCardPlayed.Color, doubleDrawCard.Value, doubleDrawCard.ImageUrl, game.PlayerToPlay.User.Name, true, doubleDrawCard);
-                            game.PlayerToPlay.Cards.Remove(doubleDrawCard);
-                            game.DiscardedPile.Add(doubleDrawCard);
-                            messageToLog += $"{game.PlayerToPlay.User.Name} doubled the draw/discard effect. ";
-                            cardsToDraw = 2;
+                            messageToLog += $"{game.PlayerToPlay.User.Name} is not affected by the draw (king's decree).";
                         }
-                        _gameManager.DrawCard(game, game.PlayerToPlay, cardsToDraw, false);
+                        else
+                        {
+                            var cardsToDraw = 1;
+                            var doubleDrawCard = game.PlayerToPlay.Cards.FirstOrDefault(c => c.Value == CardValue.DoubleDraw);
+                            if (doubleDrawCard != null)
+                            {
+                                game.LastCardPlayed = new LastCardPlayed(game.LastCardPlayed.Color, doubleDrawCard.Value, doubleDrawCard.ImageUrl, game.PlayerToPlay.User.Name, true, doubleDrawCard);
+                                game.PlayerToPlay.Cards.Remove(doubleDrawCard);
+                                game.DiscardedPile.Add(doubleDrawCard);
+                                messageToLog += $"{game.PlayerToPlay.User.Name} doubled the draw/discard effect. ";
+                                cardsToDraw = 2;
+                            }
+                            _gameManager.DrawCard(game, game.PlayerToPlay, cardsToDraw, false);
+                        }
+                        moveResult.MessagesToLog.Add(messageToLog);
                     }
-                    moveResult.MessagesToLog.Add(messageToLog);
+                    game.GreedAffectedPlayers[game.PlayerToPlay] = greedTurns - 1;
                 }
-                game.GreedAffectedPlayers[game.PlayerToPlay] = greedTurns - 1;
+
             }
-
-
             return moveResult;
         }
 

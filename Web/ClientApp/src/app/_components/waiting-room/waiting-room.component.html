@@ -81,7 +81,7 @@
     <div [hidden]="activeGame.gameSetup.bannedCards.length == 0">
       <strong>Banned cards: </strong>
       <ul>
-        <li *ngFor="let bannedCard of activeGame.gameSetup.bannedCards">{{ getBannedCardName(bannedCard) | dividePerCapital }}</li>
+        <li *ngFor="let bannedCard of activeGame.gameSetup.bannedCards"><small>{{ getBannedCardName(bannedCard) | dividePerCapital }}</small></li>
       </ul>
     </div>
     <p [hidden]="activeGame.gameSetup.bannedCards.length > 0"><strong>Banned cards: </strong> None</p>

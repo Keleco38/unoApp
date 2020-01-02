@@ -41,7 +41,7 @@ export class TournamentSetupComponent implements OnInit {
         name: "",
         gameType: GameType.specialWildCards,
         drawFourDrawTwoShouldSkipTurn: true,
-        bannedCards: [CardValue.swapHands, CardValue.paradigmShift, CardValue.magneticPolarity],
+        bannedCards: [CardValue.swapHands, CardValue.paradigmShift, CardValue.magneticPolarity, CardValue.doubleDraw],
         matchingCardStealsTurn: true,
         spectatorsCanViewHands: true,
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,

@@ -42,21 +42,9 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             }
             else
             {
-                messageToLog += $"They collected one card of each color. They will discard 4 cards and draw 2. ";
-                var automaticallyTriggeredResultDoubleDraw = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.DoubleDraw).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DoubleDrawParams = new AutomaticallyTriggeredDoubleDrawParams(moveParams.PlayerPlayed, 2, moveParams.TargetedCardColor) });
-                messageToLog = automaticallyTriggeredResultDoubleDraw.MessageToLog;
-
+                messageToLog += $"They collected one card of each color. They will discard 4 cards. ";
                 moveParams.PlayerPlayed.Cards.RemoveAll(x=>uniqueCards.Contains(x));
-
-                var automaticallyTriggeredResultKingsDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KingsDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KingsDecreeParams = new AutomaticallyTriggeredKingsDecreeParams() { PlayerAffected = moveParams.PlayerPlayed } });
-                messageToLog = automaticallyTriggeredResultKingsDecree.MessageToLog;
-                if (!automaticallyTriggeredResultKingsDecree.ActivatedKingsDecree)
-                {
-                    _gameManager.DrawCard(game, moveParams.PlayerPlayed, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, false);
-                }
-
             }
-
 
             messagesToLog.Add(messageToLog);
             return new MoveResult(messagesToLog);

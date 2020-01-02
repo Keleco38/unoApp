@@ -20,6 +20,6 @@ namespace EntityObjects.Cards.Wild
         public string ImageUrl { get; }
         public bool RequirePickColor { get; }
         public bool RequireTargetPlayer => true;
-        public string Description => "Target a player. Both players will exchange random number of cards (range: 0-2) from their hands with the opposite player.";
+        public string Description => "Target a player. Both players will exchange random number of cards (range: 0-2) from their hands with the opposite player. Can be blocked by keep my hand.";
     }
 }

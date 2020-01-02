@@ -22,7 +22,7 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
 
             if (game.SilenceTurnsRemaining <= 0)
             {
-                if (player.Cards.Count <= 5 && player.Cards.FirstOrDefault(x => x.Value == CardValue.QueensDecree) != null)
+                if (player.Cards.Count <= 4 && player.Cards.FirstOrDefault(x => x.Value == CardValue.QueensDecree) != null)
                 {
                     if (game.Players.Count == 2)
                     {

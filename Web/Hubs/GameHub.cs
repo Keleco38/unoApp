@@ -1063,27 +1063,30 @@ namespace Web.Hubs
         {
             if (game.GameStarted)
             {
-                if (game.HandCuffedPlayers.Contains(game.PlayerToPlay))
+                if (!game.GameEnded)
                 {
-                    var originallyHandcuffedPlayer = game.PlayerToPlay;
-                    if (game.SilenceTurnsRemaining <= 0)
+                    if (game.HandCuffedPlayers.Contains(game.PlayerToPlay))
                     {
-                        var nextPlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
-                        var messageToLog = $"{game.PlayerToPlay.User.Name} was handcuffed so they will skip this turn. Player to play: {nextPlayerToPlay.User.Name}";
-                        game.PlayerToPlay = nextPlayerToPlay;
-                        if(!game.HandCuffedPlayers.Contains(nextPlayerToPlay)){
-                            var automaticallyTriggeredResultQueensDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams() { PlayerAffected = game.PlayerToPlay } });
-                            if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
-                                messageToLog=automaticallyTriggeredResultQueensDecree.MessageToLog;
+                        var originallyHandcuffedPlayer = game.PlayerToPlay;
+                        if (game.SilenceTurnsRemaining <= 0)
+                        {
+                            var nextPlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
+                            var messageToLog = $"{game.PlayerToPlay.User.Name} was handcuffed so they will skip this turn. Player to play: {nextPlayerToPlay.User.Name}";
+                            game.PlayerToPlay = nextPlayerToPlay;
+                            if (!game.HandCuffedPlayers.Contains(nextPlayerToPlay))
+                            {
+                                var automaticallyTriggeredResultQueensDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams() { PlayerAffected = game.PlayerToPlay } });
+                                if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
+                                    messageToLog = automaticallyTriggeredResultQueensDecree.MessageToLog;
+                            }
+                            await AddToGameLog(game.Id, messageToLog);
                         }
-                        await AddToGameLog(game.Id, messageToLog);
+                        game.HandCuffedPlayers.Remove(originallyHandcuffedPlayer);
+                        await UpdateHands(game);
+                        await UpdateGame(game);
+                        return;
                     }
-                    game.HandCuffedPlayers.Remove(originallyHandcuffedPlayer);
-                    await UpdateHands(game);
-                    await UpdateGame(game);
-                    return;
                 }
-
 
                 var allPlayersInTheGame = GetPlayersFromGame(game);
                 foreach (var connectionId in allPlayersInTheGame)

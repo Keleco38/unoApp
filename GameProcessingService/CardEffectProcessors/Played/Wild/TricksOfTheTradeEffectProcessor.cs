@@ -31,36 +31,43 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
             moveParams.PlayerTargeted = automaticallyTriggeredResultMagneticPolarity.MagneticPolaritySelectedPlayer;
             messageToLog = automaticallyTriggeredResultMagneticPolarity.MessageToLog;
 
-            var callerNumberToTrade = random.Next(0, moveParams.PlayerPlayed.Cards.Count < 3 ? moveParams.PlayerPlayed.Cards.Count + 1 : 3);
-            var targetNumberToTrade = random.Next(0, moveParams.PlayerTargeted.Cards.Count < 3 ? moveParams.PlayerTargeted.Cards.Count + 1 : 3);
+
+            var automaticallyTriggeredResultKeepMyHand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KeepMyHand).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KeepMyHandParams = new AutomaticallyTriggeredKeepMyHandParams(new List<Player>() { moveParams.PlayerTargeted, moveParams.PlayerPlayed }, moveParams.TargetedCardColor) });
+            messageToLog = automaticallyTriggeredResultKeepMyHand.MessageToLog;
+
+            if (automaticallyTriggeredResultKeepMyHand.PlayersWithoutKeepMyHand.Count == 2)
+            {
+                var callerNumberToTrade = random.Next(0, moveParams.PlayerPlayed.Cards.Count < 3 ? moveParams.PlayerPlayed.Cards.Count + 1 : 3);
+                var targetNumberToTrade = random.Next(0, moveParams.PlayerTargeted.Cards.Count < 3 ? moveParams.PlayerTargeted.Cards.Count + 1 : 3);
 
 
-            if (callerNumberToTrade == 0)
-            {
-                messageToLog += $"{moveParams.PlayerPlayed.User.Name} didn't give any cards. ";
-            }
-            else
-            {
-                var cardsCallerTraded = moveParams.PlayerPlayed.Cards.GetRange(0, callerNumberToTrade);
-                var cardsCallerTradedString = string.Empty;
-                cardsCallerTraded.ForEach(x => { cardsCallerTradedString += (x.Color + " " + x.Value + ", "); });
-                messageToLog += $"{moveParams.PlayerPlayed.User.Name}  gave {callerNumberToTrade} cards: {cardsCallerTradedString}. ";
-                moveParams.PlayerTargeted.Cards.AddRange(cardsCallerTraded);
-                cardsCallerTraded.ForEach(x => moveParams.PlayerPlayed.Cards.Remove(x));
-            }
+                if (callerNumberToTrade == 0)
+                {
+                    messageToLog += $"{moveParams.PlayerPlayed.User.Name} didn't give any cards. ";
+                }
+                else
+                {
+                    var cardsCallerTraded = moveParams.PlayerPlayed.Cards.GetRange(0, callerNumberToTrade);
+                    var cardsCallerTradedString = string.Empty;
+                    cardsCallerTraded.ForEach(x => { cardsCallerTradedString += (x.Color + " " + x.Value + ", "); });
+                    messageToLog += $"{moveParams.PlayerPlayed.User.Name}  gave {callerNumberToTrade} cards: {cardsCallerTradedString}. ";
+                    moveParams.PlayerTargeted.Cards.AddRange(cardsCallerTraded);
+                    cardsCallerTraded.ForEach(x => moveParams.PlayerPlayed.Cards.Remove(x));
+                }
 
-            if (targetNumberToTrade == 0)
-            {
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't give any cards. ";
-            }
-            else
-            {
-                var cardsTargetTraded = moveParams.PlayerTargeted.Cards.GetRange(0, targetNumberToTrade);
-                var cardsTargetTradedString = string.Empty;
-                cardsTargetTraded.ForEach(x => { cardsTargetTradedString += (x.Color + " " + x.Value + ", "); });
-                messageToLog += $"{moveParams.PlayerTargeted.User.Name} gave {targetNumberToTrade} cards: {cardsTargetTradedString}. ";
-                moveParams.PlayerPlayed.Cards.AddRange(cardsTargetTraded);
-                cardsTargetTraded.ForEach(x => moveParams.PlayerTargeted.Cards.Remove(x));
+                if (targetNumberToTrade == 0)
+                {
+                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} didn't give any cards. ";
+                }
+                else
+                {
+                    var cardsTargetTraded = moveParams.PlayerTargeted.Cards.GetRange(0, targetNumberToTrade);
+                    var cardsTargetTradedString = string.Empty;
+                    cardsTargetTraded.ForEach(x => { cardsTargetTradedString += (x.Color + " " + x.Value + ", "); });
+                    messageToLog += $"{moveParams.PlayerTargeted.User.Name} gave {targetNumberToTrade} cards: {cardsTargetTradedString}. ";
+                    moveParams.PlayerPlayed.Cards.AddRange(cardsTargetTraded);
+                    cardsTargetTraded.ForEach(x => moveParams.PlayerTargeted.Cards.Remove(x));
+                }
             }
 
             messagesToLog.Add(messageToLog);
