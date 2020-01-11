@@ -27,7 +27,7 @@ namespace GameProcessingService.CardEffectProcessors.Played.Wild
 
             if (moveParams.ActivateSpecialCardEffect)
             {
-                messageToLog += "Player activated the special effect. They will discard his hand and draw 7 cards. ";
+                messageToLog += "Player activated the special effect. They will discard their hand and draw 7 cards. ";
 
                 var automaticallyTriggeredResultKeepMyHand = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.KeepMyHand).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { KeepMyHandParams = new AutomaticallyTriggeredKeepMyHandParams(new List<Player>(){moveParams.PlayerPlayed}, moveParams.TargetedCardColor) });
                 messageToLog = automaticallyTriggeredResultKeepMyHand.MessageToLog;
