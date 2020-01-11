@@ -469,11 +469,10 @@ export class HubService {
     this._hubConnection.invoke("CreateGame", gameSetup);
   }
 
-  createTournament(tournamentSetup: TournamentSetup, adminPassword: string) {
+  createTournament(tournamentSetup: TournamentSetup) {
     this._hubConnection.invoke(
       "CreateTournament",
       tournamentSetup,
-      adminPassword
     );
   }
 

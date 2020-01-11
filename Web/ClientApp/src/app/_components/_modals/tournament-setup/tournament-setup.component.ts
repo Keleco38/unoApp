@@ -13,9 +13,6 @@ import { PlayersSetup, GameType, CardValue } from "../../../_models/enums";
   styleUrls: ["./tournament-setup.component.css"]
 })
 export class TournamentSetupComponent implements OnInit {
-  hideAdminPasswordPart = false;
-  adminPassword = "";
-
   private _activeTournament: Tournament;
   tournamentSetup: TournamentSetup;
 
@@ -50,7 +47,6 @@ export class TournamentSetupComponent implements OnInit {
         numberOfStandardDecks: 4
       };
     } else {
-      this.hideAdminPasswordPart = true;
       this.tournamentSetup = this._activeTournament.tournamentSetup;
     }
   }
@@ -63,7 +59,6 @@ export class TournamentSetupComponent implements OnInit {
     if (this._activeTournament === null) {
       this._hubService.createTournament(
         this.tournamentSetup,
-        this.adminPassword
       );
     } else {
       this._hubService.updateTournamentSetup(this.tournamentSetup);

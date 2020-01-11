@@ -180,14 +180,8 @@ namespace Web.Hubs
             await GetAllTournaments();
         }
 
-        public async Task CreateTournament(TournamentSetupDto tournamentSetupDto, string password)
+        public async Task CreateTournament(TournamentSetupDto tournamentSetupDto)
         {
-            if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))
-            {
-                await DisplayToastMessageToUser(Context.ConnectionId, "Unauthorized", "error");
-                return;
-            }
-
             if (string.IsNullOrEmpty(tournamentSetupDto.Name))
             {
                 tournamentSetupDto.Name = "tour.";
@@ -817,7 +811,7 @@ namespace Web.Hubs
                 message = $"{name} has connected to the server.";
                 user = new User(Context.ConnectionId, name);
                 _userRepository.AddUser(user);
-                ChatMessageDto msg = new ChatMessageDto() { CreatedUtc = DateTime.Now, Text = "If you need to create a tournament please contact one of the moderators (discord link in the navbar)", TypeOfMessage = TypeOfMessage.Server, Username = "Server" };
+                ChatMessageDto msg = new ChatMessageDto() { CreatedUtc = DateTime.Now, Text = $"Welcome @{name}! To join our community, click on the community->discord link in the navbar.", TypeOfMessage = TypeOfMessage.Server, Username = "Server" };
                 await Clients.Caller.SendAsync("PostNewMessage", msg, ChatDestination.All);
             }
 
@@ -859,7 +853,7 @@ namespace Web.Hubs
                 if (game.GameSetup.DrawAutoPlay && (cardToDraw.Color == game.LastCardPlayed.Color || (cardToDraw.Value == game.LastCardPlayed.Value && !game.LastCardPlayed.WasWildCard)))
                 {
                     _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
-                    await AddToGameLog(gameId, $"{user.Name} drew and autoplayed a card.");
+                    await AddToGameLog(gameId, $"{user.Name} drew and auto played a card.");
                     await PlayCard(cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty, false, CardValue.ChangeColor);
                     return;
                 }

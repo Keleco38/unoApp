@@ -101,13 +101,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.newMessage == '/tournament') {
-      this.newMessage = '';
-      event.target.children[0].blur();
-      this._modalService.displayTournamentSetupModal();
-      return;
-    }
-
     if (this.newMessage == '/hand' && this._myHand.length > 0) {
       this.newMessage = '';
       event.target.children[0].blur();

@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     activateGSS: GameStorageService,
     activateTSS: TournamentStorageService,
     activateLSS: LobbyStorageService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this._hubService.updateOnReconnect.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
@@ -46,6 +46,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  createTournament() {
+    this._modalService.displayTournamentSetupModal();
   }
 
   createGame() {
