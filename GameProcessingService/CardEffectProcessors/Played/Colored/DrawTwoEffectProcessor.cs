@@ -46,6 +46,8 @@ namespace GameProcessingService.CardEffectProcessors.Played.Colored
 
                 var automaticallyTriggeredResultDeflect = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.Deflect).ProcessCardEffect(game, messageToLog, new AutomaticallyTriggeredParams() { DeflectParams = new AutomaticallyTriggeredDeflectParams(moveParams.PlayerPlayed, moveParams.PlayerTargeted, automaticallyTriggeredResultDoubleDraw.NumberOfCardsToDraw, moveParams.CardPlayed, moveParams.TargetedCardColor) });
                 messageToLog = automaticallyTriggeredResultDeflect.MessageToLog;
+            }else{
+                _gameManager.DrawCard(game, originallyTargetedPlayer, 2, false);
             }
 
 
