@@ -190,5 +190,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._isAlive = false;
+    window.clearTimeout(this._timer);
+    window.clearInterval(this._interval);
   }
 }
