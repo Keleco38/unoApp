@@ -23,10 +23,12 @@ import { UserSettings } from 'src/app/_models/userSettings';
   styleUrls: ['./game.component.css']
 })
 export class GameComponent implements OnInit, OnDestroy {
-  private _timer: number;
-  private _mustCallUno: boolean = false;
   private _isAlive: boolean = true;
+  private _timer: number;
+  private _interval: number;
 
+  timeLeftCallUno: number;
+  mustCallUno: boolean = false;
   isSidebarOpen = false;
   closeOnClickOutside = true;
   currentUser: User;
@@ -46,7 +48,7 @@ export class GameComponent implements OnInit, OnDestroy {
     private _gameStorageService: GameStorageService,
     private _userStorageService: UserStorageService,
     private _playCardService: PlayCardService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.userSettings = this._utilityService.userSettings;
@@ -67,11 +69,16 @@ export class GameComponent implements OnInit, OnDestroy {
     });
 
     this._gameStorageService.mustCallUno.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
-      this._mustCallUno = true;
+      this.mustCallUno = true;
+      this.timeLeftCallUno=2500;
       window.clearTimeout(this._timer);
+      window.clearInterval(this._interval);
+      this._interval = window.setInterval(() => {
+        this.timeLeftCallUno = this.timeLeftCallUno - 10;
+      },10);
       this._timer = window.setTimeout(() => {
         this.callUno(false);
-      }, 2000);
+      }, 2500);
     });
 
     this._userStorageService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
@@ -111,17 +118,19 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   callUno(unoCalled: boolean) {
-    this._mustCallUno = false;
+    this.mustCallUno = false;
+    this.timeLeftCallUno=2500;
     window.clearTimeout(this._timer);
+    window.clearInterval(this._interval);
     this._hubService.checkUnoCall(unoCalled);
-  }
+s  }
 
   seeTeammatesCards() {
     this._hubService.seeTeammatesCards();
   }
 
   playCard(cardPlayed: Card) {
-    if (this._mustCallUno) {
+    if (this.mustCallUno) {
       return;
     }
     this._playCardService.playCard(cardPlayed, this.game, this.currentUser, this.myCards);

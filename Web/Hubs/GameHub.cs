@@ -929,6 +929,7 @@ namespace Web.Hubs
             {
                 _gameManager.DrawCard(game, player, 2, false);
                 await SendMessage($"Player [{player.User.Name}] forgot to call uno! They will draw 2 cards.", TypeOfMessage.Server, ChatDestination.Game, user);
+                await DisplayToastMessageToUser(user.ConnectionId, "You forgot to call uno! Drawing 2 cards...", "error");
                 await UpdateGame(game);
                 await UpdateHands(game);
             }
