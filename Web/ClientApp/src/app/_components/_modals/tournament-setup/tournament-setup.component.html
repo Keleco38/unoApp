@@ -34,7 +34,11 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="gameType" class="col-7 col-form-label">Game type</label>
+          <label for="gameType" class="col-7 col-form-label">Game type
+            <span [placement]="['top', 'auto']" class="text-primary cursor-pointer lead" [container]="'body'" [ngbPopover]="gameTypeBody" [popoverTitle]="gameTypeTitle">
+              &#9432;
+            </span>
+          </label>
           <div class="col-5">
             <select [(ngModel)]="tournamentSetup.gameType" class="form-control form-control-sm" name="gameType" id="gameType">
               <option value="1">Classic</option>
@@ -201,3 +205,28 @@
     </div>
   </div>
 </div>
+
+
+
+
+<ng-template #gameTypeTitle>
+  <p [hidden]="tournamentSetup.gameType!=2"> Special Wild Mode</p>
+  <p [hidden]="tournamentSetup.gameType!=1"> Classic Mode</p>
+</ng-template>
+
+<ng-template #gameTypeBody>
+  <p [hidden]="tournamentSetup.gameType!=2">
+    There are many new cards added to this game. They mostly fall into 4 groups:
+    <br>
+    - Positive cards - Cards that have positive effect on the holder. Can be played anytime.
+    <br>
+    - Negative cards - Cards that have negative effect on the holder. Can be played only under special condition.
+    <br>
+    - Neutral cards - Cards that can have both positive or negative effect, depending on the setup of the game and the cards.
+    <br>
+    - Gambling cards - Cards that relay on the luck, mostly based on rolling a dice.
+  </p>
+  <p [hidden]="tournamentSetup.gameType!=1">
+    Classic uno card game with only 2 wild cards (Wild and draw 4).
+  </p>
+</ng-template>

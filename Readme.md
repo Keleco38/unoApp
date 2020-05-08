@@ -1,8 +1,8 @@
 > Developed with: .net core 3.0 + angular8 + bootstrap 4.1
 
-##### DEMO: http://unoapp.tonymarkoc.com/
+##### DEMO: http://uno-special-edition.com/
 
-##### HELP: http://unoapp.tonymarkoc.com/help
+##### HELP: http://uno-special-edition.com/help
 
 ## Rules
 

@@ -10,7 +10,6 @@ import { FirstTimeLaunchComponent } from '../_components/_modals/first-time-laun
 import { GameSetupComponent } from '../_components/_modals/game-setup/game-setup.component';
 import { PickBannedCardsComponent } from '../_components/_modals/pick-banned-cards/pick-banned-cards.component';
 import { TournamentSetupComponent } from '../_components/_modals/tournament-setup/tournament-setup.component';
-import { ContactFormComponent } from '../_components/_modals/contact-form/contact-form.component';
 import { UserSettingsComponent } from '../_components/_modals/user-settings/user-settings.component';
 import { AdminSectionComponent } from '../_components/_modals/admin-section/admin-section.component';
 import { RenameComponent } from '../_components/_modals/rename/rename.component';
@@ -99,9 +98,6 @@ export class ModalService {
     return userSettingsModal;
   }
 
-  displayContactFormModal() {
-    return this._modalService.open(ContactFormComponent, { backdrop: 'static', keyboard: false });
-  }
 
   displayKickBanPlayerModal(isTournament: boolean, userToKick: User) {
     var kickBanModal = this._modalService.open(KickBanPlayerComponent, { backdrop: 'static', keyboard: false });

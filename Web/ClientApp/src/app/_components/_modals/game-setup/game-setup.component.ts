@@ -1,3 +1,5 @@
+import { ToastrService } from 'ngx-toastr';
+import { UtilityService } from 'src/app/_services/utility.service';
 import { GameStorageService } from './../../../_services/storage-services/game-storage.service';
 import { first } from 'rxjs/operators';
 import { GameType, PlayersSetup, CardValue } from './../../../_models/enums';
@@ -16,7 +18,7 @@ export class GameSetupComponent implements OnInit {
   private _game: Game;
   gameSetup: GameSetup;
 
-  constructor(private _hubService: HubService, private _activeModal: NgbActiveModal, private _gameStorageService: GameStorageService) { }
+  constructor(private _hubService: HubService, private _activeModal: NgbActiveModal, private _gameStorageService: GameStorageService, private _utilityService: UtilityService, private _taostrService: ToastrService) { }
 
   ngOnInit() {
     this._gameStorageService.activeGame.pipe(first()).subscribe((game: Game) => {
@@ -24,23 +26,12 @@ export class GameSetupComponent implements OnInit {
     });
 
     if (this._game === null) {
-      this.gameSetup = {
-        roundsToWin: 2,
-        maxNumberOfPlayers: 6,
-        reverseShouldSkipTurnInTwoPlayers: true,
-        password: '',
-        gameType: GameType.specialWildCards,
-        drawFourDrawTwoShouldSkipTurn: true,
-        bannedCards: [CardValue.swapHands, CardValue.paradigmShift, CardValue.magneticPolarity, CardValue.doubleDraw],
-        matchingCardStealsTurn: true,
-        wildCardCanBePlayedOnlyIfNoOtherOptions: false,
-        playersSetup: PlayersSetup.individual,
-        canSeeTeammatesHandInTeamGame: true,
-        drawAutoPlay: false,
-        spectatorsCanViewHands: true,
-        limitColorChangingCards: false,
-        numberOfStandardDecks: 4
-      };
+      var lastSetup = this._utilityService.getLastGameSetup();
+      if (lastSetup != null) {
+        this.gameSetup = lastSetup;
+      } else {
+        this.restoreDefaults(false);
+      }
     } else {
       this.gameSetup = this._game.gameSetup;
     }
@@ -56,6 +47,34 @@ export class GameSetupComponent implements OnInit {
     } else {
       this._hubService.updateGameSetup(this.gameSetup);
     }
+    this._utilityService.setLastGameSetup(this.gameSetup);
     this._activeModal.close();
+  }
+
+  restoreDefaults(askConfirm: boolean) {
+    if (askConfirm) {
+      var cfr = confirm("Really restore default settings?");
+      if (!cfr)
+        return;
+      this._taostrService.info("Default settings have been restored.")
+    }
+
+    this.gameSetup = {
+      roundsToWin: 2,
+      maxNumberOfPlayers: 6,
+      reverseShouldSkipTurnInTwoPlayers: true,
+      password: '',
+      gameType: GameType.specialWildCards,
+      drawFourDrawTwoShouldSkipTurn: true,
+      bannedCards: [CardValue.swapHands, CardValue.paradigmShift, CardValue.magneticPolarity, CardValue.doubleDraw],
+      matchingCardStealsTurn: true,
+      wildCardCanBePlayedOnlyIfNoOtherOptions: false,
+      playersSetup: PlayersSetup.individual,
+      canSeeTeammatesHandInTeamGame: true,
+      drawAutoPlay: false,
+      spectatorsCanViewHands: true,
+      limitColorChangingCards: false,
+      numberOfStandardDecks: 4
+    };
   }
 }

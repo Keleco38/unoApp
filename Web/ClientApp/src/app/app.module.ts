@@ -16,7 +16,6 @@ import { ConfirmReadyComponent } from './_components/_modals/confirm-ready/confi
 import { FirstTimeLaunchComponent } from './_components/_modals/first-time-launch/first-time-launch.component';
 import { TournamentWinnersComponent } from './_components/tournament-winners/tournament-winners.component';
 import { AdminSectionComponent } from './_components/_modals/admin-section/admin-section.component';
-import { ContactFormComponent } from './_components/_modals/contact-form/contact-form.component';
 import { TournamentSetupComponent } from './_components/_modals/tournament-setup/tournament-setup.component';
 import { TournamentSpectatorsComponent } from './_components/tournament-spectators/tournament-spectators.component';
 import { HttpService } from './_services/http.service';
@@ -116,7 +115,6 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     AvailableTournamentsComponent,
     GameSetupComponent,
     TournamentSetupComponent,
-    ContactFormComponent,
     TournamentWaitingRoomComponent,
     AdminSectionComponent,
     FirstTimeLaunchComponent,
@@ -211,7 +209,6 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     FirstTimeLaunchComponent,
     UserSettingsComponent,
     PickPromiseCardComponent,
-    ContactFormComponent,
     GuessOddEvenNumberComponent,
     GameSetupComponent,
     GameEndedResultComponent,

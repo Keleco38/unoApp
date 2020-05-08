@@ -145,6 +145,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
   updateGameSetup() {
     this._hubService.updateGameSetup(this.activeGame.gameSetup);
+    this._utilityService.setLastGameSetup(this.activeGame.gameSetup);
   }
 
   ngOnDestroy(): void {

@@ -1,3 +1,4 @@
+import { GameSetup } from './../_models/gameSetup';
 import { UserSettings } from './../_models/userSettings';
 import { Injectable, OnInit } from '@angular/core';
 import { KeyValue } from '@angular/common';
@@ -11,7 +12,7 @@ export class UtilityService {
   private _allCards: KeyValue<string, number>[] = [];
   private _sidebarSettings: SidebarSettings = null;
   private _userSettings: UserSettings = null;
-  constructor() {}
+  constructor() { }
 
   get allCards() {
     if (this._allCards.length === 0) {
@@ -51,9 +52,6 @@ export class UtilityService {
           notifyWhenGameStarting: true
         };
       }
-      if (this._userSettings.showEmoji == null) this._userSettings.showEmoji = true;
-      if (this._userSettings.showNewbieTips == null) this._userSettings.showNewbieTips = true;
-      if (this._userSettings.notifyWhenGameStarting == null) this._userSettings.notifyWhenGameStarting = true;
       this.saveUserSettings();
     }
     return this._userSettings;
@@ -80,9 +78,21 @@ export class UtilityService {
       localStorage.setItem('sidebar-settings', JSON.stringify(this._sidebarSettings));
     });
   }
+
   saveUserSettings() {
     setTimeout(() => {
       localStorage.setItem('user-settings', JSON.stringify(this._userSettings));
+    });
+  }
+
+  getLastGameSetup() {
+    var lastGameSetup = JSON.parse(localStorage.getItem('game-setup'));
+    return lastGameSetup;
+  }
+
+  setLastGameSetup(gameSetup: GameSetup) {
+    setTimeout(() => {
+      localStorage.setItem('game-setup', JSON.stringify(gameSetup));
     });
   }
 

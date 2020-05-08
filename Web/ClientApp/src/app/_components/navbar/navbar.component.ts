@@ -1,7 +1,6 @@
 import { ModalService } from 'src/app/_services/modal.service';
 import { UserSettings } from './../../_models/userSettings';
 import { UtilityService } from './../../_services/utility.service';
-import { ContactFormComponent } from './../_modals/contact-form/contact-form.component';
 import { Component, OnInit } from '@angular/core';
 import { HubService } from 'src/app/_services/hub.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -27,9 +26,6 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  openContactModal() {
-    this._modalService.displayContactFormModal();
-  }
 
   openSettings() {
     this._modalService.displayUserSettingsModal();
