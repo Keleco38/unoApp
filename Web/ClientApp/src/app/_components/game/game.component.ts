@@ -123,7 +123,7 @@ export class GameComponent implements OnInit, OnDestroy {
     window.clearTimeout(this._timer);
     window.clearInterval(this._interval);
     this._hubService.checkUnoCall(unoCalled);
-s  }
+ }
 
   seeTeammatesCards() {
     this._hubService.seeTeammatesCards();
