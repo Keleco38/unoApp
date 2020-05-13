@@ -45,6 +45,7 @@
   </div>
   <div class="col-6" id="tournamentSetupInfo">
     <h6 class="text-info">Tournament setup</h6>
+    <p><strong>Name: </strong> {{ activeTournament.tournamentSetup.name | titlecase }}</p>
     <div [hidden]="activeTournament.bannedUsers.length == 0">
       <strong>Banned users: </strong>
       <ul>
@@ -58,24 +59,28 @@
       <strong>Banned cards: </strong>
       <br>
       <span *ngFor="let bannedCard of activeTournament.tournamentSetup.bannedCards" class="badge badge-secondary mx-1">{{ getBannedCardName(bannedCard) | dividePerCapital }}</span>
+      <br>
     </div>
     <p [hidden]="activeTournament.tournamentSetup.bannedCards.length > 0"><strong>Banned cards: </strong> None</p>
-    <p><strong>Name: </strong> {{ activeTournament.tournamentSetup.name | titlecase }}</p>
     <p><strong>Game type: </strong> {{ getGameTypePlaceholder() }}</p>
-    <p [hidden]="activeTournament.tournamentSetup.gameType==1"><strong>Number of standard decks: </strong> {{ activeTournament.tournamentSetup.numberOfStandardDecks }}</p>
     <p><strong>Rounds to win: </strong> {{ activeTournament.tournamentSetup.roundsToWin }}</p>
-    <p><strong>Tournament size: </strong> {{ activeTournament.tournamentSetup.numberOfPlayers }}</p>
-    <p><strong>+2/+4 skipping turn: </strong> {{ activeTournament.tournamentSetup.drawFourDrawTwoShouldSkipTurn }}</p>
-    <p><strong>Reverse skipping turn in 2p: </strong> {{ activeTournament.tournamentSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
-    <p><strong>Matching card steals turn: </strong> {{ activeTournament.tournamentSetup.matchingCardStealsTurn }}</p>
-    <p><strong>Draw auto play: </strong> {{ activeTournament.tournamentSetup.drawAutoPlay }}</p>
-    <p><strong>Spectators can view hands: </strong> {{ activeTournament.tournamentSetup.spectatorsCanViewHands }}</p>
-    <p>
-      <strong>Wild card playable only as last option: </strong>
-      {{ activeTournament.tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}
-    </p>
-    <p [hidden]="activeTournament.tournamentSetup.gameType==1"><strong>Limit color changing cards: </strong> {{ activeTournament.tournamentSetup.limitColorChangingCards }}</p>
     <p><strong>Password set:</strong> {{ activeTournament.tournamentSetup.password.length > 0 }}</p>
+
+    <div class="alert alert-primary cursor-pointer" style="margin-top:20px;" *ngIf="hideAdvancedOptions" (click)="hideAdvancedOptions=false">
+      Show advanced settings &#9660;
+    </div>
+
+    <div [ngbCollapse]="hideAdvancedOptions" [@expandCollapse]="hideAdvancedOptions ? 'closed' : 'open'">
+      <p><strong>Tournament size: </strong> {{ activeTournament.tournamentSetup.numberOfPlayers }}</p>
+      <p><strong>+2/+4 skipping turn: </strong> {{ activeTournament.tournamentSetup.drawFourDrawTwoShouldSkipTurn }}</p>
+      <p><strong>Reverse skipping turn in 2p: </strong> {{ activeTournament.tournamentSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
+      <p><strong>Matching card steals turn: </strong> {{ activeTournament.tournamentSetup.matchingCardStealsTurn }}</p>
+      <p><strong>Draw auto play: </strong> {{ activeTournament.tournamentSetup.drawAutoPlay }}</p>
+      <p><strong>Spectators can view hands: </strong> {{ activeTournament.tournamentSetup.spectatorsCanViewHands }}</p>
+      <p> <strong>Wild card playable only as last option: </strong> {{ activeTournament.tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }} </p>
+      <p [hidden]="activeTournament.tournamentSetup.gameType==1"><strong>Number of standard decks: </strong> {{ activeTournament.tournamentSetup.numberOfStandardDecks }}</p>
+      <p [hidden]="activeTournament.tournamentSetup.gameType==1"><strong>Limit color changing cards: </strong> {{ activeTournament.tournamentSetup.limitColorChangingCards }}</p>
+    </div>
   </div>
 </div>
 

@@ -6,15 +6,25 @@ import { HubService } from "../../../_services/hub.service";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { first } from "rxjs/operators";
 import { PlayersSetup, GameType, CardValue } from "../../../_models/enums";
+import { trigger, state, style, transition, animate } from "@angular/animations";
 
 @Component({
   selector: "app-tournament-setup",
   templateUrl: "./tournament-setup.component.html",
-  styleUrls: ["./tournament-setup.component.css"]
+  styleUrls: ["./tournament-setup.component.css"],
+  animations: [
+    trigger('expandCollapse', [
+                state('open', style({opacity: 1})),
+                state('closed', style({height: 0, opacity: 0})),
+                transition('* => *', [animate('100ms')])
+            ]),
+ ]
 })
 export class TournamentSetupComponent implements OnInit {
   private _activeTournament: Tournament;
+
   tournamentSetup: TournamentSetup;
+  hideAdvancedOptions=true;
 
   constructor(
     private _hubService: HubService,
@@ -32,7 +42,7 @@ export class TournamentSetupComponent implements OnInit {
     if (this._activeTournament === null) {
       this.tournamentSetup = {
         roundsToWin: 5,
-        numberOfPlayers: 8,
+        numberOfPlayers: 32,
         reverseShouldSkipTurnInTwoPlayers: true,
         password: "",
         name: "",

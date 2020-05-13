@@ -6,17 +6,26 @@ import { Game } from './../../../_models/game';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { takeWhile } from 'rxjs/operators';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-game-info',
   templateUrl: './game-info.component.html',
-  styleUrls: ['./game-info.component.css']
+  styleUrls: ['./game-info.component.css'],
+  animations: [
+    trigger('expandCollapse', [
+      state('open', style({ opacity: 1 })),
+      state('closed', style({ height: 0, opacity: 0 })),
+      transition('* => *', [animate('100ms')])
+    ]),
+  ]
 })
 export class GameInfoComponent implements OnInit, OnDestroy {
 
   private _isAlive: boolean=true;
   game: Game;
   gameLog: string[];
+  hideAdvancedOptions = true;
 
   constructor(private _activeModal: NgbActiveModal,private _gameStorageService:GameStorageService, private _hubService: HubService,private _utilityService:UtilityService) {}
 

@@ -15,11 +15,19 @@ import { ToastrService } from 'ngx-toastr';
 import { PickBannedCardsComponent } from '../_modals/pick-banned-cards/pick-banned-cards.component';
 import { UserSettings } from 'src/app/_models/userSettings';
 import { ModalService } from 'src/app/_services/modal.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-tournament-waiting-room',
   templateUrl: './tournament-waiting-room.component.html',
-  styleUrls: ['./tournament-waiting-room.component.css']
+  styleUrls: ['./tournament-waiting-room.component.css'],
+  animations: [
+    trigger('expandCollapse', [
+      state('open', style({ opacity: 1 })),
+      state('closed', style({ height: 0, opacity: 0 })),
+      transition('* => *', [animate('100ms')])
+    ]),
+  ]
 })
 export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
   private _isAlive: boolean = true;
@@ -27,6 +35,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
   activeTournament: Tournament;
   sidebarSettings: SidebarSettings;
   currentUser: User;
+  hideAdvancedOptions = true;
 
   constructor(
     private _hubService: HubService,

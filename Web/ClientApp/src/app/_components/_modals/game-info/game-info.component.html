@@ -5,51 +5,68 @@
   </button>
 </div>
 <div class="modal-body">
-  <div class="col-12">
-    <h4 class="text-primary">Game setup</h4>
-    <div *ngIf="game.gameSetup.bannedCards.length > 0">
-      <strong>Banned cards: </strong>
-      <ul>
-        <li *ngFor="let bannedCard of game.gameSetup.bannedCards">{{ getBannedCardName(bannedCard) | dividePerCapital }}</li>
-      </ul>
+  <div class="row">
+    <div class="col-12">
+      <h4 class="text-primary">Players info</h4>
+      <table class="table">
+        <thead>
+          <th>Name</th>
+          <th [hidden]="game.gameSetup.playersSetup != 2">Team</th>
+          <th>Cards Left</th>
+          <th>Rounds Won</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let player of game.players">
+            <td>{{ player.user.name }}</td>
+            <td [hidden]="game.gameSetup.playersSetup != 2">{{ player.teamNumber }}</td>
+            <td>{{ player.numberOfCards }}</td>
+            <td>{{ player.roundsWonCount }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <p *ngIf="game.gameSetup.bannedCards.length == 0"><strong>Banned cards: </strong> None</p>
-    <p><strong>Player setup: </strong> {{ getPlayerSetupPlaceholder() }}</p>
-    <p><strong>Game type: </strong> {{ getGameTypePlaceholder() }}</p>
-    <p [hidden]="game.gameSetup.gameType==1"><strong>Number of standard decks: </strong> {{ game.gameSetup.numberOfStandardDecks }}</p>
-    <p><strong>Rounds to win: </strong> {{ game.gameSetup.roundsToWin }}</p>
-    <p><strong>Max number of players: </strong> {{ game.gameSetup.maxNumberOfPlayers }}</p>
-    <p><strong>+2/+4 skipping turn: </strong> {{ game.gameSetup.drawFourDrawTwoShouldSkipTurn }}</p>
-    <p><strong>Matching card steals turn: </strong> {{ game.gameSetup.matchingCardStealsTurn }}</p>
-    <p><strong>Reverse skipping turn in 2p: </strong> {{ game.gameSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
-    <p><strong>Draw autoplay: </strong> {{ game.gameSetup.drawAutoPlay }}</p>
-    <p [hidden]="game.gameSetup.playersSetup != 2">
-      <strong>Can see teammate's cards: </strong> {{ game.gameSetup.canSeeTeammatesHandInTeamGame }}
-    </p>
-    <p><strong>Spectators can view hands: </strong> {{ game.gameSetup.spectatorsCanViewHands }}</p>
-    <p><strong>Wild card playable only as last option: </strong> {{ game.gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}</p>
-    <p [hidden]="game.gameSetup.gameType==1"><strong>Limit color changing cards: </strong> {{ game.gameSetup.limitColorChangingCards }}</p>
-    <p><strong>Password set:</strong> {{ game.gameSetup.password.length > 0 }}</p>
-    <h4 class="text-primary">Players info</h4>
-    <table class="table">
-      <thead>
-        <th>Name</th>
-        <th [hidden]="game.gameSetup.playersSetup != 2">Team</th>
-        <th>Cards Left</th>
-        <th>Rounds Won</th>
-      </thead>
-      <tbody>
-        <tr *ngFor="let player of game.players">
-          <td>{{ player.user.name }}</td>
-          <td [hidden]="game.gameSetup.playersSetup != 2">{{ player.teamNumber }}</td>
-          <td>{{ player.numberOfCards }}</td>
-          <td>{{ player.roundsWonCount }}</td>
-        </tr>
-      </tbody>
-    </table>
   </div>
-  <div class="col-12">
-    <h4 class="text-primary">Log</h4>
-    <p *ngFor="let log of gameLog">*{{ log }}</p>
+  <div class="row">
+    <div class="col-12">
+      <hr>
+    </div>
+    <div class="col-12">
+      <h4 class="text-primary">Game setup</h4>
+      <div [hidden]="game.gameSetup.bannedCards.length == 0">
+        <strong>Banned cards: </strong>
+        <br>
+        <span *ngFor="let bannedCard of game.gameSetup.bannedCards" class="badge badge-secondary mx-1">{{ getBannedCardName(bannedCard) | dividePerCapital }}</span>
+        <br>
+      </div>
+      <p [hidden]="game.gameSetup.bannedCards.length > 0"><strong>Banned cards: </strong> None</p>
+      <p><strong>Game type: </strong> {{ getGameTypePlaceholder() }}</p>
+      <p><strong>Player setup: </strong> {{ getPlayerSetupPlaceholder() }}</p>
+      <p><strong>Rounds to win: </strong> {{ game.gameSetup.roundsToWin }}</p>
+      <p><strong>Password set:</strong> {{ game.gameSetup.password.length > 0 }}</p>
+      <div class="alert alert-primary cursor-pointer" style="margin-top:20px;" *ngIf="hideAdvancedOptions" (click)="hideAdvancedOptions=false">
+        Show advanced settings &#9660;
+      </div>
+      <div [ngbCollapse]="hideAdvancedOptions" [@expandCollapse]="hideAdvancedOptions ? 'closed' : 'open'">
+        <p><strong>Max number of players: </strong> {{ game.gameSetup.maxNumberOfPlayers }}</p>
+        <p><strong>+2/+4 skipping turn: </strong> {{ game.gameSetup.drawFourDrawTwoShouldSkipTurn }}</p>
+        <p><strong>Reverse skipping turn in 2p: </strong> {{ game.gameSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
+        <p><strong>Matching card steals turn: </strong> {{ game.gameSetup.matchingCardStealsTurn }}</p>
+        <p><strong>Draw autoplay: </strong> {{ game.gameSetup.drawAutoPlay }}</p>
+        <p><strong>Spectators can view hands: </strong> {{ game.gameSetup.spectatorsCanViewHands }}</p>
+        <p><strong>Wild card playable only as last option: </strong> {{ game.gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}</p>
+        <p [hidden]="game.gameSetup.playersSetup != 2"><strong>Can see teammate's cards: </strong> {{ game.gameSetup.canSeeTeammatesHandInTeamGame }}</p>
+        <p [hidden]="game.gameSetup.gameType==1"><strong>Number of standard decks: </strong> {{ game.gameSetup.numberOfStandardDecks }}</p>
+        <p [hidden]="game.gameSetup.gameType==1"><strong>Limit color changing cards: </strong> {{ game.gameSetup.limitColorChangingCards }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <hr>
+    </div>
+    <div class="col-12">
+      <h4 class="text-primary">Log</h4>
+      <p *ngFor="let log of gameLog">*{{ log }}</p>
+    </div>
   </div>
 </div>

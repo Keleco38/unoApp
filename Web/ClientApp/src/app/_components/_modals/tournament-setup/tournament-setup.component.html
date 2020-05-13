@@ -7,29 +7,12 @@
 <div class="modal-body">
   <div class="row">
     <div class="col-12">
-      <form
-        #tournamentSetupForm="ngForm"
-        (ngSubmit)="tournamentSetupForm.form.valid && confirm()"
-        id="tournamentSetupForm"
-        name="tournamentSetupForm"
-        novalidate
-      >
+      <form #tournamentSetupForm="ngForm" (ngSubmit)="tournamentSetupForm.form.valid && confirm()" id="tournamentSetupForm" name="tournamentSetupForm" novalidate>
         <div class="form-group row">
           <label for="text" class="col-7 col-form-label">Name</label>
           <div class="col-5">
-            <input
-              type="text"
-              #name="ngModel"
-              required
-              [ngClass]="{ 'is-invalid': tournamentSetupForm.submitted && name.invalid }"
-              [(ngModel)]="tournamentSetup.name"
-              class="form-control"
-              autocomplete="off"
-              name="name"
-              [maxlength]="25"
-              id="name"
-              placeholder="(max 25 chars)"
-            />
+            <input type="text" #name="ngModel" required [ngClass]="{ 'is-invalid': tournamentSetupForm.submitted && name.invalid }" [(ngModel)]="tournamentSetup.name" class="form-control"
+              autocomplete="off" name="name" [maxlength]="25" id="name" placeholder="(max 25 chars)" />
             <div class="invalid-feedback">This field cannot be empty. (max 25).</div>
           </div>
         </div>
@@ -46,44 +29,10 @@
             </select>
           </div>
         </div>
-        <div class="form-group row" [hidden]="tournamentSetup.gameType==1">
-          <label for="numberOfStandardDecks" class="col-7 col-form-label">No. of standard uno decks</label>
-          <div class="col-5">
-            <select [(ngModel)]="tournamentSetup.numberOfStandardDecks" class="form-control form-control-sm" name="numberOfStandardDecks" id="numberOfStandardDecks">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="maxNumberOfPlayers" class="col-7 col-form-label">Tournament size</label>
-          <div class="col-5">
-            <select
-              [(ngModel)]="tournamentSetup.numberOfPlayers"
-              name="maxNumberOfPlayers"
-              class="form-control form-control-sm"
-              id="maxNumberOfPlayers"
-            >
-              <option value="4">4</option>
-              <option value="8">8</option>
-              <option value="16">16</option>
-              <option value="32">32</option>
-            </select>
-          </div>
-        </div>
         <div class="form-group row">
           <label for="playUntil" class="col-7 col-form-label">Rounds to win</label>
           <div class="col-5">
-            <select
-              [(ngModel)]="tournamentSetup.roundsToWin"
-              name="playUntil"
-              class="form-control form-control-sm"
-              name="playUntil"
-              id="playUntil"
-            >
+            <select [(ngModel)]="tournamentSetup.roundsToWin" name="playUntil" class="form-control form-control-sm" name="playUntil" id="playUntil">
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -97,102 +46,83 @@
         <div class="form-group row">
           <label for="password" class="col-7 col-form-label">Password</label>
           <div class="col-5">
-            <input
-              type="password"
-              [(ngModel)]="tournamentSetup.password"
-              class="form-control"
-              autocomplete="off"
-              name="password"
-              id="password"
-              placeholder="(optional)"
-            />
+            <input type="password" [(ngModel)]="tournamentSetup.password" class="form-control" autocomplete="off" name="password" id="password" placeholder="(optional)" />
           </div>
         </div>
-        <div class="form-group row">
-          <label for="name" for="drawTwoFourShouldSkipTurn" class="col-8">Draw two/four skips:</label>
-          <div class="col-4 text-center">
-            <ui-switch
-              class="form-check-input"
-              name="drawTwoFourShouldSkipTurn"
-              size="small"
-              type="checkbox"
-              [(ngModel)]="tournamentSetup.drawFourDrawTwoShouldSkipTurn"
-              id="drawTwoFourShouldSkipTurn"
-            ></ui-switch>
-          </div>
+
+        <div class="alert alert-primary cursor-pointer" style="margin-top:20px;" *ngIf="hideAdvancedOptions" (click)="hideAdvancedOptions=false">
+          Show advanced settings &#9660;
         </div>
-        <div class="form-group row">
-          <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Reverse skips in 2 players:</label>
-          <div class="col-4 text-center">
-            <ui-switch
-              class="form-check-input"
-              size="small"
-              [(ngModel)]="tournamentSetup.reverseShouldSkipTurnInTwoPlayers"
-              name="reverseShouldSkipTurnInTwoPlayers"
-              id="reverseShouldSkipTurnInTwoPlayers"
-            ></ui-switch>
+
+        <div [ngbCollapse]="hideAdvancedOptions" [@expandCollapse]="hideAdvancedOptions ? 'closed' : 'open'">
+          <hr>
+          <div class="form-group row">
+            <label for="maxNumberOfPlayers" class="col-7 col-form-label">Tournament size</label>
+            <div class="col-5">
+              <select [(ngModel)]="tournamentSetup.numberOfPlayers" name="maxNumberOfPlayers" class="form-control form-control-sm" id="maxNumberOfPlayers">
+                <option value="4">4</option>
+                <option value="8">8</option>
+                <option value="16">16</option>
+                <option value="32">32</option>
+              </select>
+            </div>
           </div>
-        </div>
-        <div class="form-group row">
-          <label for="name" for="drawAutoPlay" class="col-8">Draw auto play:</label>
-          <div class="col-4 text-center">
-            <ui-switch
-              class="form-check-input"
-              size="small"
-              [(ngModel)]="tournamentSetup.drawAutoPlay"
-              name="drawAutoPlay"
-              id="drawAutoPlay"
-            ></ui-switch>
+          <div class="form-group row" [hidden]="tournamentSetup.gameType==1">
+            <label for="numberOfStandardDecks" class="col-7 col-form-label">No. of standard uno decks</label>
+            <div class="col-5">
+              <select [(ngModel)]="tournamentSetup.numberOfStandardDecks" class="form-control form-control-sm" name="numberOfStandardDecks" id="numberOfStandardDecks">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
           </div>
-        </div>
-        <div class="form-group row">
-          <label for="name" for="spectatorsCanViewHands" class="col-8">Spectator can view hands:</label>
-          <div class="col-4 text-center">
-            <ui-switch
-              class="form-check-input"
-              size="small"
-              [(ngModel)]="tournamentSetup.spectatorsCanViewHands"
-              name="spectatorsCanViewHands"
-              id="spectatorsCanViewHands"
-            ></ui-switch>
+          <div class="form-group row">
+            <label for="name" for="drawTwoFourShouldSkipTurn" class="col-8">Draw two/four skips:</label>
+            <div class="col-4 text-center">
+              <ui-switch class="form-check-input" name="drawTwoFourShouldSkipTurn" size="small" type="checkbox" [(ngModel)]="tournamentSetup.drawFourDrawTwoShouldSkipTurn"
+                id="drawTwoFourShouldSkipTurn"></ui-switch>
+            </div>
           </div>
-        </div>
-        <div class="form-group row">
-          <label for="name" for="matchingCardStealsTurn" class="col-8">Matching card steals turn:</label>
-          <div class="col-4 text-center">
-            <ui-switch
-              class="form-check-input"
-              size="small"
-              [(ngModel)]="tournamentSetup.matchingCardStealsTurn"
-              name="matchingCardStealsTurn"
-              id="matchingCardStealsTurn"
-            ></ui-switch>
+          <div class="form-group row">
+            <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Reverse skips in 2 players:</label>
+            <div class="col-4 text-center">
+              <ui-switch class="form-check-input" size="small" [(ngModel)]="tournamentSetup.reverseShouldSkipTurnInTwoPlayers" name="reverseShouldSkipTurnInTwoPlayers"
+                id="reverseShouldSkipTurnInTwoPlayers"></ui-switch>
+            </div>
           </div>
-        </div>
-        <div class="form-group row">
-          <label for="name" for="wildCardCanBePlayedOnlyIfNoOtherOptions" class="col-8"
-            >Wilds playable only as must:</label
-          >
-          <div class="col-4 text-center">
-            <ui-switch
-              class="form-check-input"
-              size="small"
-              [(ngModel)]="tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions"
-              name="wildCardCanBePlayedOnlyIfNoOtherOptions"
-              id="wildCardCanBePlayedOnlyIfNoOtherOptions"
-            ></ui-switch>
+          <div class="form-group row">
+            <label for="name" for="drawAutoPlay" class="col-8">Draw auto play:</label>
+            <div class="col-4 text-center">
+              <ui-switch class="form-check-input" size="small" [(ngModel)]="tournamentSetup.drawAutoPlay" name="drawAutoPlay" id="drawAutoPlay"></ui-switch>
+            </div>
           </div>
-        </div>
-        <div class="form-group row" [hidden]="tournamentSetup.gameType==1">
-          <label for="name" for="limitColorChangingCards" class="col-8">Limit color changing cards:</label>
-          <div class="col-4 text-center">
-            <ui-switch
-              class="form-check-input"
-              size="small"
-              [(ngModel)]="tournamentSetup.limitColorChangingCards"
-              name="limitColorChangingCards"
-              id="limitColorChangingCards"
-            ></ui-switch>
+          <div class="form-group row">
+            <label for="name" for="spectatorsCanViewHands" class="col-8">Spectator can view hands:</label>
+            <div class="col-4 text-center">
+              <ui-switch class="form-check-input" size="small" [(ngModel)]="tournamentSetup.spectatorsCanViewHands" name="spectatorsCanViewHands" id="spectatorsCanViewHands"></ui-switch>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="name" for="matchingCardStealsTurn" class="col-8">Matching card steals turn:</label>
+            <div class="col-4 text-center">
+              <ui-switch class="form-check-input" size="small" [(ngModel)]="tournamentSetup.matchingCardStealsTurn" name="matchingCardStealsTurn" id="matchingCardStealsTurn"></ui-switch>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="name" for="wildCardCanBePlayedOnlyIfNoOtherOptions" class="col-8">Wilds playable only as must:</label>
+            <div class="col-4 text-center">
+              <ui-switch class="form-check-input" size="small" [(ngModel)]="tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions" name="wildCardCanBePlayedOnlyIfNoOtherOptions"
+                id="wildCardCanBePlayedOnlyIfNoOtherOptions"></ui-switch>
+            </div>
+          </div>
+          <div class="form-group row" [hidden]="tournamentSetup.gameType==1">
+            <label for="name" for="limitColorChangingCards" class="col-8">Limit color changing cards:</label>
+            <div class="col-4 text-center">
+              <ui-switch class="form-check-input" size="small" [(ngModel)]="tournamentSetup.limitColorChangingCards" name="limitColorChangingCards" id="limitColorChangingCards"></ui-switch>
+            </div>
           </div>
         </div>
       </form>
