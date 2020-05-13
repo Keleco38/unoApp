@@ -16,17 +16,17 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   styleUrls: ['./game-setup.component.css'],
   animations: [
     trigger('expandCollapse', [
-                state('open', style({opacity: 1})),
-                state('closed', style({height: 0, opacity: 0})),
-                transition('* => *', [animate('100ms')])
-            ]),
- ]
+      state('open', style({ opacity: 1 })),
+      state('closed', style({ height: 0, opacity: 0 })),
+      transition('* => *', [animate('100ms')])
+    ]),
+  ]
 })
 export class GameSetupComponent implements OnInit {
   private _game: Game;
 
   gameSetup: GameSetup;
-  hideAdvancedOptions=true;
+  hideAdvancedOptions = true;
 
   constructor(private _hubService: HubService, private _activeModal: NgbActiveModal, private _gameStorageService: GameStorageService, private _utilityService: UtilityService, private _taostrService: ToastrService) { }
 
@@ -38,7 +38,13 @@ export class GameSetupComponent implements OnInit {
     if (this._game === null) {
       var lastSetup = this._utilityService.getLastGameSetup();
       if (lastSetup != null) {
-        this.gameSetup = lastSetup;
+        var shouldRestoreDefaults = this._utilityService.shouldRestoreGameSetupDefaultsDueToNewerVersion();
+        if (shouldRestoreDefaults) {
+          this.restoreDefaults(false);
+        } else {
+          this.gameSetup = lastSetup;
+          this.gameSetup.password="";
+        }
       } else {
         this.restoreDefaults(false);
       }

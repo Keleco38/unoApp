@@ -12,6 +12,7 @@ export class UtilityService {
   private _allCards: KeyValue<string, number>[] = [];
   private _sidebarSettings: SidebarSettings = null;
   private _userSettings: UserSettings = null;
+  private _cachedGameSetupVersion = 1;
   constructor() { }
 
   get allCards() {
@@ -90,10 +91,18 @@ export class UtilityService {
     return lastGameSetup;
   }
 
+  shouldRestoreGameSetupDefaultsDueToNewerVersion() {
+    var version = JSON.parse(localStorage.getItem('cached-game-setup-version'));
+    if (version == null || version < this._cachedGameSetupVersion)
+      return true;
+    return false;
+  }
+
   setLastGameSetup(gameSetup: GameSetup) {
     setTimeout(() => {
       localStorage.setItem('game-setup', JSON.stringify(gameSetup));
-    });
+      localStorage.setItem('cached-game-setup-version', JSON.stringify(this._cachedGameSetupVersion));
+  });
   }
 
   updateTheme() {
