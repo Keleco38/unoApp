@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -369,6 +371,31 @@ namespace Web.Hubs
             }
 
         }
+
+        public async Task AdminScanForDuplicatedIps(string password)
+        {
+            if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))
+            {
+                await DisplayToastMessageToUser(Context.ConnectionId, "Unauthorized", "error");
+                return;
+            }
+
+            var groupedByHashedIp = _userRepository.GetAllUsers().GroupBy(x => x.IPHash);
+
+
+            var i = 0;
+
+            foreach (var group in groupedByHashedIp)
+            {
+                var membersInThisGroup = group.ToList().Select(x => x.Name);
+                ChatMessageDto msg = new ChatMessageDto() { CreatedUtc = DateTime.Now, Text = $"Group {++i} has members: {string.Join(',', membersInThisGroup)}", TypeOfMessage = TypeOfMessage.Server, Username = "Server" };
+                await Clients.Caller.SendAsync("PostNewMessage", msg, ChatDestination.All);
+            }
+
+        }
+
+
+
         public async Task AdminKickUser(string name, string password)
         {
             if (string.IsNullOrEmpty(password) || !string.Equals(password, _appSettings.AdminPassword))
@@ -809,7 +836,10 @@ namespace Web.Hubs
             else
             {
                 message = $"{name} has connected to the server.";
-                user = new User(Context.ConnectionId, name);
+
+                var hashedIp = Context.GetHttpContext().Connection.RemoteIpAddress.GetHashCode();
+
+                user = new User(Context.ConnectionId, name, hashedIp);
                 _userRepository.AddUser(user);
                 ChatMessageDto msg = new ChatMessageDto() { CreatedUtc = DateTime.Now, Text = $"Welcome @{name}! To join our community, click on the community->discord link in the navbar.", TypeOfMessage = TypeOfMessage.Server, Username = "Server" };
                 await Clients.Caller.SendAsync("PostNewMessage", msg, ChatDestination.All);

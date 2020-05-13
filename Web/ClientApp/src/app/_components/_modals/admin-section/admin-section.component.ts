@@ -18,8 +18,8 @@ import { StickyTournament } from 'src/app/_models/stickyTournament';
 })
 export class AdminSectionComponent implements OnInit, OnDestroy {
   private _isAlive = true;
-  stickyTournamentUrl:'';
-  stickyTournamentName:'';
+  stickyTournamentUrl: '';
+  stickyTournamentName: '';
   password: string;
   onlineUsers: User[];
   availableTournaments: TournamentList[];
@@ -65,6 +65,13 @@ export class AdminSectionComponent implements OnInit, OnDestroy {
     }
   }
 
+  scanForDuplicatedIps() {
+    var cmfr = confirm(`Really scan for duplcated ips?`);
+    if (cmfr) {
+      this._hubService.scanForDuplicatedIps(this.password);
+    }
+  }
+
   forceWinGame(player: Player) {
     var cmfr = confirm(`Really force win for the player ${player.user.name}?`);
     if (cmfr) {
@@ -97,8 +104,8 @@ export class AdminSectionComponent implements OnInit, OnDestroy {
     var cmfr = confirm(`Really create sticky tournament ${this.stickyTournamentName}?`);
     if (cmfr && this.stickyTournamentName && this.stickyTournamentUrl) {
       this._hubService.adminEditStickyTournament(this.password, this.stickyTournamentName, this.stickyTournamentUrl, false);
-      this.stickyTournamentName='';
-      this.stickyTournamentUrl='';
+      this.stickyTournamentName = '';
+      this.stickyTournamentUrl = '';
     }
   }
 

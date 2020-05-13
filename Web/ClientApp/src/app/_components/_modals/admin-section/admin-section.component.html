@@ -17,17 +17,35 @@
     </div>
   </div>
   <div class="row" [hidden]="!password">
-    <div class="col-6">
-      <h5 class="text-primary">Buzz all!</h5>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-6">
+          <h5 class="text-primary">Buzz all!</h5>
+        </div>
+        <div class="col-6">
+          <button (click)="buzzAll()" class="btn btn-block btn-sm btn-outline-primary">Ding!</button>
+        </div>
+      </div>
     </div>
-    <div class="col-6">
-      <button (click)="buzzAll()" class="btn btn-block btn-sm btn-outline-primary">Ding!</button>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-6">
+          <h5 class="text-primary">Sticky tournament!</h5>
+        </div>
+        <div class="col-6">
+          <button class="btn btn-block btn-sm btn-outline-primary" [ngbPopover]="popContent" autoClose="outside" placement="left">Add new!</button>
+        </div>
+      </div>
     </div>
-    <div class="col-6">
-      <h5 class="text-primary">Sticky tournament!</h5>
-    </div>
-    <div class="col-6">
-      <button class="btn btn-block btn-sm btn-outline-primary" [ngbPopover]="popContent" autoClose="outside" placement="left">Add new!</button>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-6">
+          <h5 class="text-primary">Scan for duplicated IPs!</h5>
+        </div>
+        <div class="col-6">
+          <button class="btn btn-block btn-sm btn-outline-primary" (click)="scanForDuplicatedIps()">Scan!</button>
+        </div>
+      </div>
     </div>
     <div class="col-12">
       <hr>

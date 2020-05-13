@@ -372,6 +372,11 @@ export class HubService {
   adminBuzzAll(password: string) {
     this._hubConnection.invoke("AdminBuzzAll", password);
   }
+
+  scanForDuplicatedIps(password: string) {
+    this._hubConnection.invoke("AdminScanForDuplicatedIps", password);
+  }
+
   adminForceWinGame(password: string, gameId: string, playerId: string) {
     this._hubConnection.invoke("AdminForceWinGame", password, gameId, playerId);
   }
