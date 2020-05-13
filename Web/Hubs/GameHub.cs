@@ -837,7 +837,18 @@ namespace Web.Hubs
             {
                 message = $"{name} has connected to the server.";
 
-                var hashedIp = Context.GetHttpContext().Connection.RemoteIpAddress.GetHashCode();
+                string hashedIp;
+
+                using (SHA256 sha256Hash = SHA256.Create())
+                {
+                    byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(Context.GetHttpContext().Connection.RemoteIpAddress.ToString()));
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < bytes.Length; i++)
+                    {
+                        builder.Append(bytes[i].ToString("x2"));
+                    }
+                    hashedIp = builder.ToString();
+                }
 
                 user = new User(Context.ConnectionId, name, hashedIp);
                 _userRepository.AddUser(user);
