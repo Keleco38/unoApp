@@ -64,6 +64,8 @@ namespace GameProcessingService.CoreManagers
             } while (lastCardDrew.Color == CardColor.Wild);
             game.LastCardPlayed = new LastCardPlayed(lastCardDrew.Color, lastCardDrew.Value, lastCardDrew.ImageUrl, string.Empty, false, lastCardDrew);
             game.Players.ForEach(x => x.Cards = game.Deck.Draw(7));
+            game.DrawAutoPlayPlayer = null;
+            game.DrawAutoPlayCard = null;
         }
 
         public void DrawCard(Game game, Player player, int count, bool normalDraw)

@@ -1,3 +1,4 @@
+import { DrawAutoPlayComponent } from './_components/_modals/DrawAutoPlay/DrawAutoPlay.component';
 import { StickyTournamentsComponent } from './_components/sticky-tournaments/sticky-tournaments.component';
 import { ActivateSpecialEffectComponent } from './_components/_modals/activate-special-effect/activate-special-effect.component';
 import { PickWildCardComponent } from './_components/_modals/pick-wild-card/pick-wild-card.component';
@@ -129,7 +130,8 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     TournamentComponent,
     PickAnyCardComponent,
     PickWildCardComponent,
-    ActivateSpecialEffectComponent
+    ActivateSpecialEffectComponent,
+    DrawAutoPlayComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -221,7 +223,8 @@ import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
     AdminSectionComponent,
     PickAnyCardComponent,
     PickWildCardComponent,
-    ActivateSpecialEffectComponent
+    ActivateSpecialEffectComponent,
+    DrawAutoPlayComponent
   ]
 })
 export class AppModule {}

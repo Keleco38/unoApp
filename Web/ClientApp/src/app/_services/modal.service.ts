@@ -1,3 +1,4 @@
+import { DrawAutoPlayComponent } from './../_components/_modals/DrawAutoPlay/DrawAutoPlay.component';
 import { ActivateSpecialEffectComponent } from './../_components/_modals/activate-special-effect/activate-special-effect.component';
 import { PickWildCardComponent } from './../_components/_modals/pick-wild-card/pick-wild-card.component';
 import { PickAnyCardComponent } from './../_components/_modals/pick-any-card/pick-any-card.component';
@@ -76,6 +77,13 @@ export class ModalService {
 
   displayFirstTimeLaunchedModal() {
     return this._modalService.open(FirstTimeLaunchComponent, { backdrop: 'static', keyboard: false });
+  }
+
+  displayDrawAutoPlayModal(card: Card, invalidMove:boolean) {
+    var mdl = this._modalService.open(DrawAutoPlayComponent, { backdrop: 'static', keyboard: false });
+    mdl.componentInstance.card = card;
+    mdl.componentInstance.invalidMove = invalidMove;
+    return mdl;
   }
 
   displayReadyPhasePlayersModal(isTournament: boolean) {

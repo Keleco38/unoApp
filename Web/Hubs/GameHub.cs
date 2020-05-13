@@ -822,6 +822,33 @@ namespace Web.Hubs
             await GetAllStickyTournaments();
         }
 
+
+        public async Task CancelDrawAutoPlay()
+        {
+            var user = GetCurrentUser();
+            var gameId = user.ActiveGameId;
+            var game = _gameRepository.GetGameByGameId(gameId);
+            if (game.GameEnded || game.PlayerToPlay.User.Name != user.Name)
+            {
+                return;
+            }
+
+            if (game.DrawAutoPlayPlayer == null)
+                return;
+
+            if (game.DrawAutoPlayPlayer.User.Name == user.Name)
+            {
+                await AddToGameLog(gameId, $"{user.Name} drew a card (normal draw)");
+                game.PlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
+
+                game.DrawAutoPlayPlayer = null;
+                game.DrawAutoPlayCard = null;
+
+                await UpdateGame(game);
+                await UpdateHands(game);
+            }
+        }
+
         public async Task DrawCard()
         {
             var user = GetCurrentUser();
@@ -850,11 +877,14 @@ namespace Web.Hubs
 
                 var cardToDraw = game.Deck.Cards.Take(1).First();
 
-                if (game.GameSetup.DrawAutoPlay && (cardToDraw.Color == game.LastCardPlayed.Color || (cardToDraw.Value == game.LastCardPlayed.Value && !game.LastCardPlayed.WasWildCard)))
+                if (game.GameSetup.DrawAutoPlay && (cardToDraw.Color == game.LastCardPlayed.Color || cardToDraw.Value == game.LastCardPlayed.Value || cardToDraw.Color == CardColor.Wild))
                 {
                     _gameManager.DrawCard(game, game.PlayerToPlay, 1, false);
-                    await AddToGameLog(gameId, $"{user.Name} drew and auto played a card.");
-                    await PlayCard(cardToDraw.Id, cardToDraw.Color, string.Empty, string.Empty, null, null, 0, null, string.Empty, string.Empty, false, CardValue.ChangeColor);
+                    game.DrawAutoPlayPlayer = game.PlayerToPlay;
+                    game.DrawAutoPlayCard = cardToDraw;
+                    await UpdateGame(game);
+                    await UpdateHands(game);
+                    await Clients.Caller.SendAsync("DrawAutoPlayActivated", _mapper.Map<CardDto>(cardToDraw));
                     return;
                 }
 
@@ -964,6 +994,16 @@ namespace Web.Hubs
             if (game.GameEnded || !game.GameStarted)
                 return;
             var player = game.Players.First(x => x.User.Name == user.Name);
+
+            if (game.DrawAutoPlayPlayer == player)
+            {
+                if (game.DrawAutoPlayCard.Id != cardPlayedId)
+                {
+                    return;
+                }
+                await AddToGameLog(gameId, $"{user.Name} drew and auto played a card.");
+            }
+
             var moveResult = _playCardManager.PlayCard(game, player, cardPlayedId, targetedCardColor, playerTargetedId, cardToDigId, duelNumbers, charityCardsIds, blackjackNumber, numbersToDiscard, cardPromisedToDiscardId, oddOrEvenGuess, targetedCardValue, activateSpecialCardEffect);
             if (moveResult == null)
             {
@@ -1276,7 +1316,7 @@ namespace Web.Hubs
                         break;
                     case "kiss":
                         buzzTypeStringForChat = "kissed";
-                        break;  
+                        break;
                 }
                 return new ChatMessageIntentionResult() { ChatMessageIntention = ChatMessageIntention.Buzz, TargetedUsername = targetedUsername, BuzzType = buzzType, BuzzTypeStringForChat = buzzTypeStringForChat };
             }

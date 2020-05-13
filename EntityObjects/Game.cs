@@ -24,13 +24,16 @@ namespace EntityObjects
         public LastCardPlayed LastCardPlayed { get; set; }
         public Player PlayerToPlay { get; set; }
         public bool GameStarted { get; set; }
-        public Dictionary<Player,int> GreedAffectedPlayers { get; set; }
+        public Dictionary<Player, int> GreedAffectedPlayers { get; set; }
         public int SilenceTurnsRemaining { get; set; }
         public DateTime ReadyPhaseExpireUtc { get; set; }
         public List<string> ReadyPlayersLeft { get; set; }
         public bool RoundEnded { get; set; }
         public bool GameEnded { get; set; }
         public List<User> BannedUsers { get; set; }
+        public Player DrawAutoPlayPlayer { get; set; }
+        public ICard DrawAutoPlayCard { get; set; }
+
         public Game(GameSetup gameSetup, string tournamentId = "")
         {
             Id = Guid.NewGuid().ToString();
@@ -46,8 +49,10 @@ namespace EntityObjects
             BannedUsers = new List<User>();
             DiscardedPile = new List<ICard>();
             SilenceTurnsRemaining = 0;
-            CardValuesRemovedFromTheRound=new List<CardValue>();
-            GreedAffectedPlayers=new Dictionary<Player, int>();
+            CardValuesRemovedFromTheRound = new List<CardValue>();
+            GreedAffectedPlayers = new Dictionary<Player, int>();
+            DrawAutoPlayPlayer = null;
+            DrawAutoPlayCard = null;
         }
 
     }

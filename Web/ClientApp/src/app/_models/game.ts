@@ -21,5 +21,7 @@ export interface Game {
   lastCardPlayed: LastCardPlayed;
   discardedPile: Card[];
   readyPlayersLeft: string[];
-  isTournamentGame:boolean;
+  isTournamentGame: boolean;
+  drawAutoPlayPlayer: Player;
+  drawAutoPlayCard: Card;
 }

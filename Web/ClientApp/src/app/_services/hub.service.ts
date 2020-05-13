@@ -47,6 +47,7 @@ export class HubService {
   private _updateGameStartedObservable = new Subject();
   private _updateTournamentStartedObservable = new Subject();
   private _updateExitGameObservable = new Subject();
+  private _drawAutoPlayObservable = new Subject<Card>();
   private _updateExitTournamentObservable = new Subject();
   private _updateShowCardsObservable = new Subject<
     KeyValue<string, Card[]>[]
@@ -93,6 +94,10 @@ export class HubService {
 
     this._hubConnection.on("ExitTournament", () => {
       this._updateExitTournamentObservable.next();
+    });
+
+    this._hubConnection.on("DrawAutoPlayActivated", (card: Card) => {
+      this._drawAutoPlayObservable.next(card);
     });
 
     this._hubConnection.on("UserMentioned", () => {
@@ -356,6 +361,10 @@ export class HubService {
     }
   }
 
+  cancelDrawAutoPlay() {
+    this._hubConnection.invoke("CancelDrawAutoPlay");
+  }
+  
   adminKickUser(user: User, password: string) {
     this._hubConnection.invoke("AdminKickUser", user.name, password);
   }
@@ -589,6 +598,9 @@ export class HubService {
   }
   get updateExitTournament() {
     return this._updateExitTournamentObservable.asObservable();
+  }
+  get updateDrawAutoPlayObservable() {
+    return this._drawAutoPlayObservable.asObservable();
   }
 
   get updateShowCards() {

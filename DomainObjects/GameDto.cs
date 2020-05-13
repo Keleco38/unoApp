@@ -21,6 +21,8 @@ namespace DomainObjects
         public bool IsTournamentGame { get; set; }
         public bool DrawAutoPlay { get; set; }
         public List<UserDto> BannedUsers { get; set; }
+        public PlayerDto DrawAutoPlayPlayer { get; set; }
+        public CardDto DrawAutoPlayCard { get; set; }
     }
 
 }

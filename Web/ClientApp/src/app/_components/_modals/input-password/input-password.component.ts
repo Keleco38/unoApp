@@ -15,7 +15,7 @@ export class InputPasswordComponent implements OnInit, OnDestroy {
   @Input() numberOfPlayers: number;
   @Input() maxNumberOfPlayers: number;
 
-  private _isAlive = false;
+  private _isAlive = true;
   password = '';
 
   constructor(private _hubService: HubService, private _activeModal:NgbActiveModal) {}

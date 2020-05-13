@@ -66,22 +66,33 @@
       <strong>Banned cards: </strong>
       <br>
       <span *ngFor="let bannedCard of activeGame.gameSetup.bannedCards" class="badge badge-secondary mx-1">{{ getBannedCardName(bannedCard) | dividePerCapital }}</span>
+      <br>
     </div>
     <p [hidden]="activeGame.gameSetup.bannedCards.length > 0"><strong>Banned cards: </strong> None</p>
-    <p><strong>Player setup: </strong> {{ getPlayerSetupPlaceholder() }}</p>
     <p><strong>Game type: </strong> {{ getGameTypePlaceholder() }}</p>
-    <p [hidden]="activeGame.gameSetup.gameType==1"><strong>Number of standard decks: </strong> {{ activeGame.gameSetup.numberOfStandardDecks }}</p>
+    <p><strong>Player setup: </strong> {{ getPlayerSetupPlaceholder() }}</p>
     <p><strong>Rounds to win: </strong> {{ activeGame.gameSetup.roundsToWin }}</p>
-    <p><strong>Max number of players: </strong> {{ activeGame.gameSetup.maxNumberOfPlayers }}</p>
-    <p><strong>+2/+4 skipping turn: </strong> {{ activeGame.gameSetup.drawFourDrawTwoShouldSkipTurn }}</p>
-    <p><strong>Reverse skipping turn in 2p: </strong> {{ activeGame.gameSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
-    <p><strong>Matching card steals turn: </strong> {{ activeGame.gameSetup.matchingCardStealsTurn }}</p>
-    <p><strong>Draw autoplay: </strong> {{ activeGame.gameSetup.drawAutoPlay }}</p>
-    <p [hidden]="activeGame.gameSetup.playersSetup != 2"><strong>Can see teammate's cards: </strong> {{ activeGame.gameSetup.canSeeTeammatesHandInTeamGame }}</p>
-    <p><strong>Spectators can view hands: </strong> {{ activeGame.gameSetup.spectatorsCanViewHands }}</p>
-    <p><strong>Wild card playable only as last option: </strong> {{ activeGame.gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}</p>
-    <p [hidden]="activeGame.gameSetup.gameType==1"><strong>Limit color changing cards: </strong> {{ activeGame.gameSetup.limitColorChangingCards }}</p>
     <p><strong>Password set:</strong> {{ activeGame.gameSetup.password.length > 0 }}</p>
+
+    <div class="alert alert-primary cursor-pointer" style="margin-top:20px;" *ngIf="hideAdvancedOptions" (click)="hideAdvancedOptions=false">
+      Show advanced settings &#9660;
+    </div>
+
+    <div [ngbCollapse]="hideAdvancedOptions" [@expandCollapse]="hideAdvancedOptions ? 'closed' : 'open'">
+      <p [hidden]="activeGame.gameSetup.gameType==1"><strong>Number of standard decks: </strong> {{ activeGame.gameSetup.numberOfStandardDecks }}</p>
+      <p><strong>Max number of players: </strong> {{ activeGame.gameSetup.maxNumberOfPlayers }}</p>
+      <p><strong>+2/+4 skipping turn: </strong> {{ activeGame.gameSetup.drawFourDrawTwoShouldSkipTurn }}</p>
+      <p><strong>Reverse skipping turn in 2p: </strong> {{ activeGame.gameSetup.reverseShouldSkipTurnInTwoPlayers }}</p>
+      <p><strong>Matching card steals turn: </strong> {{ activeGame.gameSetup.matchingCardStealsTurn }}</p>
+      <p><strong>Draw autoplay: </strong> {{ activeGame.gameSetup.drawAutoPlay }}</p>
+      <p [hidden]="activeGame.gameSetup.playersSetup != 2"><strong>Can see teammate's cards: </strong> {{ activeGame.gameSetup.canSeeTeammatesHandInTeamGame }}</p>
+      <p><strong>Spectators can view hands: </strong> {{ activeGame.gameSetup.spectatorsCanViewHands }}</p>
+      <p><strong>Wild card playable only as last option: </strong> {{ activeGame.gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}</p>
+      <p [hidden]="activeGame.gameSetup.gameType==1"><strong>Limit color changing cards: </strong> {{ activeGame.gameSetup.limitColorChangingCards }}</p>
+    </div>
+
+
+
   </div>
 </div>
 

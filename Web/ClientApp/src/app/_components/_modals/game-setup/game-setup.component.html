@@ -8,15 +8,6 @@
   <div class="row">
     <div class="col-12">
       <div class="form-group row">
-        <label for="gameType" class="col-7 col-form-label">Players setup</label>
-        <div class="col-5">
-          <select [(ngModel)]="gameSetup.playersSetup" class="form-control form-control-sm" id="playersSetup">
-            <option value="1">Individual</option>
-            <option value="2">Teams</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group row">
         <label for="gameType" class="col-7 col-form-label">Game type
           <span [placement]="['top', 'auto']" class="text-primary cursor-pointer lead" [container]="'body'" [ngbPopover]="gameTypeBody" [popoverTitle]="gameTypeTitle">
             &#9432;
@@ -26,6 +17,15 @@
           <select [(ngModel)]="gameSetup.gameType" class="form-control form-control-sm" id="gameType">
             <option value="1">Classic</option>
             <option value="2">Special</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="gameType" class="col-7 col-form-label">Players setup</label>
+        <div class="col-5">
+          <select [(ngModel)]="gameSetup.playersSetup" class="form-control form-control-sm" id="playersSetup">
+            <option value="1">Individual</option>
+            <option value="2">Teams</option>
           </select>
         </div>
       </div>

@@ -42,7 +42,7 @@ export class TournamentSetupComponent implements OnInit {
         matchingCardStealsTurn: true,
         spectatorsCanViewHands: true,
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
-        drawAutoPlay: false,
+        drawAutoPlay: true,
         limitColorChangingCards: false,
         numberOfStandardDecks: 4
       };

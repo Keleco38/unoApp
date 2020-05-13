@@ -12,11 +12,19 @@ import { Router } from '@angular/router';
 import { Player } from 'src/app/_models/player';
 import { takeWhile } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-waiting-room',
   templateUrl: './waiting-room.component.html',
-  styleUrls: ['./waiting-room.component.css']
+  styleUrls: ['./waiting-room.component.css'],
+  animations: [
+    trigger('expandCollapse', [
+      state('open', style({ opacity: 1 })),
+      state('closed', style({ height: 0, opacity: 0 })),
+      transition('* => *', [animate('100ms')])
+    ]),
+  ]
 })
 export class WaitingRoomComponent implements OnInit, OnDestroy {
   private _isAlive: boolean = true;
@@ -24,6 +32,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   activeGame: Game;
   sidebarSettings: SidebarSettings;
   currentUser: User;
+  hideAdvancedOptions = true;
 
   constructor(
     private _hubService: HubService,
@@ -33,7 +42,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _gameStorageService: GameStorageService,
     private _userStorageService: UserStorageService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.sidebarSettings = this._utilityService.sidebarSettings;
@@ -131,15 +140,15 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     this._modalService.displayKickBanPlayerModal(false, player.user);
   }
 
-  togglePopover(popover,user){
+  togglePopover(popover, user) {
     if (popover.isOpen()) {
       popover.close();
     } else {
-      popover.open({user});
+      popover.open({ user });
     }
   }
 
-  unbanPlayer(user:User){
+  unbanPlayer(user: User) {
     this._hubService.unbanPlayerFromGame(user.name);
   }
 

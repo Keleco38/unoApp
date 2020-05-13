@@ -81,7 +81,7 @@ export class GameSetupComponent implements OnInit {
       wildCardCanBePlayedOnlyIfNoOtherOptions: false,
       playersSetup: PlayersSetup.individual,
       canSeeTeammatesHandInTeamGame: true,
-      drawAutoPlay: false,
+      drawAutoPlay: true,
       spectatorsCanViewHands: true,
       limitColorChangingCards: false,
       numberOfStandardDecks: 4

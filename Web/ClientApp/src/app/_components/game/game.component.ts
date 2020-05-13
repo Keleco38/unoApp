@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { PlayCardService } from './../../_services/play-card.service';
 import { KeyValue } from '@angular/common';
 import { UserStorageService } from './../../_services/storage-services/user-storage.service';
@@ -47,7 +48,8 @@ export class GameComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _gameStorageService: GameStorageService,
     private _userStorageService: UserStorageService,
-    private _playCardService: PlayCardService
+    private _playCardService: PlayCardService,
+    private _toastrService: ToastrService
   ) { }
 
   ngOnInit() {
@@ -62,6 +64,10 @@ export class GameComponent implements OnInit, OnDestroy {
 
     this._hubService.updateGameEnded.pipe(takeWhile(() => this._isAlive)).subscribe(gameEndedResult => {
       this.isSidebarOpen = false;
+    });
+
+    this._hubService.updateDrawAutoPlayObservable.pipe(takeWhile(() => this._isAlive)).subscribe(card => {
+      this.handleDrawAutoPlay(this.game.drawAutoPlayCard, false);
     });
 
     this._gameStorageService.gameLog.pipe(takeWhile(() => this._isAlive)).subscribe(gameLog => {
@@ -108,6 +114,29 @@ export class GameComponent implements OnInit, OnDestroy {
         this.numberUnreadMessages++;
       }
     });
+
+    if (this.game.drawAutoPlayPlayer != null) {
+      if (this.game.drawAutoPlayPlayer.user.name == this.currentUser.name) {
+        this.handleDrawAutoPlay(this.game.drawAutoPlayCard, false);
+      }
+    }
+  }
+
+  handleDrawAutoPlay(card: Card, invalidMove: boolean) {
+    setTimeout(() => {
+      var mdl = this._modalService.displayDrawAutoPlayModal(card, invalidMove);
+      mdl.result.then(answer => {
+        if (this.game.drawAutoPlayPlayer == null || this.game.drawAutoPlayPlayer.user.name != this.currentUser.name) {
+          this._toastrService.error("Someone before you jumped in (stole turn). Draw auto play has no effect. Please continue game normally.", '', { timeOut: 20000 })
+          return;
+        }
+        if (answer) {
+          this.playCard(card);
+        } else {
+          this._hubService.cancelDrawAutoPlay();
+        }
+      });
+    }, 100);
   }
 
   isSpectator() {
@@ -133,6 +162,14 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this.mustCallUno) {
       return;
     }
+
+    if (this.game.drawAutoPlayPlayer != null) {
+      if (this.game.drawAutoPlayPlayer.user.name == this.currentUser.name && this.game.drawAutoPlayCard.id != cardPlayed.id) {
+        this.handleDrawAutoPlay(this.game.drawAutoPlayCard, true);
+        return;
+      }
+    }
+
     this._playCardService.playCard(cardPlayed, this.game, this.currentUser, this.myCards);
   }
 
@@ -159,6 +196,15 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this.game.playerToPlay.user.name != this.currentUser.name) {
       return;
     }
+
+    if (this.game.drawAutoPlayPlayer != null) {
+      if (this.game.drawAutoPlayPlayer.user.name == this.currentUser.name) {
+        this.handleDrawAutoPlay(this.game.drawAutoPlayCard, true);
+        return;
+      }
+    }
+
+
     this._hubService.drawCard();
   }
 

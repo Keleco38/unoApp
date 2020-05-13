@@ -137,6 +137,11 @@ namespace PreMoveProcessingService.CoreManagers
                 }
 
             }
+
+            game.DrawAutoPlayPlayer = null;
+            game.DrawAutoPlayCard = null;
+
+
             return moveResult;
         }
 
