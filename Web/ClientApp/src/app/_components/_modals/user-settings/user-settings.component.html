@@ -22,12 +22,6 @@
         <label for="inputPassword" class="col-4 col-form-label">Block Buzz Commands:</label>
         <div class="col-8">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('alert')" (change)="updateBlockedBuzzCommands($event, 'alert')" id="Alert" />
-            <label class="form-check-label" for="Alert">
-              Alert
-            </label>
-          </div>
-          <div class="form-check">
             <input class="form-check-input" type="checkbox" [checked]="shouldBeCheckedBuzzCommand('ding')" (change)="updateBlockedBuzzCommands($event, 'ding')" id="Ding" />
             <label class="form-check-label" for="Ding">
               Ding

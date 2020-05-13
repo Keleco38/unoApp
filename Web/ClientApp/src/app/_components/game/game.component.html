@@ -57,7 +57,7 @@
       </div>
       <div class="col-12">
         <hr />
-        <p class="text-center log-entry" *ngFor="let log of gameLog | slice: 0:3">*{{ log }}</p>
+        <p class="text-center log-entry" [ngClass]="getLogColor(log)" *ngFor="let log of gameLog | slice: 0:3">*{{ log }}</p>
         <hr />
       </div>
     </div>

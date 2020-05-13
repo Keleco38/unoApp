@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Common.Enums;
 using EntityObjects;
 using GameProcessingService.CoreManagers;
@@ -24,7 +25,11 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                 var playersWithoutCards = game.Players.Where(x => !x.Cards.Any()).ToList();
                 if (playersWithoutCards.Any())
                 {
-                    var firstPlayerWithTheLastStand = game.Players.Where(x => x.Cards.Any()).FirstOrDefault(x => x.Cards.FirstOrDefault(y => y.Value == CardValue.TheLastStand) != null);
+
+                    var numToStart = game.Players.IndexOf(game.PlayerToPlay);
+                    var reorderedPlayersList = game.Players.Skip(numToStart).Concat(game.Players.Take(numToStart));
+
+                    var firstPlayerWithTheLastStand = reorderedPlayersList.Where(x => x.Cards.Any()).FirstOrDefault(x => x.Cards.FirstOrDefault(y => y.Value == CardValue.TheLastStand) != null);
 
                     if (firstPlayerWithTheLastStand != null)
                     {
@@ -32,7 +37,8 @@ namespace GameProcessingService.CardEffectProcessors.AutomaticallyTriggered.Wild
                         game.LastCardPlayed = new LastCardPlayed(game.LastCardPlayed.Color, theLastStandCard.Value, theLastStandCard.ImageUrl, game.PlayerToPlay.User.Name, true, theLastStandCard);
                         firstPlayerWithTheLastStand.Cards.Remove(theLastStandCard);
                         game.DiscardedPile.Add(theLastStandCard);
-                        messageToLog = $"{firstPlayerWithTheLastStand.User.Name} saved the day! They played The Last Stand. Every player that had 0 cards will draw 2 cards.";
+                        messageToLog = $"{firstPlayerWithTheLastStand.User.Name} saved the day! They played The Last Stand. He is penalized by drawing 1 card and every player that had 0 cards will draw 2 cards.";
+                        _gameManager.DrawCard(game, firstPlayerWithTheLastStand, 1, false);
                         foreach (var player in playersWithoutCards)
                         {
                             _gameManager.DrawCard(game, player, 2, false);

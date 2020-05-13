@@ -70,15 +70,15 @@ export class GameComponent implements OnInit, OnDestroy {
 
     this._gameStorageService.mustCallUno.pipe(takeWhile(() => this._isAlive)).subscribe(() => {
       this.mustCallUno = true;
-      this.timeLeftCallUno=2500;
+      this.timeLeftCallUno = 2000;
       window.clearTimeout(this._timer);
       window.clearInterval(this._interval);
       this._interval = window.setInterval(() => {
         this.timeLeftCallUno = this.timeLeftCallUno - 10;
-      },10);
+      }, 10);
       this._timer = window.setTimeout(() => {
         this.callUno(false);
-      }, 2500);
+      }, 2000);
     });
 
     this._userStorageService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
@@ -119,11 +119,11 @@ export class GameComponent implements OnInit, OnDestroy {
 
   callUno(unoCalled: boolean) {
     this.mustCallUno = false;
-    this.timeLeftCallUno=2500;
+    this.timeLeftCallUno = 2000;
     window.clearTimeout(this._timer);
     window.clearInterval(this._interval);
     this._hubService.checkUnoCall(unoCalled);
- }
+  }
 
   seeTeammatesCards() {
     this._hubService.seeTeammatesCards();
@@ -186,6 +186,11 @@ export class GameComponent implements OnInit, OnDestroy {
 
   getDirectionStringFromGame() {
     return this.game.direction === Direction.right ? '->' : '<-';
+  }
+
+  getLogColor(msg: string) {
+    if (msg.startsWith("Round ended!") || msg.startsWith("Game ended!"))
+      return ["text-danger", "font-weight-bold"];
   }
 
   ngOnDestroy(): void {
