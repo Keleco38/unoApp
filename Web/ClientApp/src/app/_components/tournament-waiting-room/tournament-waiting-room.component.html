@@ -56,16 +56,13 @@
     </div>
     <div [hidden]="activeTournament.tournamentSetup.bannedCards.length == 0">
       <strong>Banned cards: </strong>
-      <ul>
-        <li *ngFor="let bannedCard of activeTournament.tournamentSetup.bannedCards">
-          <small> {{ getBannedCardName(bannedCard) | dividePerCapital }}</small>
-        </li>
-      </ul>
+      <br>
+      <span *ngFor="let bannedCard of activeTournament.tournamentSetup.bannedCards" class="badge badge-secondary mx-1">{{ getBannedCardName(bannedCard) | dividePerCapital }}</span>
     </div>
     <p [hidden]="activeTournament.tournamentSetup.bannedCards.length > 0"><strong>Banned cards: </strong> None</p>
     <p><strong>Name: </strong> {{ activeTournament.tournamentSetup.name | titlecase }}</p>
     <p><strong>Game type: </strong> {{ getGameTypePlaceholder() }}</p>
-    <p><strong>Number of standard decks: </strong> {{ activeTournament.tournamentSetup.numberOfStandardDecks }}</p>
+    <p [hidden]="activeTournament.tournamentSetup.gameType==1"><strong>Number of standard decks: </strong> {{ activeTournament.tournamentSetup.numberOfStandardDecks }}</p>
     <p><strong>Rounds to win: </strong> {{ activeTournament.tournamentSetup.roundsToWin }}</p>
     <p><strong>Tournament size: </strong> {{ activeTournament.tournamentSetup.numberOfPlayers }}</p>
     <p><strong>+2/+4 skipping turn: </strong> {{ activeTournament.tournamentSetup.drawFourDrawTwoShouldSkipTurn }}</p>
@@ -77,7 +74,7 @@
       <strong>Wild card playable only as last option: </strong>
       {{ activeTournament.tournamentSetup.wildCardCanBePlayedOnlyIfNoOtherOptions }}
     </p>
-    <p><strong>Limit color changing cards: </strong> {{ activeTournament.tournamentSetup.limitColorChangingCards }}</p>
+    <p [hidden]="activeTournament.tournamentSetup.gameType==1"><strong>Limit color changing cards: </strong> {{ activeTournament.tournamentSetup.limitColorChangingCards }}</p>
     <p><strong>Password set:</strong> {{ activeTournament.tournamentSetup.password.length > 0 }}</p>
   </div>
 </div>

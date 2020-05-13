@@ -99,7 +99,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   getGameTypePlaceholder() {
-    return this.activeGame.gameSetup.gameType == GameType.normal ? 'Normal' : 'Special Wild Cards';
+    return this.activeGame.gameSetup.gameType == GameType.normal ? 'Classic' : 'Special Wild Cards';
   }
   getPlayerSetupPlaceholder() {
     return this.activeGame.gameSetup.playersSetup == PlayersSetup.individual ? 'Individual' : 'Teams';

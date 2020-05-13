@@ -29,34 +29,6 @@
           </select>
         </div>
       </div>
-      <div class="form-group row" [hidden]="gameSetup.gameType==1">
-        <label for="numberOfStandardDecks" class="col-7 col-form-label">No. of standard uno decks</label>
-        <div class="col-5">
-          <select [(ngModel)]="gameSetup.numberOfStandardDecks" class="form-control form-control-sm" id="numberOfStandardDecks">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="maxNumberOfPlayers" class="col-7 col-form-label">Max No. of players</label>
-        <div class="col-5">
-          <select [(ngModel)]="gameSetup.maxNumberOfPlayers" class="form-control form-control-sm" id="maxNumberOfPlayers">
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-          </select>
-        </div>
-      </div>
       <div class="form-group row">
         <label for="playuntil" class="col-7 col-form-label">Rounds to win</label>
         <div class="col-5">
@@ -77,52 +49,88 @@
           <input type="password" [(ngModel)]="gameSetup.password" class="form-control" autocomplete="off" name="password" id="password" placeholder="(optional)" />
         </div>
       </div>
-      <div class="form-group row">
-        <label for="name" for="drawTwoFourShouldSkipTurn" class="col-8">Draw two/four skips:</label>
-        <div class="col-4 text-center">
-          <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.drawFourDrawTwoShouldSkipTurn" id="drawTwoFourShouldSkipTurn"></ui-switch>
-        </div>
+
+      <div class="alert alert-primary cursor-pointer" style="margin-top:20px;" *ngIf="hideAdvancedOptions" (click)="hideAdvancedOptions=false">
+        Show advanced settings &#9660;
       </div>
-      <div class="form-group row">
-        <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Reverse skips in 2 players:</label>
-        <div class="col-4 text-center">
-          <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.reverseShouldSkipTurnInTwoPlayers" id="reverseShouldSkipTurnInTwoPlayers"></ui-switch>
+
+      <div [ngbCollapse]="hideAdvancedOptions" [@expandCollapse]="hideAdvancedOptions ? 'closed' : 'open'">
+        <hr>
+        <div class="form-group row" [hidden]="gameSetup.gameType==1">
+          <label for="numberOfStandardDecks" class="col-7 col-form-label">No. of standard uno decks</label>
+          <div class="col-5">
+            <select [(ngModel)]="gameSetup.numberOfStandardDecks" class="form-control form-control-sm" id="numberOfStandardDecks">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <label for="name" for="matchingCardStealsTurn" class="col-8">Matching card steals turn:</label>
-        <div class="col-4 text-center">
-          <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.matchingCardStealsTurn" id="matchingCardStealsTurn"></ui-switch>
+        <div class="form-group row">
+          <label for="maxNumberOfPlayers" class="col-7 col-form-label">Max No. of players</label>
+          <div class="col-5">
+            <select [(ngModel)]="gameSetup.maxNumberOfPlayers" class="form-control form-control-sm" id="maxNumberOfPlayers">
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <label for="name" for="drawAutoPlay" class="col-8">Draw auto play:</label>
-        <div class="col-4 text-center">
-          <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.drawAutoPlay" id="drawAutoPlay"></ui-switch>
+        <div class="form-group row">
+          <label for="name" for="drawTwoFourShouldSkipTurn" class="col-8">Draw two/four skips:</label>
+          <div class="col-4 text-center">
+            <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.drawFourDrawTwoShouldSkipTurn" id="drawTwoFourShouldSkipTurn"></ui-switch>
+          </div>
         </div>
-      </div>
-      <div class="form-group row" [hidden]="gameSetup.playersSetup != 2">
-        <label for="name" for="canSeeTeammatesHandInTeamGame" class="col-8">Can see teammates cards:</label>
-        <div class="col-4 text-center">
-          <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.canSeeTeammatesHandInTeamGame" id="canSeeTeammatesHandInTeamGame"></ui-switch>
+        <div class="form-group row">
+          <label for="name" for="reverseShouldSkipTurnInTwoPlayers" class="col-8">Reverse skips in 2 players:</label>
+          <div class="col-4 text-center">
+            <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.reverseShouldSkipTurnInTwoPlayers" id="reverseShouldSkipTurnInTwoPlayers"></ui-switch>
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <label for="name" for="spectatorsCanViewHands" class="col-8">Spectator can view hands:</label>
-        <div class="col-4 text-center">
-          <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.spectatorsCanViewHands" id="spectatorsCanViewHands"></ui-switch>
+        <div class="form-group row">
+          <label for="name" for="matchingCardStealsTurn" class="col-8">Matching card steals turn:</label>
+          <div class="col-4 text-center">
+            <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.matchingCardStealsTurn" id="matchingCardStealsTurn"></ui-switch>
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <label for="name" for="wildCardCanBePlayedOnlyIfNoOtherOptions" class="col-8">Wilds playable only as must:</label>
-        <div class="col-4 text-center">
-          <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions" id="wildCardCanBePlayedOnlyIfNoOtherOptions"></ui-switch>
+        <div class="form-group row">
+          <label for="name" for="drawAutoPlay" class="col-8">Draw auto play:</label>
+          <div class="col-4 text-center">
+            <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.drawAutoPlay" id="drawAutoPlay"></ui-switch>
+          </div>
         </div>
-      </div>
-      <div class="form-group row" [hidden]="gameSetup.gameType == 1">
-        <label for="name" for="limitColorChangingCards" class="col-8">Limit color changing cards:</label>
-        <div class="col-4 text-center">
-          <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.limitColorChangingCards" id="limitColorChangingCards"></ui-switch>
+        <div class="form-group row" [hidden]="gameSetup.playersSetup != 2">
+          <label for="name" for="canSeeTeammatesHandInTeamGame" class="col-8">Can see teammates cards:</label>
+          <div class="col-4 text-center">
+            <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.canSeeTeammatesHandInTeamGame" id="canSeeTeammatesHandInTeamGame"></ui-switch>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="name" for="spectatorsCanViewHands" class="col-8">Spectator can view hands:</label>
+          <div class="col-4 text-center">
+            <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.spectatorsCanViewHands" id="spectatorsCanViewHands"></ui-switch>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="name" for="wildCardCanBePlayedOnlyIfNoOtherOptions" class="col-8">Wilds playable only as must:</label>
+          <div class="col-4 text-center">
+            <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.wildCardCanBePlayedOnlyIfNoOtherOptions" id="wildCardCanBePlayedOnlyIfNoOtherOptions"></ui-switch>
+          </div>
+        </div>
+        <div class="form-group row" [hidden]="gameSetup.gameType == 1">
+          <label for="name" for="limitColorChangingCards" class="col-8">Limit color changing cards:</label>
+          <div class="col-4 text-center">
+            <ui-switch class="form-check-input" size="small" [(ngModel)]="gameSetup.limitColorChangingCards" id="limitColorChangingCards"></ui-switch>
+          </div>
         </div>
       </div>
       <hr>

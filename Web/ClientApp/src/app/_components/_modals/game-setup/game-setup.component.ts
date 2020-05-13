@@ -8,15 +8,25 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HubService } from './../../../_services/hub.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Game } from 'src/app/_models/game';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-game-setup',
   templateUrl: './game-setup.component.html',
-  styleUrls: ['./game-setup.component.css']
+  styleUrls: ['./game-setup.component.css'],
+  animations: [
+    trigger('expandCollapse', [
+                state('open', style({opacity: 1})),
+                state('closed', style({height: 0, opacity: 0})),
+                transition('* => *', [animate('100ms')])
+            ]),
+ ]
 })
 export class GameSetupComponent implements OnInit {
   private _game: Game;
+
   gameSetup: GameSetup;
+  hideAdvancedOptions=true;
 
   constructor(private _hubService: HubService, private _activeModal: NgbActiveModal, private _gameStorageService: GameStorageService, private _utilityService: UtilityService, private _taostrService: ToastrService) { }
 

@@ -37,29 +37,15 @@
             <span [hidden]="!first">&#9734;</span>
             *{{ player.user.name }}
           </div>
-          <span
-            class="badge badge-pill badge-danger cursor-pointer"
-            (click)="openKickBanPlayerModal(player)"
-            [hidden]="currentUser.connectionId != activeGame.players[0].user.connectionId || first"
-          >
+          <span class="badge badge-pill badge-danger cursor-pointer" (click)="openKickBanPlayerModal(player)" [hidden]="currentUser.connectionId != activeGame.players[0].user.connectionId || first">
             [X]
           </span>
         </div>
         <small [hidden]="activeGame.gameSetup.playersSetup != 2">
           <i>
-            <span
-              [hidden]="currentUser.connectionId != player.user.connectionId"
-              class="text-primary  cursor-pointer"
-              (click)="changeTeam(player.teamNumber, false)"
-              >(-)</span
-            >
+            <span [hidden]="currentUser.connectionId != player.user.connectionId" class="text-primary  cursor-pointer" (click)="changeTeam(player.teamNumber, false)">(-)</span>
             <span>[Team {{ player.teamNumber }}]</span>
-            <span
-              [hidden]="currentUser.connectionId != player.user.connectionId"
-              class="text-primary cursor-pointer"
-              (click)="changeTeam(player.teamNumber, true)"
-              >(+)</span
-            >
+            <span [hidden]="currentUser.connectionId != player.user.connectionId" class="text-primary cursor-pointer" (click)="changeTeam(player.teamNumber, true)">(+)</span>
           </i>
         </small>
       </li>
@@ -72,17 +58,14 @@
       <ul>
         <li *ngFor="let user of activeGame.bannedUsers">
           {{ user.name }}
-          <span class="text-danger cursor-pointer" [ngbPopover]="popContent" triggers="manual" #p1="ngbPopover"  placement="left" (click)="togglePopover(p1, user)"
-            >[X]</span
-          >
+          <span class="text-danger cursor-pointer" [ngbPopover]="popContent" triggers="manual" #p1="ngbPopover" placement="left" (click)="togglePopover(p1, user)">[X]</span>
         </li>
       </ul>
     </div>
     <div [hidden]="activeGame.gameSetup.bannedCards.length == 0">
       <strong>Banned cards: </strong>
-      <ul>
-        <li *ngFor="let bannedCard of activeGame.gameSetup.bannedCards"><small>{{ getBannedCardName(bannedCard) | dividePerCapital }}</small></li>
-      </ul>
+      <br>
+      <span *ngFor="let bannedCard of activeGame.gameSetup.bannedCards" class="badge badge-secondary mx-1">{{ getBannedCardName(bannedCard) | dividePerCapital }}</span>
     </div>
     <p [hidden]="activeGame.gameSetup.bannedCards.length > 0"><strong>Banned cards: </strong> None</p>
     <p><strong>Player setup: </strong> {{ getPlayerSetupPlaceholder() }}</p>

@@ -106,7 +106,7 @@ export class TournamentWaitingRoomComponent implements OnInit, OnDestroy {
   }
 
   getGameTypePlaceholder() {
-    return this.activeTournament.tournamentSetup.gameType == GameType.normal ? 'Normal' : 'Special Wild Cards';
+    return this.activeTournament.tournamentSetup.gameType == GameType.normal ? 'Classic' : 'Special Wild Cards';
   }
 
   joinTournament() {
