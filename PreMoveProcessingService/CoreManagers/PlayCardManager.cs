@@ -93,19 +93,19 @@ namespace PreMoveProcessingService.CoreManagers
 
             game.PlayerToPlay = _gameManager.GetNextPlayer(game, game.PlayerToPlay, game.Players);
 
-            var automaticallyTriggeredResultQueensDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams() { PlayerAffected = game.PlayerToPlay } });
-            if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
-                moveResult.MessagesToLog.Add(automaticallyTriggeredResultQueensDecree.MessageToLog);
-
-
-            if (game.SilenceTurnsRemaining > 0)
-            {
-                game.SilenceTurnsRemaining--;
-                moveResult.MessagesToLog.Add($"{game.SilenceTurnsRemaining} silenced turns remaining. ");
-            }
 
             if (!game.GameEnded)
             {
+                var automaticallyTriggeredResultQueensDecree = _automaticallyTriggeredCardEffectProcessors.First(x => x.CardAffected == CardValue.QueensDecree).ProcessCardEffect(game, string.Empty, new AutomaticallyTriggeredParams() { QueensDecreeParams = new AutomaticallyTriggeredQueensDecreeParams() { PlayerAffected = game.PlayerToPlay } });
+                if (!string.IsNullOrEmpty(automaticallyTriggeredResultQueensDecree.MessageToLog))
+                    moveResult.MessagesToLog.Add(automaticallyTriggeredResultQueensDecree.MessageToLog);
+
+                if (game.SilenceTurnsRemaining > 0)
+                {
+                    game.SilenceTurnsRemaining--;
+                    moveResult.MessagesToLog.Add($"{game.SilenceTurnsRemaining} silenced turns remaining. ");
+                }
+
                 var result = game.GreedAffectedPlayers.TryGetValue(game.PlayerToPlay, out var greedTurns);
                 if (result && greedTurns > 0)
                 {
