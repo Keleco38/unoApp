@@ -20,16 +20,17 @@
         <div class="btn-group special">
           <button class="btn btn-sm btn-danger" (click)="leaveWaitingRoom()">Leave room</button>
           <button class="btn btn-sm btn-primary" [ngStyle]="getStyleJoinGameButton()" [disabled]="!userIsSpectator()" (click)="joinGame()">
-            Join Game
+            Join Room
           </button>
         </div>
       </div>
     </div>
+    <hr>
   </div>
 </div>
 <div class="row">
   <div class="col-6">
-    <h6 class="text-success">Players joined ({{ activeGame.players.length }})</h6>
+    <h6 class="text-success">Players joined ({{ activeGame.players.length }} / {{activeGame.gameSetup.maxNumberOfPlayers}})</h6>
     <ul class="list-group">
       <li class="list-group-item flex-column " *ngFor="let player of activeGame.players; let first = first">
         <div class="d-flex w-100 justify-content-between align-items-center">

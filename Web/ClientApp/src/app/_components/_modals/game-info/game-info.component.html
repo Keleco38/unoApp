@@ -20,7 +20,7 @@
             <td>{{ player.user.name }}</td>
             <td [hidden]="game.gameSetup.playersSetup != 2">{{ player.teamNumber }}</td>
             <td>{{ player.numberOfCards }}</td>
-            <td>{{ player.roundsWonCount }}</td>
+            <td>{{ player.roundsWonCount }} / {{game.gameSetup.roundsToWin}}</td>
           </tr>
         </tbody>
       </table>
