@@ -77,7 +77,7 @@ export class GameSetupComponent implements OnInit {
 
     this.gameSetup = {
       roundsToWin: 2,
-      maxNumberOfPlayers: 6,
+      maxNumberOfPlayers: 10,
       reverseShouldSkipTurnInTwoPlayers: true,
       password: '',
       gameType: GameType.specialWildCards,
@@ -90,7 +90,7 @@ export class GameSetupComponent implements OnInit {
       drawAutoPlay: true,
       spectatorsCanViewHands: true,
       limitColorChangingCards: false,
-      numberOfStandardDecks: 4
+      numberOfStandardDecks: 5
     };
   }
 }

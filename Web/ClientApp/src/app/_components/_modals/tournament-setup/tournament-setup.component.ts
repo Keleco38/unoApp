@@ -54,7 +54,7 @@ export class TournamentSetupComponent implements OnInit {
         wildCardCanBePlayedOnlyIfNoOtherOptions: false,
         drawAutoPlay: true,
         limitColorChangingCards: false,
-        numberOfStandardDecks: 4
+        numberOfStandardDecks: 5
       };
     } else {
       this.tournamentSetup = this._activeTournament.tournamentSetup;

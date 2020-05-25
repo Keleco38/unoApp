@@ -12,7 +12,7 @@ export class UtilityService {
   private _allCards: KeyValue<string, number>[] = [];
   private _sidebarSettings: SidebarSettings = null;
   private _userSettings: UserSettings = null;
-  private _cachedGameSetupVersion = 1;
+  private _cachedGameSetupVersion = 2;
   constructor() { }
 
   get allCards() {

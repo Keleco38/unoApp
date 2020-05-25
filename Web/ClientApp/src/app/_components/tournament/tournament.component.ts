@@ -9,6 +9,8 @@ import { HubService } from 'src/app/_services/hub.service';
 import { takeWhile } from 'rxjs/operators';
 import { SidebarSettings } from 'src/app/_models/sidebarSettings';
 import { User } from 'src/app/_models/user';
+import domtoimage from 'dom-to-image';
+
 
 @Component({
   selector: 'app-tournament',
@@ -21,7 +23,7 @@ export class TournamentComponent implements OnInit, OnDestroy {
   activeTournament: Tournament;
   currentUser: User;
 
-  constructor(private _hubService: HubService, private _utilityService: UtilityService, private _router: Router, private _tournamentStorageService:TournamentStorageService, private _userStorageService:UserStorageService) {}
+  constructor(private _hubService: HubService, private _utilityService: UtilityService, private _router: Router, private _tournamentStorageService: TournamentStorageService, private _userStorageService: UserStorageService) { }
 
   ngOnInit() {
     this.sidebarSettings = this._utilityService.sidebarSettings;
@@ -32,6 +34,19 @@ export class TournamentComponent implements OnInit, OnDestroy {
     this._userStorageService.currentUser.pipe(takeWhile(() => this._isAlive)).subscribe(user => {
       this.currentUser = user;
     });
+  }
+
+  export() {
+    var node = document.getElementById('full-tournament-info');
+    var isDarkTheme = this._utilityService.userSettings.useDarkTheme;
+    var bgcolor = isDarkTheme ? "#222" : "#fff";
+    domtoimage.toJpeg(node, { bgcolor: bgcolor })
+      .then(function (dataUrl) {
+        var link = document.createElement('a');
+        link.download = 'uno-tournament-' + new Date() + '.jpeg';
+        link.href = dataUrl;
+        link.click();
+      });
   }
 
   exitTournament() {

@@ -1,6 +1,6 @@
 <app-navbar [hidden]="!sidebarSettings.showNavbar"></app-navbar>
 <div class="row">
-  <div class="col-12">
+  <div class="col-12" id="full-tournament-info">
     <div class="jumbotron">
       <h1 class="display-4">{{ activeTournament.tournamentSetup.name | titlecase }}</h1>
       <p class="lead">
@@ -9,37 +9,27 @@
       <hr />
       <p>Tournament brackets are displayed below, followed by the chat.</p>
       <button (click)="exitTournament()" class="btn  btn-danger">Exit Tournament</button>
+      <button *ngIf="activeTournament.tournamentEnded" (click)="export()" class="btn btn-primary">Export as image</button>
     </div>
     <div id="tournament" class="scrollable-div-x">
       <ul class="round" *ngFor="let round of activeTournament.tournamentRounds">
         <ng-container *ngFor="let roundGame of round.tournamentRoundGames">
           <li class="spacer">&nbsp;</li>
 
-          <li
-            class="game game-top"
-            [ngClass]="{
+          <li class="game game-top" [ngClass]="{
               'winner winner-top':
                 getPlayerFromTheGameAtPosition(roundGame.game, 1)?.roundsWonCount == activeTournament.tournamentSetup.roundsToWin
-            }"
-          >
-            <span
-              [ngClass]="{
+            }">
+            <span [ngClass]="{
                 'animation-text-shine':
                   getPlayerFromTheGameAtPosition(roundGame.game, 1)?.user.name == currentUser.name && !roundGame.game.gameEnded
-              }"
-              *ngIf="getPlayerFromTheGameAtPosition(roundGame.game, 1)?.user.name"
-              >{{ getPlayerFromTheGameAtPosition(roundGame.game, 1)?.user.name }}</span
-            >
+              }" *ngIf="getPlayerFromTheGameAtPosition(roundGame.game, 1)?.user.name">{{ getPlayerFromTheGameAtPosition(roundGame.game, 1)?.user.name }}</span>
             <span *ngIf="!getPlayerFromTheGameAtPosition(roundGame.game, 1)?.user.name">&nbsp;</span>
             <span class="score">{{ getPlayerFromTheGameAtPosition(roundGame.game, 1)?.roundsWonCount }}</span>
           </li>
           <li class="game game-spacer d-flex  align-items-center">
             <div>
-              <button
-                (click)="joinGame(roundGame.game)"
-                *ngIf="roundGame.game.gameStarted && !roundGame.game.gameEnded"
-                class="btn btn-sm btn-block btn-outline-info"
-              >
+              <button (click)="joinGame(roundGame.game)" *ngIf="roundGame.game.gameStarted && !roundGame.game.gameEnded" class="btn btn-sm btn-block btn-outline-info">
                 Join game
               </button>
               <p class="text-center">
@@ -47,21 +37,14 @@
               </p>
             </div>
           </li>
-          <li
-            class="game game-bottom"
-            [ngClass]="{
+          <li class="game game-bottom" [ngClass]="{
               'winner winner-bottom':
                 getPlayerFromTheGameAtPosition(roundGame.game, 2)?.roundsWonCount == activeTournament.tournamentSetup.roundsToWin
-            }"
-          >
-            <span
-              *ngIf="getPlayerFromTheGameAtPosition(roundGame.game, 2)?.user.name"
-              [ngClass]="{
+            }">
+            <span *ngIf="getPlayerFromTheGameAtPosition(roundGame.game, 2)?.user.name" [ngClass]="{
                 'animation-text-shine':
                   getPlayerFromTheGameAtPosition(roundGame.game, 2)?.user.name == currentUser.name && !roundGame.game.gameEnded
-              }"
-              >{{ getPlayerFromTheGameAtPosition(roundGame.game, 2)?.user.name }}</span
-            >
+              }">{{ getPlayerFromTheGameAtPosition(roundGame.game, 2)?.user.name }}</span>
             <span *ngIf="!getPlayerFromTheGameAtPosition(roundGame.game, 2)?.user.name">&nbsp;</span>
             <span class="score">{{ getPlayerFromTheGameAtPosition(roundGame.game, 2)?.roundsWonCount }}</span>
           </li>
@@ -71,8 +54,7 @@
       <ul class="round">
         <li class="spacer">&nbsp;</li>
         <li class="game game-top winner">
-          <span [hidden]="!activeTournament.tournamentWinner">{{ activeTournament.tournamentWinner }}</span
-          ><span class="score lead">&#9819;</span>
+          <span [hidden]="!activeTournament.tournamentWinner">{{ activeTournament.tournamentWinner }}</span><span class="score lead">&#9819;</span>
         </li>
         <li class="spacer">&nbsp;</li>
       </ul>
@@ -80,8 +62,11 @@
   </div>
   <div class="col-12 my-2" *ngIf="activeTournament.tournamentEnded">
     <h3 class="text-success">
-      Tournament ended! Extra points won: <u>{{ getExtraPointsWon() }}</u>
+      Tournament ended!
     </h3>
+    <h4 class="text-success">
+      Winner: {{activeTournament.tournamentWinner}}! Extra points won: <u>{{ getExtraPointsWon() }}</u>
+    </h4>
   </div>
 </div>
 <div class="row">
