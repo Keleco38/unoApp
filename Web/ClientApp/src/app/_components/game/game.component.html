@@ -46,7 +46,7 @@
           <span
             *ngFor="let player of game.players"
             [ngClass]="{
-              'text-primary font-weight-bold': player.id == game.playerToPlay.id,
+              'lead font-weight-bold': player.id == game.playerToPlay.id,
               'left-game': player.leftGame,
               'animation-text-shine': player.id == game.playerToPlay.id && currentUser.name == player.user.name
             }"
